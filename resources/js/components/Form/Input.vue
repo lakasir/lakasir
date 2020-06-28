@@ -3,7 +3,7 @@
     <div class="mb-3" :class="prepend ? 'input-group' : ''">
       <label v-if="!prepend">{{ label }}</label>
       <input type="text" class="form-control" :class="error ? 'is-invalid' : validClass"
-              :name="name" v-on:keyup="checkValidation" :placeholder="placeholder">
+                         :name="name" v-on:keyup="checkValidation" v-on:blur="checkValidation" :placeholder="placeholder">
       <div v-if="prepend" class="input-group-append">
         <div class="input-group-text">
           <span :class="'fas ' + icon"></span>

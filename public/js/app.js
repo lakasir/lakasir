@@ -20390,7 +20390,7 @@ var render = function() {
           staticClass: "form-control",
           class: _vm.error ? "is-invalid" : _vm.validClass,
           attrs: { type: "text", name: _vm.name, placeholder: _vm.placeholder },
-          on: { keyup: _vm.checkValidation }
+          on: { keyup: _vm.checkValidation, blur: _vm.checkValidation }
         }),
         _vm._v(" "),
         _vm.prepend
