@@ -61,13 +61,16 @@
         <meta name="msapplication-TileColor" content="#ffffff">
         <meta name="msapplication-TileImage" content="{{ asset('favicon/ms-icon-144x144.png') }}">
     @endif
+    @livewireStyles
 
 </head>
 
 <body class="@yield('classes_body')" @yield('body_data')>
 
     {{-- Body Content --}}
-    @yield('body')
+    <div id="app">
+      @yield('body')
+    </div>
 
     {{-- Base Scripts --}}
     @if(!config('adminlte.enabled_laravel_mix'))
@@ -77,12 +80,13 @@
 
         {{-- Configured Scripts --}}
         @include('adminlte::plugins', ['type' => 'js'])
-    @else
         <script src="{{ mix(config('adminlte.laravel_mix_js_path', 'js/app.js')) }}"></script>
+    @else
     @endif
 
     {{-- Custom Scripts --}}
     @yield('adminlte_js')
+    @livewireScripts
 
 </body>
 

@@ -9,7 +9,7 @@ class Install extends Controller
 {
     public function show()
     {
-
+        return view('app.install.index');
     }
 
 }
