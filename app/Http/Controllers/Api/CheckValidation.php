@@ -11,7 +11,14 @@ class CheckValidation extends Controller
 {
     public function __invoke(Request $request): JsonResponse
     {
-        $validator = Validator::make([$request->key => $request->value], [
+        $req = [
+            $request->key => $request->value
+        ];
+        if (in_array('confirmation', $request->validation)) {
+            $keyConfirmed = explode('_', $request->key)[0];
+            $req[$keyConfirmed] = $request->keyConfirmed;
+        }
+        $validator = Validator::make($req, [
             $request->key => $request->validation
         ]);
 

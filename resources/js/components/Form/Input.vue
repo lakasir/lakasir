@@ -2,7 +2,7 @@
   <div>
     <div class="mb-3" :class="prepend ? 'input-group' : ''">
       <label v-if="!prepend">{{ label }}</label>
-      <input type="text" class="form-control" :class="error ? 'is-invalid' : validClass"
+      <input :type="type" class="form-control" :class="error ? 'is-invalid' : validClass"
                          :name="name" v-on:keyup="checkValidation" v-on:blur="checkValidation" :placeholder="placeholder">
       <div v-if="prepend" class="input-group-append">
         <div class="input-group-text">
@@ -24,6 +24,10 @@ export default {
     name: {
       type: String,
       value: ''
+    },
+    type: {
+      type: String,
+      value: 'text'
     },
     icon : {
       type: String,
@@ -61,12 +65,18 @@ export default {
 
   methods: {
     checkValidation: async function ($e) {
+      let data = {
+        validation: this.validation,
+        key: this.name,
+        value: $e.target.value
+      }
+      if (this.validation.includes('confirmation')) {
+        let keyConfirmed = this.name.split('_')[0];
+        let valueConfirmed = document.getElementsByName(keyConfirmed)[0].value
+        data[keyConfirmed] = valueConfirmed
+      }
       try {
-        const success = await axios.post('/api/formvalidation', {
-          validation: this.validation,
-          key: this.name,
-          value: $e.target.value
-        });
+        const success = await axios.post('/api/formvalidation', data);
         if (success.status == 200) {
           this.error = false
           this.validClass = 'is-valid'

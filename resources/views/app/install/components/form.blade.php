@@ -5,6 +5,12 @@
   <v-input icon="fa-envelope" placeholder="{{ __('app.install.placeholder.email') }}"
                           :prepend="true" name="email" :validation="['required', 'email']"
     ></v-input>
+  <v-input icon="fa-lock" placeholder="{{ __('app.install.placeholder.password') }}"
+                          type="password" :prepend="true" name="password" :validation="['required']"
+    ></v-input>
+  <v-input icon="fa-lock" placeholder="{{ __('app.install.placeholder.password_confirmation') }}"
+                          type="password" :prepend="true" name="password_confirmation" :validation="['required', 'confirmation']"
+    ></v-input>
   <div class="row">
     <div class="col-8">
       <div class="icheck-primary">
