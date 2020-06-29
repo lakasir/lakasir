@@ -53,7 +53,7 @@ export default {
       type: String,
       value: ''
     },
-    value: {
+    defaultValue: {
       type: String,
       value: ''
     },
@@ -64,6 +64,10 @@ export default {
     errorMessage: {
       type: String,
       value: null
+    },
+    old: {
+      type: String,
+      value: null
     }
 
   },
@@ -72,12 +76,14 @@ export default {
     return {
       dataError: false,
       dataErrorMessage: '',
-      validClass: ''
+      validClass: '',
+      value: ''
     }
   },
 
   methods: {
     checkValidation: async function ($e) {
+      this.value = $e.target.value
       let data = {
         validation: this.validation,
         key: this.name,
@@ -106,6 +112,12 @@ export default {
     if (this.error) {
       this.dataErrorMessage = this.errorMessage
       this.dataError = this.error
+    }
+    if (this.defaultValue) {
+      this.value = this.defaultValue
+    }
+    if (this.old) {
+      this.value = this.old
     }
   }
 }
