@@ -2,15 +2,15 @@
   <div>
     <div class="mb-3" :class="prepend ? 'input-group' : ''">
       <label v-if="!prepend">{{ label }}</label>
-      <input :type="type" class="form-control" :class="error ? 'is-invalid' : validClass"
-                         :name="name" v-on:keyup="checkValidation" v-on:blur="checkValidation" :placeholder="placeholder">
+      <input :type="type" class="form-control" :class="dataError ? 'is-invalid' : validClass" :value="value"
+                         :name="name" v-on:focus="checkValidation" v-on:blur="checkValidation" :placeholder="placeholder">
       <div v-if="prepend" class="input-group-append">
         <div class="input-group-text">
           <span :class="'fas ' + icon"></span>
         </div>
       </div>
-      <div v-if="error" class="invalid-feedback">
-        {{ errorMessage }}
+      <div v-if="dataError" class="invalid-feedback">
+        {{ dataErrorMessage }}
       </div>
     </div>
   </div>
@@ -52,13 +52,26 @@ export default {
     placeholder: {
       type: String,
       value: ''
+    },
+    value: {
+      type: String,
+      value: ''
+    },
+    error: {
+      type: Boolean,
+      value: false
+    },
+    errorMessage: {
+      type: String,
+      value: null
     }
+
   },
 
   data() {
     return {
-      error: false,
-      errorMessage: [],
+      dataError: false,
+      dataErrorMessage: '',
       validClass: ''
     }
   },
@@ -78,17 +91,23 @@ export default {
       try {
         const success = await axios.post('/api/formvalidation', data);
         if (success.status == 200) {
-          this.error = false
+          this.dataError = false
           this.validClass = 'is-valid'
         }
       } catch (e) {
         if (e.request.status == 422) {
-          this.error = true
-          this.errorMessage = JSON.parse(e.request.response)[this.name][0]
+          this.dataError = true
+          this.dataErrorMessage = JSON.parse(e.request.response)[this.name][0]
         }
       }
     }
   },
+  mounted() {
+    if (this.error) {
+      this.dataErrorMessage = this.errorMessage
+      this.dataError = this.error
+    }
+  }
 }
 
 </script>
