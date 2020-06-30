@@ -4,7 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 
-class InstalledMiddleware
+class CheckInstalled
 {
     /**
      * Handle an incoming request.
@@ -15,8 +15,8 @@ class InstalledMiddleware
      */
     public function handle($request, Closure $next)
     {
-        if (!env('INSTALL')) {
-            return redirect('install?tab=database');
+        if (env('INSTALL')) {
+            return redirect('/');
         }
         return $next($request);
     }

@@ -75,6 +75,9 @@ class Install extends Controller
     {
         $this->user->create($request);
         $this->company->create($request);
+        $this->dispatchNow(new UpdateEnv([
+            'INSTALLED' => 'true'
+        ]));
 
         return redirect()->to('/');
     }
