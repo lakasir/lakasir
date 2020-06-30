@@ -1953,6 +1953,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       type: String,
       value: ''
     },
+    type: {
+      type: String,
+      value: 'text'
+    },
     icon: {
       type: String,
       value: 'fa-user'
@@ -1976,57 +1980,83 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     placeholder: {
       type: String,
       value: ''
+    },
+    defaultValue: {
+      type: String,
+      value: ''
+    },
+    error: {
+      type: Boolean,
+      value: false
+    },
+    errorMessage: {
+      type: String,
+      value: null
+    },
+    old: {
+      type: String,
+      value: null
     }
   },
   data: function data() {
     return {
-      error: false,
-      errorMessage: [],
-      validClass: ''
+      dataError: false,
+      dataErrorMessage: '',
+      validClass: '',
+      value: ''
     };
   },
   methods: {
     checkValidation: function () {
       var _checkValidation = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee($e) {
-        var success;
+        var data, keyConfirmed, valueConfirmed, success;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                _context.prev = 0;
-                _context.next = 3;
-                return axios.post('/api/formvalidation', {
+                this.value = $e.target.value;
+                data = {
                   validation: this.validation,
                   key: this.name,
                   value: $e.target.value
-                });
+                };
 
-              case 3:
+                if (this.validation.includes('confirmation')) {
+                  keyConfirmed = this.name.split('_')[0];
+                  valueConfirmed = document.getElementsByName(keyConfirmed)[0].value;
+                  data[keyConfirmed] = valueConfirmed;
+                }
+
+                _context.prev = 3;
+                _context.next = 6;
+                return axios.post('/api/formvalidation', data);
+
+              case 6:
                 success = _context.sent;
 
                 if (success.status == 200) {
-                  this.error = false;
+                  this.dataError = false;
                   this.validClass = 'is-valid';
                 }
 
-                _context.next = 10;
+                _context.next = 13;
                 break;
 
-              case 7:
-                _context.prev = 7;
-                _context.t0 = _context["catch"](0);
+              case 10:
+                _context.prev = 10;
+                _context.t0 = _context["catch"](3);
 
                 if (_context.t0.request.status == 422) {
-                  this.error = true;
-                  this.errorMessage = JSON.parse(_context.t0.request.response)[this.name][0];
+                  this.dataError = true;
+                  this.dataErrorMessage = JSON.parse(_context.t0.request.response)[this.name][0];
                 }
 
-              case 10:
+              case 13:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, this, [[0, 7]]);
+        }, _callee, this, [[3, 10]]);
       }));
 
       function checkValidation(_x) {
@@ -2035,6 +2065,20 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
       return checkValidation;
     }()
+  },
+  mounted: function mounted() {
+    if (this.error) {
+      this.dataErrorMessage = this.errorMessage;
+      this.dataError = this.error;
+    }
+
+    if (this.defaultValue) {
+      this.value = this.defaultValue;
+    }
+
+    if (this.old) {
+      this.value = this.old;
+    }
   }
 });
 
@@ -20388,9 +20432,14 @@ var render = function() {
         _vm._v(" "),
         _c("input", {
           staticClass: "form-control",
-          class: _vm.error ? "is-invalid" : _vm.validClass,
-          attrs: { type: "text", name: _vm.name, placeholder: _vm.placeholder },
-          on: { keyup: _vm.checkValidation, blur: _vm.checkValidation }
+          class: _vm.dataError ? "is-invalid" : _vm.validClass,
+          attrs: {
+            type: _vm.type,
+            name: _vm.name,
+            placeholder: _vm.placeholder
+          },
+          domProps: { value: _vm.value },
+          on: { focus: _vm.checkValidation, blur: _vm.checkValidation }
         }),
         _vm._v(" "),
         _vm.prepend
@@ -20401,9 +20450,9 @@ var render = function() {
             ])
           : _vm._e(),
         _vm._v(" "),
-        _vm.error
+        _vm.dataError
           ? _c("div", { staticClass: "invalid-feedback" }, [
-              _vm._v("\n      " + _vm._s(_vm.errorMessage) + "\n    ")
+              _vm._v("\n      " + _vm._s(_vm.dataErrorMessage) + "\n    ")
             ])
           : _vm._e()
       ]
@@ -32633,15 +32682,14 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 /*!************************************************!*\
   !*** ./resources/js/components/Form/Input.vue ***!
   \************************************************/
-/*! no static exports found */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Input_vue_vue_type_template_id_7df7dbca___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Input.vue?vue&type=template&id=7df7dbca& */ "./resources/js/components/Form/Input.vue?vue&type=template&id=7df7dbca&");
 /* harmony import */ var _Input_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Input.vue?vue&type=script&lang=js& */ "./resources/js/components/Form/Input.vue?vue&type=script&lang=js&");
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _Input_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _Input_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));
-/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
 
@@ -32671,7 +32719,7 @@ component.options.__file = "resources/js/components/Form/Input.vue"
 /*!*************************************************************************!*\
   !*** ./resources/js/components/Form/Input.vue?vue&type=script&lang=js& ***!
   \*************************************************************************/
-/*! no static exports found */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
