@@ -75,6 +75,14 @@ class Install extends Controller
     {
         $this->user->create($request);
         $this->company->create($request);
+        /**
+         * FIXME: update INSTALLED variable <sheenazien 2020-06-30>
+         * the first value don't want to change
+         */
+
+        $this->dispatchNow(new UpdateEnv([
+            'INSTALLED' => 'true'
+        ]));
 
         return redirect()->to('/');
     }
