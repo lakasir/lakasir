@@ -16,7 +16,7 @@ class InstalledMiddleware
     public function handle($request, Closure $next)
     {
         if (!env('INSTALLED')) {
-            return redirect('install');
+            return redirect('install?tab=database');
         }
         return $next($request);
     }
