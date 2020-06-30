@@ -3,6 +3,7 @@
 namespace App\Abstracts;
 
 use App\Interfaces\Repository as RepositoryInterface;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 abstract class Repository implements RepositoryInterface
@@ -10,17 +11,17 @@ abstract class Repository implements RepositoryInterface
     /** @var string model */
     protected string $model;
 
-    public function find($id)
+    public function find(int $id)
     {
         return $this->model::find($id);
     }
 
-    public function delete($id)
+    public function delete(int $id)
     {
         return $this->model::find($id)->delete();
     }
 
-    public function paginate($request, $columns = ['*'], $search)
+    public function paginate(Request $request, array $columns = ['*'], string $search)
     {
         $self = $this;
         return $this->model::select($columns)
@@ -36,7 +37,7 @@ abstract class Repository implements RepositoryInterface
                         ->paginate($request->per_page);
     }
 
-    public function all($columns)
+    public function all(array $columns)
     {
         return $this->model::select($columns)->get();
     }
@@ -51,7 +52,7 @@ abstract class Repository implements RepositoryInterface
             ->get();
     }
 
-    public function create($request)
+    public function create(Request $request)
     {
         $model = new $this->model;
         $model->fill($request->all());
@@ -63,7 +64,7 @@ abstract class Repository implements RepositoryInterface
         return $model;
     }
 
-    public function update($request, $model)
+    public function update(Request $request, $model)
     {
         $model->fill($request->all());
         if (isset($this->parent)) {
@@ -74,7 +75,7 @@ abstract class Repository implements RepositoryInterface
         return $model;
     }
 
-    public function bulkDestroy($request, $column = 'id')
+    public function bulkDestroy(Request $request, string $column = 'id')
     {
         $self = $this;
         DB::transaction(static function () use ($request, $self, $column) {

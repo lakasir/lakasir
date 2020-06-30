@@ -2,22 +2,24 @@
 
 namespace App\Interfaces;
 
+use Illuminate\Http\Request;
+
 interface Repository
 {
-    public function paginate($request, $columns, $search);
+    public function paginate(Request $request, array $columns, string $search);
 
-    public function all($columns);
+    public function all(array $columns);
 
-    public function get($request, $columns, $search);
+    public function get(Request $request, array $columns, string $search);
 
-    public function create($request);
+    public function create(Request $request);
 
-    public function update($request, $model);
+    public function update(Request $request, $model);
 
-    public function delete($id);
+    public function delete(int $id);
 
-    public function find($id);
+    public function find(int $id);
 
-    public function bulkDestroy($request);
+    public function bulkDestroy(Request $request, string $column);
 
 }
