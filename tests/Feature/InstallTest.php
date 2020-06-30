@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Jobs\UpdateEnv;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\DB;
@@ -13,7 +14,7 @@ class InstallTest extends TestCase
     {
         $response = $this->post(route('install.databaseStore'), [
             'host' => 'localhost',
-            'name' => 'laravel_lakasir',
+            'name' => 'lakasir',
             'username' => 'root',
             'password' => 'password'
         ]);
@@ -47,6 +48,10 @@ class InstallTest extends TestCase
         ])->post(route('install.companyStore'), [
             'business_type' => $array_options[rand(0, count($array_options) - 1)],
             'business_description' => 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr,sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.'
+        ]);
+
+        UpdateEnv::dispatchNow([
+            'INSTALLED=' => 'false'
         ]);
 
         $response->assertStatus(302);

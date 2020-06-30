@@ -15,7 +15,7 @@ class CheckInstalled
      */
     public function handle($request, Closure $next)
     {
-        if (env('INSTALLED')) {
+        if (env('INSTALL')) {
             return redirect('/');
         }
         return $next($request);
