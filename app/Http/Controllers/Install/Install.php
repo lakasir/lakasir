@@ -49,7 +49,6 @@ class Install extends Controller
 
     public function store(InstallRequest $request): RedirectResponse
     {
-
     }
 
     public function databaseStore(Database $request): RedirectResponse
@@ -73,10 +72,10 @@ class Install extends Controller
 
     public function companyStore(Company $request): RedirectResponse
     {
-        $this->user->create($request);
+        $this->user->role('owner')->create($request);
         $this->company->create($request);
         $this->dispatchNow(new UpdateEnv([
-            'INSTALLED' => 'true'
+            'INSTALL' => 'true'
         ]));
 
         return redirect()->to('/');
