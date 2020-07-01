@@ -30,6 +30,7 @@ class Install extends Controller
 
     /**
      * @param UserRepository $user
+     * @param companyRepository $company
      */
     public function __construct(UserRepository $user, CompanyRepository $company)
     {
