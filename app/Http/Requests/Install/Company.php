@@ -24,7 +24,7 @@ class Company extends FormRequest
     public function rules()
     {
         return [
-            //
+            'business_type' => [ 'in:retail,butik / distro', 'required' ]
         ];
     }
 }
