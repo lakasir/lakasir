@@ -9,5 +9,11 @@ return
         'delete-unit' => ['owner', 'employee'],
         'update-unit' => ['owner', 'employee'],
         'bulk-delete-unit' => ['owner', 'employee'],
+
+        'create-category' => ['owner', 'employee'],
+        'browse-category' => ['owner', 'employee'],
+        'delete-category' => ['owner', 'employee'],
+        'update-category' => ['owner', 'employee'],
+        'bulk-delete-category' => ['owner', 'employee'],
     ]
 ];
