@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Requests\Install;
+namespace App\Http\Requests\Master\Unit;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
 
-class Company extends FormRequest
+class Store extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +25,7 @@ class Company extends FormRequest
     public function rules()
     {
         return [
-            'business_type' => [ 'in:retail,butik / distro', 'required' ]
+            'name' => 'required'
         ];
     }
 }

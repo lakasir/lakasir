@@ -30,6 +30,7 @@ class Install extends Controller
 
     /**
      * @param UserRepository $user
+     * @param companyRepository $company
      */
     public function __construct(UserRepository $user, CompanyRepository $company)
     {
@@ -72,6 +73,11 @@ class Install extends Controller
 
     public function companyStore(Company $request): RedirectResponse
     {
+        /**
+         * FIXME: the first value is don't wan't change <sheenazien 2020-07-02>
+         * INSTALL variable env
+         */
+
         $this->user->role('owner')->create($request);
         $this->company->create($request);
         $this->dispatchNow(new UpdateEnv([
