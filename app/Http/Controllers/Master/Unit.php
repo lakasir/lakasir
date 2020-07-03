@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Master;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Master\Unit\BulkDelete;
-use App\Http\Requests\Master\Unit\Delete;
 use App\Http\Requests\Master\Unit\Index;
 use App\Http\Requests\Master\Unit\Store;
 use App\Http\Requests\Master\Unit\Update;
