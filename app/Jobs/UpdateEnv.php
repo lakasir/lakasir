@@ -46,7 +46,8 @@ class UpdateEnv implements ShouldQueue
             }
        }
 
-        Artisan::call('migrate:refresh');
+        Artisan::call('migrate:fresh');
+        Artisan::call('migrate');
         Artisan::call('db:seed');
     }
 }
