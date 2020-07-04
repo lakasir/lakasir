@@ -1,46 +1,24 @@
 <form action="{{ route('install.companyStore') }}" method="post">
   @csrf
-  <v-input icon="fa-database"
-           placeholder="{{ __('app.install.placeholder.database.host') }}"
-           default-value="localhost"
-           old="{{ old('host') }}"
-           default-value="host"
-           @error('host') :error="true"
+  <v-dropdown icon="fa-building"
+           label="{{ __('app.install.placeholder.company.business_type') }}"
+           old="{{ old('business_type') }}"
+           v-bind:lists='@json(config('array_options.business_type'))'
+           @error('business_type') :error="true"
            error-message="{{ $message }}"
            @enderror
-           :prepend="true" name="host" :validation="['required', 'alpha_dash']"
-  ></v-input>
-  <v-input icon="fa-database"
-           placeholder="{{ __('app.install.placeholder.database.name') }}"
+           :prepend="true" name="business_type"
+           :validation="['required']"
+  ></v-dropdown>
+  <v-input icon="fa-building"
+           placeholder="{{ __('app.install.placeholder.company.business_description') }}"
            :prepend="true"
-           name="name" :validation="['required', 'alpha_dash']"
-           old="{{ old('name') }}"
-           @error('name') :error="true"
+           name="business_description" :validation="['required']"
+           old="{{ old('business_description') }}"
+           @error('business_description') :error="true"
            error-message="{{ $message }}"
            @enderror
            ></v-input>
-
-  <v-input icon="fa-database"
-           placeholder="{{ __('app.install.placeholder.database.username') }}"
-           :prepend="true"
-           name="username"
-           old="{{ old('username') }}"
-           :validation="['required', 'alpha_dash']"
-           @error('username') :error="true"
-           error-message="{{ $message }}"
-           @enderror
-
-           ></v-input>
-  <v-input icon="fa-database"
-           placeholder="{{ __('app.install.placeholder.database.password') }}"
-           type="password"
-           old="{{ old('password') }}"
-           @error('password')
-           :error="true"
-           error-message="{{ $message }}"
-           @enderror
-           :prepend="true" name="password" :validation="['required', 'alpha_dash']"
-    ></v-input>
   <div class="row">
     <div class="col-8">
     </div>
