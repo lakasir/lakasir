@@ -12,7 +12,7 @@ trait Media
     /**
      * Get the image.
      */
-    public function image()
+    public function media()
     {
         return $this->morphMany(MediaModel::class, 'imageable');
     }
