@@ -39,7 +39,7 @@ trait Media
             'mime_type' => $uploaded->getMimeType(),
             'orginal_filename' => $this->file->getClientOriginalName(),
         ]);
-        $this->image()->save($media);
+        $this->media()->save($media);
     }
 
 
