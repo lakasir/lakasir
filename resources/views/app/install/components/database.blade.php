@@ -1,3 +1,9 @@
+@if (session('database_error_message'))
+    <div class="alert alert-danger">
+        {{ session('database_error_message') }}
+    </div>
+@endif
+
 <form action="{{ route('install.databaseStore') }}" method="post">
   @csrf
   <v-input icon="fa-database"

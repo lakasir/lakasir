@@ -7,7 +7,6 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Artisan;
 
 class UpdateEnv implements ShouldQueue
 {
@@ -45,8 +44,5 @@ class UpdateEnv implements ShouldQueue
                 ));
             }
        }
-
-        Artisan::call('migrate:refresh');
-        Artisan::call('db:seed');
     }
 }
