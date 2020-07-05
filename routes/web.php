@@ -16,3 +16,8 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function() {
 
 })->middleware('installed');
+
+Route::group(['middleware' => 'auth'], function() {
+    Route::delete('/master/unit/bulk-destroy', 'Master\Unit@bulkDestroy');
+    Route::resource('master/unit', 'Master\Unit');
+});
