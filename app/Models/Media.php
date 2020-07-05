@@ -14,4 +14,10 @@ class Media extends Model
         'custom_property',
         'size'
     ];
+
+    public function getGetFullNameAttribute()
+    {
+        return $this->location . '/' . $this->fullname;
+    }
+
 }
