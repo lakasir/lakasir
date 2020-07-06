@@ -93,9 +93,11 @@ class Install extends Controller
 
         $this->user->role('owner')->create($request);
         $this->company->create($request);
-        $this->dispatchNow(new UpdateEnv([
-            'INSTALL' => 'true'
-        ]));
+        if (app()->environment() == 'production') {
+            $this->dispatchNow(new UpdateEnv([
+                'INSTALL' => 'true'
+            ]));
+        }
 
         return redirect()->to('/');
     }
@@ -111,7 +113,7 @@ class Install extends Controller
                     'password' => $request->password,
                     'driver' => 'mysql',
                ]);
-                Artisan::call('migrate:refresh');
+                Artisan::call('migrate:fresh');
                 Artisan::call('db:seed');
             }
 
