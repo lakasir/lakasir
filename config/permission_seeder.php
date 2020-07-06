@@ -15,5 +15,11 @@ return
         'delete-category' => ['owner', 'employee'],
         'update-category' => ['owner', 'employee'],
         'bulk-delete-category' => ['owner', 'employee'],
+
+        'create-item' => ['owner', 'employee'],
+        'browse-item' => ['owner', 'employee'],
+        'delete-item' => ['owner', 'employee'],
+        'update-item' => ['owner', 'employee'],
+        'bulk-delete-item' => ['owner', 'employee'],
     ]
 ];

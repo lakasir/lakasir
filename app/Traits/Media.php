@@ -42,5 +42,10 @@ trait Media
         $this->media()->save($media);
     }
 
+    public function deleteMedia(MediaModel $media): self
+    {
+        return $this;
+    }
+
 
 }

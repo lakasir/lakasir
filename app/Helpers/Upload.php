@@ -16,7 +16,7 @@ class Upload
     public function __construct($file)
     {
         $this->file = $file;
-        $this->location = now()->format('Y-m-d').'/app';
+        $this->location = 'app/'.now()->format('Y-m-d');
     }
 
     public function to(string $location)
