@@ -1,20 +1,22 @@
 <?php
 
 namespace App\Helpers;
+use Illuminate\Database\Eloquent;
+use Illuminate\Support\Collection;
 
 class NumberGenerator
 {
     /**
      * @var string
      */
-    private string $model;
+    private $model;
 
     /**
      * @param string $model
      */
-    public function __construct(string $model)
+    public function __construct($model)
     {
-        $this->model = $model;
+        $this->model = new $model;
     }
     /**
      * create unique number for user
@@ -30,14 +32,10 @@ class NumberGenerator
 
         $prefix = env('CODE_PREFIX');
         $number = $prefix . now()->format('ymd');
-        $increments = str_pad(1, 4, 0, STR_PAD_LEFT);
-        $number = $number.$increments;
         $lastCompany = $this->model::latest()->first();
-        if (!$lastCompany) {
-
-        }
-
-        return $number;
+        $increments = str_pad(($lastCompany->id ?? 1), 4, "0", STR_PAD_LEFT);
+        $format = $number.$increments;
+        return $format;
     }
 
 

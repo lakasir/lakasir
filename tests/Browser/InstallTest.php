@@ -18,9 +18,9 @@ class InstallTest extends DuskTestCase
         $this->browse(function (Browser $browser) {
             $browser->visit('/install?tab=database')
                     ->type('host', 'localhost')
-                    ->type('name', 'laravel_lakasir')
+                    ->type('name', 'lakasir')
                     ->type('username', 'root')
-                    ->type('password', 'password');
+                    ->type('password', '`');
             $browser->press('Next')
                     ->assertPathIs('/install');
         });
