@@ -111,7 +111,7 @@ class Install extends Controller
                     'password' => $request->password,
                     'driver' => 'mysql',
                ]);
-                Artisan::call('migrate:refresh');
+                Artisan::call('migrate:fresh');
                 Artisan::call('db:seed');
             }
 
