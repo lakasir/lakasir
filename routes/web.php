@@ -27,4 +27,7 @@ Route::group(['middleware' => 'auth'], function() {
 
     Route::delete('/master/item/bulk-destroy', 'Master\Item@bulkDestroy');
     Route::resource('master/item', 'Master\Item');
+
+    Route::delete('/master/supplier/bulk-destroy', 'Master\Supplier@bulkDestroy');
+    Route::resource('master/supplier', 'Master\Supplier');
 });

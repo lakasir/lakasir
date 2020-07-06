@@ -21,5 +21,11 @@ return
         'delete-item' => ['owner', 'employee'],
         'update-item' => ['owner', 'employee'],
         'bulk-delete-item' => ['owner', 'employee'],
+
+        'create-supplier' => ['owner', 'employee'],
+        'browse-supplier' => ['owner', 'employee'],
+        'delete-supplier' => ['owner', 'employee'],
+        'update-supplier' => ['owner', 'employee'],
+        'bulk-delete-supplier' => ['owner', 'employee'],
     ]
 ];
