@@ -44,6 +44,11 @@ trait Media
 
     public function deleteMedia(MediaModel $media): self
     {
+        /**
+         * FIXME: deleted image and media <sheenazien8 2020-07-07>
+         *
+         */
+
         return $this;
     }
 
