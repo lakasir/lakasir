@@ -2,7 +2,7 @@
 
 namespace App\Http\Livewire;
 
-use App\User;
+use App\Models\User;
 use Kdion4891\LaravelLivewireForms\ArrayField;
 use Kdion4891\LaravelLivewireForms\Field;
 use Kdion4891\LaravelLivewireForms\FormComponent;
