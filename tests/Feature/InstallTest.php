@@ -16,7 +16,7 @@ class InstallTest extends TestCase
             'host' => 'localhost',
             'name' => 'lakasir',
             'username' => 'root',
-            'password' => '`'
+            'password' => 'password'
         ]);
 
         $response->assertStatus(302);
