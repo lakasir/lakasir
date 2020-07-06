@@ -16,7 +16,7 @@ class InstallTest extends TestCase
             'host' => 'localhost',
             'name' => 'lakasir',
             'username' => 'root',
-            'password' => '``'
+            'password' => 'password'
         ]);
 
         $response->assertStatus(302);
@@ -56,9 +56,11 @@ class InstallTest extends TestCase
          * but overwritten and become one word
          */
 
-        UpdateEnv::dispatchNow([
-            'INSTALL=' => 'false'
-        ]);
+        if (app()->environment() == 'production') {
+            UpdateEnv::dispatchNow([
+                'INSTALL=' => 'false'
+            ]);
+        }
 
         $response->assertStatus(302);
         $response->assertRedirect('/');
