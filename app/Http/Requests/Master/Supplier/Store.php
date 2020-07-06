@@ -25,7 +25,11 @@ class Store extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required'
+            'name' => 'required',
+            'code' => 'required',
+            'shop_name' => 'required',
+            'phone' => 'required',
+            'address' => 'required'
         ];
     }
 }
