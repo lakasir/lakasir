@@ -17,6 +17,7 @@ Route::get('/', function() {
 
 })->middleware('installed');
 
+Route::view('login', 'app.auth.login')->name('login');
 Route::view('/completed', 'app.install.completed');
 
 Route::group(['middleware' => [ 'auth' ]], function() {
