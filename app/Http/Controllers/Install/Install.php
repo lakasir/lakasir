@@ -93,28 +93,30 @@ class Install extends Controller
 
         $this->user->role('owner')->create($request);
         $this->company->create($request);
-        if (app()->environment() == 'production') {
+        if (app()->environment() == 'production' || app()->environment() == 'local') {
             $this->dispatchNow(new UpdateEnv([
                 'INSTALL' => 'true'
             ]));
         }
 
-        return redirect()->to('/');
+        return redirect()->to('/completed');
     }
 
     private function checkDatabaseConnection($request = null, $set_config = false)
     {
         try {
             if($set_config) {
-               \Config::set('database.connections.mysql', [
+                \Config::set('database.connections.mysql', [
                     'host' => $request->host,
                     'database' => $request->name,
                     'username' => $request->username,
                     'password' => $request->password,
                     'driver' => 'mysql',
-               ]);
+                ]);
                 Artisan::call('migrate:fresh');
-                Artisan::call('db:seed');
+                if (app()->environment() == 'testing') {
+                    Artisan::call('db:seed');
+                }
             }
 
             \DB::connection()->getPdo();

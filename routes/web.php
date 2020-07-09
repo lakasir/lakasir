@@ -17,7 +17,9 @@ Route::get('/', function() {
 
 })->middleware('installed');
 
-Route::group(['middleware' => 'auth'], function() {
+Route::view('/completed', 'app.install.completed');
+
+Route::group(['middleware' => [ 'auth' ]], function() {
     Route::delete('/master/unit/bulk-destroy', 'Master\Unit@bulkDestroy');
     Route::resource('master/unit', 'Master\Unit');
 
@@ -30,4 +32,7 @@ Route::group(['middleware' => 'auth'], function() {
 
     Route::delete('/master/supplier/bulk-destroy', 'Master\Supplier@bulkDestroy');
     Route::resource('master/supplier', 'Master\Supplier');
+
+    Route::delete('/master/group/bulk-destroy', 'Master\Group@bulkDestroy');
+    Route::resource('master/group', 'Master\Group');
 });
