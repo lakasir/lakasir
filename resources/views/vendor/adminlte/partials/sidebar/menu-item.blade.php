@@ -4,7 +4,7 @@
 
     {{-- Header --}}
     <li @if(isset($item['id'])) id="{{ $item['id'] }}" @endif class="nav-header">
-        {{ is_string($item) ? $item : $item['header'] }}
+        {{ is_string($item) ? trans($item) : trans($item['header']) }}
     </li>
 
 @elseif ($menuItemHelper->isSearchBar($item))

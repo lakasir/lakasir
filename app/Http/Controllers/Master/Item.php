@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Master;
 
+use App\DataTables\ItemDataTable;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Master\Item\BulkDelete;
 use App\Http\Requests\Master\Item\Delete;
@@ -16,6 +17,8 @@ use Illuminate\View\View;
 
 class Item extends Controller
 {
+
+    protected string $viewPath = 'app.master.items';
     /**
      * @var Item
      */
@@ -32,14 +35,16 @@ class Item extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\View\View
+     * @return mix
      */
-    public function index(Index $request): View
+    public function index(Index $request)
     {
         $this->authorize('browse-item');
-        $items = $this->item->paginate($request, ['*'], 'name');
+        if ($request->has('draw')) {
+            return $this->item->datatable($request);
+        }
 
-        return view('app.master.items.index', compact('items'));
+        return view("{$this->viewPath}.index");
     }
 
     /**
@@ -51,7 +56,7 @@ class Item extends Controller
     {
         $this->authorize('create-item');
 
-        return view('app.master.items.create');
+        return view("{$this->viewPath}.create");
     }
 
     /**
@@ -78,7 +83,7 @@ class Item extends Controller
     {
         $this->authorize('browse-item');
 
-        return view('app.master.items.show', compact('item'));
+        return view("{$this->viewPath}.show", compact('item'));
     }
 
     /**
@@ -91,7 +96,7 @@ class Item extends Controller
     {
         $this->authorize('update-item');
 
-        return view('app.master.items.edit', compact('item'));
+        return view("{$this->viewPath}.edit", compact('item'));
     }
 
     /**

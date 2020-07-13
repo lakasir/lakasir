@@ -114,9 +114,7 @@ class Install extends Controller
                     'driver' => 'mysql',
                 ]);
                 Artisan::call('migrate:fresh');
-                if (app()->environment() == 'testing') {
-                    Artisan::call('db:seed');
-                }
+                Artisan::call('db:seed');
             }
 
             \DB::connection()->getPdo();

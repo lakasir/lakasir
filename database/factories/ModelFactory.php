@@ -3,6 +3,7 @@
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
 use App\Models\Category;
+use App\Models\Group;
 use App\Models\Item;
 use App\Models\Price;
 use App\Models\Stock;
@@ -59,5 +60,11 @@ $factory->define(Supplier::class, function (Faker $faker) {
         'phone' => $faker->phoneNumber(),
         'address' => $faker->streetAddress(),
         'code' => $faker->languageCode()
+    ];
+});
+
+$factory->define(Group::class, function (Faker $faker) {
+    return [
+        'name' => $faker->name
     ];
 });

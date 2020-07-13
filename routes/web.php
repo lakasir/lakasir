@@ -17,10 +17,11 @@ Route::get('/', function() {
 
 })->middleware('installed');
 
-Route::view('login', 'app.auth.login')->name('login');
 Route::view('/completed', 'app.install.completed');
 
-Route::group(['middleware' => [ 'auth' ]], function() {
+Route::group(['middleware' => [ 'auth', 'installed' ]], function() {
+    Route::get('dashboard', 'Dashboard')->name('dashboard');
+
     Route::delete('/master/unit/bulk-destroy', 'Master\Unit@bulkDestroy');
     Route::resource('master/unit', 'Master\Unit');
 
@@ -36,4 +37,8 @@ Route::group(['middleware' => [ 'auth' ]], function() {
 
     Route::delete('/master/group/bulk-destroy', 'Master\Group@bulkDestroy');
     Route::resource('master/group', 'Master\Group');
+});
+
+Route::group(['middleware' => 'installed'], function() {
+    Auth::routes();
 });

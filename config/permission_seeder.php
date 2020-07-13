@@ -27,5 +27,11 @@ return
         'delete-supplier' => ['owner', 'employee'],
         'update-supplier' => ['owner', 'employee'],
         'bulk-delete-supplier' => ['owner', 'employee'],
+
+        'create-group' => ['owner', 'employee'],
+        'browse-group' => ['owner', 'employee'],
+        'delete-group' => ['owner', 'employee'],
+        'update-group' => ['owner', 'employee'],
+        'bulk-delete-group' => ['owner', 'employee'],
     ]
 ];
