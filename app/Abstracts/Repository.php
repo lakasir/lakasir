@@ -11,6 +11,14 @@ abstract class Repository implements RepositoryInterface
     /** @var string model */
     protected string $model;
 
+    public function datatable(Request $request)
+    {
+        $items = $this->model::toBase()->latest()->get();
+
+        return DataTables::of($items)
+            ->addIndexColumn()->toJson();
+    }
+
     public function find(int $id)
     {
         return $this->model::find($id);
