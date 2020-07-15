@@ -9,10 +9,21 @@ use App\Models\Stock;
 use App\Models\Unit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Yajra\DataTables\DataTables;
 
 class Item extends RepositoryAbstract
 {
     protected string $model = 'App\Models\Item';
+
+    public function datatable(Request $request)
+    {
+        $items = $this->model::toBase()->addSelect([
+            'unit_name' => Unit::select('name')->whereColumn('unit_id', 'units.id')->latest()->limit(1),
+            'category_name' => Category::select('name')->whereColumn('category_id', 'categories.id')->latest()->limit(1)
+        ])->get();
+
+        return DataTables::of($items)->addIndexColumn()->make(true);
+    }
 
     public function create(Request $request)
     {

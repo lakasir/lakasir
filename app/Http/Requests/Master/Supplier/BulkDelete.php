@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Requests\Install;
+namespace App\Http\Requests\Master\Supplier;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
 
-class User extends FormRequest
+class BulkDelete extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,10 +25,7 @@ class User extends FormRequest
     public function rules()
     {
         return [
-            'username' => ['required', 'alpha_dash', 'min:3', 'unique:users'],
-            'email' => ['required', 'email'],
-            'password' => ['required', 'alpha_dash', 'confirmed'],
-            'password_confirmation' => ['required'],
+            'ids.*' => 'required'
         ];
     }
 }

@@ -9,7 +9,7 @@
         }}"></i>
 
         <p>
-            {{ $item['text'] }}
+            {{ trans($item['text']) }}
             <i class="fas fa-angle-left right"></i>
 
             @if(isset($item['label']))

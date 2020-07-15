@@ -8,7 +8,7 @@ interface Repository
 {
     public function paginate(Request $request, array $columns, string $search);
 
-    public function all(array $columns);
+    public function all(Request $request, array $columns, string $search);
 
     public function get(Request $request, array $columns, string $search);
 

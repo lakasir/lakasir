@@ -37,9 +37,20 @@ abstract class Repository implements RepositoryInterface
                         ->paginate($request->per_page);
     }
 
-    public function all(array $columns)
+    public function all(Request $request, array $columns = ['*'], string $search)
     {
-        return $this->model::select($columns)->get();
+        $self = $this;
+        return $this->model::select($columns)
+                    ->when(isset($this->parent) && ! is_null($this->parent), function ($query)
+                        use ($self) {
+                            return $query->where($self->column, $self->parent->id);
+                        })
+                    ->when(! is_null($request->s), function ($query)
+                        use ($request, $search) {
+                            return $query->where($search, 'LIKE', $request->s.'%%');
+                        })
+                    ->orderBy('id', 'desc')
+                    ->get();
     }
 
     public function get($request, $columns, $search)
