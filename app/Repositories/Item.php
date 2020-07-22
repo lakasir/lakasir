@@ -1,6 +1,6 @@
 <?php
 
-Namespace App\Repositories;
+namespace App\Repositories;
 
 use App\Abstracts\Repository as RepositoryAbstract;
 use App\Models\Category;
@@ -31,7 +31,7 @@ class Item extends RepositoryAbstract
     public function create(Request $request)
     {
         $self = $this;
-        return DB::transaction(static function() use ($request, $self) {
+        return DB::transaction(static function () use ($request, $self) {
             $request->merge([
                 'date' => now()->format('Y-m-d'),
                 'current_stock' => $request->stock,
@@ -59,7 +59,7 @@ class Item extends RepositoryAbstract
     public function update(Request $request, $item)
     {
         $self = $this;
-        return DB::transaction(static function() use ($request, $self, $item) {
+        return DB::transaction(static function () use ($request, $self, $item) {
             $request->merge([
                 'date' => now()->format('Y-m-d'),
                 'current_stock' => $request->stock,
@@ -76,6 +76,4 @@ class Item extends RepositoryAbstract
             return $item;
         });
     }
-
-
 }

@@ -7,140 +7,26 @@ use App\Http\Requests\Master\Category\BulkDelete;
 use App\Http\Requests\Master\Category\Index;
 use App\Http\Requests\Master\Category\Store;
 use App\Http\Requests\Master\Category\Update;
-use App\Models\Category as Model;
 use App\Repositories\Category as CategoryRepository;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\View\View;
-use Yajra\DataTables\Html\Builder;
+use App\Traits\HasCrudActions;
 
 class Category extends Controller
 {
-    private $viewPath = 'app.master.categories';
-    /**
-     * @var Category
-     */
-    public CategoryRepository $category;
+    use HasCrudActions;
 
-    /**
-     * @param CategoryRepository $category
-     */
-    public function __construct()
-    {
-        $this->category = new CategoryRepository();
-    }
+    protected $viewPath = 'app.master.categories';
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return mix
-     */
-    public function index(Index $request, Builder $builder)
-    {
-        $this->authorize('browse-item');
-        if ($request->ajax()) {
-            return $this->category->datatable($request);
-        }
+    protected $permission = 'category';
 
-        $html = $builder->columns([
-            ['data' => 'id', 'footer' => '#', 'title' => '#'],
-            ['data' => 'name', 'footer' => __('app.categories.column.name'), 'title' => __('app.categories.column.name')],
-        ]);
+    protected $indexRequest = Index::class;
 
-        return view("{$this->viewPath}.index", compact('html'));
-    }
+    protected $storeRequest = Store::class;
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\View\View
-     */
-    public function create(): View
-    {
-        $this->authorize('create-category');
+    protected $updateRequest = Update::class;
 
-        return view('app.master.categories.create');
-    }
+    protected $bulkDestroyRequest = BulkDelete::class;
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param App\Http\Requests\Master\Category\Store $request
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function store(Store $request): RedirectResponse
-    {
-        $this->authorize('create-category');
-        $this->category->create($request);
+    protected $redirect = '/master/category';
 
-        return redirect()->to('/master/category');
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Category  $category
-     * @return \Illuminate\View\View
-     */
-    public function show(Model $category): View
-    {
-        $this->authorize('browse-category');
-
-        return view('app.master.categories.show', compact('category'));
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Category  $category
-     * @return \Illuminate\View\View
-     */
-    public function edit(Model $category)
-    {
-        $this->authorize('update-category');
-
-        return view('app.master.categories.edit', compact('category'));
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Model  $category
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function update(Update $request, Model $category): RedirectResponse
-    {
-        $this->authorize('update-category');
-        $this->category->update($request, $category);
-
-        return redirect()->to('/master/category');
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Category  $category
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Model $category): RedirectResponse
-    {
-        $this->authorize('delete-category');
-        $category->delete();
-
-        return redirect()->to('/master/category');
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  BulkDelete $request
-     * @return \Illuminate\Http\Response
-     */
-    public function bulkDestroy(BulkDelete $request): RedirectResponse
-    {
-        $this->category->bulkDestroy($request);
-
-        return redirect()->back();
-    }
+    protected $repositoryClass = CategoryRepository::class;
 }
