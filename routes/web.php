@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function() {
 
-})->middleware('installed');
+})->middleware([ 'installed', 'auth' ]);
 
 Route::view('/completed', 'app.install.completed');
 

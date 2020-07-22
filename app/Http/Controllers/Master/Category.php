@@ -12,9 +12,11 @@ use App\Repositories\Category as CategoryRepository;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Yajra\DataTables\Html\Builder;
 
 class Category extends Controller
 {
+    private $viewPath = 'app.master.categories';
     /**
      * @var Category
      */
@@ -31,14 +33,21 @@ class Category extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\View\View
+     * @return mix
      */
-    public function index(Index $request): View
+    public function index(Index $request, Builder $builder)
     {
-        $this->authorize('browse-category');
-        $categories = $this->category->paginate($request, ['name'], 'name');
+        $this->authorize('browse-item');
+        if ($request->ajax()) {
+            return $this->category->datatable($request);
+        }
 
-        return view('app.master.categories.index', compact('categories'));
+        $html = $builder->columns([
+            ['data' => 'id', 'footer' => '#', 'title' => '#'],
+            ['data' => 'name', 'footer' => __('app.categories.column.name'), 'title' => __('app.categories.column.name')],
+        ]);
+
+        return view("{$this->viewPath}.index", compact('html'));
     }
 
     /**

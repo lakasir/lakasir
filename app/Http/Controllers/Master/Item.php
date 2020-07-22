@@ -14,10 +14,10 @@ use App\Repositories\Item as ItemRepository;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Yajra\DataTables\Html\Builder;
 
 class Item extends Controller
 {
-
     protected string $viewPath = 'app.master.items';
     /**
      * @var Item
@@ -37,15 +37,33 @@ class Item extends Controller
      *
      * @return mix
      */
-    public function index(Index $request)
+    public function index(Index $request, Builder $builder)
     {
         $this->authorize('browse-item');
-        if ($request->has('draw')) {
+        if ($request->ajax()) {
             return $this->item->datatable($request);
         }
 
-        return view("{$this->viewPath}.index");
+        $html = $builder->columns([
+            ['data' => 'id', 'footer' => '#', 'title' => '#'],
+            ['data' => 'name', 'footer' => __('app.items.column.name'), 'title' => __('app.items.column.name')],
+            ['data' => 'internal_production', 'footer' => __('app.items.column.internal_production'), 'title' => __('app.items.column.internal_production')],
+            ['data' => 'category_name', 'footer' => __('app.items.column.category.name'), 'title' => __('app.items.column.category.name')],
+            ['data' => 'unit_name', 'footer' => __('app.items.column.unit.name'), 'title' => __('app.items.column.unit.name')],
+            ['data' => 'initial_price', 'footer' => __('app.items.column.price.initial_price'), 'title' => __('app.items.column.price.initial_price')],
+            ['data' => 'selling_price', 'footer' => __('app.items.column.price.selling_price'), 'title' => __('app.items.column.price.selling_price')],
+        ])->parameters([
+            'buttons' => ['mee']
+        ]);
+
+        return view("{$this->viewPath}.index", compact('html'));
     }
+
+    public function mee()
+    {
+        return null;
+    }
+
 
     /**
      * Show the form for creating a new resource.

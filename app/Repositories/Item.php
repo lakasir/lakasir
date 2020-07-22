@@ -19,10 +19,13 @@ class Item extends RepositoryAbstract
     {
         $items = $this->model::toBase()->addSelect([
             'unit_name' => Unit::select('name')->whereColumn('unit_id', 'units.id')->latest()->limit(1),
-            'category_name' => Category::select('name')->whereColumn('category_id', 'categories.id')->latest()->limit(1)
-        ])->get();
+            'category_name' => Category::select('name')->whereColumn('category_id', 'categories.id')->latest()->limit(1),
+            'initial_price' => Price::select('initial_price')->whereColumn('item_id', 'items.id')->latest()->limit(1),
+            'selling_price' => Price::select('selling_price')->whereColumn('item_id', 'items.id')->latest()->limit(1),
+        ])->latest()->get();
 
-        return DataTables::of($items)->addIndexColumn()->make(true);
+        return DataTables::of($items)
+            ->addIndexColumn()->toJson();
     }
 
     public function create(Request $request)
