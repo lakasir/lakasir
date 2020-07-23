@@ -3,10 +3,19 @@
 @section('content')
   <div class="card">
     <div class="card-header">
-      {{ __('app.categories.title') }}
+      {{ __('app.categorys.title') }}
     </div>
     <div class="card-body">
-      {!! $html->table(['class' => 'table']) !!}
+      <div class="table-responsive">
+        <table class="table table-bordered" id="categories-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th> {{ __('app.categories.column.name') }} </th>
+            </tr>
+          </thead>
+        </table>
+      </div>
     </div>
     <div class="card-footer">
     </div>
@@ -14,6 +23,17 @@
 @endsection
 
 @push('js')
-  {!! $html->scripts() !!}
+  <script>
+    $(function() {
+      $('#categories-table').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: '{!! route('category.index') !!}',
+        columns: [
+          { data: 'id', name: '#' },
+          { data: 'name', name: 'name' },
+        ]
+      });
+    });
+  </script>
 @endpush
-

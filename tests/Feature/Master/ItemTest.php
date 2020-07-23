@@ -25,9 +25,6 @@ class ItemTest extends TestCase
             'name' => 'product abal abal',
             'stock' => 30,
             'unit_id' => '',
-            'category_id' => Category::inRandomOrder()->first()->id,
-            'initial_price' => 20000,
-            'selling_price' => 25000,
             'image' => UploadedFile::fake()->image('avatar.jpg', 500, 200)->size(10)
         ]);
         $media = Media::latest()->first();

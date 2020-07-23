@@ -57,7 +57,9 @@ class Install extends Controller
     {
         $is_connected = $this->checkDatabaseConnection($request, true);
 
-        if($is_connected !==true) return $is_connected;
+        if ($is_connected !==true) {
+            return $is_connected;
+        }
 
         $this->dispatchNow(new UpdateEnv([
             'DB_HOST' => $request->host,
@@ -73,7 +75,9 @@ class Install extends Controller
     {
         $is_connected = $this->checkDatabaseConnection($request);
 
-        if($is_connected !==true) return $is_connected;
+        if ($is_connected !==true) {
+            return $is_connected;
+        }
 
         $this->dispatchNow(new SaveSessionUser($request));
 
@@ -84,7 +88,9 @@ class Install extends Controller
     {
         $is_connected = $this->checkDatabaseConnection($request);
 
-        if($is_connected !==true) return $is_connected;
+        if ($is_connected !==true) {
+            return $is_connected;
+        }
 
         /**
          * FIXME: the first value is don't wan't change <sheenazien 2020-07-02>
@@ -105,7 +111,7 @@ class Install extends Controller
     private function checkDatabaseConnection($request = null, $set_config = false)
     {
         try {
-            if($set_config) {
+            if ($set_config) {
                 \Config::set('database.connections.mysql', [
                     'host' => $request->host,
                     'database' => $request->name,

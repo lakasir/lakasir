@@ -7,7 +7,6 @@ use App\Http\Requests\Master\Unit\BulkDelete;
 use App\Http\Requests\Master\Unit\Index;
 use App\Http\Requests\Master\Unit\Store;
 use App\Http\Requests\Master\Unit\Update;
-use App\Models\Unit as Model;
 use App\Repositories\Unit as UnitRepository;
 use App\Traits\HasCrudActions;
 

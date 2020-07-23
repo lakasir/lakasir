@@ -6,7 +6,6 @@ use App\Http\Requests\Master\Unit\Index;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
-use Yajra\DataTables\Html\Builder;
 
 /**
  * Trait HasCrudActions
@@ -29,7 +28,7 @@ trait HasCrudActions
      * @param Yajra\DataTables\Html\Builder $builder
      * @return mix
      */
-    public function index(Builder $builder)
+    public function index()
     {
         $request = resolve($this->indexRequest);
         $this->authorize("browse-$this->permission");
@@ -37,12 +36,7 @@ trait HasCrudActions
             return $this->repository->datatable($request);
         }
 
-        $html = $builder->columns([
-            ['data' => 'id', 'footer' => '#', 'title' => '#'],
-            ['data' => 'name', 'footer' => __('app.categories.column.name'), 'title' => __('app.categories.column.name')],
-        ]);
-
-        return view("{$this->viewPath}.index", compact('html'));
+        return view("{$this->viewPath}.index");
     }
 
     /**

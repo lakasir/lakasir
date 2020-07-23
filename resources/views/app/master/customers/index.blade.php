@@ -3,15 +3,15 @@
 @section('content')
   <div class="card">
     <div class="card-header">
-      {{ __('app.suppliers.title') }}
+      {{ __('app.customers.title') }}
     </div>
     <div class="card-body">
       <div class="table-responsive">
-        <table class="table table-bordered" id="suppliers-table">
+        <table class="table table-bordered" id="customers-table">
           <thead>
             <tr>
               <th>#</th>
-              <th> {{ __('app.suppliers.column.name') }} </th>
+              <th> {{ __('app.customers.column.name') }} </th>
             </tr>
           </thead>
         </table>
@@ -25,10 +25,10 @@
 @push('js')
   <script>
     $(function() {
-      $('#suppliers-table').DataTable({
+      $('#customers-table').DataTable({
         processing: true,
         serverSide: true,
-        ajax: '{!! route('supplier.index') !!}',
+        ajax: '{!! route('customer.index') !!}',
         columns: [
           { data: 'id', name: '#' },
           { data: 'name', name: 'name' },

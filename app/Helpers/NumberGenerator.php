@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Helpers;
+
 use Illuminate\Database\Eloquent;
 use Illuminate\Support\Collection;
 
@@ -10,13 +11,19 @@ class NumberGenerator
      * @var string
      */
     private $model;
+    /**
+     * @var string
+     */
+    private $prefix;
+
 
     /**
      * @param string $model
      */
-    public function __construct($model)
+    public function __construct(string $model, string $prefix)
     {
         $this->model = new $model;
+        $this->prefix = $prefix;
     }
     /**
      * create unique number for user
@@ -30,13 +37,11 @@ class NumberGenerator
          * create dinamis increments number
          */
 
-        $prefix = env('CODE_PREFIX');
+        $prefix = $this->prefix;
         $number = $prefix . now()->format('ymd');
         $lastCompany = $this->model::latest()->first();
         $increments = str_pad(($lastCompany->id ?? 1), 4, "0", STR_PAD_LEFT);
         $format = $number.$increments;
         return $format;
     }
-
-
 }

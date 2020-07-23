@@ -7,7 +7,6 @@ use App\Http\Requests\Master\GroupReq\BulkDelete;
 use App\Http\Requests\Master\GroupReq\Index;
 use App\Http\Requests\Master\GroupReq\Store;
 use App\Http\Requests\Master\GroupReq\Update;
-use App\Models\Group as Model;
 use App\Repositories\Group as GroupRepository;
 use App\Traits\HasCrudActions;
 
