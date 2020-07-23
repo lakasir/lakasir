@@ -27,11 +27,22 @@ return [
             ],
             'unit' => [
                 'name' => 'Unit Name'
+            ],
+            'price' => [
+                'selling_price' => 'Selling Price',
+                'initial_price' => 'Initial Price'
+            ],
+            'stock' => [
+                'amount' => 'Amount',
+                'stock' => 'Stock'
             ]
         ]
     ],
     'global' => [
-        'submit' => 'Submit'
+        'submit' => 'Submit',
+        'action' => 'Action',
+        'edit' => 'Edit',
+        'delete' => 'Delete'
     ]
 ];
 

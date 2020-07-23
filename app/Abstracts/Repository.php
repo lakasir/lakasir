@@ -5,11 +5,20 @@ namespace App\Abstracts;
 use App\Interfaces\Repository as RepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Yajra\DataTables\DataTables;
 
 abstract class Repository implements RepositoryInterface
 {
     /** @var string model */
     protected string $model;
+
+    public function datatable(Request $request)
+    {
+        $items = $this->model::toBase()->latest()->get();
+
+        return DataTables::of($items)
+            ->addIndexColumn()->toJson();
+    }
 
     public function find(int $id)
     {
@@ -25,14 +34,12 @@ abstract class Repository implements RepositoryInterface
     {
         $self = $this;
         return $this->model::select($columns)
-                    ->when(isset($this->parent) && ! is_null($this->parent), function ($query)
-                        use ($self) {
-                            return $query->where($self->column, $self->parent->id);
-                        })
-                    ->when(! is_null($request->s), function ($query)
-                        use ($request, $search) {
-                            return $query->where($search, 'LIKE', $request->s.'%%');
-                        })
+                    ->when(isset($this->parent) && ! is_null($this->parent), function ($query) use ($self) {
+                        return $query->where($self->column, $self->parent->id);
+                    })
+                    ->when(! is_null($request->s), function ($query) use ($request, $search) {
+                        return $query->where($search, 'LIKE', $request->s.'%%');
+                    })
                         ->orderBy('id', 'desc')
                         ->paginate($request->per_page);
     }
@@ -41,24 +48,21 @@ abstract class Repository implements RepositoryInterface
     {
         $self = $this;
         return $this->model::select($columns)
-                    ->when(isset($this->parent) && ! is_null($this->parent), function ($query)
-                        use ($self) {
-                            return $query->where($self->column, $self->parent->id);
-                        })
-                    ->when(! is_null($request->s), function ($query)
-                        use ($request, $search) {
-                            return $query->where($search, 'LIKE', $request->s.'%%');
-                        })
+                    ->when(isset($this->parent) && ! is_null($this->parent), function ($query) use ($self) {
+                        return $query->where($self->column, $self->parent->id);
+                    })
+                    ->when(! is_null($request->s), function ($query) use ($request, $search) {
+                        return $query->where($search, 'LIKE', $request->s.'%%');
+                    })
                     ->orderBy('id', 'desc')
                     ->get();
     }
 
     public function get($request, $columns, $search)
     {
-        return $this->model::select($columns)->when(! is_null($request->s), function ($query)
-            use ($request, $search) {
-                return $query->where($search, 'LIKE', $request->s.'%%');
-            })
+        return $this->model::select($columns)->when(! is_null($request->s), function ($query) use ($request, $search) {
+            return $query->where($search, 'LIKE', $request->s.'%%');
+        })
             ->orderBy('id', 'desc')
             ->get();
     }

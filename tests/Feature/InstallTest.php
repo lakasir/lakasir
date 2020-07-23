@@ -18,9 +18,13 @@ class InstallTest extends TestCase
             'username' => 'root',
             'password' => 'password'
         ]);
+        $redirect = '/install?tab=user';
+        if (env('INSTALL') != 'false') {
+            $redirect = '';
+        }
 
         $response->assertStatus(302);
-        $response->assertRedirect('/install?tab=user');
+        $response->assertRedirect($redirect);
     }
 
     public function test_install_user()
@@ -31,9 +35,13 @@ class InstallTest extends TestCase
             'password' => '12345678',
             'password_confirmation' => '12345678'
         ]);
+        $redirect = '/install?tab=company';
+        if (env('INSTALL') != 'false') {
+            $redirect = '';
+        }
 
         $response->assertStatus(302);
-        $response->assertRedirect('/install?tab=company');
+        $response->assertRedirect($redirect);
     }
 
     public function test_install_company()

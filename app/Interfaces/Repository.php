@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 
 interface Repository
 {
+    public function datatable(Request $request);
+
     public function paginate(Request $request, array $columns, string $search);
 
     public function all(Request $request, array $columns, string $search);

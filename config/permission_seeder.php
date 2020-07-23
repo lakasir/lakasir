@@ -33,5 +33,11 @@ return
         'delete-group' => ['owner', 'employee'],
         'update-group' => ['owner', 'employee'],
         'bulk-delete-group' => ['owner', 'employee'],
+
+        'create-customer' => ['owner', 'employee'],
+        'browse-customer' => ['owner', 'employee'],
+        'delete-customer' => ['owner', 'employee'],
+        'update-customer' => ['owner', 'employee'],
+        'bulk-delete-customer' => ['owner', 'employee'],
     ]
 ];

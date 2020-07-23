@@ -13,13 +13,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function() {
-
-})->middleware('installed');
+Route::get('/', function () {
+})->middleware([ 'installed', 'auth' ]);
 
 Route::view('/completed', 'app.install.completed');
 
-Route::group(['middleware' => [ 'auth', 'installed' ]], function() {
+Route::group(['middleware' => [ 'auth', 'installed' ]], function () {
     Route::get('dashboard', 'Dashboard')->name('dashboard');
 
     Route::delete('/master/unit/bulk-destroy', 'Master\Unit@bulkDestroy');
@@ -37,8 +36,11 @@ Route::group(['middleware' => [ 'auth', 'installed' ]], function() {
 
     Route::delete('/master/group/bulk-destroy', 'Master\Group@bulkDestroy');
     Route::resource('master/group', 'Master\Group');
+
+    Route::delete('/master/customer/bulk-destroy', 'Master\Customer@bulkDestroy');
+    Route::resource('master/customer', 'Master\Customer');
 });
 
-Route::group(['middleware' => 'installed'], function() {
+Route::group(['middleware' => 'installed'], function () {
     Auth::routes();
 });

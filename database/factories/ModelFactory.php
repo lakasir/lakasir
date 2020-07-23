@@ -3,6 +3,7 @@
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
 use App\Models\Category;
+use App\Models\Customer;
 use App\Models\Group;
 use App\Models\Item;
 use App\Models\Price;
@@ -65,6 +66,14 @@ $factory->define(Supplier::class, function (Faker $faker) {
 
 $factory->define(Group::class, function (Faker $faker) {
     return [
-        'name' => $faker->name
+        'name' => $faker->name()
+    ];
+});
+
+$factory->define(Customer::class, function (Faker $faker) {
+    return [
+        'name' => $faker->name(),
+        'email' => $faker->email(),
+        'code' => $faker->randomDigit()
     ];
 });
