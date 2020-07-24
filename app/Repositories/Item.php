@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Abstracts\Repository as RepositoryAbstract;
 use App\Models\Category;
+use App\Models\Item as ItemModel;
 use App\Models\Price;
 use App\Models\Stock;
 use App\Models\Unit;
@@ -15,7 +16,7 @@ class Item extends RepositoryAbstract
 {
     protected string $model = 'App\Models\Item';
 
-    public function datatable(Request $request)
+    public function datatable(Request $request): DataTables
     {
         $items = $this->model::toBase()->addSelect([
             'unit_name' => Unit::select('name')->whereColumn('unit_id', 'units.id')->latest()->limit(1),
@@ -28,7 +29,7 @@ class Item extends RepositoryAbstract
             ->addIndexColumn()->toJson();
     }
 
-    public function create(Request $request)
+    public function create(Request $request): ItemModel
     {
         $self = $this;
         return DB::transaction(static function () use ($request, $self) {
@@ -43,10 +44,14 @@ class Item extends RepositoryAbstract
             $item->category()->associate(Category::find($request->category_id));
             $item->save();
             $item->createMediaFromFile($request->image);
+
+            // create price
             $price = new Price();
             $price->fill($request->only('initial_price', 'selling_price', 'date'));
             $price->item()->associate($item);
             $price->save();
+
+            // create stock
             $stock = new Stock();
             $stock->fill($request->only('current_stock', 'last_stock', 'date'));
             $stock->item()->associate($item);
@@ -56,7 +61,7 @@ class Item extends RepositoryAbstract
         });
     }
 
-    public function update(Request $request, $item)
+    public function update(Request $request, $item): ItemModel
     {
         $self = $this;
         return DB::transaction(static function () use ($request, $self, $item) {
@@ -69,6 +74,7 @@ class Item extends RepositoryAbstract
             $item->unit()->associate(Unit::find($request->unit_id));
             $item->category()->associate(Category::find($request->category_id));
             $item->save();
+            // delete image
             if ($request->hasFile('image')) {
                 $item->deleteMedia($item->media->first())->createMediaFromFile($request->image);
             }
