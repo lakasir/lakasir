@@ -24,4 +24,7 @@ interface Repository
 
     public function bulkDestroy(Request $request, string $column);
 
+    public function findByKeyArray(array $key, string $id = "id");
+
+    public function getModel(): string;
 }

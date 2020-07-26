@@ -8,6 +8,7 @@ use App\Models\Item as ItemModel;
 use App\Models\Price;
 use App\Models\Stock;
 use App\Models\Unit;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\DataTables;
@@ -16,7 +17,7 @@ class Item extends RepositoryAbstract
 {
     protected string $model = 'App\Models\Item';
 
-    public function datatable(Request $request): DataTables
+    public function datatable(Request $request): JsonResponse
     {
         $items = $this->model::toBase()->addSelect([
             'unit_name' => Unit::select('name')->whereColumn('unit_id', 'units.id')->latest()->limit(1),
