@@ -25,7 +25,8 @@ class Store extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required'
+            'name' => 'required',
+            'customer_id' => ['array', 'required']
         ];
     }
 }

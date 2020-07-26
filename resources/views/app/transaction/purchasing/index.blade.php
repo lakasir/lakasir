@@ -1,22 +1,17 @@
 @extends('adminlte::page')
 
 @section('content')
-  <div class="row col">
-    <v-button float="right" text="{{ __('app.global.create') }}" to="{{ route('unit.create') }}" icon="fas fa-plus"></v-button>
-  </div>
-  <br>
-
   <div class="card">
     <div class="card-header">
-      {{ __('app.units.title') }}
+      {{ __('app.purchasings.title') }}
     </div>
     <div class="card-body">
       <div class="table-responsive">
-        <table class="table table-bordered" id="units-table">
+        <table class="table table-bordered" id="categories-table">
           <thead>
             <tr>
               <th>#</th>
-              <th> {{ __('app.units.column.name') }} </th>
+              <th> {{ __('app.categories.column.name') }} </th>
             </tr>
           </thead>
         </table>
@@ -30,10 +25,10 @@
 @push('js')
   <script>
     $(function() {
-      $('#units-table').DataTable({
+      $('#categories-table').DataTable({
         processing: true,
         serverSide: true,
-        ajax: '{!! route('unit.index') !!}',
+        ajax: '{!! route('purchasing.index') !!}',
         columns: [
           { data: 'id', name: '#' },
           { data: 'name', name: 'name' },

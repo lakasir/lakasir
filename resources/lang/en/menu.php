@@ -5,5 +5,9 @@ return [
     'unit' => 'Unit',
     'Unit' => 'Unit',
     'category' => 'Category',
-    'supplier' => 'Supplier'
+    'supplier' => 'Supplier',
+    'customer' => 'Customer',
+    'customer_data' => 'Customer Data',
+    'customer_list' => 'List',
+    'group' => 'Group'
 ];

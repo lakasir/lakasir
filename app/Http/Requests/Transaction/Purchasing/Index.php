@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests\Master\GroupReq;
+namespace App\Http\Requests\Transaction\Purchasing;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 
-class Update extends FormRequest
+class Index extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,8 +25,12 @@ class Update extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required',
-            'customer_id' => ['array', 'required']
+            'orderBy' => 'in:id,name,url_customize,website,status,sort|nullable',
+            'orderDirection' => 'in:asc,desc|nullable',
+            's' => 'string|nullable',
+            'page' => 'integer|nullable',
+            'per_page' => 'integer|nullable',
+            'limit' => 'integer|nullable',
         ];
     }
 }

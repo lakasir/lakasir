@@ -17,6 +17,7 @@ export default {
     loading: {default: false},
     loadingText: {default: 'Loading...', type: String},
     float: {default: '', type: String},
+    to: {default: '', type: String}
   },
 
   data() {
@@ -28,6 +29,9 @@ export default {
   methods: {
     clicked() {
       this.loading = true
+      if (this.type != 'submit') {
+        window.location.href = this.to
+      }
     }
   },
 

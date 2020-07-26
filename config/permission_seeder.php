@@ -39,5 +39,17 @@ return
         'delete-customer' => ['owner', 'employee'],
         'update-customer' => ['owner', 'employee'],
         'bulk-delete-customer' => ['owner', 'employee'],
+
+        'create-grouping' => ['owner', 'employee'],
+        'browse-grouping' => ['owner', 'employee'],
+        'delete-grouping' => ['owner', 'employee'],
+        'update-grouping' => ['owner', 'employee'],
+        'bulk-delete-grouping' => ['owner', 'employee'],
+
+        'create-purchasing' => ['owner', 'employee'],
+        'browse-purchasing' => ['owner', 'employee'],
+        'delete-purchasing' => ['owner', 'employee'],
+        'update-purchasing' => ['owner', 'employee'],
+        'bulk-delete-purchasing' => ['owner', 'employee'],
     ]
 ];
