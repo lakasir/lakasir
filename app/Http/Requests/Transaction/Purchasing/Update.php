@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Master\GroupReq;
+namespace App\Http\Requests\Transaction\Purchasing;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
@@ -25,8 +25,12 @@ class Update extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required',
-            'customer_id' => ['array', 'required']
+            'supplier_id' => ['required'],
+            'payment_method' => [
+                'required',
+                Rule::in(config('array_options.payment_method'))
+            ],
+            'items' => ['array', 'required']
         ];
     }
 }

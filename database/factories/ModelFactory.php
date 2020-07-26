@@ -26,9 +26,8 @@ $factory->define(Category::class, function (Faker $faker) {
 
 $factory->define(Price::class, function (Faker $faker) {
     return [
-        'name' => $faker->name,
-        'initial_price' => rand(4000, 20000),
-        'selling_price' => rand(20000, 40000),
+        'initial_price' => rand(20, 30). '00',
+        'selling_price' => rand(30, 40). '00',
         'date' => now()->format('Y-m-d'),
         'item_id' => factory(Item::class)
     ];
@@ -75,5 +74,11 @@ $factory->define(Customer::class, function (Faker $faker) {
         'name' => $faker->name(),
         'email' => $faker->email(),
         'code' => $faker->randomDigit()
+    ];
+});
+
+$factory->define(Group::class, function (Faker $faker) {
+    return [
+        'name' => $faker->name(),
     ];
 });

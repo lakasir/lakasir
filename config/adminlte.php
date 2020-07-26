@@ -249,6 +249,23 @@ return [
             'label'       => 'new',
             'label_color' => 'success',
         ],
+        ['header' => 'menu.customer_data'],
+        [
+            'text'    => 'menu.customer',
+            'icon'    => 'fas fa-fw fa-users',
+            'submenu' => [
+                [
+                    'text' => 'menu.customer_list',
+                    'url'  => 'master/customer',
+                    'can' => 'browse-customer'
+                ],
+                [
+                    'text' => 'menu.group',
+                    'url'  => 'master/group',
+                    'can' => 'browse-group'
+                ],
+            ],
+        ],
         ['header' => 'menu.master_data'],
         [
             'text'    => 'menu.master_data',

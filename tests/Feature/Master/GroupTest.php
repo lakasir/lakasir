@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Master;
 
+use App\Models\Customer;
 use App\Models\Group;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -17,9 +18,11 @@ class GroupTest extends TestCase
      */
     public function test_group_create()
     {
+        factory(Customer::class, 10)->create();
         $user = User::find(1);
         $response = $this->actingAs($user)->post('/master/group', [
-            'name' => 'group a'
+            'name' => 'group a',
+            'customer_id' => Customer::inRandomOrder()->get()->pluck('id')->toArray()
         ]);
 
         $response->assertStatus(302);
@@ -60,10 +63,12 @@ class GroupTest extends TestCase
      */
     public function test_group_update()
     {
+        factory(Customer::class, 10)->create();
         $user = User::find(1);
         factory(Group::class, 10)->create();
-        $response = $this->actingAs($user)->put('/master/group/' . Group::inRandomOrder()->first()->id,[
-            'name' => 'group b'
+        $response = $this->actingAs($user)->put('/master/group/' . Group::inRandomOrder()->first()->id, [
+            'name' => 'group b',
+            'customer_id' => Customer::inRandomOrder()->get()->pluck('id')->toArray()
         ]);
 
         $response->assertStatus(302);
@@ -100,5 +105,4 @@ class GroupTest extends TestCase
 
         $response->assertStatus(302);
     }
-
 }

@@ -42,7 +42,7 @@ return [
         'submit' => 'Submit',
         'action' => 'Action',
         'edit' => 'Edit',
-        'delete' => 'Delete'
+        'delete' => 'Delete',
+        'create' => 'Create'
     ]
 ];
-

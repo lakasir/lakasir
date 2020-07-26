@@ -1953,6 +1953,10 @@ __webpack_require__.r(__webpack_exports__);
     "float": {
       "default": '',
       type: String
+    },
+    to: {
+      "default": '',
+      type: String
     }
   },
   data: function data() {
@@ -1961,6 +1965,10 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     clicked: function clicked() {
       this.loading = true;
+
+      if (this.type != 'submit') {
+        window.location.href = this.to;
+      }
     }
   },
   mounted: function mounted() {}
