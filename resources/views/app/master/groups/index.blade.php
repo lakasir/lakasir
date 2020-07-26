@@ -30,7 +30,7 @@
         serverSide: true,
         ajax: '{!! route('group.index') !!}',
         columns: [
-          { data: 'id', name: '#' },
+          { data: 'DT_RowIndex', name: '#' },
           { data: 'name', name: 'name' },
         ]
       });

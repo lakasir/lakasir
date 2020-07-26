@@ -94,8 +94,15 @@ abstract class Repository implements RepositoryInterface
     {
         $model->fill($request->all());
         if (isset($this->parent)) {
-            $model->{strtolower(class_basename($this->parent))}()->associate($this->parent);
+            if ($this->getAllParent()->count() > 1) {
+                foreach ($this->getAllParent() as $parent) {
+                    $model->{strtolower(class_basename($parent))}()->associate($parent);
+                }
+            } else {
+                $model->{strtolower(class_basename($this->parent))}()->associate($this->parent);
+            }
         }
+        $model->save();
         $model->save();
 
         return $model;

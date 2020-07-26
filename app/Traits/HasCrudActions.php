@@ -122,7 +122,17 @@ trait HasCrudActions
 
         $this->authorize("update-{$this->permission}");
 
-        $this->repository->update($request, $data);
+        if (isset($this->storeService)) {
+            if (count($this->storeService) > 2) {
+                throw new ServiceActionsException('Store Service property is cant to more 2 index');
+            }
+            if (!is_array($this->storeService)) {
+                throw new ServiceActionsException('Store Service property must be array');
+            }
+            ( new $this->storeService[0] )->{$this->storeService[1]}($request);
+        } else {
+            $this->repository->update($request, $data);
+        }
 
         return redirect()->to($this->redirect);
     }
@@ -143,10 +153,10 @@ trait HasCrudActions
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @return Illuminate\Http\RedirectResponse
-     */
+ * Remove the specified resource from storage.
+*
+ * @return Illuminate\Http\RedirectResponse
+ */
     public function bulkDestroy(): RedirectResponse
     {
         $request = resolve($this->bulkDestroyRequest);

@@ -28,4 +28,9 @@ class Item extends Model
     {
         return $this->hasMany(Price::class, 'item_id');
     }
+
+    public function log_stocks()
+    {
+        return $this->hasMany(Stock::class, 'item_id');
+    }
 }

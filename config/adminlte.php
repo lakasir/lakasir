@@ -249,6 +249,23 @@ return [
             'label'       => 'new',
             'label_color' => 'success',
         ],
+        ['header' => 'menu.transaction'],
+        [
+            'text'    => 'menu.transaction',
+            'icon'    => 'fas fa-fw fa-dollar-sign',
+            'submenu' => [
+                [
+                    'text' => 'menu.purchasing',
+                    'url'  => 'transaction/purchasing',
+                    'can' => 'browse-purchasing'
+                ],
+                [
+                    'text' => 'menu.selling',
+                    'url'  => 'transaction/selling',
+                    'can' => 'browse-selling'
+                ],
+            ],
+        ],
         ['header' => 'menu.customer_data'],
         [
             'text'    => 'menu.customer',

@@ -9,5 +9,8 @@ return [
     'customer' => 'Customer',
     'customer_data' => 'Customer Data',
     'customer_list' => 'List',
-    'group' => 'Group'
+    'group' => 'Group',
+    'transaction' => 'Transaction',
+    'purchasing' => 'Purchasing',
+    'selling' => 'Penjualan'
 ];

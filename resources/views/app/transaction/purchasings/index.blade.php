@@ -11,7 +11,7 @@
           <thead>
             <tr>
               <th>#</th>
-              <th> {{ __('app.categories.column.name') }} </th>
+              <th> {{ __('app.purchasing.column.date') }} </th>
             </tr>
           </thead>
         </table>
@@ -30,8 +30,8 @@
         serverSide: true,
         ajax: '{!! route('purchasing.index') !!}',
         columns: [
-          { data: 'id', name: '#' },
-          { data: 'name', name: 'name' },
+          { data: 'DT_RowIndex', name: '#' },
+          { data: 'date', name: 'date' },
         ]
       });
     });

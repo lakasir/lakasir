@@ -35,7 +35,7 @@
         serverSide: true,
         ajax: '{!! route('item.index') !!}',
         columns: [
-          { data: 'id', name: '#' },
+          { data: 'DT_RowIndex', name: '#' },
           { data: 'name', name: 'name' },
           { data: 'internal_production', name: 'internal_production' },
           { data: 'category_name', name: 'category_name' },
