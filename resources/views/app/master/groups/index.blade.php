@@ -1,31 +1,17 @@
 @extends('adminlte::page')
 
 @section('content')
-  <div class="card">
-    <div class="card-header">
-      {{ __('app.groups.title') }}
-    </div>
-    <div class="card-body">
-      <div class="table-responsive">
-        <table class="table table-bordered" id="groups-table">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th> {{ __('app.groups.column.name') }} </th>
-            </tr>
-          </thead>
-        </table>
-      </div>
-    </div>
-    <div class="card-footer">
-    </div>
-  </div>
+  <x-index-table :title="__('app.groups.title')" resources="group">
+    @slot('thead')
+      <th> {{ __('app.groups.column.name') }} </th>
+    @endslot
+  </x-index-table>
 @endsection
 
 @push('js')
   <script>
     $(function() {
-      $('#groups-table').DataTable({
+      $('#group-table').DataTable({
         processing: true,
         serverSide: true,
         ajax: '{!! route('group.index') !!}',

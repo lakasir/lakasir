@@ -1,31 +1,17 @@
 @extends('adminlte::page')
 
 @section('content')
-  <div class="card">
-    <div class="card-header">
-      {{ __('app.purchasings.title') }}
-    </div>
-    <div class="card-body">
-      <div class="table-responsive">
-        <table class="table table-bordered" id="categories-table">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th> {{ __('app.purchasing.column.date') }} </th>
-            </tr>
-          </thead>
-        </table>
-      </div>
-    </div>
-    <div class="card-footer">
-    </div>
-  </div>
+  <x-index-table :title="__('app.purchasings.title')" resources="purchasing">
+    @slot('thead')
+      <th> {{ __('app.purchasings.column.date') }} </th>
+    @endslot
+  </x-index-table>
 @endsection
 
 @push('js')
   <script>
     $(function() {
-      $('#categories-table').DataTable({
+      $('#purchasing-table').DataTable({
         processing: true,
         serverSide: true,
         ajax: '{!! route('purchasing.index') !!}',

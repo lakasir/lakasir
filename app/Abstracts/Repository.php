@@ -103,7 +103,6 @@ abstract class Repository implements RepositoryInterface
             }
         }
         $model->save();
-        $model->save();
 
         return $model;
     }

@@ -1,31 +1,17 @@
 @extends('adminlte::page')
 
 @section('content')
-  <div class="card">
-    <div class="card-header">
-      {{ __('app.customers.title') }}
-    </div>
-    <div class="card-body">
-      <div class="table-responsive">
-        <table class="table table-bordered" id="customers-table">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th> {{ __('app.customers.column.name') }} </th>
-            </tr>
-          </thead>
-        </table>
-      </div>
-    </div>
-    <div class="card-footer">
-    </div>
-  </div>
+  <x-index-table :title="__('app.customers.title')" resources="customer">
+    @slot('thead')
+      <th> {{ __('app.customers.column.name') }} </th>
+    @endslot
+  </x-index-table>
 @endsection
 
 @push('js')
   <script>
     $(function() {
-      $('#customers-table').DataTable({
+      $('#customer-table').DataTable({
         processing: true,
         serverSide: true,
         ajax: '{!! route('customer.index') !!}',
