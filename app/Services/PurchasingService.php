@@ -19,7 +19,7 @@ class PurchasingService
     public function create(Request $request)
     {
         try {
-            DB::transaction(static function () use ($request) {
+            return DB::transaction(static function () use ($request) {
                 $purchasingRepository = new Purchasing();
                 $purchasingDetailRepository = new PurchasingDetail();
                 $supplier = ( new Supplier() )->find($request->supplier_id);
@@ -66,13 +66,19 @@ class PurchasingService
                     /**
                      * TODO: Update Stock <sheenazien8 2020-07-25>
                      */
+
+                    /**
+                     * TODO: create jurnal accounting <sheenazien8 2020-07-26>
+                     *
+                     */
                 }
+
+                return $purchasing;
             });
         } catch (\Exception $e) {
             Log::error($e->getMessage());
-            abort(500, $e->getMessage());
 
-            return;
+            return abort(500, $e->getMessage());
         }
     }
 }

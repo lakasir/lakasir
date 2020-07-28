@@ -19,6 +19,7 @@ class PurchasingTest extends TestCase
         $items = Item::where('internal_production', false)->inRandomOrder()->limit(2)->get();
         $item2 = $items->last();
         $item = $items->first();
+        /* dump($item->log_stocks->last(), $item2->log_stocks->last()); */
         $supplier = Supplier::inRandomOrder()->limit(1)->first();
         $user = User::find(1);
         $response = $this->actingAs($user)->post('/transaction/purchasing', [
@@ -39,6 +40,7 @@ class PurchasingTest extends TestCase
                 ]
             ]
         ]);
+        /* dump($item->log_stocks->last(), $item2->log_stocks->last()); */
 
         $response->assertStatus(302);
         $response->assertRedirect('/transaction/purchasing');

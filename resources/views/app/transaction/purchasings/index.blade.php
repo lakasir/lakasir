@@ -1,9 +1,9 @@
 @extends('adminlte::page')
 
 @section('content')
-  <x-index-table :title="__('app.groups.title')" resources="group">
+  <x-index-table :title="__('app.purchasings.title')" resources="purchasing">
     @slot('thead')
-      <th> {{ __('app.groups.column.name') }} </th>
+      <th> {{ __('app.purchasings.column.date') }} </th>
     @endslot
   </x-index-table>
 @endsection
@@ -11,13 +11,13 @@
 @push('js')
   <script>
     $(function() {
-      $('#group-table').DataTable({
+      $('#purchasing-table').DataTable({
         processing: true,
         serverSide: true,
-        ajax: '{!! route('group.index') !!}',
+        ajax: '{!! route('purchasing.index') !!}',
         columns: [
           { data: 'DT_RowIndex', name: '#' },
-          { data: 'name', name: 'name' },
+          { data: 'date', name: 'date' },
         ]
       });
     });

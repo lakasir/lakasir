@@ -1,15 +1,7 @@
 @extends('adminlte::page')
 
 @section('content')
-  <div class="card">
-    <div class="card-header">
-
-    </div>
-    <div class="card-body">
-
-    </div>
-    <div class="card-footer">
-
-    </div>
-  </div>
+  @include('app.master.units.components.form', [
+    'route' => route('unit.store')
+  ])
 @endsection
