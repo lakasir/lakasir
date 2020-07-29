@@ -59,7 +59,7 @@ When contributing code to Lakasir, you must follow the PSR coding standards. The
 * [ ] Setting
   * [ ] Appreance
   * [ ] Localization
-  * [ ] Mailing
+  * [ ] Mailling
   
 ## Credits
 
