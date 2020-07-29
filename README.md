@@ -68,6 +68,6 @@ When contributing code to Lakasir, you must follow the PSR coding standards. The
 
 ## Sponsors
 
-Support Lakasir to becoming a sponsor on [Github](https://github.com/lakasir) Your Profile Picture will show up here with link to your account
+Support Lakasir to becoming a sponsor on [Github](https://github.com/lakasir), Your Profile Picture will show up here with link to your account
 
 ## License
