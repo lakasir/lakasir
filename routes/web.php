@@ -14,9 +14,11 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
+    redirect()->to('/dashboard');
 })->middleware([ 'installed', 'auth' ]);
 
 Route::view('/completed', 'app.install.completed');
+
 
 Route::group(['middleware' => [ 'auth', 'installed' ]], function () {
     Route::get('dashboard', 'Dashboard')->name('dashboard');

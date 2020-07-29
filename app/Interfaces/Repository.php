@@ -27,4 +27,6 @@ interface Repository
     public function findByKeyArray(array $key, string $id = "id");
 
     public function getModel(): string;
+
+    public function getObjectModel(): Object;
 }

@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\HasLaTable;
 
 class Supplier extends Model
 {
+    use HasLaTable;
+
     protected $fillable = [
         'name',
         'shop_name',

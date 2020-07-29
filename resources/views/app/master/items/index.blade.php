@@ -21,13 +21,14 @@
         serverSide: true,
         ajax: '{!! route('item.index') !!}',
         columns: [
-          { data: 'DT_RowIndex', name: '#' },
+          { data: 'checkbox', name: '#', orderable: false, searchable: false, width: '3%' },
           { data: 'name', name: 'name' },
           { data: 'internal_production', name: 'internal_production' },
           { data: 'category_name', name: 'category_name' },
           { data: 'unit_name', name: 'unit_name' },
           { data: 'initial_price', name: 'initial_price' },
           { data: 'selling_price', name: 'selling_price' },
+          { data: 'created_at', name: 'Created At' }
         ]
       });
     });

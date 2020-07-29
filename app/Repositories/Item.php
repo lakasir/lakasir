@@ -17,7 +17,7 @@ class Item extends RepositoryAbstract
 {
     protected string $model = 'App\Models\Item';
 
-    public function datatable(Request $request): JsonResponse
+    public function datatable(Request $request)
     {
         $items = $this->model::toBase()->addSelect([
             'unit_name' => Unit::select('name')->whereColumn('unit_id', 'units.id')->latest()->limit(1),
@@ -26,8 +26,7 @@ class Item extends RepositoryAbstract
             'selling_price' => Price::select('selling_price')->whereColumn('item_id', 'items.id')->latest()->limit(1),
         ])->latest()->get();
 
-        return DataTables::of($items)
-            ->addIndexColumn()->toJson();
+        return $this->getObjectModel()->table($items);
     }
 
     public function create(Request $request): ItemModel
