@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\HasLaTable;
 
 class Purchasing extends Model
 {
+    use HasLaTable;
+
     protected $fillable = [
         'date',
         'payment_method',

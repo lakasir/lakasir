@@ -4,10 +4,12 @@ namespace App\Models;
 
 use App\Traits\Media;
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\HasLaTable;
 
 class Item extends Model
 {
     use Media;
+    use HasLaTable;
 
     protected $fillable = [
         'name',

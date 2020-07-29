@@ -16,8 +16,9 @@
         serverSide: true,
         ajax: '{!! route('purchasing.index') !!}',
         columns: [
-          { data: 'DT_RowIndex', name: '#' },
+          { data: 'checkbox', name: '#', orderable: false, searchable: false, width: '3%' },
           { data: 'date', name: 'date' },
+          { data: 'created_at', name: 'Created At' }
         ]
       });
     });

@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\HasLaTable;
 
 class Company extends Model
 {
+    use HasLaTable;
+
     protected $fillable = [
         'reg_number',
         'business_type',
@@ -21,5 +24,4 @@ class Company extends Model
     {
         return $this->belongsTo(User::class);
     }
-
 }

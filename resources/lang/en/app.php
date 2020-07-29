@@ -43,6 +43,7 @@ return [
         'action' => 'Action',
         'edit' => 'Edit',
         'delete' => 'Delete',
-        'create' => 'Create'
+        'create' => 'Create',
+        'created_at' => 'Created At'
     ]
 ];

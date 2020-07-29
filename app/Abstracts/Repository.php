@@ -5,7 +5,6 @@ namespace App\Abstracts;
 use App\Interfaces\Repository as RepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Yajra\DataTables\DataTables;
 
 abstract class Repository implements RepositoryInterface
 {
@@ -16,8 +15,7 @@ abstract class Repository implements RepositoryInterface
     {
         $items = $this->model::toBase()->latest()->get();
 
-        return DataTables::of($items)
-        ->addIndexColumn()->toJson();
+        return $this->getObjectModel()->table($items);
     }
 
     public function find(int $id)
@@ -122,5 +120,10 @@ abstract class Repository implements RepositoryInterface
     public function getModel(): string
     {
         return $this->model;
+    }
+
+    public function getObjectModel(): Object
+    {
+        return new $this->model;
     }
 }

@@ -153,10 +153,10 @@ trait HasCrudActions
     }
 
     /**
- * Remove the specified resource from storage.
-*
- * @return Illuminate\Http\RedirectResponse
- */
+     * Remove the specified resource from storage.
+     *
+     * @return Illuminate\Http\RedirectResponse
+     */
     public function bulkDestroy(): RedirectResponse
     {
         $request = resolve($this->bulkDestroyRequest);

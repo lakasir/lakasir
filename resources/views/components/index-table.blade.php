@@ -8,8 +8,9 @@
         <table class="table table-bordered" id="{{ $resources }}-table">
           <thead>
             <tr>
-              <th>#</th>
+              @include('partials.table.select-all')
               {{ $thead }}
+              <th> {{ __('app.global.created_at') }}</th>
             </tr>
           </thead>
         </table>
