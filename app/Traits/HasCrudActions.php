@@ -37,7 +37,9 @@ trait HasCrudActions
             return $this->repository->datatable($request);
         }
 
-        return view("{$this->viewPath}.index");
+        return view("{$this->viewPath}.index", [
+            'resources' => $this->permission
+        ]);
     }
 
     /**

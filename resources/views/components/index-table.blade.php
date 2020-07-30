@@ -5,7 +5,7 @@
     </div>
     <div class="card-body">
       <div class="table-responsive">
-        <table class="table table-bordered" id="{{ $resources }}-table">
+        <table class="table table-hover" id="{{ $resources }}-table">
           <thead>
             <tr>
               @include('partials.table.select-all')

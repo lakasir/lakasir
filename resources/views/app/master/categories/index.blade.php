@@ -12,19 +12,24 @@
   </x-index-table>
 
 @endsection
-
 @push('js')
   <script>
     $(function() {
-      $('#category-table').DataTable({
+      $('#{{ $resources }}-table').DataTable({
         processing: true,
         serverSide: true,
-        ajax: '{!! route('category.index') !!}',
+        ajax: '{!! route($resources.'.index') !!}',
         columns: [
           { data: 'checkbox', name: '#', orderable: false, searchable: false, width: '3%' },
           { data: 'name', name: 'name' },
           { data: 'created_at', name: 'Created At' }
         ]
+      });
+      $('#{{ $resources }}-table tbody').on('click', 'tr td', function () {
+        let id = $(this).parent().attr('id')
+        if($(this)[0].className != 'sorting_1') {
+          window.location.href = route('{{ $resources }}'+'.edit', id)
+        }
       });
     });
   </script>

@@ -45,6 +45,12 @@ abstract class LaTable implements Responsable
             ->addColumn('created_at', function ($model) {
                 return view('partials.table.date')->with('date', $model->created_at);
             })
+            ->setRowId(function ($model) {
+                return $model->id;
+            })
+            ->setRowAttr([
+                'style' => 'cursor:pointer'
+            ])
             ->rawColumns(array_merge($this->defaultRawColumns, $this->rawColumns));
     }
 

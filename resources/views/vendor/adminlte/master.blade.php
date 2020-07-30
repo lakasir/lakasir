@@ -85,6 +85,7 @@
     @endif
 
     {{-- Custom Scripts --}}
+    @routes
     @yield('adminlte_js')
     @livewireScripts
 
