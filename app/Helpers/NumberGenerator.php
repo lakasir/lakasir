@@ -39,8 +39,8 @@ class NumberGenerator
 
         $prefix = $this->prefix;
         $number = $prefix . now()->format('ymd');
-        $lastCompany = $this->model::latest()->first();
-        $increments = str_pad(($lastCompany->id ?? 1), 4, "0", STR_PAD_LEFT);
+        $lastInsert = $this->model::latest()->first();
+        $increments = str_pad(($lastInsert->id ?? 1), 4, "0", STR_PAD_LEFT);
         $format = $number.$increments;
         return $format;
     }

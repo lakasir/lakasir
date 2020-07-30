@@ -19,7 +19,7 @@ class InstallTest extends TestCase
             'password' => 'password'
         ]);
         $redirect = '/install?tab=user';
-        if (env('INSTALL') != 'false') {
+        if (getenv('INSTALL') != "false") {
             $redirect = '';
         }
 
@@ -36,7 +36,7 @@ class InstallTest extends TestCase
             'password_confirmation' => '12345678'
         ]);
         $redirect = '/install?tab=company';
-        if (env('INSTALL') != 'false') {
+        if (getenv('INSTALL') != "false") {
             $redirect = '';
         }
 
@@ -59,7 +59,7 @@ class InstallTest extends TestCase
         ]);
 
         /**
-         * FIXME: update the value env install variable <sheenazien 2020-07-01>
+         * FIXME: update the value getenv install variable <sheenazien 2020-07-01>
          * the first value don't want to change
          * but overwritten and become one word
          */

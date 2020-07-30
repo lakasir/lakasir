@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    redirect()->to('/dashboard');
+    return redirect()->to('/dashboard');
 })->middleware([ 'installed', 'auth' ]);
 
 Route::view('/completed', 'app.install.completed');

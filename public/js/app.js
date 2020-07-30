@@ -2326,10 +2326,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
 
 
+var _props;
+
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+//
+//
+//
 //
 //
 //
@@ -2350,7 +2357,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'VInput',
-  props: {
+  props: (_props = {
+    info: {
+      type: String,
+      value: null
+    },
     name: {
       type: String,
       value: ''
@@ -2366,40 +2377,32 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     prepend: {
       type: Boolean,
       value: false
-    },
-    info: {
-      type: String,
-      value: ''
-    },
-    label: {
-      type: String,
-      value: ''
-    },
-    validation: {
-      type: Array,
-      value: []
-    },
-    placeholder: {
-      type: String,
-      value: ''
-    },
-    defaultValue: {
-      type: String,
-      value: ''
-    },
-    error: {
-      type: Boolean,
-      value: false
-    },
-    errorMessage: {
-      type: String,
-      value: null
-    },
-    old: {
-      type: String,
-      value: null
     }
-  },
+  }, _defineProperty(_props, "info", {
+    type: String,
+    value: ''
+  }), _defineProperty(_props, "label", {
+    type: String,
+    value: ''
+  }), _defineProperty(_props, "validation", {
+    type: Array,
+    value: []
+  }), _defineProperty(_props, "placeholder", {
+    type: String,
+    value: ''
+  }), _defineProperty(_props, "defaultValue", {
+    type: String,
+    value: ''
+  }), _defineProperty(_props, "error", {
+    type: Boolean,
+    value: false
+  }), _defineProperty(_props, "errorMessage", {
+    type: String,
+    value: null
+  }), _defineProperty(_props, "old", {
+    type: String,
+    value: null
+  }), _props),
   data: function data() {
     return {
       dataError: false,
@@ -49505,7 +49508,11 @@ var render = function() {
       "div",
       { staticClass: "mb-3", class: _vm.prepend ? "input-group" : "" },
       [
-        !_vm.prepend ? _c("label", [_vm._v(_vm._s(_vm.label))]) : _vm._e(),
+        !_vm.prepend
+          ? _c("label", { staticClass: "text-muted" }, [
+              _vm._v(_vm._s(_vm.label))
+            ])
+          : _vm._e(),
         _vm._v(" "),
         _c(
           "select",
@@ -49582,7 +49589,11 @@ var render = function() {
       "div",
       { staticClass: "mb-3", class: _vm.prepend ? "input-group" : "" },
       [
-        !_vm.prepend ? _c("label", [_vm._v(_vm._s(_vm.label))]) : _vm._e(),
+        !_vm.prepend
+          ? _c("label", { staticClass: "text-muted" }, [
+              _vm._v(_vm._s(_vm.label))
+            ])
+          : _vm._e(),
         _vm._v(" "),
         _c("input", {
           staticClass: "form-control",
@@ -49607,6 +49618,12 @@ var render = function() {
         _vm.dataError
           ? _c("div", { staticClass: "invalid-feedback" }, [
               _vm._v("\n      " + _vm._s(_vm.dataErrorMessage) + "\n    ")
+            ])
+          : _vm._e(),
+        _vm._v(" "),
+        _vm.info
+          ? _c("small", { staticClass: "form-text text-muted" }, [
+              _vm._v("\n      " + _vm._s(_vm.info) + "\n    ")
             ])
           : _vm._e()
       ]

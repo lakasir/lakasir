@@ -2,6 +2,7 @@
 
 namespace App\Abstracts;
 
+use Carbon\Carbon;
 use Illuminate\Contracts\Support\Responsable;
 use Yajra\DataTables\DataTables;
 
@@ -43,8 +44,15 @@ abstract class LaTable implements Responsable
                 return view('partials.table.checkbox', compact('model'));
             })
             ->addColumn('created_at', function ($model) {
-                return view('partials.table.date')->with('date', $model->created_at);
+                $date = (new Carbon($model->created_at))->diffForHumans();
+                return view('partials.table.date')->with('date', $date);
             })
+            ->setRowId(function ($model) {
+                return $model->id;
+            })
+            ->setRowAttr([
+                'style' => 'cursor:pointer'
+            ])
             ->rawColumns(array_merge($this->defaultRawColumns, $this->rawColumns));
     }
 

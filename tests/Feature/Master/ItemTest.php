@@ -29,9 +29,8 @@ class ItemTest extends TestCase
         ]);
         $media = Media::latest()->first();
 
-        Storage::disk('local')->assertExists($media->fullFileName);
-
         $response->assertStatus(302);
+        Storage::disk('local')->assertExists($media->fullFileName);
         $response->assertRedirect('');
     }
 
@@ -56,9 +55,9 @@ class ItemTest extends TestCase
         ]);
         $media = Media::latest()->first();
 
-        Storage::disk('local')->assertExists($media->fullFileName);
 
         $response->assertStatus(302);
+        Storage::disk('local')->assertExists($media->fullFileName);
         $response->assertRedirect('/master/item');
     }
 
