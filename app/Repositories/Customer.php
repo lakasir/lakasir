@@ -22,4 +22,18 @@ class Customer extends RepositoryAbstract
 
         return $customer;
     }
+
+    public function update(Request $request, $customer)
+    {
+        $numberGenerator = ( new NumberGeneratorBuilder() )->model($this->model)->prefix('CUS')->build();
+        if (!$request->code) {
+            $request->merge([
+                'code' => $numberGenerator->create()
+            ]);
+        }
+        $customer->fill($request->all());
+        $customer->save();
+
+        return $customer;
+    }
 }

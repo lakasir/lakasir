@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="mb-3" :class="prepend ? 'input-group' : ''">
-      <label v-if="!prepend">{{ label }}</label>
+      <label class="text-muted" v-if="!prepend">{{ label }}</label>
       <input :type="type" class="form-control" :class="dataError ? 'is-invalid' : validClass" :value="value"
                          :name="name" v-on:focus="checkValidation" v-on:blur="checkValidation" :placeholder="placeholder">
       <div v-if="prepend" class="input-group-append">
@@ -12,6 +12,9 @@
       <div v-if="dataError" class="invalid-feedback">
         {{ dataErrorMessage }}
       </div>
+      <small v-if="info" class="form-text text-muted">
+        {{ info }}
+      </small>
     </div>
   </div>
 </template>
@@ -21,6 +24,10 @@ export default {
   name: 'VInput',
 
   props: {
+    info: {
+      type: String,
+      value: null
+    },
     name: {
       type: String,
       value: ''

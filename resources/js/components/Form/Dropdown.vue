@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="mb-3" :class="prepend ? 'input-group' : ''">
-      <label v-if="!prepend">{{ label }}</label>
+      <label class="text-muted" v-if="!prepend">{{ label }}</label>
       <select class="custom-select" :class="dataError ? 'is-invalid' : validClass"
               :required="required" :name="name" @blur="checkValidation">
         <option value="" :selected="!old" disabled>{{ label }}</option>
