@@ -20,7 +20,8 @@ class CustomerTest extends TestCase
         $user = User::find(1);
         $response = $this->actingAs($user)->post('/master/customer', [
             'name' => 'customer a',
-            'email' => 'customer@mail.com'
+            'email' => 'customer@mail.com',
+            'point' => rand(1, 30)
         ]);
 
         $response->assertStatus(302);
@@ -65,7 +66,8 @@ class CustomerTest extends TestCase
         factory(Customer::class, 10)->create();
         $response = $this->actingAs($user)->put('/master/customer/' . Customer::inRandomOrder()->first()->id, [
             'name' => 'customer b',
-            'email' => 'customer@mail.com'
+            'email' => 'customer@mail.com',
+            'point' => rand(1, 30)
         ]);
 
         $response->assertStatus(302);

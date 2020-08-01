@@ -40,7 +40,9 @@ class Group extends Controller
     public function create(): View
     {
         $this->authorize("create-$this->permission");
-        $customers = Customer::get();
+        $customers = Customer::toBase()->get()->map(function ($c) {
+            return ['id' => $c->id, 'text' => $c->name];
+        });
 
         return view("{$this->viewPath}.create", compact('customers'));
     }
