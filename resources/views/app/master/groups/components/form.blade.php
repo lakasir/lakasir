@@ -11,4 +11,7 @@
            :validation="['required']"
            default-value="{{ optional( $data ?? '' )->name }}"
            ></v-input>
+  <select2 :options="{{ $customers }}">
+  <option disabled value="0">Select one</option>
+  </select2>
 </x-form>

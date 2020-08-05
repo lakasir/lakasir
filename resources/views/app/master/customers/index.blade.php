@@ -10,6 +10,7 @@
       <th> {{ __('app.customers.column.name') }} </th>
       <th> {{ __('app.customers.column.email') }} </th>
       <th> {{ __('app.customers.column.code') }} </th>
+      <th> {{ __('app.customers.column.total_point') }} </th>
     @endslot
   </x-index-table>
 @endsection
@@ -24,8 +25,9 @@
         columns: [
           { data: 'checkbox', name: '#', orderable: false, searchable: false, width: '3%' },
           { data: 'name', name: 'name' },
-          { data: 'email', code: 'email' },
-          { data: 'code', code: 'code' },
+          { data: 'email', name: 'email' },
+          { data: 'code', name: 'code' },
+          { data: 'total_point', name: 'total_point' },
           { data: 'created_at', name: 'Created At' }
         ]
       });

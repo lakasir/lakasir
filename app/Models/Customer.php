@@ -15,4 +15,9 @@ class Customer extends Model
     {
         return $this->belongsToMany(Group::class, 'customer_group', 'customer_id', 'group_id');
     }
+
+    public function points()
+    {
+        return $this->hasMany(CustomerPoint::class, 'customer_id');
+    }
 }

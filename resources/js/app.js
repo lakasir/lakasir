@@ -9,6 +9,7 @@ Vue.component('v-input', require('./components/Form/Input').default)
 Vue.component('v-checkbox', require('./components/Form/Checkbox').default)
 Vue.component('v-button', require('./components/Button/Button').default)
 Vue.component('v-dropdown', require('./components/Form/Dropdown').default)
+Vue.component('select2', require('./components/Form/Select2').default)
 
 const app = new Vue({
   el: '#app',

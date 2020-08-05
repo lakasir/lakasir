@@ -40,6 +40,8 @@ return
         'update-customer' => ['owner', 'employee'],
         'bulk-delete-customer' => ['owner', 'employee'],
 
+        'create-customer-point' => ['owner', 'employee'],
+
         'create-grouping' => ['owner', 'employee'],
         'browse-grouping' => ['owner', 'employee'],
         'delete-grouping' => ['owner', 'employee'],

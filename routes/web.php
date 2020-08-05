@@ -42,6 +42,8 @@ Route::group(['middleware' => [ 'auth', 'installed' ]], function () {
     Route::delete('/master/customer/bulk-destroy', 'Master\Customer@bulkDestroy');
     Route::resource('master/customer', 'Master\Customer');
 
+    Route::post('/master/customer-point', 'Master\CustomerPoint@store')->name('customer-point.store');
+
     Route::resource('transaction/purchasing', 'Transaction\Purchasing');
 });
 
