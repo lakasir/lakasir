@@ -10,15 +10,15 @@
            :prepend="true" name="business_type"
            :validation="['required']"
   ></v-dropdown>
-  <v-input icon="fa-building"
+  <v-text-area icon="fa-building"
            placeholder="{{ __('app.install.placeholder.company.business_description') }}"
-           :prepend="true"
+           :prepend="false"
            name="business_description" :validation="['required']"
            old="{{ old('business_description') }}"
            @error('business_description') :error="true"
            error-message="{{ $message }}"
            @enderror
-           ></v-input>
+></v-text-area>
   <div class="row">
     <div class="col-8">
     </div>
