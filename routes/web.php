@@ -13,11 +13,38 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function() {
+Route::get('/', function () {
+    redirect()->to('/dashboard');
+})->middleware([ 'installed', 'auth' ]);
 
-})->middleware('installed');
+Route::view('/completed', 'app.install.completed');
 
-Route::group(['middleware' => 'auth'], function() {
+
+Route::group(['middleware' => [ 'auth', 'installed' ]], function () {
+    Route::get('dashboard', 'Dashboard')->name('dashboard');
+
     Route::delete('/master/unit/bulk-destroy', 'Master\Unit@bulkDestroy');
     Route::resource('master/unit', 'Master\Unit');
+
+    Route::delete('/master/category/bulk-destroy', 'Master\Category@bulkDestroy');
+    Route::resource('master/category', 'Master\Category');
+
+
+    Route::delete('/master/item/bulk-destroy', 'Master\Item@bulkDestroy');
+    Route::resource('master/item', 'Master\Item');
+
+    Route::delete('/master/supplier/bulk-destroy', 'Master\Supplier@bulkDestroy');
+    Route::resource('master/supplier', 'Master\Supplier');
+
+    Route::delete('/master/group/bulk-destroy', 'Master\Group@bulkDestroy');
+    Route::resource('master/group', 'Master\Group');
+
+    Route::delete('/master/customer/bulk-destroy', 'Master\Customer@bulkDestroy');
+    Route::resource('master/customer', 'Master\Customer');
+
+    Route::resource('transaction/purchasing', 'Transaction\Purchasing');
+});
+
+Route::group(['middleware' => 'installed'], function () {
+    Auth::routes();
 });

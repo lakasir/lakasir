@@ -14,7 +14,7 @@ return [
     |
     */
 
-    'title' => 'AdminLTE 3',
+    'title' => 'Lakasir',
     'title_prefix' => '',
     'title_postfix' => '',
 
@@ -45,12 +45,12 @@ return [
     |
     */
 
-    'logo' => '<b>Admin</b>LTE',
+    'logo' => '<b>LA</b>Kasir',
     'logo_img' => 'vendor/adminlte/dist/img/AdminLTELogo.png',
     'logo_img_class' => 'brand-image img-circle elevation-3',
     'logo_img_xl' => null,
     'logo_img_xl_class' => 'brand-image-xs',
-    'logo_img_alt' => 'AdminLTE',
+    'logo_img_alt' => 'Lakasir',
 
     /*
     |--------------------------------------------------------------------------
@@ -186,9 +186,9 @@ return [
     |
     */
 
-    'use_route_url' => false,
+    'use_route_url' => true,
 
-    'dashboard_url' => 'home',
+    'dashboard_url' => 'dashboard',
 
     'logout_url' => 'logout',
 
@@ -237,16 +237,78 @@ return [
             'topnav' => true,
         ],
         [
-            'text' => 'blog',
-            'url'  => 'admin/blog',
-            'can'  => 'manage-blog',
+            'text' => 'transaction',
+            'url'  => 'transaction',
+            'icon' => 'far fa-fw fa-file',
+            'can'  => 'browse-transaction',
         ],
         [
-            'text'        => 'pages',
-            'url'         => 'admin/pages',
-            'icon'        => 'far fa-fw fa-file',
-            'label'       => 4,
+            'text'        => 'dashboard',
+            'url'         => 'dashboard',
+            'icon'        => 'far fa-fw fa-tachometer-alt',
+            'label'       => 'new',
             'label_color' => 'success',
+        ],
+        ['header' => 'menu.transaction'],
+        [
+            'text'    => 'menu.transaction',
+            'icon'    => 'fas fa-fw fa-dollar-sign',
+            'submenu' => [
+                [
+                    'text' => 'menu.purchasing',
+                    'url'  => 'transaction/purchasing',
+                    'can' => 'browse-purchasing'
+                ],
+                [
+                    'text' => 'menu.selling',
+                    'url'  => 'transaction/selling',
+                    'can' => 'browse-selling'
+                ],
+            ],
+        ],
+        ['header' => 'menu.customer_data'],
+        [
+            'text'    => 'menu.customer',
+            'icon'    => 'fas fa-fw fa-users',
+            'submenu' => [
+                [
+                    'text' => 'menu.customer_list',
+                    'url'  => 'master/customer',
+                    'can' => 'browse-customer'
+                ],
+                [
+                    'text' => 'menu.group',
+                    'url'  => 'master/group',
+                    'can' => 'browse-group'
+                ],
+            ],
+        ],
+        ['header' => 'menu.master_data'],
+        [
+            'text'    => 'menu.master_data',
+            'icon'    => 'fas fa-fw fa-database',
+            'submenu' => [
+                [
+                    'text' => 'menu.item',
+                    'url'  => 'master/item',
+                    'can' => 'browse-item'
+                ],
+                [
+                    'text' => 'menu.unit',
+                    'url'  => 'master/unit',
+                    'can' => 'browse-unit'
+                ],
+                [
+                    'text' => 'menu.category',
+                    'url'  => 'master/category',
+                    'can' => 'browse-category'
+                ],
+                [
+                    'text' => 'menu.supplier',
+                    'url'  => 'master/supplier',
+                    'can' => 'browse-supplier'
+                ],
+            ],
         ],
         ['header' => 'account_settings'],
         [
@@ -258,60 +320,6 @@ return [
             'text' => 'change_password',
             'url'  => 'admin/settings',
             'icon' => 'fas fa-fw fa-lock',
-        ],
-        [
-            'text'    => 'multilevel',
-            'icon'    => 'fas fa-fw fa-share',
-            'submenu' => [
-                [
-                    'text' => 'level_one',
-                    'url'  => '#',
-                ],
-                [
-                    'text'    => 'level_one',
-                    'url'     => '#',
-                    'submenu' => [
-                        [
-                            'text' => 'level_two',
-                            'url'  => '#',
-                        ],
-                        [
-                            'text'    => 'level_two',
-                            'url'     => '#',
-                            'submenu' => [
-                                [
-                                    'text' => 'level_three',
-                                    'url'  => '#',
-                                ],
-                                [
-                                    'text' => 'level_three',
-                                    'url'  => '#',
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-                [
-                    'text' => 'level_one',
-                    'url'  => '#',
-                ],
-            ],
-        ],
-        ['header' => 'labels'],
-        [
-            'text'       => 'important',
-            'icon_color' => 'red',
-            'url'        => '#',
-        ],
-        [
-            'text'       => 'warning',
-            'icon_color' => 'yellow',
-            'url'        => '#',
-        ],
-        [
-            'text'       => 'information',
-            'icon_color' => 'cyan',
-            'url'        => '#',
         ],
     ],
 
@@ -353,21 +361,21 @@ return [
     'plugins' => [
         [
             'name' => 'Datatables',
-            'active' => false,
+            'active' => true,
             'files' => [
                 [
                     'type' => 'js',
-                    'asset' => false,
+                    'asset' => true,
                     'location' => '//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js',
                 ],
                 [
                     'type' => 'js',
-                    'asset' => false,
+                    'asset' => true,
                     'location' => '//cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js',
                 ],
                 [
                     'type' => 'css',
-                    'asset' => false,
+                    'asset' => true,
                     'location' => '//cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css',
                 ],
             ],

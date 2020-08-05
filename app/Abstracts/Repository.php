@@ -11,9 +11,21 @@ abstract class Repository implements RepositoryInterface
     /** @var string model */
     protected string $model;
 
+    public function datatable(Request $request)
+    {
+        $items = $this->model::toBase()->latest()->get();
+
+        return $this->getObjectModel()->table($items);
+    }
+
     public function find(int $id)
     {
         return $this->model::find($id);
+    }
+
+    public function findByKeyArray(array $key, string $column = "id")
+    {
+        return $this->model::whereIn($column, $key)->get();
     }
 
     public function delete(int $id)
@@ -25,31 +37,37 @@ abstract class Repository implements RepositoryInterface
     {
         $self = $this;
         return $this->model::select($columns)
-                    ->when(isset($this->parent) && ! is_null($this->parent), function ($query)
-                        use ($self) {
-                            return $query->where($self->column, $self->parent->id);
-                        })
-                    ->when(! is_null($request->s), function ($query)
-                        use ($request, $search) {
-                            return $query->where($search, 'LIKE', $request->s.'%%');
-                        })
-                        ->orderBy('id', 'desc')
-                        ->paginate($request->per_page);
+                ->when(isset($this->parent) && ! is_null($this->parent), function ($query) use ($self) {
+                    return $query->where($self->column, $self->parent->id);
+                })
+                ->when(! is_null($request->s), function ($query) use ($request, $search) {
+                    return $query->where($search, 'LIKE', $request->s.'%%');
+                })
+                    ->orderBy('id', 'desc')
+                    ->paginate($request->per_page);
     }
 
-    public function all(array $columns)
+    public function all(Request $request, array $columns = ['*'], string $search)
     {
-        return $this->model::select($columns)->get();
+        $self = $this;
+        return $this->model::select($columns)
+                ->when(isset($this->parent) && ! is_null($this->parent), function ($query) use ($self) {
+                    return $query->where($self->column, $self->parent->id);
+                })
+                ->when(! is_null($request->s), function ($query) use ($request, $search) {
+                    return $query->where($search, 'LIKE', $request->s.'%%');
+                })
+                ->orderBy('id', 'desc')
+                ->get();
     }
 
     public function get($request, $columns, $search)
     {
-        return $this->model::select($columns)->when(! is_null($request->s), function ($query)
-            use ($request, $search) {
-                return $query->where($search, 'LIKE', $request->s.'%%');
-            })
-            ->orderBy('id', 'desc')
-            ->get();
+        return $this->model::select($columns)->when(! is_null($request->s), function ($query) use ($request, $search) {
+            return $query->where($search, 'LIKE', $request->s.'%%');
+        })
+        ->orderBy('id', 'desc')
+        ->get();
     }
 
     public function create(Request $request)
@@ -57,7 +75,13 @@ abstract class Repository implements RepositoryInterface
         $model = new $this->model;
         $model->fill($request->all());
         if (isset($this->parent)) {
-            $model->{strtolower(class_basename($this->parent))}()->associate($this->parent);
+            if ($this->getAllParent()->count() > 1) {
+                foreach ($this->getAllParent() as $parent) {
+                    $model->{strtolower(class_basename($parent))}()->associate($parent);
+                }
+            } else {
+                $model->{strtolower(class_basename($this->parent))}()->associate($this->parent);
+            }
         }
         $model->save();
 
@@ -68,7 +92,13 @@ abstract class Repository implements RepositoryInterface
     {
         $model->fill($request->all());
         if (isset($this->parent)) {
-            $model->{strtolower(class_basename($this->parent))}()->associate($this->parent);
+            if ($this->getAllParent()->count() > 1) {
+                foreach ($this->getAllParent() as $parent) {
+                    $model->{strtolower(class_basename($parent))}()->associate($parent);
+                }
+            } else {
+                $model->{strtolower(class_basename($this->parent))}()->associate($this->parent);
+            }
         }
         $model->save();
 
@@ -85,5 +115,15 @@ abstract class Repository implements RepositoryInterface
                     $self->model::whereIn($column, $bulkChunk)->delete();
                 });
         });
+    }
+
+    public function getModel(): string
+    {
+        return $this->model;
+    }
+
+    public function getObjectModel(): Object
+    {
+        return new $this->model;
     }
 }

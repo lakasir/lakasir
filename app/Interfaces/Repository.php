@@ -6,9 +6,11 @@ use Illuminate\Http\Request;
 
 interface Repository
 {
+    public function datatable(Request $request);
+
     public function paginate(Request $request, array $columns, string $search);
 
-    public function all(array $columns);
+    public function all(Request $request, array $columns, string $search);
 
     public function get(Request $request, array $columns, string $search);
 
@@ -22,4 +24,9 @@ interface Repository
 
     public function bulkDestroy(Request $request, string $column);
 
+    public function findByKeyArray(array $key, string $id = "id");
+
+    public function getModel(): string;
+
+    public function getObjectModel(): Object;
 }
