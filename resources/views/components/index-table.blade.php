@@ -11,6 +11,7 @@
               @include('partials.table.select-all')
               {{ $thead }}
               <th> {{ __('app.global.created_at') }}</th>
+              <th></th>
             </tr>
           </thead>
         </table>

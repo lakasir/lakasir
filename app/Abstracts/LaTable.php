@@ -21,7 +21,7 @@ abstract class LaTable implements Responsable
     * @var defaultRawColumns
     */
     private $defaultRawColumns = [
-        'checkbox', 'created_at'
+        'checkbox', 'created_at', 'action'
     ];
 
     /**
@@ -50,9 +50,13 @@ abstract class LaTable implements Responsable
             ->setRowId(function ($model) {
                 return $model->id;
             })
-            ->setRowAttr([
-                'style' => 'cursor:pointer'
-            ])
+            ->addColumn('action', function ($model) {
+                $resources = explode('.', request()->route()->action['as'])[0];
+                return view('partials.table.action', [
+                    'delete' => route("{$resources}.destroy", $model->id),
+                    'model' => $model
+                ]);
+            })
             ->rawColumns(array_merge($this->defaultRawColumns, $this->rawColumns));
     }
 

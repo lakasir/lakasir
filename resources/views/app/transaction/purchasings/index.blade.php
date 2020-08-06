@@ -17,15 +17,12 @@
         ajax: '{!! route('purchasing.index') !!}',
         columns: [
           { data: 'checkbox', name: '#', orderable: false, searchable: false, width: '3%' },
-          { data: 'date', name: 'date' },
-          { data: 'created_at', name: 'Created At' }
+          { data: 'date', name: 'date', render: function ( data, type, row ) {
+            return '<a href='+ route('{{ $resources }}.edit', row) +'>'+data+'</a>'
+          }},
+          { data: 'created_at', name: 'Created At' },
+          { data: 'action', name: 'action', orderable: false, searchable: false, width: '3%' },
         ]
-      });
-      $('#{{ $resources }}-table tbody').on('click', 'tr td', function () {
-        let id = $(this).parent().attr('id')
-        if($(this)[0].className != 'sorting_1') {
-          window.location.href = route('{{ $resources }}'+'.edit', id)
-        }
       });
     });
   </script>

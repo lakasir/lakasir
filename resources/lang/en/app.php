@@ -44,6 +44,7 @@ return [
         'edit' => 'Edit',
         'delete' => 'Delete',
         'create' => 'Create',
-        'created_at' => 'Created At'
+        'created_at' => 'Created At',
+        'suredelete' => 'Are You Sure?'
     ]
 ];

@@ -14,7 +14,7 @@ class InstallTest extends TestCase
     {
         $response = $this->post(route('install.databaseStore'), [
             'host' => 'localhost',
-            'name' => 'lakasir',
+            'name' => 'laravel_lakasir',
             'username' => 'root',
             'password' => 'password'
         ]);
