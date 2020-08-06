@@ -14,6 +14,7 @@ use App\Repositories\User as UserRepository;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class Install extends Controller
@@ -119,14 +120,15 @@ class Install extends Controller
                     'password' => $request->password,
                     'driver' => 'mysql',
                 ]);
-                Artisan::call('migrate:fresh');
-                Artisan::call('db:seed');
             }
+            DB::connection()->reconnect();
+            DB::connection()->getPdo();
+            Artisan::call('migrate:fresh');
+            Artisan::call('db:seed');
 
-            \DB::connection()->getPdo();
             return true;
         } catch (\Exception $e) {
-            return redirect()->to('install?tab=database')->with('database_error_message', 'Failed to connect to database');
+            return redirect()->to('install?tab=database')->with('database_error_message', $e->getMessage());
         }
     }
 }
