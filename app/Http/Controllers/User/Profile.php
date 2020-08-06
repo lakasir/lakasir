@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\User\Profile\Index;
 use App\Http\Requests\User\Profile\Store;
 use App\Repositories\Profile as ProfileRepository;
 use App\Services\ProfileService;
@@ -19,6 +20,8 @@ class Profile extends Controller
     protected $redirect = '/user/profile';
 
     protected $storeRequest = Store::class;
+
+    protected $indexRequest = Index::class;
 
     protected $repositoryClass = ProfileRepository::class;
 
