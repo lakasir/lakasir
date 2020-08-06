@@ -53,5 +53,14 @@ return
         'delete-purchasing' => ['owner', 'employee'],
         'update-purchasing' => ['owner', 'employee'],
         'bulk-delete-purchasing' => ['owner', 'employee'],
+
+        'create-profile' => ['owner', 'employee'],
+        'browse-profile' => ['owner', 'employee'],
+        'delete-profile' => ['owner', 'employee'],
+        'update-profile' => ['owner', 'employee'],
+        'bulk-delete-profile' => ['owner', 'employee'],
+
+        'create-profile' => ['owner', 'employee'],
+        'browse-profile' => ['owner', 'employee'],
     ]
 ];

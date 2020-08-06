@@ -19,7 +19,9 @@ trait Media
 
     public function createMediaFromFile($file): void
     {
-        if (!$file) return;
+        if (!$file) {
+            return;
+        }
         $upload = new Upload($file);
         $uploaded = $upload->action();
         $this->file = $file;
@@ -48,9 +50,8 @@ trait Media
          * FIXME: deleted image and media <sheenazien8 2020-07-07>
          *
          */
+        $media->delete();
 
         return $this;
     }
-
-
 }

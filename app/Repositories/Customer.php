@@ -37,7 +37,7 @@ class Customer extends RepositoryAbstract
         $customer->save();
         $points = new CustomerPoint([
             'date' => today()->format('Y-m-d'),
-            'point' => $request->point
+            'point' => $request->point ?? 0
         ]);
         $customer->points()->save($points);
 
