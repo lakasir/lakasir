@@ -5,6 +5,7 @@
 /storage/debugbar
 /vendor
 /public/vendor
+/public/app.js
 tags
 .env
 .env.backup
