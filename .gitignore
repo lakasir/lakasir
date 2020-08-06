@@ -2,7 +2,9 @@
 /public/hot
 /public/storage
 /storage/*.key
+/storage/debugbar
 /vendor
+/public/vendor
 tags
 .env
 .env.backup
