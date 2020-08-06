@@ -312,8 +312,9 @@ return [
         ],
         ['header' => 'account_settings'],
         [
+            'can' => 'browse-profile',
             'text' => 'profile',
-            'url'  => 'admin/settings',
+            'url'  => 'user/profile',
             'icon' => 'fas fa-fw fa-user',
         ],
         [
