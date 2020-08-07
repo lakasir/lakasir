@@ -3,16 +3,17 @@
 namespace Tests\Feature\User;
 
 use App\Models\User;
+use Faker\Factory;
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
 
 class UserTest extends TestCase
 {
     public function test_success_create_user()
     {
+        $faker = Factory::create();
         $data = [
-            'username' => 'testuser',
-            'email' => 'testuser@mail.com',
+            'username' => $faker->userName(),
+            'email' => $faker->email(),
             'password' => '12345678',
             'password_confirmation' => '12345678',
             'role' => 'employee'
@@ -27,9 +28,10 @@ class UserTest extends TestCase
 
     public function test_success_update_user()
     {
+        $faker = Factory::create();
         $data = [
-            'username' => 'edit',
-            'email' => 'edit@mail.com',
+            'username' => $faker->userName(),
+            'email' => $faker->email(),
             'password' => '12345678',
             'password_confirmation' => '12345678',
             'role' => 'employee'

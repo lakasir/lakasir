@@ -25,7 +25,7 @@ class Update extends FormRequest
     public function rules()
     {
         return [
-            'username' => ['required', 'string', 'alpha_dash', 'max:255', 'unique:users,id,' . auth()->user()->id],
+            'username' => ['required', 'string', 'regex:/^\S*$/u', 'max:255', 'unique:users,id,' . auth()->user()->id],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,id,'. auth()->user()->id],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ];

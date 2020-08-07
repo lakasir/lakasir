@@ -70,7 +70,12 @@ class InstallTest extends TestCase
             ]);
         }
 
+        $redirect = '/completed';
+        if (getenv('INSTALL') != "false") {
+            $redirect = '/';
+        }
+
         $response->assertStatus(302);
-        $response->assertRedirect('/completed');
+        $response->assertRedirect($redirect);
     }
 }
