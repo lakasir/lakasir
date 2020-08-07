@@ -16,7 +16,7 @@ class InstallTest extends TestCase
             'host' => 'localhost',
             'name' => 'lakasir',
             'username' => 'root',
-            'password' => 'password'
+            'password' => '`'
         ]);
         $redirect = '/install?tab=user';
         if (getenv('INSTALL') != "false") {
@@ -71,6 +71,6 @@ class InstallTest extends TestCase
         }
 
         $response->assertStatus(302);
-        $response->assertRedirect('/');
+        $response->assertRedirect('/completed');
     }
 }
