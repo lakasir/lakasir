@@ -34,11 +34,29 @@ trait HasCrudActions
         $request = resolve($this->indexRequest);
         $this->authorize("browse-$this->permission");
         if ($request->ajax()) {
-            return $this->repository->datatable($request);
+            if (isset($this->indexService)) {
+                if (count($this->indexService) > 2) {
+                    throw new ServiceActionsException('Index Service property is cant to more 2 index');
+                }
+                if (!is_array($this->indexService)) {
+                    throw new ServiceActionsException('Index Service property must be array');
+                }
+                $resources = ( new $this->indexService[0] )->{$this->indexService[1]}($request);
+
+                return $this->repository->getobjectmodel()->table($resources);
+            } else {
+                return $this->repository->datatable($request);
+            }
+        }
+
+        $resources = $this->permission;
+
+        if (isset($this->resources)) {
+            $resources = $this->resources;
         }
 
         return view("{$this->viewPath}.index", [
-            'resources' => $this->permission
+            'resources' => $resources
         ]);
     }
 

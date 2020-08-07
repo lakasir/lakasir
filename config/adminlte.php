@@ -322,6 +322,18 @@ return [
             'url'  => 'admin/settings',
             'icon' => 'fas fa-fw fa-lock',
         ],
+        ['header' => 'menu.user_management'],
+        [
+            'text' => 'menu.user',
+            'icon' => 'fas fa-fw fa-users',
+            'submenu' => [
+                [
+                    'text' => 'menu.user_list',
+                    'url'  => 'user',
+                    'can' => 'browse-user'
+                ],
+            ]
+        ]
     ],
 
     /*

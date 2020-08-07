@@ -15,7 +15,7 @@ abstract class Repository implements RepositoryInterface
     {
         $items = $this->model::toBase()->latest()->get();
 
-        return $this->getObjectModel()->table($items);
+        return $this->getobjectmodel()->table($items);
     }
 
     public function find(int $id)

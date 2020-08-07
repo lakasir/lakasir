@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\DataTables\UserTable;
+use App\Traits\HasLaTable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -11,6 +13,9 @@ class User extends Authenticatable
 {
     use HasRoles;
     use Notifiable;
+    use HasLaTable;
+
+    protected $latable = UserTable::class;
 
     /**
      * The attributes that are mass assignable.

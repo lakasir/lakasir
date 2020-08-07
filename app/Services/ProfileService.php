@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 /**
- * Service For Complect Logic which related with Purchasing
+ * Service For Complect Logic which related with Profile
  */
 class ProfileService
 {

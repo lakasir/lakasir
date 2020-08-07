@@ -1,6 +1,6 @@
 <?php
 
-Namespace App\Repositories;
+namespace App\Repositories;
 
 use App\Abstracts\Repository as RepositoryAbstract;
 use Illuminate\Http\Request;
@@ -16,11 +16,10 @@ class User extends RepositoryAbstract
      */
     private string $role = 'employee';
 
-
     public function create(Request $request)
     {
         $self = $this;
-        return DB::transaction(static function() use ($request, $self) {
+        return DB::transaction(static function () use ($request, $self) {
             $session = $request->session()->all()['user'];
             $request->merge($session);
             $request->merge(['password' => bcrypt($request->password)]);
@@ -39,7 +38,4 @@ class User extends RepositoryAbstract
         $this->role = $role;
         return $this;
     }
-
-
 }
-
