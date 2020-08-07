@@ -11,6 +11,4 @@ class Unit extends Model
     use HasLaTable;
 
     protected $fillable = ['name'];
-
-    protected $latable = UnitTable::class;
 }

@@ -1,42 +1,12 @@
 <?php
 
-namespace App\Abstracts;
+namespace App\DataTables;
 
+use App\Abstracts\LaTable;
 use Carbon\Carbon;
-use Illuminate\Contracts\Support\Responsable;
-use Yajra\DataTables\DataTables;
 
-abstract class LaTable implements Responsable
+class UserTable extends LaTable
 {
-    protected $query;
-
-    /**
-    * Raw Columns For
-    * @var rawColumns
-    */
-    protected $rawColumns = [];
-
-    /**
-    * Raw Columns For
-    * @var defaultRawColumns
-    */
-    protected $defaultRawColumns = [
-        'checkbox', 'created_at', 'action'
-    ];
-
-    /**
-     * @param $query
-     */
-    public function __construct($query)
-    {
-        $this->query = $query;
-    }
-
-    public function create()
-    {
-        return $this->newTable();
-    }
-
     public function newTable()
     {
         return datatables($this->query)
@@ -50,6 +20,9 @@ abstract class LaTable implements Responsable
             ->setRowId(function ($model) {
                 return $model->id;
             })
+            ->addColumn('role', function ($model) {
+                return $model->getRoleNames()->first();
+            })
             ->addColumn('action', function ($model) {
                 $resources = explode('.', request()->route()->action['as'])[0];
                 return view('partials.table.action', [
@@ -58,17 +31,5 @@ abstract class LaTable implements Responsable
                 ]);
             })
             ->rawColumns(array_merge($this->defaultRawColumns, $this->rawColumns));
-    }
-
-
-    /**
-     * Create an HTTP response that represents the object.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function toResponse($request)
-    {
-        return $this->create()->toJson();
     }
 }

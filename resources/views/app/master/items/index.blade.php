@@ -22,20 +22,17 @@
         ajax: '{!! route('item.index') !!}',
         columns: [
           { data: 'checkbox', name: '#', orderable: false, searchable: false, width: '3%' },
-          { data: 'name', name: 'name' },
+          { data: 'name', name: 'name', render: function ( data, type, row ) {
+            return '<a href='+ route('{{ $resources }}.edit', row) +'>'+data+'</a>'
+          }},
           { data: 'internal_production', name: 'internal_production' },
           { data: 'category_name', name: 'category_name' },
           { data: 'unit_name', name: 'unit_name' },
           { data: 'initial_price', name: 'initial_price' },
           { data: 'selling_price', name: 'selling_price' },
-          { data: 'created_at', name: 'Created At' }
+          { data: 'created_at', name: 'Created At' },
+          { data: 'action', name: 'action', orderable: false, searchable: false, width: '3%' },
         ]
-      });
-      $('#{{ $resources }}-table tbody').on('click', 'tr td', function () {
-        let id = $(this).parent().attr('id')
-        if($(this)[0].className != 'sorting_1') {
-          window.location.href = route('{{ $resources }}'+'.edit', id)
-        }
       });
     });
   </script>

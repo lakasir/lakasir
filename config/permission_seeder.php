@@ -54,11 +54,23 @@ return
         'update-purchasing' => ['owner', 'employee'],
         'bulk-delete-purchasing' => ['owner', 'employee'],
 
-        'create-profile' => ['owner', 'employee'],
-        'browse-profile' => ['owner', 'employee'],
-        'delete-profile' => ['owner', 'employee'],
-        'update-profile' => ['owner', 'employee'],
-        'bulk-delete-profile' => ['owner', 'employee'],
+        'create-selling' => ['owner', 'employee'],
+        'browse-selling' => ['owner', 'employee'],
+        'delete-selling' => ['owner', 'employee'],
+        'update-selling' => ['owner', 'employee'],
+        'bulk-delete-selling' => ['owner', 'employee'],
+
+        'create-user' => ['owner', 'employee'],
+        'browse-user' => ['owner', 'employee'],
+        'delete-user' => ['owner', 'employee'],
+        'update-user' => ['owner', 'employee'],
+        'bulk-delete-user' => ['owner', 'employee'],
+
+        'create-role' => ['owner', 'employee'],
+        'browse-role' => ['owner', 'employee'],
+        'delete-role' => ['owner', 'employee'],
+        'update-role' => ['owner', 'employee'],
+        'bulk-delete-role' => ['owner', 'employee'],
 
         'create-profile' => ['owner', 'employee'],
         'browse-profile' => ['owner', 'employee'],

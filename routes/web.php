@@ -49,7 +49,11 @@ Route::group(['middleware' => [ 'auth', 'installed' ]], function () {
     Route::group(['prefix' => 'user'], function () {
         Route::get('profile', 'User\Profile@index')->name('profile.index');
         Route::post('profile', 'User\Profile@store')->name('profile.store');
+
+        Route::delete('/bulk-destroy', 'User\UserController@bulkDestroy');
+        Route::resource('/role', 'User\Role');
     });
+    Route::resource('/user', 'User\UserController');
 
     Route::resource('transaction/purchasing', 'Transaction\Purchasing');
 });
