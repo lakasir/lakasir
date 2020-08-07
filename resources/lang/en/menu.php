@@ -17,4 +17,5 @@ return [
     'user' => 'User',
     'user_management' => 'USER DATA',
     'user_list' => 'List',
+    'role' => 'Role',
 ];
