@@ -20,12 +20,38 @@ class User extends RepositoryAbstract
     {
         $self = $this;
         return DB::transaction(static function () use ($request, $self) {
-            $session = $request->session()->all()['user'];
-            $request->merge($session);
+            if (getenv('INSTALL') == 'false') {
+                $session = $request->session()->all()['user'];
+                $request->merge($session);
+            }
             $request->merge(['password' => bcrypt($request->password)]);
             $user = new $self->model();
             $user = $user->fill($request->all());
             $user->save();
+            if ($request->role) {
+                $self->role = $request->role;
+            }
+            $role = Role::whereName($self->role)->first();
+            $user->assignRole($role);
+
+            return $user;
+        });
+    }
+
+    public function update(Request $request, $user)
+    {
+        $self = $this;
+        return DB::transaction(static function () use ($request, $self, $user) {
+            if (getenv('INSTALL') == 'false') {
+                $session = $request->session()->all()['user'];
+                $request->merge($session);
+            }
+            $request->merge(['password' => bcrypt($request->password)]);
+            $user = $user->fill($request->all());
+            $user->save();
+            if ($request->role) {
+                $self->role = $request->role;
+            }
             $role = Role::whereName($self->role)->first();
             $user->assignRole($role);
 

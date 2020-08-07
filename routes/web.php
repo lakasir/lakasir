@@ -51,6 +51,7 @@ Route::group(['middleware' => [ 'auth', 'installed' ]], function () {
         Route::post('profile', 'User\Profile@store')->name('profile.store');
 
         Route::delete('/bulk-destroy', 'User\UserController@bulkDestroy');
+        Route::resource('/role', 'User\Role');
     });
     Route::resource('/user', 'User\UserController');
 

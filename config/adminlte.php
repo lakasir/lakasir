@@ -332,6 +332,11 @@ return [
                     'url'  => 'user',
                     'can' => 'browse-user'
                 ],
+                [
+                    'text' => 'menu.role',
+                    'url'  => 'user/role',
+                    'can' => 'browse-role'
+                ],
             ]
         ]
     ],

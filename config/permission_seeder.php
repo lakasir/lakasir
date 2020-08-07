@@ -66,6 +66,12 @@ return
         'update-user' => ['owner', 'employee'],
         'bulk-delete-user' => ['owner', 'employee'],
 
+        'create-role' => ['owner', 'employee'],
+        'browse-role' => ['owner', 'employee'],
+        'delete-role' => ['owner', 'employee'],
+        'update-role' => ['owner', 'employee'],
+        'bulk-delete-role' => ['owner', 'employee'],
+
         'create-profile' => ['owner', 'employee'],
         'browse-profile' => ['owner', 'employee'],
     ]
