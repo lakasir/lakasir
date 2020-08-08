@@ -25,17 +25,23 @@ class Form extends Component
      * @var size
      */
     public $size;
+
+    /**
+     * @var size
+     */
+    public $card;
     /**
      * Create a new component instance.
      *
      * @return void
      */
-    public function __construct($route, $method = null, $title, $size = 6)
+    public function __construct($route, $method = null, $title, $size = 6, $card = true)
     {
         $this->route = $route;
         $this->method = $method;
         $this->title = $title;
         $this->size = $size;
+        $this->card = $card;
     }
 
     /**

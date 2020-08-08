@@ -5,6 +5,7 @@ namespace Tests\Feature\User;
 use App\Models\User;
 use Faker\Factory;
 use Tests\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class UserTest extends TestCase
 {

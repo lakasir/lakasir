@@ -50,6 +50,9 @@ Route::group(['middleware' => [ 'auth', 'installed' ]], function () {
         Route::get('profile', 'User\Profile@index')->name('profile.index');
         Route::post('profile', 'User\Profile@store')->name('profile.store');
 
+        Route::get('change_password', 'User\ChangePassword@index')->name('change_password.index');
+        Route::post('change_password', 'User\ChangePassword@store')->name('change_password.store');
+
         Route::delete('/bulk-destroy', 'User\UserController@bulkDestroy');
         Route::resource('/role', 'User\Role');
     });

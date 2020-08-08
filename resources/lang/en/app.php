@@ -28,6 +28,14 @@ return [
             ]
         ],
     ],
+    'profiles' => [
+        'column' => [
+            'bio' => 'Bio',
+            'phone' => 'Phone',
+            'address' => 'Address',
+            'photo_profile' => 'Photo Profile'
+        ]
+    ],
     'auth' => [
         'placeholder' => [
             'email' => 'Type your email',
@@ -153,6 +161,19 @@ return [
             'email' => 'Email',
             'role' => 'Role'
         ],
+        'change_password' => [
+            'update' => 'Change Password',
+            'column' => [
+                'old_password' => 'Old Password',
+                'new_password' => 'New Password',
+                'new_password_confirmation' => 'New Password Confirmation',
+            ],
+            'placeholder' => [
+                'old_password' => 'Type Your Old Password',
+                'new_password' => 'Type Your New Password',
+                'new_password_confirmation' => 'Confirm Your New Password'
+            ]
+        ]
     ],
     'global' => [
         'submit' => 'Submit',
@@ -161,6 +182,7 @@ return [
         'delete' => 'Delete',
         'create' => 'Create',
         'created_at' => 'Created At',
-        'suredelete' => 'Are You Sure?'
+        'suredelete' => 'Are You Sure?',
+        'error_old_password' => 'Your Old Password is Not Valid'
     ]
 ];

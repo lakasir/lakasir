@@ -59,6 +59,12 @@ class User extends RepositoryAbstract
         });
     }
 
+    public function updatePassword(Request $request, $user)
+    {
+        return $user->update($request->all());
+    }
+
+
     public function role(string $role): self
     {
         $this->role = $role;
