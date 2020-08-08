@@ -12,7 +12,7 @@ Lakasir is a free, open source and online Point Of Sale Software designed for sm
 
 ## Framework
 
-Akaunting uses [Laravel](http://laravel.com), the best existing PHP framework, as the foundation framework and [Module](https://github.com/akaunting/module) package for Apps.
+Lakasir uses [Laravel](http://laravel.com), the best existing PHP framework, as the foundation framework and [Module](https://github.com/lakasir/lakasir) package for Apps.
 
 
 ## Installation
