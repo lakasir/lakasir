@@ -1,46 +1,47 @@
-<form class="form-horizontal">
-  <div class="form-group row">
-    <label for="inputName" class="col-sm-2 col-form-label">Name</label>
-    <div class="col-sm-10">
-      <input type="email" class="form-control" id="inputName" placeholder="Name">
+<x-form :route="route('profile.store')" :title="__('app.profiles.create.title')" :method="$method ?? null" :card="false" size="12">
+  <v-input icon="fa-signature"
+           placeholder="{{ __('app.profiles.placeholder.phone') }}"
+           label="{{ __('app.profiles.column.phone') }}"
+           old="{{ old('phone') }}"
+           @error('phone')
+           error-message="{{ $message }}"
+           :error="true"
+           @enderror
+           name="phone"
+           :validation="['required']"
+           default-value="{{ optional( auth()->user()->profile ?? '' )->phone }}"
+           ></v-input>
+
+  <v-input icon="fa-signature"
+           placeholder="{{ __('app.profiles.placeholder.address') }}"
+           label="{{ __('app.profiles.column.address') }}"
+           old="{{ old('address') }}"
+           @error('address')
+           error-message="{{ $message }}"
+           :error="true"
+           @enderror
+           name="address"
+           :validation="['required']"
+           default-value="{{ optional( auth()->user()->profile ?? '' )->address }}"
+           ></v-input>
+  <v-text-area icon="fa-building"
+           placeholder="{{ __('app.profiles.placeholder.bio') }}"
+           default-value="{{ optional( auth()->user()->profile ?? '' )->bio }}"
+           label="{{ __('app.profiles.column.bio') }}"
+           name="bio"
+           old="{{ old('bio') }}"
+           @error('bio')
+           :error="true"
+           error-message="{{ $message }}"
+           @enderror
+  ></v-text-area>
+  <div class="form-group">
+    <label for="exampleFormControlFile1" class="text-muted"> {{ __('app.profiles.column.photo_profile') }}</label>
+    <input type="file" name="photo_profile" class="form-control-file @error('photo_profile') 'is-invalid' @enderror" id="exampleFormControlFile1">
+    @error('photo_profile')
+    <div class="text-red">
+      {{ $message }}
     </div>
+    @enderror
   </div>
-  <div class="form-group row">
-    <label for="inputEmail" class="col-sm-2 col-form-label">Email</label>
-    <div class="col-sm-10">
-      <input type="email" class="form-control" id="inputEmail" placeholder="Email">
-    </div>
-  </div>
-  <div class="form-group row">
-    <label for="inputName2" class="col-sm-2 col-form-label">Name</label>
-    <div class="col-sm-10">
-      <input type="text" class="form-control" id="inputName2" placeholder="Name">
-    </div>
-  </div>
-  <div class="form-group row">
-    <label for="inputExperience" class="col-sm-2 col-form-label">Experience</label>
-    <div class="col-sm-10">
-      <textarea class="form-control" id="inputExperience" placeholder="Experience"></textarea>
-    </div>
-  </div>
-  <div class="form-group row">
-    <label for="inputSkills" class="col-sm-2 col-form-label">Skills</label>
-    <div class="col-sm-10">
-      <input type="text" class="form-control" id="inputSkills" placeholder="Skills">
-    </div>
-  </div>
-  <div class="form-group row">
-    <div class="offset-sm-2 col-sm-10">
-      <div class="checkbox">
-        <label>
-          <input type="checkbox"> I agree to the <a href="#">terms and conditions</a>
-        </label>
-      </div>
-    </div>
-  </div>
-  <div class="form-group row">
-    <div class="offset-sm-2 col-sm-10">
-      <button type="submit" class="btn btn-danger">Submit</button>
-    </div>
-  </div>
-</form>
+</x-form>

@@ -17,7 +17,6 @@ class Media extends Model
 
     public function getGetFullNameAttribute()
     {
-        return $this->location . '/' . $this->fullname;
+        return $this->location . '/' . $this->filename;
     }
-
 }

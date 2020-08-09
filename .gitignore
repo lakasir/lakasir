@@ -7,6 +7,7 @@
 /public/vendor
 /public/js/
 /public/css/
+/public/app/
 tags
 .env
 .env.backup

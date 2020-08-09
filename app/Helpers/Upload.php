@@ -9,6 +9,7 @@ class Upload
     private $file;
     private $location;
     private $name;
+    private $path;
 
     /**
      * @param $file
@@ -16,7 +17,8 @@ class Upload
     public function __construct($file)
     {
         $this->file = $file;
-        $this->location = storage_path('app/'.now()->format('Y-m-d'));
+        $this->path = 'app/'.now()->format('Y-m-d');
+        $this->location = public_path($this->path);
     }
 
     public function to(string $location)
@@ -51,12 +53,11 @@ class Upload
 
     public function location()
     {
-        return $this->location;
+        return $this->path;
     }
 
     public function setLocation(string $location)
     {
         $this->location = $location;
     }
-
 }

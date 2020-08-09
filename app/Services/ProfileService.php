@@ -32,10 +32,12 @@ class ProfileService
             return DB::transaction(static function () use ($request, $self) {
                 $user = auth()->user();
                 if ($user->profile) {
-                    $self->profile->hasParent('user_id', $user)
-                          ->update($request, $user->profile)
-                          ->deleteMedia($user->profile->media->first())
-                          ->createMediaFromFile($request->photo_profile);
+                    $profile = $self->profile->hasParent('user_id', $user)
+                          ->update($request, $user->profile);
+                    if ($request->photo_profile) {
+                        $profile->deleteMedia($user->profile->media->first());
+                    }
+                    $profile->createMediaFromFile($request->photo_profile);
                 }
                 if (!$user->profile) {
                     $self->profile->hasParent('user_id', $user)->create($request)->createMediaFromFile($request->photo_profile);

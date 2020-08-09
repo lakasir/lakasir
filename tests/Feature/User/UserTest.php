@@ -22,7 +22,6 @@ class UserTest extends TestCase
         $user = User::find(1);
         $response = $this->actingAs($user)->post(route('user.store'), $data);
 
-        $response->dumpSession();
         $response->assertStatus(302);
         $response->assertRedirect(route('user.index'));
     }
@@ -41,7 +40,6 @@ class UserTest extends TestCase
         $user = User::inRandomOrder()->take(1)->first();
         $response = $this->actingAs($auth)->put(route('user.update', $user), $data);
 
-        $response->dumpSession();
         $response->assertStatus(302);
         $response->assertRedirect(route('user.index'));
     }
