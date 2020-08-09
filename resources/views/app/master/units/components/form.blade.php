@@ -1,4 +1,4 @@
-<x-form :route="$route" :title="__('app.units.create.title')" :method="$method ?? null">
+<x-form :route="$route" :title="$title" :method="$method ?? null">
   <v-input icon="fa-signature"
            placeholder="{{ __('app.units.placeholder.name') }}"
            :prepend="true"

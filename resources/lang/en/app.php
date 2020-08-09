@@ -38,6 +38,12 @@ return [
             'phone' => 'Phone',
             'address' => 'Address',
             'photo_profile' => 'Photo Profile'
+        ],
+        'placeholder' => [
+            'bio' => 'Bio',
+            'phone' => 'Phone',
+            'address' => 'Address',
+            'photo_profile' => 'Photo Profile'
         ]
     ],
     'auth' => [
@@ -47,7 +53,7 @@ return [
         ],
         'label' => [
             'remember' => 'Remeber Me'
-        ]
+        ],
     ],
     'items' => [
         'title' => 'Item Data',
@@ -68,7 +74,13 @@ return [
                 'amount' => 'Amount',
                 'stock' => 'Stock'
             ]
-        ]
+        ],
+        'edit' => [
+            'title' => 'Edit Items'
+        ],
+        'create' => [
+            'title' => 'Create Items'
+        ],
     ],
     'purchasings' => [
         'title' => 'Purchasing',
@@ -91,7 +103,13 @@ return [
             'total_qty' => 'Total Qty',
             'note' => 'Note',
             'paid' => 'Paid'
-        ]
+        ],
+        'edit' => [
+            'title' => 'Edit Purchasing'
+        ],
+        'create' => [
+            'title' => 'Create Purchasing'
+        ],
     ],
     'customers' => [
         'title' => 'Title',
@@ -106,7 +124,16 @@ return [
             'email' => 'Email',
             'code' => 'Code',
             'total_point' => 'Total Point'
-        ]
+        ],
+        'info' => [
+            'code' => 'Leave it Empty for use default generatecode'
+        ],
+        'edit' => [
+            'title' => 'Edit Customer'
+        ],
+        'create' => [
+            'title' => 'Create Customer'
+        ],
     ],
     'groups' => [
         'title' => 'Group',
@@ -120,6 +147,12 @@ return [
             'name' => 'Name',
             'customer' => 'Select Customer'
         ],
+        'edit' => [
+            'title' => 'Edit Group'
+        ],
+        'create' => [
+            'title' => 'Create Group'
+        ],
     ],
     'units' => [
         'title' => 'Unit',
@@ -129,6 +162,12 @@ return [
         'placeholder' => [
             'name' => 'Name',
         ],
+        'edit' => [
+            'title' => 'Edit Unit'
+        ],
+        'create' => [
+            'title' => 'Create Unit'
+        ],
     ],
     'categories' => [
         'title' => 'Unit',
@@ -137,6 +176,12 @@ return [
         ],
         'placeholder' => [
             'name' => 'Name',
+        ],
+        'edit' => [
+            'title' => 'Edit Categories'
+        ],
+        'create' => [
+            'title' => 'Create Categories'
         ],
     ],
     'suppliers' => [
@@ -154,6 +199,12 @@ return [
             'code' => 'Code',
             'phone' => 'Phone',
             'address' => 'Address'
+        ],
+        'edit' => [
+            'title' => 'Edit Supplier'
+        ],
+        'create' => [
+            'title' => 'Create Supplier'
         ],
     ],
     'user' => [

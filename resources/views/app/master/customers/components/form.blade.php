@@ -1,7 +1,7 @@
-<x-form :route="$route" :title="__('app.suppliers.create.title')" :method="$method ?? null">
+<x-form :route="$route" :title="$title" :method="$method ?? null">
   <v-input icon="fa-signature"
-           placeholder="{{ __('app.suppliers.placeholder.code') }}"
-           label="{{ __('app.suppliers.column.code') }}"
+           placeholder="{{ __('app.customers.placeholder.code') }}"
+           label="{{ __('app.customers.column.code') }}"
            old="{{ old('code') }}"
            @error('code')
            error-message="{{ $message }}"
@@ -9,11 +9,11 @@
            @enderror
            name="code"
            default-value="{{ optional( $data ?? '' )->code }}"
-           info=" {{ __('app.suppliers.info.code') }}"
+           info=" {{ __('app.customers.info.code') }}"
            ></v-input>
   <v-input icon="fa-signature"
-           placeholder="{{ __('app.suppliers.placeholder.name') }}"
-           label="{{ __('app.suppliers.column.name') }}"
+           placeholder="{{ __('app.customers.placeholder.name') }}"
+           label="{{ __('app.customers.column.name') }}"
            old="{{ old('name') }}"
            @error('name')
            error-message="{{ $message }}"
@@ -24,8 +24,8 @@
            default-value="{{ optional( $data ?? '' )->name }}"
            ></v-input>
   <v-input icon="fa-signature"
-           placeholder="{{ __('app.suppliers.placeholder.email') }}"
-           label="{{ __('app.suppliers.column.email') }}"
+           placeholder="{{ __('app.customers.placeholder.email') }}"
+           label="{{ __('app.customers.column.email') }}"
            old="{{ old('email') }}"
            @error('email')
            error-message="{{ $message }}"
