@@ -37,7 +37,7 @@ trait Media
 
         $media = new MediaModel([
             'filename' => $uploaded->getBasename(),
-            'location' => $uploaded->getPath(),
+            'location' => '/'.$uploaded->getPath(),
             'mime_type' => $uploaded->getMimeType(),
             'orginal_filename' => $this->file->getClientOriginalName(),
         ]);

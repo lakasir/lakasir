@@ -5,35 +5,29 @@
   </div>
   <!-- /.card-header -->
   <div class="card-body">
-    <strong><i class="fas fa-book mr-1"></i> Education</strong>
 
-    <p class="text-muted">
-    B.S. in Computer Science from the University of Tennessee at Knoxville
-    </p>
+    <strong><i class="fas fa-map-marker-alt mr-1"></i> {{ __('app.profiles.column.address') }}</strong>
 
-    <hr>
-
-    <strong><i class="fas fa-map-marker-alt mr-1"></i> Location</strong>
-
-    <p class="text-muted">Malibu, California</p>
+    <p class="text-muted">{{ optional(auth()->user()->profile ?? '')->address }}</p>
 
     <hr>
 
-    <strong><i class="fas fa-pencil-alt mr-1"></i> Skills</strong>
+    <strong><i class="fas fa-phone-alt mr-1"></i> {{ __('app.profiles.column.phone') }}</strong>
 
-    <p class="text-muted">
-    <span class="tag tag-danger">UI Design</span>
-    <span class="tag tag-success">Coding</span>
-    <span class="tag tag-info">Javascript</span>
-    <span class="tag tag-warning">PHP</span>
-    <span class="tag tag-primary">Node.js</span>
-    </p>
+    <p class="text-muted">{{ optional(auth()->user()->profile ?? '')->phone }}</p>
 
     <hr>
 
-    <strong><i class="far fa-file-alt mr-1"></i> Notes</strong>
+    <strong><i class="fas fa-book mr-1"></i> {{ __('app.profiles.column.bio') }}</strong>
 
-    <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam fermentum enim neque.</p>
+    <p class="text-muted">{{ optional(auth()->user()->profile ?? '')->bio }}</p>
+
+
+    {{-- <hr> --}}
+
+    {{-- <strong><i class="far fa-file-alt mr-1"></i> Notes</strong> --}}
+
+    {{-- <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam fermentum enim neque.</p> --}}
   </div>
   <!-- /.card-body -->
 </div>
