@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Requests\User\Profile;
+namespace App\Http\Requests\User\ChangePassword;
 
+use App\Rules\CheckOldPassword;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 
@@ -25,9 +26,8 @@ class Store extends FormRequest
     public function rules()
     {
         return [
-            'phone' => [ 'required' ],
-            'address' => ['required'],
-            'photo_profile' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'old_password' => ['required', new CheckOldPassword],
+            'new_password' => ['required', 'confirmed']
         ];
     }
 }

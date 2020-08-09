@@ -81,7 +81,9 @@ trait HasCrudActions
     {
         $request = resolve($this->storeRequest);
 
-        $this->authorize("create-$this->permission");
+        if ($this->permission) {
+            $this->authorize("create-$this->permission");
+        }
 
         if (isset($this->storeService)) {
             if (count($this->storeService) > 2) {
@@ -140,7 +142,9 @@ trait HasCrudActions
 
         $request = resolve($this->updateRequest);
 
-        $this->authorize("update-{$this->permission}");
+        if ($this->permission) {
+            $this->authorize("update-{$this->permission}");
+        }
 
         if (isset($this->updateService)) {
             if (count($this->updateService) > 2) {
@@ -149,7 +153,7 @@ trait HasCrudActions
             if (!is_array($this->updateService)) {
                 throw new ServiceActionsException('Store Service property must be array');
             }
-            ( new $this->updateService[0] )->{$this->updateService[1]}($request);
+            ( new $this->updateService[0] )->{$this->updateService[1]}($data, $request);
         } else {
             $this->repository->update($request, $data);
         }
