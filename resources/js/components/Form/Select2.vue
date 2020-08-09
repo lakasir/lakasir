@@ -66,9 +66,15 @@ export default {
       this.dataError = this.error
     }
     if (this.defaultValue) {
-      let defaultValue = JSON.parse(this.defaultValue)
+      let defaultValue = ''
+      if (!this.multiple) {
+       defaultValue = this.defaultValue
+      } else {
+       defaultValue = JSON.parse(this.defaultValue)
+      }
       this.value = defaultValue
     }
+    console.log(this.value);
     if (this.old != 'null') {
       this.value = JSON.parse(this.old)
     }

@@ -232,12 +232,16 @@ return [
         'column' => [
             'username' => 'Username',
             'email' => 'Email',
-            'role' => 'Role'
+            'role' => 'Role',
+            'password' => 'Password',
+            'password_confirmation' => 'Password Confirmation'
         ],
         'placeholder' => [
-            'username' => 'Username',
-            'email' => 'Email',
-            'role' => 'Role'
+            'username' => 'Type Your Username',
+            'email' => 'Type Your Email',
+            'role' => 'Type Your Role',
+            'password' => 'Type Your Password',
+            'password_confirmation' => 'Type Your Password Confirmation'
         ],
         'change_password' => [
             'update' => 'Change Password',
@@ -251,6 +255,12 @@ return [
                 'new_password' => 'Type Your New Password',
                 'new_password_confirmation' => 'Confirm Your New Password'
             ]
+        ],
+        'create' => [
+            'title' => 'Create User',
+        ],
+        'edit' => [
+            'title' => 'Edit User',
         ]
     ],
     'global' => [

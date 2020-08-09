@@ -27,7 +27,8 @@ class Update extends FormRequest
         return [
             'username' => ['required', 'string', 'regex:/^\S*$/u', 'max:255', 'unique:users,id,' . auth()->user()->id],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,id,'. auth()->user()->id],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'password' => ['confirmed'],
+            'role' => ['required']
         ];
     }
 }

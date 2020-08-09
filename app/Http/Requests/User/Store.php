@@ -28,6 +28,7 @@ class Store extends FormRequest
             'username' => ['required', 'string', 'regex:/^\S*$/u', 'max:255', 'unique:users'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'role' => ['required']
         ];
     }
 }

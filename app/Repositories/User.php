@@ -53,7 +53,7 @@ class User extends RepositoryAbstract
                 $self->role = $request->role;
             }
             $role = Role::whereName($self->role)->first();
-            $user->assignRole($role);
+            $user->syncRoles($role);
 
             return $user;
         });

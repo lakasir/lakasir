@@ -2,7 +2,7 @@
   <a href="{{ route('category.create') }}" class="float-right" target="_blank"> {{ __('app.categories.create.title') }}</a>
   <select2
      :options="{{ $categories }}"
-     default-value="{{ optional(optional( $data ?? '' )->category ?? '')->pluck('id') }}"
+     default-value="{{ optional(optional( $data ?? '' )->category ?? '')->id }}"
      label="{{ __('app.items.column.category.name') }}"
      name="category_id"
      old="{{ json_encode(old('category_id')) }}"
@@ -16,7 +16,7 @@
   <a href="{{ route('unit.create') }}" class="float-right" target="_blank"> {{ __('app.units.create.title') }}</a>
   <select2
      :options="{{ $units }}"
-     default-value="{{ optional(optional( $data ?? '' )->unit ?? '')->pluck('id') }}"
+     default-value="{{ optional(optional( $data ?? '' )->unit ?? '')->id }}"
      label="{{ __('app.items.column.unit.name') }}"
      name="unit_id"
      old="{{ json_encode(old('unit_id')) }}"
