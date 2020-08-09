@@ -17,7 +17,8 @@ class Company extends RepositoryAbstract
     {
         $self = $this;
         return DB::transaction(static function () use ($request, $self) {
-            $user = User::first();
+            $session = $request->session()->all()['user'];
+            $user = User::whereUsername($session['username'])->first();
             if (!$request->reg_number) {
                 $numberGenerator = (new NumberGeneratorBuilder())->prefix('LA')->model($self->model)->build();
                 $request->merge([

@@ -122,8 +122,7 @@ class Install extends Controller
                 ]);
             }
             DB::connection()->reconnect();
-            DB::connection()->getPdo();
-            Artisan::call('migrate:fresh');
+            Artisan::call('migrate');
             Artisan::call('db:seed');
 
             return true;

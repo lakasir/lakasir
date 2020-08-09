@@ -1,6 +1,10 @@
 <?php
 
 return [
+    'completed' => [
+        'message' => 'Congratulations, now you can use Lakasir for manage your selling',
+        'link' => 'Go Login Now!!!'
+    ],
     'install' => [
         'database' => 'Register Your Database',
         'next' => 'Next',
