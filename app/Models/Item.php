@@ -35,4 +35,14 @@ class Item extends Model
     {
         return $this->hasMany(Stock::class, 'item_id');
     }
+
+    public function getLastStockAttribute()
+    {
+        return $this->log_stocks->last();
+    }
+
+    public function getLastPricekAttribute()
+    {
+        return $this->prices->last();
+    }
 }

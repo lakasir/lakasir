@@ -36,7 +36,7 @@ class Item extends RepositoryAbstract
             $request->merge([
                 'date' => now()->format('Y-m-d'),
                 'current_stock' => $request->stock,
-                'last_stock' => $request->stock,
+                'last_stock' => $request->stock
             ]);
             $item = new $self->model();
             $item->fill($request->only('internal_production', 'name'));
@@ -70,6 +70,9 @@ class Item extends RepositoryAbstract
                 'current_stock' => $request->stock,
                 'last_stock' => $request->stock,
             ]);
+            if (!$request->internal_production) {
+                $request->merge(['internal_production' => false]);
+            }
             $item->fill($request->only('internal_production', 'name'));
             $item->unit()->associate(Unit::find($request->unit_id));
             $item->category()->associate(Category::find($request->category_id));

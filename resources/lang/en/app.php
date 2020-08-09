@@ -57,8 +57,28 @@ return [
     ],
     'items' => [
         'title' => 'Item Data',
+        'placeholder' => [
+            'name' => 'Name',
+            'images' => 'Images',
+            'internal_production' => 'Internal Production',
+            'category' => [
+                'name' => 'Category Name',
+            ],
+            'unit' => [
+                'name' => 'Unit Name'
+            ],
+            'price' => [
+                'selling_price' => 'Selling Price',
+                'initial_price' => 'Initial Price'
+            ],
+            'stock' => [
+                'amount' => 'Amount',
+                'stock' => 'Stock'
+            ]
+        ],
         'column' => [
             'name' => 'Name',
+            'images' => 'Images',
             'internal_production' => 'Internal Production',
             'category' => [
                 'name' => 'Category Name',

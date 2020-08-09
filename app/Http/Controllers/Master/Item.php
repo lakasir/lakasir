@@ -9,8 +9,11 @@ use App\Http\Requests\Master\Item\Delete;
 use App\Http\Requests\Master\Item\Index;
 use App\Http\Requests\Master\Item\Store;
 use App\Http\Requests\Master\Item\Update;
+use App\Models\Category;
+use App\Models\Unit;
 use App\Repositories\Item as ItemRepository;
 use App\Traits\HasCrudActions;
+use Illuminate\View\View;
 use Yajra\DataTables\Html\Builder;
 
 class Item extends Controller
@@ -32,4 +35,44 @@ class Item extends Controller
     protected $redirect = '/master/item';
 
     protected $repositoryClass = ItemRepository::class;
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function create(): View
+    {
+        $this->authorize("create-$this->permission");
+        $categories = Category::toBase()->get()->map(function ($c) {
+            return ['id' => $c->id, 'text' => $c->name];
+        });
+        $units = Unit::toBase()->get()->map(function ($c) {
+            return ['id' => $c->id, 'text' => $c->name];
+        });
+
+        return view("{$this->viewPath}.create", compact('categories', 'units'));
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function edit(int $model): View
+    {
+        $data = $this->repository->find($model);
+
+        $this->authorize("update-$this->permission");
+
+        $categories = Category::toBase()->get()->map(function ($c) {
+            return ['id' => $c->id, 'text' => $c->name];
+        });
+
+        $units = Unit::toBase()->get()->map(function ($c) {
+            return ['id' => $c->id, 'text' => $c->name];
+        });
+
+        return view("{$this->viewPath}.edit", compact('categories', 'data', 'units'));
+    }
 }

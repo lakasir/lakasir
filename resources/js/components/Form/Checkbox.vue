@@ -2,8 +2,8 @@
   <div>
     <div class="row col">
       <div class="mb-3" :class="prepend ? 'input-group' : ''">
-        <input type="checkbox" :class="dataError ? 'is-invalid' : validClass" :value="value"
-               :name="name" v-on:focus="checkValidation" v-on:change="checkValidation" :placeholder="placeholder"aria-label="Checkbox for following text input">
+        <input type="checkbox" :class="dataError ? 'is-invalid' : validClass" :value="value" :checked="checked"
+               :name="name" :placeholder="placeholder"aria-label="Checkbox for following text input">
         <div v-if="prepend" class="input-group-append">
           <div class="input-group-text">
             <span :class="'fas ' + icon"></span>
@@ -58,6 +58,10 @@ export default {
       type: String,
       value: ''
     },
+    checked: {
+      type: Boolean,
+      value: false
+    }
   },
 
   data() {

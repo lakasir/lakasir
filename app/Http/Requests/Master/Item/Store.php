@@ -31,7 +31,7 @@ class Store extends FormRequest
             'category_id' => 'required',
             'initial_price' => ['required', 'min:1'],
             'selling_price' => ['required', 'min:1'],
-            'image' => ['image:jpeg,png']
+            'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048'
         ];
     }
 }
