@@ -108,10 +108,13 @@ return [
         'title' => 'Group',
         'column' => [
             'name' => 'Name',
-            'total_user' => 'Total User'
+            'total_user' => 'Total User',
+            'customer' => 'Customer',
+            'total_customer' => 'Total Customer'
         ],
         'placeholder' => [
             'name' => 'Name',
+            'customer' => 'Select Customer'
         ],
     ],
     'units' => [

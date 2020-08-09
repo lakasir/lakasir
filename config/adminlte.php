@@ -319,7 +319,7 @@ return [
         ],
         [
             'text' => 'change_password',
-            'url'  => 'admin/settings',
+            'url'  => 'user/change_password',
             'icon' => 'fas fa-fw fa-lock',
         ],
         ['header' => 'menu.user_management'],
