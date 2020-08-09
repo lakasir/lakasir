@@ -27,7 +27,7 @@ class Form extends Component
     public $size;
 
     /**
-     * @var size
+     * @var card
      */
     public $card;
     /**
