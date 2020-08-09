@@ -30,4 +30,11 @@ class Group extends RepositoryAbstract
             $group->customers()->sync($customer);
         });
     }
+
+    public function datatable(Request $request)
+    {
+        $items = $this->model::withCount([ 'customers' ])->toBase()->latest()->get();
+
+        return $this->getobjectmodel()->table($items);
+    }
 }

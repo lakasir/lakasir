@@ -46,4 +46,22 @@ class Group extends Controller
 
         return view("{$this->viewPath}.create", compact('customers'));
     }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function edit(int $model): View
+    {
+        $data = $this->repository->find($model);
+
+        $this->authorize("update-$this->permission");
+
+        $customers = Customer::toBase()->get()->map(function ($c) {
+            return ['id' => $c->id, 'text' => $c->name];
+        });
+
+        return view("{$this->viewPath}.edit", compact('customers', 'data'));
+    }
 }

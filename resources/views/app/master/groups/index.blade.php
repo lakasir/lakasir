@@ -8,6 +8,7 @@
   <x-index-table :title="__('app.groups.title')" resources="group">
     @slot('thead')
       <th> {{ __('app.groups.column.name') }} </th>
+      <th> {{ __('app.groups.column.total_customer') }} </th>
     @endslot
   </x-index-table>
 @endsection
@@ -24,6 +25,7 @@
           { data: 'name', name: 'name', render: function ( data, type, row ) {
             return '<a href='+ route('{{ $resources }}.edit', row) +'>'+data+'</a>'
           }},
+          { data: 'customers_count', name: 'customers_count'},
           { data: 'created_at', name: 'Created At' },
           { data: 'action', name: 'action', orderable: false, searchable: false, width: '3%' },
         ]

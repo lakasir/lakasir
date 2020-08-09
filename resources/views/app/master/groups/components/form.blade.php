@@ -14,7 +14,15 @@
     <select2
       :options="{{ $customers }}"
       :multiple="true"
-      label="{{ __('app.groups.column.customer') }}">
-      <option disabled value="0">Select one</option>
+      default-value="{{ optional(optional( $data ?? '' )->customers ?? '')->pluck('id') }}"
+      label="{{ __('app.groups.column.customer') }}"
+      name="customer_id[]"
+      old="{{ json_encode(old('customer_id')) }}"
+      @error('customer_id')
+      error-message="{{ $message }}"
+      :error="true"
+      @enderror
+      >
+      <option disabled value="0"> {{ __('app.groups.placeholder.customer') }}</option>
     </select2>
 </x-form>

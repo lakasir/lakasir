@@ -1,9 +1,15 @@
 <template>
-  <div class="form-group mb-3">
+  <div class="form-group mb-3" :class="dataError ? 'has-error' : validClass">
     <label for="#" class="text-muted">{{ label }}</label>
-    <select class="form-control select2" :multiple="multiple">
+    <select :name="name" class="form-control select2" :multiple="multiple" selected="value">
       <slot></slot>
     </select>
+    <div v-if="dataError" class="text-danger text-sm">
+      {{ dataErrorMessage }}
+    </div>
+    <small v-if="info" class="form-text text-muted">
+      {{ info }}
+    </small>
   </div>
 </template>
 
@@ -16,9 +22,10 @@ export default {
       type: Array,
       value: [],
     },
-    value: {
+    name: null,
+    info : {
       type: String,
-      value: "",
+      value: ''
     },
     label: {
       type: String,
@@ -28,8 +35,43 @@ export default {
       type: Boolean,
       value: false,
     },
+    defaultValue: {
+      type: String,
+      value: ''
+    },
+    error: {
+      type: Boolean,
+      value: false
+    },
+    errorMessage: {
+      type: String,
+      value: null
+    },
+    old: null
+
   },
+
+  data() {
+    return {
+      dataError: false,
+      dataErrorMessage: '',
+      validClass: '',
+      value: '',
+    }
+  },
+
   mounted() {
+    if (this.error) {
+      this.dataErrorMessage = this.errorMessage
+      this.dataError = this.error
+    }
+    if (this.defaultValue) {
+      let defaultValue = JSON.parse(this.defaultValue)
+      this.value = defaultValue
+    }
+    if (this.old != 'null') {
+      this.value = JSON.parse(this.old)
+    }
     let vm = this;
     let selectElement = this.$el.children[1];
     $(selectElement)
@@ -57,3 +99,9 @@ export default {
   },
 };
 </script>
+
+<style>
+.has-error .select2-selection {
+  border-color: rgb(185, 74, 72) !important;
+}
+</style>

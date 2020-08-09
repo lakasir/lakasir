@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="mb-3" :class="prepend ? 'input-group' : ''">
-      <label v-if="prepend">{{ label }}</label>
+      <label v-if="!prepend" class="text-muted">{{ label }}</label>
       <textarea
         :type="type"
         class="form-control"
@@ -115,7 +115,7 @@ export default {
       this.dataError = this.error;
     }
     if (this.defaultValue) {
-      this.value = this.defaultValue;
+      this.value = this.defaultValue
     }
     if (this.old) {
       this.value = this.old;
