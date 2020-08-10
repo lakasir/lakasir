@@ -48,4 +48,9 @@ class User extends Authenticatable
     {
         return $this->hasOne(Profile::class);
     }
+
+    public function getLocalizationAttribute()
+    {
+        return optional($this->profile ?? 'en')->lang ?? 'en';
+    }
 }

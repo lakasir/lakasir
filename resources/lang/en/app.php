@@ -37,14 +37,20 @@ return [
             'bio' => 'Bio',
             'phone' => 'Phone',
             'address' => 'Address',
-            'photo_profile' => 'Photo Profile'
+            'photo_profile' => 'Photo Profile',
+            'lang' => 'Language'
         ],
         'placeholder' => [
             'bio' => 'Bio',
             'phone' => 'Phone',
             'address' => 'Address',
-            'photo_profile' => 'Photo Profile'
-        ]
+            'photo_profile' => 'Photo Profile',
+            'lang' => 'Language'
+        ],
+        'about_me' => 'About Me',
+        'settings' => 'Settings',
+        'timeline' => 'Timeline',
+        'activity' => 'Activity'
     ],
     'auth' => [
         'placeholder' => [

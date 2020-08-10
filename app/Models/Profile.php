@@ -15,7 +15,8 @@ class Profile extends Model
     protected $fillable = [
         'phone',
         'bio',
-        'address'
+        'address',
+        'lang'
     ];
 
     public function user()

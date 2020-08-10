@@ -1,7 +1,7 @@
 <!-- About Me Box -->
 <div class="card card-primary">
   <div class="card-header">
-    <h3 class="card-title">About Me</h3>
+    <h3 class="card-title"> {{ __('app.profiles.about_me') }}</h3>
   </div>
   <!-- /.card-header -->
   <div class="card-body">

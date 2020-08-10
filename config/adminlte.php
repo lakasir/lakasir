@@ -313,12 +313,12 @@ return [
         ['header' => 'account_settings'],
         [
             'can' => 'browse-profile',
-            'text' => 'profile',
+            'text' => 'menu.profile',
             'url'  => 'user/profile',
             'icon' => 'fas fa-fw fa-user',
         ],
         [
-            'text' => 'change_password',
+            'text' => 'menu.change_password',
             'url'  => 'user/change_password',
             'icon' => 'fas fa-fw fa-lock',
         ],

@@ -31,6 +31,7 @@ trait HasCrudActions
      */
     public function index()
     {
+        app()->setLocale(optional(auth()->user() ?? 'en')->localization);
         $request = resolve($this->indexRequest);
         $this->authorize("browse-$this->permission");
         if ($request->ajax()) {
@@ -67,6 +68,8 @@ trait HasCrudActions
      */
     public function create(): View
     {
+        app()->setLocale(optional(auth()->user() ?? 'en')->localization);
+
         $this->authorize("create-$this->permission");
 
         return view("{$this->viewPath}.create");
@@ -79,6 +82,8 @@ trait HasCrudActions
      */
     public function store(): RedirectResponse
     {
+        app()->setLocale(optional(auth()->user() ?? 'en')->localization);
+
         $request = resolve($this->storeRequest);
 
         if ($this->permission) {
@@ -108,6 +113,8 @@ trait HasCrudActions
      */
     public function show(int $model): View
     {
+        app()->setLocale(optional(auth()->user() ?? 'en')->localization);
+
         $data = $this->repository->find($model);
 
         $this->authorize("browse-{$this->permission}");
@@ -123,6 +130,8 @@ trait HasCrudActions
      */
     public function edit(int $model)
     {
+        app()->setLocale(optional(auth()->user() ?? 'en')->localization);
+
         $data = $this->repository->find($model);
 
         $this->authorize("update-{$this->permission}");
@@ -138,6 +147,8 @@ trait HasCrudActions
      */
     public function update(int $model): RedirectResponse
     {
+        app()->setLocale(optional(auth()->user() ?? 'en')->localization);
+
         $data = $this->repository->find($model);
 
         $request = resolve($this->updateRequest);
@@ -169,6 +180,8 @@ trait HasCrudActions
      */
     public function destroy(int $model): RedirectResponse
     {
+        app()->setLocale(optional(auth()->user() ?? 'en')->localization);
+
         $this->authorize("delete-{$this->permission}");
 
         $this->repository->find($model)->delete();
@@ -183,6 +196,8 @@ trait HasCrudActions
      */
     public function bulkDestroy(): RedirectResponse
     {
+        app()->setLocale(optional(auth()->user() ?? 'en')->localization);
+
         $request = resolve($this->bulkDestroyRequest);
 
         $this->repository->bulkDestroy($request);

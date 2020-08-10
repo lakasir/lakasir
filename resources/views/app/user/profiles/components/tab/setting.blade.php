@@ -44,4 +44,17 @@
     </div>
     @enderror
   </div>
+  <select2
+    :options="{{ collect([['id' => 'en', 'text' => 'en'],['id' => 'id', 'text' => 'id'],]) }}"
+    default-value="{{optional(optional(auth()->user() ?? '')->profile)->lang}}"
+     label="{{ __('app.profiles.column.lang') }}"
+     name="lang"
+     old="{{ json_encode(old('lang')) }}"
+     @error('lang')
+     error-message="{{ $message }}"
+     :error="true"
+     @enderror
+     >
+     <option disabled value="0"> {{ __('app.profiles.placeholder.lang') }}</option>
+  </select2>
 </x-form>

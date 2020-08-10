@@ -11,9 +11,9 @@
       <div class="card">
         <div class="card-header p-2">
           <ul class="nav nav-pills">
-            <li class="nav-item"><a class="nav-link active" href="#settings" data-toggle="tab">Settings</a></li>
-            <li class="nav-item"><a class="nav-link" href="#activity" data-toggle="tab">Activity</a></li>
-            <li class="nav-item"><a class="nav-link" href="#timeline" data-toggle="tab">Timeline</a></li>
+            <li class="nav-item"><a class="nav-link active" href="#settings" data-toggle="tab"> {{ __('app.profiles.settings') }}</a></li>
+            <li class="nav-item"><a class="nav-link" href="#activity" data-toggle="tab"> {{ __('app.profiles.activity') }}</a></li>
+            <li class="nav-item"><a class="nav-link" href="#timeline" data-toggle="tab"> {{ __('app.profiles.timeline') }}</a></li>
           </ul>
         </div><!-- /.card-header -->
         <div class="card-body">

@@ -18,4 +18,7 @@ return [
     'user_management' => 'USER DATA',
     'user_list' => 'List',
     'role' => 'Role',
+    'account_settings' => 'Account Settings',
+    'profile' => 'Profile',
+    'change_password' => 'Change Password'
 ];
