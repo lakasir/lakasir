@@ -2,7 +2,7 @@
 
 return [
     'completed' => [
-        'message' => 'Selmata, sekarang anda dapat menggunakan Lakasir untuk membantu penjualan anda',
+        'message' => 'Selamat, sekarang anda dapat menggunakan Lakasir untuk membantu penjualan anda',
         'link' => 'Masuk Sekarang!!!'
     ],
     'install' => [
@@ -102,7 +102,7 @@ return [
             ]
         ],
         'edit' => [
-            'title' => 'Edit Item'
+            'title' => 'Ubah Item'
         ],
         'create' => [
             'title' => 'Tambah Items'
@@ -131,7 +131,7 @@ return [
             'paid' => 'Lunas'
         ],
         'edit' => [
-            'title' => 'Edit Pembelian'
+            'title' => 'Ubah Pembelian'
         ],
         'create' => [
             'title' => 'Tambah Pembelian'
@@ -155,10 +155,10 @@ return [
             'code' => 'Biarkan kosong untuk menggunakan generate kode bawaan'
         ],
         'edit' => [
-            'title' => 'Edit Pelanggan'
+            'title' => 'Ubah Pelanggan'
         ],
         'create' => [
-            'title' => 'Create Pelanggan'
+            'title' => 'Tambah Pelanggan'
         ],
     ],
     'groups' => [
@@ -166,18 +166,18 @@ return [
         'column' => [
             'name' => 'Nama',
             'total_user' => 'Total Penguguna',
-            'customer' => 'Pengguna',
-            'total_customer' => 'Total Pengguna'
+            'customer' => 'Pelanggan',
+            'total_customer' => 'Total Pelanggan'
         ],
         'placeholder' => [
             'name' => 'Nama',
-            'customer' => 'Select Pengguna'
+            'customer' => 'Pilih Pelanggan'
         ],
         'edit' => [
-            'title' => 'Edit Kelompok'
+            'title' => 'Ubah Kelompok'
         ],
         'create' => [
-            'title' => 'Create Kelompok'
+            'title' => 'Tambah Kelompok'
         ],
     ],
     'units' => [
@@ -189,14 +189,14 @@ return [
             'name' => 'Nama',
         ],
         'edit' => [
-            'title' => 'Edit Satuan'
+            'title' => 'Ubah Satuan'
         ],
         'create' => [
-            'title' => 'Create Satuan'
+            'title' => 'Tambah Satuan'
         ],
     ],
     'categories' => [
-        'title' => 'Category',
+        'title' => 'Kategori',
         'column' => [
             'name' => 'Nama',
         ],
@@ -204,10 +204,10 @@ return [
             'name' => 'Nama',
         ],
         'edit' => [
-            'title' => 'Edit Category'
+            'title' => 'Ubah Kategori'
         ],
         'create' => [
-            'title' => 'Create Category'
+            'title' => 'Tambah Kategori'
         ],
     ],
     'suppliers' => [
@@ -227,10 +227,10 @@ return [
             'address' => 'Alamat'
         ],
         'edit' => [
-            'title' => 'Edit Pemasok'
+            'title' => 'Ubah Pemasok'
         ],
         'create' => [
-            'title' => 'Create Pemasok'
+            'title' => 'Tambah Pemasok'
         ],
     ],
     'user' => [
@@ -266,7 +266,7 @@ return [
             'title' => 'Tambah Pengguna',
         ],
         'edit' => [
-            'title' => 'Edit Pengguna',
+            'title' => 'Ubah Pengguna',
         ]
     ],
     'role' => [
@@ -287,13 +287,13 @@ return [
             'title' => 'Tambah Jabatan',
         ],
         'edit' => [
-            'title' => 'Edit Jabatan',
+            'title' => 'Ubah Jabatan',
         ]
     ],
     'global' => [
         'submit' => 'Simpan',
         'action' => 'Aksi',
-        'edit' => 'Edit',
+        'edit' => 'Ubah',
         'delete' => 'Hapus',
         'create' => 'Tambah',
         'created_at' => 'Dibuat Pada',
