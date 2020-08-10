@@ -3,7 +3,7 @@
 namespace App\Repositories;
 
 use App\Abstracts\Repository as RepositoryAbstract;
-use Spatie\Permission\Models\Role as RoleModel;
+use App\Models\Role as RoleModel;
 
 class Role extends RepositoryAbstract
 {

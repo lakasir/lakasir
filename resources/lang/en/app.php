@@ -263,6 +263,27 @@ return [
             'title' => 'Edit User',
         ]
     ],
+    'role' => [
+        'title' => 'Role',
+        'column' => [
+            'name' => 'Role Name',
+            'guard_name' => 'Guard Name',
+            'permission_name' => 'Permission Name',
+            'permission' => 'Permission'
+        ],
+        'placeholder' => [
+            'name' => 'Type Your Role Name',
+            'guard_name' => 'Type Your Guard Name',
+            'permission_name' => 'Permission Name',
+            'permission' => 'Permission'
+        ],
+        'create' => [
+            'title' => 'Create Role',
+        ],
+        'edit' => [
+            'title' => 'Edit Role',
+        ]
+    ],
     'global' => [
         'submit' => 'Submit',
         'action' => 'Action',

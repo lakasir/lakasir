@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Master\Category;
+namespace App\Http\Requests\User\Role;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;

@@ -10,6 +10,9 @@ use App\Http\Requests\User\Role\Update;
 use App\Repositories\Role as RoleRepository;
 use App\Services\RoleService;
 use App\Traits\HasCrudActions;
+use Illuminate\Support\Str;
+use Illuminate\View\View;
+use Spatie\Permission\Models\Permission;
 
 class Role extends Controller
 {
@@ -27,9 +30,58 @@ class Role extends Controller
 
     protected $bulkDestroyRequest = BulkDelete::class;
 
-    protected $redirect = '/user';
+    protected $redirect = 'user/role';
 
     protected $repositoryClass = RoleRepository::class;
 
-    protected $storeService = [RoleService::class, 'store'];
+    protected $storeService = [RoleService::class, 'create'];
+
+    protected $updateService = [RoleService::class, 'update'];
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function create(): View
+    {
+        $this->authorize("create-$this->permission");
+        $permissions = Permission::toBase()->get()->map(function ($c, $i) {
+            $name = str_replace('-', ' ', Str::title($c->name));
+            $explode = Str::of($name)->explode(' ')->last();
+            return [
+                'id' => $c->id,
+                'text' => $name,
+                'header' => $explode
+            ];
+        });
+        $permissions = $permissions->groupBy('header');
+
+        return view("{$this->viewPath}.create", compact('permissions'));
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function edit(int $model): View
+    {
+        $data = $this->repository->find($model);
+
+        $this->authorize("update-$this->permission");
+
+        $permissions = Permission::toBase()->get()->map(function ($c, $i) {
+            $name = str_replace('-', ' ', Str::title($c->name));
+            $explode = Str::of($name)->explode(' ')->last();
+            return [
+                'id' => $c->id,
+                'text' => $name,
+                'header' => $explode
+            ];
+        });
+        $permissions = $permissions->groupBy('header');
+
+        return view("{$this->viewPath}.edit", compact('permissions', 'data'));
+    }
 }
