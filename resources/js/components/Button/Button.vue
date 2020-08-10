@@ -1,7 +1,7 @@
 <template>
   <div>
     <button @click="clicked" :type="type" class="btn btn-primary" :class="`float-${float}`" :disabled="loading"> <div v-if="!loading"><i :class="icon"></i> <span class="mr-1"></span>{{ text }}</div>
-      <div v-if="loading"><span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> {{ loadingText }}</div>
+      <div v-if="loading"><span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> {{ loadingText }}</div>
     </button>
   </div>
 </template>
