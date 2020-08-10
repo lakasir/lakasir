@@ -152,7 +152,7 @@ return [
             'total_point' => 'Total Point'
         ],
         'info' => [
-            'code' => 'Leave it Empty for use default generatecode'
+            'code' => 'Leave it Empty for use default generate code'
         ],
         'edit' => [
             'title' => 'Edit Customer'

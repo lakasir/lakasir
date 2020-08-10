@@ -9,6 +9,10 @@
   <x-index-table :title="__('app.suppliers.title')" resources="supplier">
     @slot('thead')
       <th> {{ __('app.suppliers.column.name') }} </th>
+      <th> {{ __('app.suppliers.column.code') }} </th>
+      <th> {{ __('app.suppliers.column.shop_name') }} </th>
+      <th> {{ __('app.suppliers.column.phone') }} </th>
+      <th> {{ __('app.suppliers.column.address') }} </th>
     @endslot
   </x-index-table>
 @endsection
@@ -25,6 +29,10 @@
           { data: 'name', name: 'name', render: function ( data, type, row ) {
             return '<a href='+ route('{{ $resources }}.edit', row) +'>'+data+'</a>'
           }},
+          { data: 'code', name: 'code' },
+          { data: 'shop_name', name: 'shop_name' },
+          { data: 'phone', name: 'phone' },
+          { data: 'address', name: 'address' },
           { data: 'created_at', name: 'Created At' },
           { data: 'action', name: 'action', orderable: false, searchable: false, width: '3%' },
         ]

@@ -26,7 +26,6 @@ class Store extends FormRequest
     {
         return [
             'name' => 'required',
-            'code' => 'required',
             'shop_name' => 'required',
             'phone' => 'required',
             'address' => 'required'

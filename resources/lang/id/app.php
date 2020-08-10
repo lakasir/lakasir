@@ -152,7 +152,7 @@ return [
             'total_point' => 'Total Point'
         ],
         'info' => [
-            'code' => 'Biarkan kosong untuk menggunakan generate password bawaan'
+            'code' => 'Biarkan kosong untuk menggunakan generate kode bawaan'
         ],
         'edit' => [
             'title' => 'Edit Pelanggan'

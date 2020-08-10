@@ -10,6 +10,7 @@
            name="code"
            :validation="['required']"
            default-value="{{ optional( $data ?? '' )->code }}"
+           info=" {{ __('app.customers.info.code') }}"
            ></v-input>
   <v-input icon="fa-signature"
            placeholder="{{ __('app.suppliers.placeholder.name') }}"
