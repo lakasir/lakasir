@@ -46,7 +46,11 @@ class User extends RepositoryAbstract
                 $session = $request->session()->all()['user'];
                 $request->merge($session);
             }
-            $request->merge(['password' => bcrypt($request->password)]);
+            if ($request->password) {
+                $request->merge(['password' => bcrypt($request->password)]);
+            } else {
+                $request->merge(['password' => $user->password]);
+            }
             $user = $user->fill($request->all());
             $user->save();
             if ($request->role) {
