@@ -82,7 +82,7 @@ export default {
     let selectElement = this.$el.children[1];
     $(selectElement)
       // init select2
-      .select2({ data: this.options })
+      .select2({ data: this.options, width: '100%' })
       .val(this.value)
       .trigger("change")
       // emit event on change.

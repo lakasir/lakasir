@@ -35,7 +35,7 @@ class Form extends Component
      *
      * @return void
      */
-    public function __construct($route, $method = null, $title, $size = 6, $card = true)
+    public function __construct($route, $method = null, $title, $size = 8, $card = true)
     {
         $this->route = $route;
         $this->method = $method;

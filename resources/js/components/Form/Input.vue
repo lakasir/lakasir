@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div :class="'col-md-' + size">
     <label class="text-muted" v-if="!prepend">{{ label }}</label>
     <div class="mb-3" :class="prepend || type == 'password' ? 'input-group' : ''">
       <input :type="type" class="form-control" :class="dataError ? 'is-invalid' : validClass" :value="value"
@@ -27,6 +27,10 @@ export default {
     info: {
       type: String,
       value: null
+    },
+    size: {
+      type: String,
+      value: '12'
     },
     name: {
       type: String,
