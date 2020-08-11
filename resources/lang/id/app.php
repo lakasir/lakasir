@@ -111,24 +111,29 @@ return [
     'purchasings' => [
         'title' => 'Pembelian',
         'column' => [
+            'supplier' => 'Pemasok',
             'date' => 'Tanggal',
             'payment_method' => 'Metode Pembayaran',
-            'invoice_number' => 'Struk Pembayaran',
+            'invoice_number' => 'Nomor Pembayaran',
             'total_initial_price' => 'Total Harga Beli',
             'total_selling_price' => 'Total Harga Jual',
             'total_qty' => 'Total Jumlah',
             'note' => 'Catatan',
             'paid' => 'Lunas'
         ],
-        'column' => [
+        'placeholder' => [
+            'supplier' => 'Pemasok',
             'date' => 'Tanggal',
             'payment_method' => 'Metode Pembayaran',
-            'invoice_number' => 'Struk Pembayaran',
+            'invoice_number' => 'Nomor Pembayaran',
             'total_initial_price' => 'Total Harga Beli',
             'total_selling_price' => 'Total Harga Jual',
             'total_qty' => 'Total Jumlah',
             'note' => 'Catatan',
             'paid' => 'Lunas'
+        ],
+        'info' => [
+            'invoice_number' => 'Biarkan kosong untuk menggunakan generate nomor pembayaran otomatis'
         ],
         'edit' => [
             'title' => 'Ubah Pembelian'
@@ -152,7 +157,7 @@ return [
             'total_point' => 'Total Point'
         ],
         'info' => [
-            'code' => 'Biarkan kosong untuk menggunakan generate kode bawaan'
+            'code' => 'Biarkan kosong untuk menggunakan generate kode otomatis'
         ],
         'edit' => [
             'title' => 'Ubah Pelanggan'
@@ -298,6 +303,13 @@ return [
         'create' => 'Tambah',
         'created_at' => 'Dibuat Pada',
         'suredelete' => 'Apa Anda Yakin?',
-        'error_old_password' => 'Password Kamu tidak valid'
+        'error_old_password' => 'Password Kamu tidak valid',
+        'cancel' => 'Batal',
+        'message' => [
+            'create' => 'Menambahkan',
+            'update' => 'Memeperbarui',
+            'delete' => 'Menghapus',
+            'success' => 'Sukses',
+        ]
     ]
 ];

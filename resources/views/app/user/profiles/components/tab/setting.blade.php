@@ -45,7 +45,7 @@
     @enderror
   </div>
   <select2
-    :options="{{ collect([['id' => 'en', 'text' => 'en'],['id' => 'id', 'text' => 'id'],]) }}"
+    :options="{{ collect([['id' => 'en', 'text' => 'English USA'],['id' => 'id', 'text' => 'Bahasa Indonesia'],]) }}"
     default-value="{{optional(optional(auth()->user() ?? '')->profile)->lang}}"
      label="{{ __('app.profiles.column.lang') }}"
      name="lang"

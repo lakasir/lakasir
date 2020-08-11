@@ -101,6 +101,7 @@ trait HasCrudActions
         } else {
             $this->repository->create($request);
         }
+        flash()->success(__('app.global.message.create').' '. ucfirst($this->permission));
 
         return redirect()->to($this->redirect);
     }
@@ -168,6 +169,7 @@ trait HasCrudActions
         } else {
             $this->repository->update($request, $data);
         }
+        flash()->success(__('app.global.message.update').' '. ucfirst($this->permission));
 
         return redirect()->to($this->redirect);
     }
@@ -186,6 +188,8 @@ trait HasCrudActions
 
         $this->repository->find($model)->delete();
 
+        flash()->success(__('app.global.message.delete').' '. ucfirst($this->permission));
+
         return redirect()->to($this->redirect);
     }
 
@@ -201,6 +205,8 @@ trait HasCrudActions
         $request = resolve($this->bulkDestroyRequest);
 
         $this->repository->bulkDestroy($request);
+
+        flash()->success(__('app.global.message.delete').' '. ucfirst($this->permission));
 
         return redirect()->back();
     }

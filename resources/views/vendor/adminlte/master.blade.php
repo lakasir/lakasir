@@ -69,6 +69,17 @@
         background-repeat: no-repeat;
         background-size: auto;
       }
+      .float{
+        position:fixed;
+        width:150px;
+        height:60px;
+        right:40px;
+        background-color:#0C9;
+        color:#FFF;
+        border-radius:50px;
+        text-align:center;
+        box-shadow: 2px 2px 3px #999;
+      }
     </style>
     @livewireStyles
 

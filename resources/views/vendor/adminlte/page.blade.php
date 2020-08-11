@@ -45,6 +45,16 @@
             {{-- Main Content --}}
             <div class="content">
                 <div class="{{ config('adminlte.classes_content') ?: $def_container_class }}">
+                  @if(flash()->message)
+                    <div class="">
+                      <div class="alert {{ flash()->class }} alert-dismissible fade show" role="alert">
+                        <strong>{{ __('app.global.message.'.flash()->level) }}</strong> {{ flash()->message }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                    </div>
+                  @endif
                     @yield('content')
                 </div>
             </div>

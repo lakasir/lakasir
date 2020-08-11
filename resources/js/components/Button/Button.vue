@@ -1,6 +1,6 @@
 <template>
   <div>
-    <button @click="clicked" :type="type" class="btn btn-primary" :class="`float-${float}`" :disabled="loading"> <div v-if="!loading"><i :class="icon"></i> <span class="mr-1"></span>{{ text }}</div>
+    <button @click="clicked" :type="type" class="btn" :class="`float-${float} btn-${color}`" :disabled="loading"> <div v-if="!loading"><i :class="icon"></i> <span class="mr-1"></span>{{ text }}</div>
       <div v-if="loading"><span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> {{ loadingText }}</div>
     </button>
   </div>
@@ -17,7 +17,8 @@ export default {
     loading: {default: false},
     loadingText: {default: 'Loading...', type: String},
     float: {default: '', type: String},
-    to: {default: '', type: String}
+    to: {default: '', type: String},
+    color: {default: 'primary', type: String}
   },
 
   data() {

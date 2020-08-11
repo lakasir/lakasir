@@ -112,6 +112,7 @@ return [
         'title' => 'Purchasing',
         'column' => [
             'date' => 'Date',
+            'supplier' => 'Supplier',
             'payment_method' => 'Payment Method',
             'invoice_number' => 'Invoice Number',
             'total_initial_price' => 'Total Initial Price',
@@ -122,6 +123,7 @@ return [
         ],
         'placeholder' => [
             'date' => 'Date',
+            'supplier' => 'Supplier',
             'payment_method' => 'Payment Method',
             'invoice_number' => 'Invoice Number',
             'total_initial_price' => 'Total Initial Price',
@@ -129,6 +131,9 @@ return [
             'total_qty' => 'Total Qty',
             'note' => 'Note',
             'paid' => 'Paid'
+        ],
+        'info' => [
+            'invoice_number' => 'Leave it Empty for use default generate invoice number'
         ],
         'edit' => [
             'title' => 'Edit Purchasing'
@@ -298,6 +303,13 @@ return [
         'create' => 'Create',
         'created_at' => 'Created At',
         'suredelete' => 'Are You Sure?',
-        'error_old_password' => 'Your Old Password is Not Valid'
+        'error_old_password' => 'Your Old Password is Not Valid',
+        'cancel' => 'Cancel',
+        'message' => [
+            'create' => 'Create',
+            'update' => 'Update',
+            'delete' => 'Delete',
+            'success' => 'Success',
+        ]
     ]
 ];
