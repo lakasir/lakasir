@@ -119,7 +119,14 @@ return [
             'total_selling_price' => 'Total Harga Jual',
             'total_qty' => 'Total Jumlah',
             'note' => 'Catatan',
-            'paid' => 'Lunas'
+            'paid' => 'Lunas',
+            'items' => [
+                'header' => 'Item',
+                'name' => 'Nama Item',
+                'qty' => 'Kuantitas',
+                'price' => 'Harga',
+                'total' => 'Total'
+            ]
         ],
         'placeholder' => [
             'supplier' => 'Pemasok',
@@ -133,7 +140,8 @@ return [
             'paid' => 'Lunas'
         ],
         'info' => [
-            'invoice_number' => 'Biarkan kosong untuk menggunakan generate nomor pembayaran otomatis'
+            'invoice_number' => 'Biarkan kosong untuk menggunakan generate nomor pembayaran otomatis',
+            'date' => 'Biarkan kosong untuk menggunakan tanggal hari ini'
         ],
         'edit' => [
             'title' => 'Ubah Pembelian'
@@ -297,7 +305,7 @@ return [
     ],
     'global' => [
         'submit' => 'Simpan',
-        'action' => 'Aksi',
+        'action' => 'Tindakan',
         'edit' => 'Ubah',
         'delete' => 'Hapus',
         'create' => 'Tambah',

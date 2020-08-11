@@ -82,6 +82,10 @@
       }
     </style>
     @livewireStyles
+    <script>
+      window._locale = '{{ app()->getLocale() }}';
+      window._translations = {!! cache('translations') !!};
+    </script>
 
 </head>
 
@@ -108,7 +112,6 @@
     @yield('adminlte_js')
     @routes
     @livewireScripts
-
 </body>
 
 </html>

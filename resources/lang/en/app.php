@@ -119,7 +119,14 @@ return [
             'total_selling_price' => 'Total Selling Price',
             'total_qty' => 'Total Qty',
             'note' => 'Note',
-            'paid' => 'Paid'
+            'paid' => 'Paid',
+            'items' => [
+                'header' => 'Item',
+                'name' => 'Item Name',
+                'qty' => 'Qty',
+                'price' => 'Price',
+                'total' => 'Total'
+            ]
         ],
         'placeholder' => [
             'date' => 'Date',
@@ -133,7 +140,8 @@ return [
             'paid' => 'Paid'
         ],
         'info' => [
-            'invoice_number' => 'Leave it Empty for use default generate invoice number'
+            'invoice_number' => 'Leave it Empty for use default generate invoice number',
+            'date' => 'Leave it Empty for use today Date'
         ],
         'edit' => [
             'title' => 'Edit Purchasing'
