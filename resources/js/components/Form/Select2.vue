@@ -74,7 +74,6 @@ export default {
       }
       this.value = defaultValue
     }
-    console.log(this.value);
     if (this.old != 'null') {
       this.value = JSON.parse(this.old)
     }
