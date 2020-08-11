@@ -145,9 +145,9 @@ return [
     */
 
     'sidebar_mini' => true,
-    'sidebar_collapse' => true,
+    'sidebar_collapse' => false,
     'sidebar_collapse_auto_size' => false,
-    'sidebar_collapse_remember' => false,
+    'sidebar_collapse_remember' => true,
     'sidebar_collapse_remember_no_transition' => true,
     'sidebar_scrollbar_theme' => 'os-theme-light',
     'sidebar_scrollbar_auto_hide' => 'l',
@@ -249,10 +249,17 @@ return [
             'label'       => 'new',
             'label_color' => 'success',
         ],
-        ['header' => 'menu.transaction'],
+        [
+            'text' => 'menu.item',
+            'icon' => 'far fa-fw fa-file',
+            'url'  => 'master/item',
+            'can' => 'browse-item'
+        ],
+        /* ['header' => 'menu.transaction'], */
         [
             'text'    => 'menu.transaction',
             'icon'    => 'fas fa-fw fa-dollar-sign',
+            'can' => ['browse-purchasing', 'browse-selling'],
             'submenu' => [
                 [
                     'text' => 'menu.purchasing',
@@ -266,10 +273,11 @@ return [
                 ],
             ],
         ],
-        ['header' => 'menu.customer_data'],
+        /* ['header' => 'menu.customer_data'], */
         [
             'text'    => 'menu.customer',
             'icon'    => 'fas fa-fw fa-users',
+            'can' => ['browse-customer', 'browse-group'],
             'submenu' => [
                 [
                     'text' => 'menu.customer_list',
@@ -283,16 +291,12 @@ return [
                 ],
             ],
         ],
-        ['header' => 'menu.master_data'],
+        /* ['header' => 'menu.master_data'], */
         [
             'text'    => 'menu.master_data',
             'icon'    => 'fas fa-fw fa-database',
+            'can' => ['browse-unit', 'browse-category', 'browse-supplier'],
             'submenu' => [
-                [
-                    'text' => 'menu.item',
-                    'url'  => 'master/item',
-                    'can' => 'browse-item'
-                ],
                 [
                     'text' => 'menu.unit',
                     'url'  => 'master/unit',
@@ -310,22 +314,11 @@ return [
                 ],
             ],
         ],
-        ['header' => 'account_settings'],
-        [
-            'can' => 'browse-profile',
-            'text' => 'menu.profile',
-            'url'  => 'user/profile',
-            'icon' => 'fas fa-fw fa-user',
-        ],
-        [
-            'text' => 'menu.change_password',
-            'url'  => 'user/change_password',
-            'icon' => 'fas fa-fw fa-lock',
-        ],
-        ['header' => 'menu.user_management'],
+        /* ['header' => 'menu.user_management'], */
         [
             'text' => 'menu.user',
             'icon' => 'fas fa-fw fa-users',
+            'can' => ['browse-user', 'browse-role'],
             'submenu' => [
                 [
                     'text' => 'menu.user_list',
@@ -338,7 +331,19 @@ return [
                     'can' => 'browse-role'
                 ],
             ]
-        ]
+        ],
+        ['header' => 'account_settings'],
+        [
+            'can' => 'browse-profile',
+            'text' => 'menu.profile',
+            'url'  => 'user/profile',
+            'icon' => 'fas fa-fw fa-user',
+        ],
+        [
+            'text' => 'menu.change_password',
+            'url'  => 'user/change_password',
+            'icon' => 'fas fa-fw fa-lock',
+        ],
     ],
 
     /*
