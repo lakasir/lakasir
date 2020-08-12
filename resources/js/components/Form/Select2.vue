@@ -48,7 +48,8 @@ export default {
       value: null
     },
     old: null,
-    prepend: false
+    prepend: false,
+    getValue: false
 
   },
 
@@ -87,6 +88,9 @@ export default {
       .trigger("change")
       // emit event on change.
       .on("change", function () {
+        if (vm.getValue) {
+          vm.$parent.receiveValue(this.value)
+        }
         vm.$emit("input", this.value);
       });
   },
