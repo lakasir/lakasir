@@ -8,7 +8,7 @@
             <th scope="col"> {{ __('app.global.action') }}</th>
             <th scope="col" width="40%"> {{ __('app.purchasings.column.items.name') }}</th>
             <th scope="col" width="10%"> {{ __('app.purchasings.column.items.qty') }}</th>
-            <th scope="col" width="20%" class="text-right"> {{ __('app.purchasings.column.items.price') }}</th>
+            <th scope="col" width="20%" class="text-right"> {{ __('app.purchasings.column.items.initial_price') }}</th>
             <th scope="col" width="20%" class="text-right"> {{ __('app.purchasings.column.items.total') }}</th>
           </tr>
         </thead>
@@ -19,6 +19,7 @@
             </td>
             <td>
               <select2
+                @change="handleItem(event)"
                 :options="options"
                 prepend="true"
                 old="null"
@@ -68,7 +69,7 @@ export default {
 
   data() {
     return {
-      items: [0],
+      items: [],
       options: []
     }
   },
@@ -79,6 +80,9 @@ export default {
     },
     removeArray(i) {
       document.getElementById(i).remove();
+    },
+    handleItem(evt) {
+      console.log('ok');
     }
   },
 

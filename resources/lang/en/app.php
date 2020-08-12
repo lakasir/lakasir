@@ -125,6 +125,8 @@ return [
                 'name' => 'Item Name',
                 'qty' => 'Qty',
                 'price' => 'Price',
+                'initial_price' => 'Initial Price',
+                'selling_price' => 'Selling Price',
                 'total' => 'Total'
             ]
         ],

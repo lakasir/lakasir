@@ -124,6 +124,8 @@ return [
                 'header' => 'Item',
                 'name' => 'Nama Item',
                 'qty' => 'Kuantitas',
+                'initial_price' => 'Harga Beli',
+                'selling_price' => 'Harga Jual',
                 'price' => 'Harga',
                 'total' => 'Total'
             ]
