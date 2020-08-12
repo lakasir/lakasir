@@ -6,6 +6,7 @@ use App\Builder\NumberGeneratorBuilder;
 use App\Repositories\Item;
 use App\Repositories\Purchasing;
 use App\Repositories\PurchasingDetail;
+use App\Repositories\Stock;
 use App\Repositories\Supplier;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -70,6 +71,18 @@ class PurchasingService
                     /**
                      * TODO: Update Stock <sheenazien8 2020-07-25>
                      */
+                    $item = ( new Item )->find($itemData['item_id']);
+                    if (!$item->last_stock) {
+                        $last_stock = 0;
+                    } else {
+                        $last_stock = $item->last_stock->current_stock;
+                    }
+                    $request->merge([
+                        'current_stock' => $last_stock + $itemData['qty'],
+                        'last_stock' => $last_stock,
+                        'date' => $date
+                    ]);
+                    $stock = ( new Stock )->hasParent('itemd_id', $item)->create($request);
 
                     /**
                      * TODO: create jurnal accounting <sheenazien8 2020-07-26>
