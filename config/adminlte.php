@@ -457,5 +457,21 @@ return [
                 ],
             ],
         ],
+        [
+            'name' => 'DatePicker',
+            'active' => true,
+            'files' => [
+                [
+                    'type' => 'css',
+                    'asset' => true,
+                    'location' => '//unpkg.com/gijgo@1.9.13/css/gijgo.min.css',
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => '//unpkg.com/gijgo@1.9.13/js/gijgo.min.js',
+                ],
+            ],
+        ]
     ],
 ];

@@ -42,6 +42,7 @@ class UserController extends Controller
      */
     public function create(): View
     {
+        app()->setLocale(optional(auth()->user() ?? 'en')->localization);
         $this->authorize("create-$this->permission");
         $roles = Role::toBase()->get()->map(function ($c) {
             return ['id' => $c->name, 'text' => $c->name];
@@ -57,6 +58,8 @@ class UserController extends Controller
      */
     public function edit(int $model): View
     {
+        app()->setLocale(optional(auth()->user() ?? 'en')->localization);
+
         $data = $this->repository->find($model);
 
         $this->authorize("update-$this->permission");

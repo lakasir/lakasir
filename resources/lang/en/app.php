@@ -313,6 +313,7 @@ return [
         'suredelete' => 'Are You Sure?',
         'error_old_password' => 'Your Old Password is Not Valid',
         'cancel' => 'Cancel',
+        'total' => 'Total',
         'message' => [
             'create' => 'Create',
             'update' => 'Update',

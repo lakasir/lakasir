@@ -28,6 +28,8 @@ class ChangePassword extends Controller
 
     public function index()
     {
+        app()->setLocale(optional(auth()->user() ?? 'en')->localization);
+
         return view("{$this->viewPath}.index");
     }
 }

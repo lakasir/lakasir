@@ -43,6 +43,7 @@ class Item extends Controller
      */
     public function create(): View
     {
+        app()->setLocale(optional(auth()->user() ?? 'en')->localization);
         $this->authorize("create-$this->permission");
         $categories = Category::toBase()->get()->map(function ($c) {
             return ['id' => $c->id, 'text' => $c->name];
@@ -61,6 +62,7 @@ class Item extends Controller
      */
     public function edit(int $model): View
     {
+        app()->setLocale(optional(auth()->user() ?? 'en')->localization);
         $data = $this->repository->find($model);
 
         $this->authorize("update-$this->permission");

@@ -313,6 +313,7 @@ return [
         'suredelete' => 'Apa Anda Yakin?',
         'error_old_password' => 'Password Kamu tidak valid',
         'cancel' => 'Batal',
+        'total' => 'Total',
         'message' => [
             'create' => 'Menambahkan',
             'update' => 'Memeperbarui',
