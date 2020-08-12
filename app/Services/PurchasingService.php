@@ -41,11 +41,15 @@ class PurchasingService
                     ->prefix('INV')
                     ->build();
                 $invoiceNumber = $numberGenerator->create();
+                $date = today()->format('Y-m-d');
+                if ($request->date) {
+                    $date = date('Y-m-d', strtotime($request->date));
+                }
                 $request->merge([
                     'total_initial_price' => $totalIntialPrice,
                     'total_selling_price' => $totalSellingPrice,
                     'total_qty' => $totalQty,
-                    'date' => today()->format('Y-m-d'),
+                    'date' => $date,
                     'invoice_number' => $invoiceNumber
                 ]);
                 $purchasing = $purchasingRepository->hasParent('supplier_id', $supplier)->create($request);
