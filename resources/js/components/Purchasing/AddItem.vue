@@ -6,9 +6,10 @@
         <thead class="thead-light">
           <tr>
             <th scope="col"> {{ __('app.global.action') }}</th>
-            <th scope="col" width="40%"> {{ __('app.purchasings.column.items.name') }}</th>
+            <th scope="col" width="30%"> {{ __('app.purchasings.column.items.name') }}</th>
             <th scope="col" width="10%"> {{ __('app.purchasings.column.items.qty') }}</th>
             <th scope="col" width="20%" class="text-right"> {{ __('app.purchasings.column.items.initial_price') }}</th>
+            <th scope="col" width="20%" class="text-right"> {{ __('app.purchasings.column.items.selling_price') }}</th>
             <th scope="col" width="20%" class="text-right"> {{ __('app.purchasings.column.items.total') }}</th>
           </tr>
         </thead>
@@ -19,7 +20,7 @@
             </td>
             <td>
               <select2
-                @change="handleItem(event)"
+                :get-value="true"
                 :options="options"
                 prepend="true"
                 old="null"
@@ -32,19 +33,22 @@
               <input type="text" :name="`items[${i}][qty]`" class="form-control"/>
             </td>
             <td class="text-right">
-              Rp. 10.000
+              <input type="text" :name="`items[${i}][initial_price]`" class="form-control"/>
+            </td>
+            <td class="text-right">
+              <input type="text" :name="`items[${i}][selling_price]`" class="form-control"/>
             </td>
             <td class="text-right">
               Rp. 10.000
             </td>
           </tr>
           <tr>
-            <td colspan="5">
+            <td colspan="6">
               <button type="button" @click="addItem" class="btn btn-outline-success"><i class="fas fa-plus"></i></button>
             </td>
           </tr>
           <tr>
-            <td colspan="3"></td>
+            <td colspan="4"></td>
             <th class="text-right">{{ __('app.global.total') }}</th>
             <td class="text-right">
               Rp. 10.000
@@ -81,8 +85,8 @@ export default {
     removeArray(i) {
       document.getElementById(i).remove();
     },
-    handleItem(evt) {
-      console.log('ok');
+    receiveValue(value) {
+      console.log(value);
     }
   },
 
