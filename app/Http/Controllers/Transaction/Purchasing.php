@@ -7,6 +7,7 @@ use App\Http\Requests\Transaction\Purchasing\BulkDelete;
 use App\Http\Requests\Transaction\Purchasing\Index;
 use App\Http\Requests\Transaction\Purchasing\Store;
 use App\Http\Requests\Transaction\Purchasing\Update;
+use App\Repositories\Item;
 use App\Repositories\Purchasing as PurchasingRepository;
 use App\Repositories\Supplier;
 use App\Services\PurchasingService;
@@ -52,6 +53,9 @@ class Purchasing extends Controller
         }));
         $options->put('PaymentMethod', collect(config('array_options.payment_method'))->map(function ($c) {
             return ['id' => $c, 'text' => dash_to_space($c)];
+        }));
+        $options->put('Item', (new Item)->getModel()::get()->map(function ($c) {
+            return ['id' => $c->id, 'text' => $c->name];
         }));
 
         return view("{$this->viewPath}.create", compact('options'));

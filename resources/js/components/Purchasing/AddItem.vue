@@ -18,7 +18,14 @@
               <button type="button" @click="removeArray(i)" class="btn btn-outline-danger"><i class="fas fa-trash"></i></button>
             </td>
             <td>
-              <input type="text" :name="`items[${i}][item_id]`" class="form-control"/>
+              <select2
+                :options="options"
+                prepend="true"
+                old="null"
+                :name="`items[${i}][item_id]`"
+                >
+                <option disabled value="0"> {{ __('app.purchasings.column.items.name') }}</option>
+              </select2>
             </td>
             <td>
               <input type="text" :name="`items[${i}][qty]`" class="form-control"/>
@@ -53,12 +60,16 @@ export default {
   name: 'AddItem',
 
   props: {
-
+    itemsOptions: {
+      default: '',
+      type: String
+    }
   },
 
   data() {
     return {
-      items: [0]
+      items: [0],
+      options: []
     }
   },
 
@@ -72,6 +83,7 @@ export default {
   },
 
   mounted() {
+    this.options = JSON.parse(this.itemsOptions)
   }
 }
 

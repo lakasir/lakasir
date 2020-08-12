@@ -70,5 +70,5 @@
              info="{{ __('app.purchasings.info.date') }}"
              ></v-date-picker>
   </div>
-  <v-add-item></v-add-item>
+  <v-add-item items-options="{{ collect($options->get('Item')) }}"></v-add-item>
 </x-form>

@@ -1,6 +1,6 @@
 <template>
   <div class="form-group mb-3" :class="dataError ? 'has-error' : validClass">
-    <label for="#" class="text-muted">{{ label }}</label>
+    <label for="#" class="text-muted" :class="prepend ? ' d-none': ''">{{ label }}</label>
     <select :name="name" class="form-control select2" :multiple="multiple" selected="value">
       <slot></slot>
     </select>
@@ -47,7 +47,8 @@ export default {
       type: String,
       value: null
     },
-    old: null
+    old: null,
+    prepend: false
 
   },
 
