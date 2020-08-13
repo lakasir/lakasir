@@ -20,7 +20,7 @@ abstract class Repository implements RepositoryInterface
 
     public function find(int $id)
     {
-        return $this->model::find($id);
+        return $this->model::findOrFail($id);
     }
 
     public function findByKeyArray(array $key, string $column = "id")

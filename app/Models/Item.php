@@ -41,7 +41,7 @@ class Item extends Model
         return $this->log_stocks->last();
     }
 
-    public function getLastPricekAttribute()
+    public function getLastPriceAttribute()
     {
         return $this->prices->last();
     }

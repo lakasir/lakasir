@@ -25,21 +25,23 @@
                 prepend="true"
                 old="null"
                 :name="`items[${i}][item_id]`"
+                class="select-item"
+                :id="i"
                 >
                 <option disabled value="0"> {{ __('app.purchasings.column.items.name') }}</option>
               </select2>
             </td>
             <td>
-              <input type="text" :name="`items[${i}][qty]`" class="form-control"/>
+              <input type="number" min="1" :name="`items[${i}][qty]`" class="form-control" :id="i" @keyup="calculation"/>
             </td>
             <td class="text-right">
-              <input type="text" :name="`items[${i}][initial_price]`" class="form-control"/>
+              <input type="number" min="1" :name="`items[${i}][initial_price]`" class="form-control" :id="i" @keyup="calculation"/>
             </td>
             <td class="text-right">
-              <input type="text" :name="`items[${i}][selling_price]`" class="form-control"/>
+              <input type="number" min="1" :name="`items[${i}][selling_price]`" class="form-control" :id="i"/>
             </td>
             <td class="text-right">
-              Rp. 10.000
+              <input type="number" min="1" readonly class="form-control sub-total" :id="`sub-total-${i}`"/>
             </td>
           </tr>
           <tr>
@@ -51,7 +53,7 @@
             <td colspan="4"></td>
             <th class="text-right">{{ __('app.global.total') }}</th>
             <td class="text-right">
-              Rp. 10.000
+              <input type="text" readonly class="form-control total"/>
             </td>
           </tr>
         </tbody>
@@ -61,6 +63,8 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   name: 'AddItem',
 
@@ -82,11 +86,27 @@ export default {
     addItem() {
       this.items.push(this.items[this.items.length - 1] + 1)
     },
+    calculation(evt) {
+      let index = evt.target.id;
+      let initial_price = $(`input[name="items[${index}][initial_price]"]`).val();
+      let qty = $(`input[name="items[${index}][qty]"]`).val();
+      let selling_price = $(`input[name="items[${index}][selling_price]"]`).val();
+      let totalPrice = $(`#sub-total-${index}`).val(qty * initial_price)
+    },
     removeArray(i) {
       document.getElementById(i).remove();
     },
     receiveValue(value) {
-      console.log(value);
+      axios.get(route('api.item.show', value))
+        .then(res => {
+          let index = $('.select-item').last().attr('id');
+          $(`#sub-total-${index}`).val(res.data?.initial_price)
+          $(`input[name="items[${index}][initial_price]"]`).val(res.data?.initial_price);
+          $(`input[name="items[${index}][selling_price]"]`).val(res.data?.selling_price);
+        })
+        .catch(err => {
+          alert(err)
+        });
     }
   },
 

@@ -1,7 +1,7 @@
 <template>
   <div class="form-group mb-3" :class="dataError ? 'has-error' : validClass">
     <label for="#" class="text-muted" :class="prepend ? ' d-none': ''">{{ label }}</label>
-    <select :name="name" class="form-control select2" :multiple="multiple" selected="value">
+    <select :name="name" class="form-control select2" :class="addClass" :multiple="multiple" selected="value">
       <slot></slot>
     </select>
     <div v-if="dataError" class="text-danger text-sm">
@@ -18,6 +18,10 @@ export default {
   name: "Select2",
 
   props: {
+    addClass: {
+      type: String,
+      value: ''
+    },
     options: {
       type: Array,
       value: [],

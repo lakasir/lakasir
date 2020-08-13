@@ -80,6 +80,17 @@
         text-align:center;
         box-shadow: 2px 2px 3px #999;
       }
+      /* Chrome, Safari, Edge, Opera */
+      input::-webkit-outer-spin-button,
+      input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+
+      /* Firefox */
+      input[type=number] {
+        -moz-appearance: textfield;
+      }
     </style>
     @livewireStyles
     <script>

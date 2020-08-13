@@ -19,3 +19,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::post('/formvalidation', 'Api\CheckValidation')->withoutMiddleware('throttle');
+Route::get('/item/{id}', 'Api\Item')->name('api.item.show');
