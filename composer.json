@@ -17,9 +17,15 @@
         "laravel/tinker": "^2.0",
         "laravel/ui": "^2.0",
         "livewire/livewire": "^1.2",
-        "spatie/laravel-permission": "^3.13"
+        "spatie/laravel-flash": "^1.6",
+        "spatie/laravel-permission": "^3.13",
+        "tightenco/ziggy": "^0.9.4",
+        "yajra/laravel-datatables": "^1.5",
+        "yajra/laravel-datatables-buttons": "^4.0",
+        "yajra/laravel-datatables-oracle": "~9.0"
     },
     "require-dev": {
+        "barryvdh/laravel-debugbar": "^3.3",
         "facade/ignition": "^2.0",
         "fzaninotto/faker": "^1.9.1",
         "laravel/dusk": "^6.3",
@@ -38,6 +44,9 @@
         }
     },
     "autoload": {
+        "files": [
+            "app/helpers.php"
+        ],
         "psr-4": {
             "App\\": "app/"
         },

@@ -19,7 +19,9 @@ trait Media
 
     public function createMediaFromFile($file): void
     {
-        if (!$file) return;
+        if (!$file) {
+            return;
+        }
         $upload = new Upload($file);
         $uploaded = $upload->action();
         $this->file = $file;
@@ -35,7 +37,7 @@ trait Media
 
         $media = new MediaModel([
             'filename' => $uploaded->getBasename(),
-            'location' => $uploaded->getPath(),
+            'location' => '/'.$uploaded->getPath(),
             'mime_type' => $uploaded->getMimeType(),
             'orginal_filename' => $this->file->getClientOriginalName(),
         ]);
@@ -44,8 +46,12 @@ trait Media
 
     public function deleteMedia(MediaModel $media): self
     {
+        /**
+         * FIXME: deleted image and media <sheenazien8 2020-07-07>
+         *
+         */
+        $media->delete();
+
         return $this;
     }
-
-
 }

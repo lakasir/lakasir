@@ -14,7 +14,7 @@ return [
     |
     */
 
-    'title' => 'AdminLTE 3',
+    'title' => 'Lakasir',
     'title_prefix' => '',
     'title_postfix' => '',
 
@@ -45,12 +45,12 @@ return [
     |
     */
 
-    'logo' => '<b>Admin</b>LTE',
-    'logo_img' => 'vendor/adminlte/dist/img/AdminLTELogo.png',
+    'logo' => '<b>Akasir</b>',
+    'logo_img' => '/assets/Lakasir.png',
     'logo_img_class' => 'brand-image img-circle elevation-3',
     'logo_img_xl' => null,
-    'logo_img_xl_class' => 'brand-image-xs',
-    'logo_img_alt' => 'AdminLTE',
+    'logo_img_xl_class' => 'brand-image-xl',
+    'logo_img_alt' => 'Lakasir',
 
     /*
     |--------------------------------------------------------------------------
@@ -147,7 +147,7 @@ return [
     'sidebar_mini' => true,
     'sidebar_collapse' => false,
     'sidebar_collapse_auto_size' => false,
-    'sidebar_collapse_remember' => false,
+    'sidebar_collapse_remember' => true,
     'sidebar_collapse_remember_no_transition' => true,
     'sidebar_scrollbar_theme' => 'os-theme-light',
     'sidebar_scrollbar_auto_hide' => 'l',
@@ -186,9 +186,9 @@ return [
     |
     */
 
-    'use_route_url' => false,
+    'use_route_url' => true,
 
-    'dashboard_url' => 'home',
+    'dashboard_url' => 'dashboard',
 
     'logout_url' => 'logout',
 
@@ -237,81 +237,112 @@ return [
             'topnav' => true,
         ],
         [
-            'text' => 'blog',
-            'url'  => 'admin/blog',
-            'can'  => 'manage-blog',
+            'text' => 'transaction',
+            'url'  => 'transaction',
+            'icon' => 'far fa-fw fa-file',
+            'can'  => 'browse-transaction',
         ],
         [
-            'text'        => 'pages',
-            'url'         => 'admin/pages',
-            'icon'        => 'far fa-fw fa-file',
-            'label'       => 4,
+            'text'        => 'dashboard',
+            'url'         => 'dashboard',
+            'icon'        => 'far fa-fw fa-tachometer-alt',
+            'label'       => 'new',
             'label_color' => 'success',
         ],
-        ['header' => 'account_settings'],
         [
-            'text' => 'profile',
-            'url'  => 'admin/settings',
-            'icon' => 'fas fa-fw fa-user',
+            'text' => 'menu.item',
+            'icon' => 'far fa-fw fa-file',
+            'url'  => 'master/item',
+            'can' => 'browse-item'
         ],
+        /* ['header' => 'menu.transaction'], */
         [
-            'text' => 'change_password',
-            'url'  => 'admin/settings',
-            'icon' => 'fas fa-fw fa-lock',
-        ],
-        [
-            'text'    => 'multilevel',
-            'icon'    => 'fas fa-fw fa-share',
+            'text'    => 'menu.transaction',
+            'icon'    => 'fas fa-fw fa-dollar-sign',
+            'can' => ['browse-purchasing', 'browse-selling'],
             'submenu' => [
                 [
-                    'text' => 'level_one',
-                    'url'  => '#',
+                    'text' => 'menu.purchasing',
+                    'url'  => 'transaction/purchasing',
+                    'can' => 'browse-purchasing'
                 ],
                 [
-                    'text'    => 'level_one',
-                    'url'     => '#',
-                    'submenu' => [
-                        [
-                            'text' => 'level_two',
-                            'url'  => '#',
-                        ],
-                        [
-                            'text'    => 'level_two',
-                            'url'     => '#',
-                            'submenu' => [
-                                [
-                                    'text' => 'level_three',
-                                    'url'  => '#',
-                                ],
-                                [
-                                    'text' => 'level_three',
-                                    'url'  => '#',
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-                [
-                    'text' => 'level_one',
-                    'url'  => '#',
+                    'text' => 'menu.selling',
+                    'url'  => 'transaction/selling',
+                    'can' => 'browse-selling'
                 ],
             ],
         ],
-        ['header' => 'labels'],
+        /* ['header' => 'menu.customer_data'], */
         [
-            'text'       => 'important',
-            'icon_color' => 'red',
-            'url'        => '#',
+            'text'    => 'menu.customer',
+            'icon'    => 'fas fa-fw fa-users',
+            'can' => ['browse-customer', 'browse-group'],
+            'submenu' => [
+                [
+                    'text' => 'menu.customer_list',
+                    'url'  => 'master/customer',
+                    'can' => 'browse-customer'
+                ],
+                [
+                    'text' => 'menu.group',
+                    'url'  => 'master/group',
+                    'can' => 'browse-group'
+                ],
+            ],
+        ],
+        /* ['header' => 'menu.master_data'], */
+        [
+            'text'    => 'menu.master_data',
+            'icon'    => 'fas fa-fw fa-database',
+            'can' => ['browse-unit', 'browse-category', 'browse-supplier'],
+            'submenu' => [
+                [
+                    'text' => 'menu.unit',
+                    'url'  => 'master/unit',
+                    'can' => 'browse-unit'
+                ],
+                [
+                    'text' => 'menu.category',
+                    'url'  => 'master/category',
+                    'can' => 'browse-category'
+                ],
+                [
+                    'text' => 'menu.supplier',
+                    'url'  => 'master/supplier',
+                    'can' => 'browse-supplier'
+                ],
+            ],
+        ],
+        /* ['header' => 'menu.user_management'], */
+        [
+            'text' => 'menu.user',
+            'icon' => 'fas fa-fw fa-users',
+            'can' => ['browse-user', 'browse-role'],
+            'submenu' => [
+                [
+                    'text' => 'menu.user_list',
+                    'url'  => 'user',
+                    'can' => 'browse-user'
+                ],
+                [
+                    'text' => 'menu.role',
+                    'url'  => 'user/role',
+                    'can' => 'browse-role'
+                ],
+            ]
+        ],
+        ['header' => 'account_settings'],
+        [
+            'can' => 'browse-profile',
+            'text' => 'menu.profile',
+            'url'  => 'user/profile',
+            'icon' => 'fas fa-fw fa-user',
         ],
         [
-            'text'       => 'warning',
-            'icon_color' => 'yellow',
-            'url'        => '#',
-        ],
-        [
-            'text'       => 'information',
-            'icon_color' => 'cyan',
-            'url'        => '#',
+            'text' => 'menu.change_password',
+            'url'  => 'user/change_password',
+            'icon' => 'fas fa-fw fa-lock',
         ],
     ],
 
@@ -353,37 +384,37 @@ return [
     'plugins' => [
         [
             'name' => 'Datatables',
-            'active' => false,
+            'active' => true,
             'files' => [
                 [
                     'type' => 'js',
-                    'asset' => false,
+                    'asset' => true,
                     'location' => '//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js',
                 ],
                 [
                     'type' => 'js',
-                    'asset' => false,
+                    'asset' => true,
                     'location' => '//cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js',
                 ],
                 [
                     'type' => 'css',
-                    'asset' => false,
+                    'asset' => true,
                     'location' => '//cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css',
                 ],
             ],
         ],
         [
             'name' => 'Select2',
-            'active' => false,
+            'active' => true,
             'files' => [
                 [
                     'type' => 'js',
-                    'asset' => false,
+                    'asset' => true,
                     'location' => '//cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js',
                 ],
                 [
                     'type' => 'css',
-                    'asset' => false,
+                    'asset' => true,
                     'location' => '//cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.css',
                 ],
             ],
@@ -426,5 +457,21 @@ return [
                 ],
             ],
         ],
+        [
+            'name' => 'DatePicker',
+            'active' => true,
+            'files' => [
+                [
+                    'type' => 'css',
+                    'asset' => true,
+                    'location' => '//unpkg.com/gijgo@1.9.13/css/gijgo.min.css',
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => '//unpkg.com/gijgo@1.9.13/js/gijgo.min.js',
+                ],
+            ],
+        ]
     ],
 ];

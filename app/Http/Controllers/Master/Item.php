@@ -2,45 +2,39 @@
 
 namespace App\Http\Controllers\Master;
 
+use App\DataTables\ItemDataTable;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Master\Item\BulkDelete;
 use App\Http\Requests\Master\Item\Delete;
 use App\Http\Requests\Master\Item\Index;
 use App\Http\Requests\Master\Item\Store;
 use App\Http\Requests\Master\Item\Update;
-use App\Models\Item as Model;
+use App\Models\Category;
+use App\Models\Unit;
 use App\Repositories\Item as ItemRepository;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
+use App\Traits\HasCrudActions;
 use Illuminate\View\View;
+use Yajra\DataTables\Html\Builder;
 
 class Item extends Controller
 {
-    /**
-     * @var Item
-     */
-    public ItemRepository $item;
+    use HasCrudActions;
 
-    /**
-     * @param ItemRepository $item
-     */
-    public function __construct()
-    {
-        $this->item = new ItemRepository();
-    }
+    protected $viewPath = 'app.master.items';
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\View\View
-     */
-    public function index(Index $request): View
-    {
-        $this->authorize('browse-item');
-        $items = $this->item->paginate($request, ['*'], 'name');
+    protected $permission = 'item';
 
-        return view('app.master.items.index', compact('items'));
-    }
+    protected $indexRequest = Index::class;
+
+    protected $storeRequest = Store::class;
+
+    protected $updateRequest = Update::class;
+
+    protected $bulkDestroyRequest = BulkDelete::class;
+
+    protected $redirect = '/master/item';
+
+    protected $repositoryClass = ItemRepository::class;
 
     /**
      * Show the form for creating a new resource.
@@ -49,90 +43,38 @@ class Item extends Controller
      */
     public function create(): View
     {
-        $this->authorize('create-item');
+        app()->setLocale(optional(auth()->user() ?? 'en')->localization);
+        $this->authorize("create-$this->permission");
+        $categories = Category::toBase()->get()->map(function ($c) {
+            return ['id' => $c->id, 'text' => $c->name];
+        });
+        $units = Unit::toBase()->get()->map(function ($c) {
+            return ['id' => $c->id, 'text' => $c->name];
+        });
 
-        return view('app.master.items.create');
+        return view("{$this->viewPath}.create", compact('categories', 'units'));
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Show the form for creating a new resource.
      *
-     * @param App\Http\Requests\Master\Item\Store $request
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function store(Store $request): RedirectResponse
-    {
-        $this->authorize('create-item');
-        $this->item->create($request);
-
-        return redirect()->to('/master/item');
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Item  $item
      * @return \Illuminate\View\View
      */
-    public function show(Model $item): View
+    public function edit(int $model): View
     {
-        $this->authorize('browse-item');
+        app()->setLocale(optional(auth()->user() ?? 'en')->localization);
+        $data = $this->repository->find($model);
 
-        return view('app.master.items.show', compact('item'));
-    }
+        $this->authorize("update-$this->permission");
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Item  $item
-     * @return \Illuminate\View\View
-     */
-    public function edit(Model $item)
-    {
-        $this->authorize('update-item');
+        $categories = Category::toBase()->get()->map(function ($c) {
+            return ['id' => $c->id, 'text' => $c->name];
+        });
 
-        return view('app.master.items.edit', compact('item'));
-    }
+        $units = Unit::toBase()->get()->map(function ($c) {
+            return ['id' => $c->id, 'text' => $c->name];
+        });
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Model  $item
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function update(Update $request, Model $item): RedirectResponse
-    {
-        $this->authorize('update-item');
-        $this->item->update($request, $item);
-
-        return redirect()->to('/master/item');
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Item  $item
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Model $item): RedirectResponse
-    {
-        $this->authorize('delete-item');
-        $item->delete();
-
-        return redirect()->to('/master/item');
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  BulkDelete $request
-     * @return \Illuminate\Http\Response
-     */
-    public function bulkDestroy(BulkDelete $request): RedirectResponse
-    {
-        $this->item->bulkDestroy($request);
-
-        return redirect()->back();
+        return view("{$this->viewPath}.edit", compact('categories', 'data', 'units'));
     }
 }

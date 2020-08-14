@@ -14,13 +14,17 @@ class InstallTest extends TestCase
     {
         $response = $this->post(route('install.databaseStore'), [
             'host' => 'localhost',
-            'name' => 'lakasir',
+            'name' => 'laravel_lakasir',
             'username' => 'root',
-            'password' => '``'
+            'password' => '`'
         ]);
+        $redirect = '/install?tab=user';
+        if (getenv('INSTALL') != "false") {
+            $redirect = '';
+        }
 
         $response->assertStatus(302);
-        $response->assertRedirect('/install?tab=user');
+        $response->assertRedirect($redirect);
     }
 
     public function test_install_user()
@@ -31,9 +35,13 @@ class InstallTest extends TestCase
             'password' => '12345678',
             'password_confirmation' => '12345678'
         ]);
+        $redirect = '/install?tab=company';
+        if (getenv('INSTALL') != "false") {
+            $redirect = '';
+        }
 
         $response->assertStatus(302);
-        $response->assertRedirect('/install?tab=company');
+        $response->assertRedirect($redirect);
     }
 
     public function test_install_company()
@@ -51,16 +59,23 @@ class InstallTest extends TestCase
         ]);
 
         /**
-         * FIXME: update the value env install variable <sheenazien 2020-07-01>
+         * FIXME: update the value getenv install variable <sheenazien 2020-07-01>
          * the first value don't want to change
          * but overwritten and become one word
          */
 
-        UpdateEnv::dispatchNow([
-            'INSTALL=' => 'false'
-        ]);
+        if (app()->environment() == 'production') {
+            UpdateEnv::dispatchNow([
+                'INSTALL=' => 'false'
+            ]);
+        }
+
+        $redirect = '/completed';
+        if (getenv('INSTALL') != "false") {
+            $redirect = '/';
+        }
 
         $response->assertStatus(302);
-        $response->assertRedirect('/');
+        $response->assertRedirect($redirect);
     }
 }

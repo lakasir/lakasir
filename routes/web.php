@@ -13,18 +13,54 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function() {
+Route::get('/', function () {
+    return redirect()->to('/dashboard');
+})->middleware([ 'installed', 'auth' ]);
 
-})->middleware('installed');
-
-Route::group(['middleware' => 'auth'], function() {
-    Route::delete('/master/unit/bulk-destroy', 'Master\Unit@bulkDestroy');
-    Route::resource('master/unit', 'Master\Unit');
-
-    Route::delete('/master/category/bulk-destroy', 'Master\Category@bulkDestroy');
-    Route::resource('master/category', 'Master\Category');
+Route::view('/completed', 'app.install.completed');
 
 
-    Route::delete('/master/item/bulk-destroy', 'Master\Item@bulkDestroy');
-    Route::resource('master/item', 'Master\Item');
+Route::group(['middleware' => [ 'auth', 'installed' ]], function () {
+    Route::get('dashboard', 'Dashboard')->name('dashboard');
+
+    Route::group(['prefix' => 'master'], function () {
+        Route::delete('/unit/bulk-destroy', 'Master\Unit@bulkDestroy');
+        Route::resource('/unit', 'Master\Unit');
+
+        Route::delete('/category/bulk-destroy', 'Master\Category@bulkDestroy');
+        Route::resource('/category', 'Master\Category');
+
+
+        Route::delete('/item/bulk-destroy', 'Master\Item@bulkDestroy');
+        Route::resource('/item', 'Master\Item');
+
+        Route::delete('/supplier/bulk-destroy', 'Master\Supplier@bulkDestroy');
+        Route::resource('/supplier', 'Master\Supplier');
+
+        Route::delete('/group/bulk-destroy', 'Master\Group@bulkDestroy');
+        Route::resource('/group', 'Master\Group');
+
+        Route::delete('/customer/bulk-destroy', 'Master\Customer@bulkDestroy');
+        Route::resource('/customer', 'Master\Customer');
+
+        Route::post('/customer-point', 'Master\CustomerPoint@store')->name('customer-point.store');
+    });
+
+    Route::group(['prefix' => 'user'], function () {
+        Route::get('profile', 'User\Profile@index')->name('profile.index');
+        Route::post('profile', 'User\Profile@store')->name('profile.store');
+
+        Route::get('change_password', 'User\ChangePassword@index')->name('change_password.index');
+        Route::post('change_password', 'User\ChangePassword@store')->name('change_password.store');
+
+        Route::delete('/bulk-destroy', 'User\UserController@bulkDestroy');
+        Route::resource('/role', 'User\Role');
+    });
+    Route::resource('/user', 'User\UserController');
+
+    Route::resource('transaction/purchasing', 'Transaction\Purchasing');
+});
+
+Route::group(['middleware' => 'installed'], function () {
+    Auth::routes();
 });

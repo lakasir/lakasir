@@ -1,7 +1,7 @@
 <form action="{{ route('install.userStore') }}" method="post">
   @csrf
   <v-input icon="fa-user"
-           placeholder="{{ __('app.install.placeholder.username') }}"
+           placeholder="{{ __('app.install.placeholder.user.username') }}"
            :prepend="true"
            old="{{ old('username') }}"
            @error('username')
@@ -12,7 +12,7 @@
            :validation="['required', 'min:3', 'alpha_dash']"
     ></v-input>
   <v-input icon="fa-envelope"
-           placeholder="{{ __('app.install.placeholder.email') }}"
+           placeholder="{{ __('app.install.placeholder.user.email') }}"
            :prepend="true"
            old="{{ old('email') }}"
            @error('email')
@@ -23,7 +23,7 @@
            :validation="['required', 'email']"
     ></v-input>
   <v-input icon="fa-lock"
-           placeholder="{{ __('app.install.placeholder.password') }}"
+           placeholder="{{ __('app.install.placeholder.user.password') }}"
            type="password"
            old="{{ old('password') }}"
            @error('password')
@@ -35,7 +35,7 @@
            :validation="['required']"
     ></v-input>
   <v-input icon="fa-lock"
-           placeholder="{{ __('app.install.placeholder.password_confirmation') }}"
+           placeholder="{{ __('app.install.placeholder.user.password_confirmation') }}"
           type="password"
           old="{{ old('password_confirmation') }}"
            @error('password_confirmation')
@@ -58,4 +58,3 @@
     <!-- /.col -->
   </div>
 </form>
-

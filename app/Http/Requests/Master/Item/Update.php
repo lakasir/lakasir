@@ -26,10 +26,9 @@ class Update extends FormRequest
     {
         return [
             'name' => 'required',
-            'stock' => ['required', 'integer'],
             'unit_id' => 'required',
             'category_id' => 'required',
-            'image' => ['image:jpeg,png']
+            'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048'
         ];
     }
 }

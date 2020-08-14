@@ -14,6 +14,7 @@ use App\Repositories\User as UserRepository;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class Install extends Controller
@@ -57,7 +58,9 @@ class Install extends Controller
     {
         $is_connected = $this->checkDatabaseConnection($request, true);
 
-        if($is_connected !==true) return $is_connected;
+        if ($is_connected !==true) {
+            return $is_connected;
+        }
 
         $this->dispatchNow(new UpdateEnv([
             'DB_HOST' => $request->host,
@@ -73,7 +76,9 @@ class Install extends Controller
     {
         $is_connected = $this->checkDatabaseConnection($request);
 
-        if($is_connected !==true) return $is_connected;
+        if ($is_connected !==true) {
+            return $is_connected;
+        }
 
         $this->dispatchNow(new SaveSessionUser($request));
 
@@ -84,7 +89,9 @@ class Install extends Controller
     {
         $is_connected = $this->checkDatabaseConnection($request);
 
-        if($is_connected !==true) return $is_connected;
+        if ($is_connected !==true) {
+            return $is_connected;
+        }
 
         /**
          * FIXME: the first value is don't wan't change <sheenazien 2020-07-02>
@@ -93,32 +100,34 @@ class Install extends Controller
 
         $this->user->role('owner')->create($request);
         $this->company->create($request);
-        $this->dispatchNow(new UpdateEnv([
-            'INSTALL' => 'true'
-        ]));
+        if (app()->environment() == 'production' || app()->environment() == 'local') {
+            $this->dispatchNow(new UpdateEnv([
+                'INSTALL' => 'true'
+            ]));
+        }
 
-        return redirect()->to('/');
+        return redirect()->to('/completed');
     }
 
     private function checkDatabaseConnection($request = null, $set_config = false)
     {
         try {
-            if($set_config) {
-               \Config::set('database.connections.mysql', [
+            if ($set_config) {
+                \Config::set('database.connections.mysql', [
                     'host' => $request->host,
                     'database' => $request->name,
                     'username' => $request->username,
                     'password' => $request->password,
                     'driver' => 'mysql',
-               ]);
-                Artisan::call('migrate:fresh');
-                Artisan::call('db:seed');
+                ]);
             }
+            DB::connection()->reconnect();
+            Artisan::call('migrate');
+            Artisan::call('db:seed');
 
-            \DB::connection()->getPdo();
             return true;
         } catch (\Exception $e) {
-            return redirect()->to('install?tab=database')->with('database_error_message', 'Failed to connect to database');
+            return redirect()->to('install?tab=database')->with('database_error_message', $e->getMessage());
         }
     }
 }

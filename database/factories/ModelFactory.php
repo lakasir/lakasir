@@ -3,9 +3,12 @@
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
 use App\Models\Category;
+use App\Models\Customer;
+use App\Models\Group;
 use App\Models\Item;
 use App\Models\Price;
 use App\Models\Stock;
+use App\Models\Supplier;
 use App\Models\Unit;
 use Faker\Generator as Faker;
 
@@ -23,9 +26,8 @@ $factory->define(Category::class, function (Faker $faker) {
 
 $factory->define(Price::class, function (Faker $faker) {
     return [
-        'name' => $faker->name,
-        'initial_price' => rand(4000, 20000),
-        'selling_price' => rand(20000, 40000),
+        'initial_price' => rand(20, 30). '00',
+        'selling_price' => rand(30, 40). '00',
         'date' => now()->format('Y-m-d'),
         'item_id' => factory(Item::class)
     ];
@@ -50,3 +52,33 @@ $factory->define(Item::class, function (Faker $faker) {
     ];
 });
 
+$factory->define(Supplier::class, function (Faker $faker) {
+    return [
+        'name' => $faker->name(),
+        'shop_name' => $faker->name(),
+        'name' => $faker->name(),
+        'phone' => $faker->phoneNumber(),
+        'address' => $faker->streetAddress(),
+        'code' => $faker->languageCode()
+    ];
+});
+
+$factory->define(Group::class, function (Faker $faker) {
+    return [
+        'name' => $faker->name()
+    ];
+});
+
+$factory->define(Customer::class, function (Faker $faker) {
+    return [
+        'name' => $faker->name(),
+        'email' => $faker->email(),
+        'code' => $faker->randomDigit()
+    ];
+});
+
+$factory->define(Group::class, function (Faker $faker) {
+    return [
+        'name' => $faker->name(),
+    ];
+});

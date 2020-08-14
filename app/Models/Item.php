@@ -4,10 +4,12 @@ namespace App\Models;
 
 use App\Traits\Media;
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\HasLaTable;
 
 class Item extends Model
 {
     use Media;
+    use HasLaTable;
 
     protected $fillable = [
         'name',
@@ -29,5 +31,18 @@ class Item extends Model
         return $this->hasMany(Price::class, 'item_id');
     }
 
+    public function log_stocks()
+    {
+        return $this->hasMany(Stock::class, 'item_id');
+    }
 
+    public function getLastStockAttribute()
+    {
+        return $this->log_stocks->last();
+    }
+
+    public function getLastPriceAttribute()
+    {
+        return $this->prices->last();
+    }
 }

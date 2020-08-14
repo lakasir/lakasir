@@ -1,17 +1,20 @@
 <template>
-  <div>
-    <div class="mb-3" :class="prepend ? 'input-group' : ''">
-      <label v-if="!prepend">{{ label }}</label>
+  <div :class="'col-md-' + size">
+    <label class="text-muted" v-if="!prepend">{{ label }}</label>
+    <div class="mb-3" :class="prepend || type == 'password' ? 'input-group' : ''">
       <input :type="type" class="form-control" :class="dataError ? 'is-invalid' : validClass" :value="value"
                          :name="name" v-on:focus="checkValidation" v-on:blur="checkValidation" :placeholder="placeholder">
-      <div v-if="prepend" class="input-group-append">
+      <div v-if="prepend || type == 'password'" class="input-group-append">
         <div class="input-group-text">
-          <span :class="'fas ' + icon"></span>
+            <span :class="'fas ' + icon"></span>
         </div>
       </div>
       <div v-if="dataError" class="invalid-feedback">
         {{ dataErrorMessage }}
       </div>
+      <small v-if="info" class="form-text text-muted">
+        {{ info }}
+      </small>
     </div>
   </div>
 </template>
@@ -21,6 +24,14 @@ export default {
   name: 'VInput',
 
   props: {
+    info: {
+      type: String,
+      value: null
+    },
+    size: {
+      type: String,
+      value: '12'
+    },
     name: {
       type: String,
       value: ''
@@ -77,7 +88,7 @@ export default {
       dataError: false,
       dataErrorMessage: '',
       validClass: '',
-      value: ''
+      value: '',
     }
   },
 

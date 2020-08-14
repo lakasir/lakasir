@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
 
@@ -31,6 +32,12 @@ class AppServiceProvider extends ServiceProvider
         if (!env('APP_KEY')) {
             Artisan::call('key:generate');
         }
+        \Spatie\Flash\Flash::levels([
+            'success' => 'alert-success',
+            'warning' => 'alert-warning',
+            'error' => 'alert-error',
+        ]);
+
         /**
          * FIXME: create error custome message foR extend falidation <sheenazien8 2020-06-29>
          *

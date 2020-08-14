@@ -7,6 +7,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-param" content="_token" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     {{-- Custom Meta Tags --}}
@@ -61,7 +62,41 @@
         <meta name="msapplication-TileColor" content="#ffffff">
         <meta name="msapplication-TileImage" content="{{ asset('favicon/ms-icon-144x144.png') }}">
     @endif
+    <style>
+      .img-cover {
+        border: 2px solid black;
+        padding: 25px;
+        background-repeat: no-repeat;
+        background-size: auto;
+      }
+      .float{
+        position:fixed;
+        width:150px;
+        height:60px;
+        right:40px;
+        background-color:#0C9;
+        color:#FFF;
+        border-radius:50px;
+        text-align:center;
+        box-shadow: 2px 2px 3px #999;
+      }
+      /* Chrome, Safari, Edge, Opera */
+      input::-webkit-outer-spin-button,
+      input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+
+      /* Firefox */
+      input[type=number] {
+        -moz-appearance: textfield;
+      }
+    </style>
     @livewireStyles
+    <script>
+      window._locale = '{{ app()->getLocale() }}';
+      window._translations = {!! cache('translations') !!};
+    </script>
 
 </head>
 
@@ -74,20 +109,25 @@
 
     {{-- Base Scripts --}}
     @if(!config('adminlte.enabled_laravel_mix'))
-        <script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
-        <script src="{{ asset('vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-        <script src="{{ asset('vendor/overlayScrollbars/js/jquery.overlayScrollbars.min.js') }}"></script>
+      <script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
+      <script src="{{ asset('vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+      <script src="{{ asset('vendor/overlayScrollbars/js/jquery.overlayScrollbars.min.js') }}"></script>
 
-        {{-- Configured Scripts --}}
-        @include('adminlte::plugins', ['type' => 'js'])
-        <script src="{{ mix(config('adminlte.laravel_mix_js_path', 'js/app.js')) }}"></script>
+      {{-- Configured Scripts --}}
+      @include('adminlte::plugins', ['type' => 'js'])
+      <script src="{{ mix(config('adminlte.laravel_mix_js_path', 'js/app.js')) }}"></script>
     @else
     @endif
 
     {{-- Custom Scripts --}}
     @yield('adminlte_js')
+    <script charset="utf-8">
+      $(function(){
+        $('#chkToggle').bootstrapToggle();
+      });
+    </script>
+    @routes
     @livewireScripts
-
 </body>
 
 </html>
