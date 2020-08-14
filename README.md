@@ -28,24 +28,26 @@ Please, be very clear on your commit messages and pull requests, empty pull requ
 When contributing code to Lakasir, you must follow the PSR coding standards. The golden rule is: Imitate the existing Lakasir code
 
 ## Todo
-* [ ] install method
+* [x] install method
+* [x] Profile
+* [x] Change Password
 * [ ] Master Data 
-  * [ ] Unit
-  * [ ] Category
-  * [ ] Items
+  * [x] Unit
+  * [x] Category
+  * [x] Items
   * [ ] Log Price
   * [ ] Log Stock
-  * [ ] Supplier
+  * [x] Supplier
 * [ ] Employee
   * [ ] Attendance
   * [ ] Salary
-  * [ ] Role Management
-* [ ] Customer / Member
-  * [ ] List
-  * [ ] Group
-  * [ ] Point Customer
+  * [x] Role Management
+* [x] Customer / Member
+  * [x] List
+  * [x] Group
+  * [x] Point Customer
 * [ ] Transaction
-  * [ ] Purchasing
+  * [x] Purchasing
   * [ ] Selling
   * [ ] Print Invoice Purchasing / Selling
 * [ ] Accounting
@@ -56,9 +58,10 @@ When contributing code to Lakasir, you must follow the PSR coding standards. The
     * [ ] Selliing
     * [ ] Log Stock
     * [ ] log Price
+* [ ] Dashboard
 * [ ] Setting
   * [ ] Appreance
-  * [ ] Localization
+  * [x] Localization
   * [ ] Mailling
   
 ## Credits
