@@ -141,6 +141,13 @@ return [
             'note' => 'Note',
             'paid' => 'Paid'
         ],
+        'paid' => [
+            'true' => 'Already Paid Off',
+            'false' => 'Not Paid Yet'
+        ],
+        'note' => [
+            'nothing_note' => 'No Note'
+        ],
         'info' => [
             'invoice_number' => 'Leave it Empty for use default generate invoice number',
             'date' => 'Leave it Empty for use today Date'

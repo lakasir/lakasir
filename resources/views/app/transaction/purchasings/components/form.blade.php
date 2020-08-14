@@ -71,4 +71,10 @@
              ></v-date-picker>
   </div>
   <v-add-item items-options="{{ collect($options->get('Item')) }}"></v-add-item>
+  <v-checkbox placeholder="{{ __('app.purchasings.placeholder.paid') }}"
+           old="{{ old('is_paid') }}"
+           name="is_paid"
+           label="{{ __('app.purchasings.column.paid') }}"
+           default-value="1"
+    ></v-checkbox>
 </x-form>

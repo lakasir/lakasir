@@ -23,4 +23,9 @@ class PurchasingDetail extends Model
     {
         return $this->belongsTo(Purchasing::class, 'purchasing_id');
     }
+
+    public function getRowTotalAttribute()
+    {
+        return price_format($this->initial_price * $this->qty);
+    }
 }

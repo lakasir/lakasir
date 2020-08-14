@@ -16,3 +16,9 @@ if (! function_exists('dash_to_space')) {
         return $name;
     }
 }
+if (! function_exists('price_format')) {
+    function price_format($price)
+    {
+        return 'Rp. '.number_format($price, 0, ',', '.');
+    }
+}

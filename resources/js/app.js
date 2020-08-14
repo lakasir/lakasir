@@ -2,6 +2,7 @@ require('./bootstrap');
 require('datatables.net-bs4');
 require('datatables.net-buttons-bs4');
 require('jquery-ujs')
+require('bootstrap4-toggle')
 window.Vue = require('vue');
 window.axios = require('axios');
 Vue.mixin(require('./trans'))

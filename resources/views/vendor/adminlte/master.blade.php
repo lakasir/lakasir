@@ -121,6 +121,11 @@
 
     {{-- Custom Scripts --}}
     @yield('adminlte_js')
+    <script charset="utf-8">
+      $(function(){
+        $('#chkToggle').bootstrapToggle();
+      });
+    </script>
     @routes
     @livewireScripts
 </body>

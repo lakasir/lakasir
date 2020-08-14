@@ -141,6 +141,13 @@ return [
             'note' => 'Catatan',
             'paid' => 'Lunas'
         ],
+        'paid' => [
+            'true' => 'Sudah Terbayarkan',
+            'false' => 'Belum di Bayarkan'
+        ],
+        'note' => [
+            'nothing_note' => 'Tidak Ada Catatan'
+        ],
         'info' => [
             'invoice_number' => 'Biarkan kosong untuk menggunakan generate nomor pembayaran otomatis',
             'date' => 'Biarkan kosong untuk menggunakan tanggal hari ini'
