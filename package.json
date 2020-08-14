@@ -20,6 +20,7 @@
         "vue-template-compiler": "^2.6.11"
     },
     "dependencies": {
+        "bootstrap4-toggle": "^3.6.1",
         "datatables.net-bs4": "^1.10.21",
         "datatables.net-buttons-bs4": "^1.6.2",
         "jquery-ujs": "^1.2.2",

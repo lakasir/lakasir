@@ -1,15 +1,15 @@
 <template>
   <div>
     <div class="row col">
-      <div class="mb-3" :class="prepend ? 'input-group' : ''">
-        <input type="checkbox" :class="dataError ? 'is-invalid' : validClass" :value="value" :checked="checked"
-               :name="name" :placeholder="placeholder"aria-label="Checkbox for following text input">
+      <div class="mb-3 custom-control custom-switch" :class="prepend ? 'input-group' : ''">
+        <input type="checkbox" :class="dataError ? 'is-invalid' : validClass" :value="value" :checked="checked" class="custom-control-input"
+               :name="name" :placeholder="placeholder"aria-label="Checkbox for following text input" id="customSwitches">
         <div v-if="prepend" class="input-group-append">
           <div class="input-group-text">
             <span :class="'fas ' + icon"></span>
           </div>
         </div>
-        <label class="ml-2">{{ label }}</label>
+        <label class="custom-control-label" for="customSwitches">{{ label }}</label>
         <div v-if="dataError" class="invalid-feedback">
           {{ dataErrorMessage }}
         </div>
