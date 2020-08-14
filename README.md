@@ -38,8 +38,8 @@ When contributing code to Lakasir, you must follow the PSR coding standards. The
   * [ ] Log Price
   * [ ] Log Stock
   * [x] Supplier
-* [ ] User Management
-  * [ ] List
+* [x] User Management
+  * [x] List
   * [x] Role Management
 * [ ] Employee
   * [ ] Attendance
