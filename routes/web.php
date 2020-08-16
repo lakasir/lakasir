@@ -58,7 +58,14 @@ Route::group(['middleware' => [ 'auth', 'installed' ]], function () {
     });
     Route::resource('/user', 'User\UserController');
 
-    Route::resource('transaction/purchasing', 'Transaction\Purchasing');
+    Route::group(['prefix' => 'transaction'], function () {
+        Route::resource('/purchasing', 'Transaction\Purchasing');
+        Route::resource('/selling', 'Transaction\Selling');
+        Route::get('/cashier', 'Transaction\Selling@cashier');
+    });
+
+    Route::post('/cashdraw/open', 'Transaction\Cashdraw@open')->name('cashdraw.open');
+    Route::post('/cashdraw/close', 'Transaction\Cashdraw@close')->name('cashdraw.close');
 });
 
 Route::group(['middleware' => 'installed'], function () {
