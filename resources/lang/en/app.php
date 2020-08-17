@@ -108,6 +108,15 @@ return [
             'title' => 'Create Items'
         ],
     ],
+    'selling' => [
+        'title' => [
+            'cashier' => 'Cashier',
+            'index' => 'Index'
+        ],
+        'placeholder' => [
+            'search_item' => 'Search Item'
+        ]
+    ],
     'purchasings' => [
         'title' => 'Purchasing',
         'column' => [

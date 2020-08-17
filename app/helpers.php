@@ -22,3 +22,9 @@ if (! function_exists('price_format')) {
         return 'Rp. '.number_format($price, 0, ',', '.');
     }
 }
+if (! function_exists('get_lang')) {
+    function get_lang()
+    {
+        app()->setLocale(optional(auth()->user() ?? 'en')->localization);
+    }
+}

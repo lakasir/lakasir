@@ -271,6 +271,11 @@ return [
                     'url'  => 'transaction/selling',
                     'can' => 'browse-selling'
                 ],
+                [
+                    'text' => 'menu.cashier',
+                    'url'  => 'transaction/cashier',
+                    'can' => 'browse-selling'
+                ],
             ],
         ],
         /* ['header' => 'menu.customer_data'], */

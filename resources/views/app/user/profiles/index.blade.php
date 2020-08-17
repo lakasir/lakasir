@@ -12,8 +12,12 @@
         <div class="card-header p-2">
           <ul class="nav nav-pills">
             <li class="nav-item"><a class="nav-link active" href="#settings" data-toggle="tab"> {{ __('app.profiles.settings') }}</a></li>
-            <li class="nav-item"><a class="nav-link" href="#activity" data-toggle="tab"> {{ __('app.profiles.activity') }}</a></li>
-            <li class="nav-item"><a class="nav-link" href="#timeline" data-toggle="tab"> {{ __('app.profiles.timeline') }}</a></li>
+            @if (app()->environment('local', 'stagging'))
+              <li class="nav-item"><a class="nav-link" href="#activity" data-toggle="tab"> {{ __('app.profiles.activity') }}</a></li>
+            @endif
+            @if (app()->environment('local', 'stagging'))
+              <li class="nav-item"><a class="nav-link" href="#timeline" data-toggle="tab"> {{ __('app.profiles.timeline') }}</a></li>
+            @endif
           </ul>
         </div><!-- /.card-header -->
         <div class="card-body">
@@ -22,13 +26,17 @@
               @include('app.user.profiles.components.tab.setting')
             </div>
             <!-- /.tab-pane -->
-            <div class="tab-pane" id="activity">
-              @include('app.user.profiles.components.tab.activity')
-            </div>
+            @if (app()->environment('local', 'stagging'))
+              <div class="tab-pane" id="activity">
+                @include('app.user.profiles.components.tab.activity')
+              </div>
+            @endif
             <!-- /.tab-pane -->
-            <div class="tab-pane" id="timeline">
-              @include('app.user.profiles.components.tab.timeline')
-            </div>
+            @if (app()->environment('local', 'stagging'))
+              <div class="tab-pane" id="timeline">
+                @include('app.user.profiles.components.tab.timeline')
+              </div>
+            @endif
             <!-- /.tab-pane -->
 
           </div>

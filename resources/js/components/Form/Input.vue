@@ -94,27 +94,29 @@ export default {
 
   methods: {
     checkValidation: async function ($e) {
-      this.value = $e.target.value
-      let data = {
-        validation: this.validation,
-        key: this.name,
-        value: $e.target.value
-      }
-      if (this.validation.includes('confirmation')) {
-        let keyConfirmed = this.name.split('_')[0];
-        let valueConfirmed = document.getElementsByName(keyConfirmed)[0].value
-        data[keyConfirmed] = valueConfirmed
-      }
-      try {
-        const success = await axios.post('/api/formvalidation', data);
-        if (success.status == 200) {
-          this.dataError = false
-          this.validClass = 'is-valid'
+      if (this.validation) {
+        this.value = $e.target.value
+        let data = {
+          validation: this.validation,
+          key: this.name,
+          value: $e.target.value
         }
-      } catch (e) {
-        if (e.request.status == 422) {
-          this.dataError = true
-          this.dataErrorMessage = JSON.parse(e.request.response)[this.name][0]
+        if (this.validation.includes('confirmation')) {
+          let keyConfirmed = this.name.split('_')[0];
+          let valueConfirmed = document.getElementsByName(keyConfirmed)[0].value
+          data[keyConfirmed] = valueConfirmed
+        }
+        try {
+          const success = await axios.post('/api/formvalidation', data);
+          if (success.status == 200) {
+            this.dataError = false
+            this.validClass = 'is-valid'
+          }
+        } catch (e) {
+          if (e.request.status == 422) {
+            this.dataError = true
+            this.dataErrorMessage = JSON.parse(e.request.response)[this.name][0]
+          }
         }
       }
     }

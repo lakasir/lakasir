@@ -28,6 +28,8 @@ class CustomerPoint extends Controller
      */
     public function store(): RedirectResponse
     {
+        get_lang();
+
         $request = resolve($this->storeRequest);
 
         $this->authorize("create-$this->permission");

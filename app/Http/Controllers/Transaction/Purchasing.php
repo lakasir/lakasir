@@ -43,7 +43,7 @@ class Purchasing extends Controller
      */
     public function create(): View
     {
-        app()->setLocale(optional(auth()->user() ?? 'en')->localization);
+        get_lang();
 
         $this->authorize("create-$this->permission");
 
@@ -68,7 +68,7 @@ class Purchasing extends Controller
      */
     public function edit(int $model): View
     {
-        app()->setLocale(optional(auth()->user() ?? 'en')->localization);
+        get_lang();
 
         $data = $this->repository->find($model);
 

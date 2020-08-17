@@ -20,5 +20,6 @@ return [
     'role' => 'Jabatan',
     'account_settings' => 'Pengaturan Akun',
     'profile' => 'Profil',
-    'change_password' => 'Ganti Password'
+    'change_password' => 'Ganti Password',
+    'cashier' => 'Kasir'
 ];

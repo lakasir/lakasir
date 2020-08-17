@@ -31,7 +31,7 @@ trait HasCrudActions
      */
     public function index()
     {
-        app()->setLocale(optional(auth()->user() ?? 'en')->localization);
+        get_lang();
         $request = resolve($this->indexRequest);
         $this->authorize("browse-$this->permission");
         if ($request->ajax()) {
@@ -68,7 +68,7 @@ trait HasCrudActions
      */
     public function create(): View
     {
-        app()->setLocale(optional(auth()->user() ?? 'en')->localization);
+        get_lang();
 
         $this->authorize("create-$this->permission");
 
@@ -82,7 +82,7 @@ trait HasCrudActions
      */
     public function store(): RedirectResponse
     {
-        app()->setLocale(optional(auth()->user() ?? 'en')->localization);
+        get_lang();
 
         $request = resolve($this->storeRequest);
 
@@ -114,7 +114,7 @@ trait HasCrudActions
      */
     public function show(int $model): View
     {
-        app()->setLocale(optional(auth()->user() ?? 'en')->localization);
+        get_lang();
 
         $data = $this->repository->find($model);
 
@@ -131,7 +131,7 @@ trait HasCrudActions
      */
     public function edit(int $model)
     {
-        app()->setLocale(optional(auth()->user() ?? 'en')->localization);
+        get_lang();
 
         $data = $this->repository->find($model);
 
@@ -148,7 +148,7 @@ trait HasCrudActions
      */
     public function update(int $model): RedirectResponse
     {
-        app()->setLocale(optional(auth()->user() ?? 'en')->localization);
+        get_lang();
 
         $data = $this->repository->find($model);
 
@@ -182,7 +182,7 @@ trait HasCrudActions
      */
     public function destroy(int $model): RedirectResponse
     {
-        app()->setLocale(optional(auth()->user() ?? 'en')->localization);
+        get_lang();
 
         $this->authorize("delete-{$this->permission}");
 
@@ -200,7 +200,7 @@ trait HasCrudActions
      */
     public function bulkDestroy(): RedirectResponse
     {
-        app()->setLocale(optional(auth()->user() ?? 'en')->localization);
+        get_lang();
 
         $request = resolve($this->bulkDestroyRequest);
 

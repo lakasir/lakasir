@@ -20,5 +20,6 @@ return [
     'role' => 'Role',
     'account_settings' => 'Account Settings',
     'profile' => 'Profile',
-    'change_password' => 'Change Password'
+    'change_password' => 'Change Password',
+    'cashier' => 'Cashier'
 ];
