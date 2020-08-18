@@ -64,8 +64,8 @@ Route::group(['middleware' => [ 'auth', 'installed' ]], function () {
         Route::get('/cashier', 'Transaction\Selling@cashier');
     });
 
-    Route::post('/cashdraw/open', 'Transaction\Cashdraw@open')->name('cashdraw.open');
-    Route::post('/cashdraw/close', 'Transaction\Cashdraw@close')->name('cashdraw.close');
+    Route::post('/cashdrawer/open', 'Transaction\CashDrawer@open')->name('cashdrawer.open');
+    Route::post('/cashdrawer/close', 'Transaction\CashDrawer@close')->name('cashdrawer.close');
 });
 
 Route::group(['middleware' => 'installed'], function () {
