@@ -21,6 +21,7 @@ Route::view('/completed', 'app.install.completed');
 
 
 Route::group(['middleware' => [ 'auth', 'installed' ]], function () {
+    Route::view('/c', 'app.transaction.sellings.cashier');
     Route::get('dashboard', 'Dashboard')->name('dashboard');
 
     Route::group(['prefix' => 'master'], function () {
