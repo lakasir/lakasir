@@ -15,6 +15,7 @@ class LoginTest extends TestCase
         $data = ['email' => $user->email, 'password' => '12345678'];
         $response = $this->post(route('api.auth.login'), $data);
 
+        $response->dump();
         $response->assertStatus(200)
                  ->assertJsonStructure(['success', 'payload' => ['token']]);
     }
@@ -25,6 +26,7 @@ class LoginTest extends TestCase
         $data = ['email' => $user->email];
         $response = $this->post(route('api.auth.login'), $data);
 
+        $response->dump();
         $response->assertStatus(422)
                  ->assertJsonStructure(['success', 'errors']);
     }
@@ -35,6 +37,7 @@ class LoginTest extends TestCase
         $data = ['email' => $user->email, 'password' => '23979843'];
         $response = $this->post(route('api.auth.login'), $data);
 
+        $response->dump();
         $response->assertStatus(422)
                  ->assertJsonStructure(['success', 'message']);
     }
@@ -44,6 +47,7 @@ class LoginTest extends TestCase
         $data = ['email' => 'admin21213@example.com', 'password' => '23979843'];
         $response = $this->post(route('api.auth.login'), $data);
 
+        $response->dump();
         $response->assertStatus(422)
                  ->assertJsonStructure(['success', 'message']);
     }

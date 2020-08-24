@@ -15,6 +15,8 @@ class Media extends Model
         'size'
     ];
 
+    protected $appends = ['get_full_name'];
+
     public function getGetFullNameAttribute()
     {
         return $this->location . '/' . $this->filename;

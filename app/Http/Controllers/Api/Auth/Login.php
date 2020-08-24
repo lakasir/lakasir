@@ -24,6 +24,14 @@ class Login extends Controller
         $this->user = $user;
     }
 
+    /**
+     *
+     * Login User
+     *
+     * @params App\Http\Requests\Auth\Login as Request $request
+     *
+     * @return Illuminate\Http\JsonResponse
+     */
     public function login(Request $request): JsonResponse
     {
         $user = $this->user->getModel()::where('email', $request->email)->first();
