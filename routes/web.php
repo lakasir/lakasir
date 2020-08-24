@@ -19,9 +19,9 @@ Route::get('/', function () {
 
 Route::view('/completed', 'app.install.completed');
 
+Route::view('/c', 'app.transaction.sellings.cashier')->middleware('installed');
 
 Route::group(['middleware' => [ 'auth', 'installed' ]], function () {
-    Route::view('/c', 'app.transaction.sellings.cashier');
     Route::get('dashboard', 'Dashboard')->name('dashboard');
 
     Route::group(['prefix' => 'master'], function () {
@@ -61,8 +61,8 @@ Route::group(['middleware' => [ 'auth', 'installed' ]], function () {
 
     Route::group(['prefix' => 'transaction'], function () {
         Route::resource('/purchasing', 'Transaction\Purchasing');
-        Route::resource('/selling', 'Transaction\Selling');
-        Route::get('/cashier', 'Transaction\Selling@cashier');
+        // Route::resource('/selling', 'Transaction\Selling');
+        // Route::get('/cashier', 'Transaction\Selling@cashier');
     });
 
     Route::post('/cashdrawer/open', 'Transaction\CashDrawer@open')->name('cashdrawer.open');

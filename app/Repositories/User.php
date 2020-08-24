@@ -4,12 +4,13 @@ namespace App\Repositories;
 
 use App\Abstracts\Repository as RepositoryAbstract;
 use Illuminate\Http\Request;
+use App\Models\User as UserModel;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 
 class User extends RepositoryAbstract
 {
-    protected string $model = 'App\Models\User';
+    protected string $model = UserModel::class;
 
     /**
      * @var string

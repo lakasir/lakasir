@@ -32,8 +32,11 @@ trait HasCrudActions
     public function index()
     {
         get_lang();
+
         $request = resolve($this->indexRequest);
+
         $this->authorize("browse-$this->permission");
+
         if ($request->ajax()) {
             if (isset($this->indexService)) {
                 if (count($this->indexService) > 2) {
@@ -46,6 +49,9 @@ trait HasCrudActions
 
                 return $this->repository->getobjectmodel()->table($resources);
             } else {
+                if (isset($this->indexReturn) && $this->indexReturn == 'index') {
+                    return;
+                }
                 return $this->repository->datatable($request);
             }
         }
@@ -97,11 +103,18 @@ trait HasCrudActions
             if (!is_array($this->storeService)) {
                 throw new ServiceActionsException('Store Service property must be array');
             }
-            ( new $this->storeService[0] )->{$this->storeService[1]}($request);
+            $data = ( new $this->storeService[0] )->{$this->storeService[1]}($request);
         } else {
-            $this->repository->create($request);
+            $data = $this->repository->create($request);
         }
-        flash()->success(__('app.global.message.create').' '. ucfirst($this->permission));
+        $message = __('app.global.message.create').' '. ucfirst($this->permission);
+
+        if (isset($this->return) && $this->return == 'api') {
+            return response()->json($data, 200);
+        }
+
+        flash()->success($message);
+
 
         return redirect()->to($this->redirect);
     }
@@ -165,11 +178,18 @@ trait HasCrudActions
             if (!is_array($this->updateService)) {
                 throw new ServiceActionsException('Store Service property must be array');
             }
-            ( new $this->updateService[0] )->{$this->updateService[1]}($data, $request);
+            $data = (new $this->updateService[0])->{$this->updateService[1]}($data, $request);
         } else {
-            $this->repository->update($request, $data);
+            $data = $this->repository->update($request, $data);
         }
-        flash()->success(__('app.global.message.update').' '. ucfirst($this->permission));
+
+        $message = __('app.global.message.update').' '. ucfirst($this->permission);
+
+        if (isset($this->return) && $this->return == 'api') {
+            return response()->json($data, 200);
+        }
+
+        flash()->success($message);
 
         return redirect()->to($this->redirect);
     }
@@ -188,7 +208,9 @@ trait HasCrudActions
 
         $this->repository->find($model)->delete();
 
-        flash()->success(__('app.global.message.delete').' '. ucfirst($this->permission));
+        $message = __('app.global.message.delete').' '. ucfirst($this->permission);
+
+        flash()->success($message);
 
         return redirect()->to($this->redirect);
     }
@@ -206,7 +228,9 @@ trait HasCrudActions
 
         $this->repository->bulkDestroy($request);
 
-        flash()->success(__('app.global.message.delete').' '. ucfirst($this->permission));
+        $message = __('app.global.message.delete').' '. ucfirst($this->permission);
+
+        flash()->success($message);
 
         return redirect()->back();
     }

@@ -46,7 +46,7 @@ return [
     */
 
     'logo' => '<b>Akasir</b>',
-    'logo_img' => '/assets/Lakasir.png',
+    'logo_img' => '/assets/lakasir-sm.png',
     'logo_img_class' => 'brand-image img-circle elevation-3',
     'logo_img_xl' => null,
     'logo_img_xl_class' => 'brand-image-xl',
@@ -266,16 +266,16 @@ return [
                     'url'  => 'transaction/purchasing',
                     'can' => 'browse-purchasing'
                 ],
-                [
-                    'text' => 'menu.selling',
-                    'url'  => 'transaction/selling',
-                    'can' => 'browse-selling'
-                ],
-                [
-                    'text' => 'menu.cashier',
-                    'url'  => 'transaction/cashier',
-                    'can' => 'browse-selling'
-                ],
+                /* [ */
+                /*     'text' => 'menu.selling', */
+                /*     'url'  => 'transaction/selling', */
+                /*     'can' => 'browse-selling' */
+                /* ], */
+                /* [ */
+                /*     'text' => 'menu.cashier', */
+                /*     'url'  => 'transaction/cashier', */
+                /*     'can' => 'browse-selling' */
+                /* ], */
             ],
         ],
         /* ['header' => 'menu.customer_data'], */
@@ -367,7 +367,7 @@ return [
         JeroenNoten\LaravelAdminLte\Menu\Filters\HrefFilter::class,
         JeroenNoten\LaravelAdminLte\Menu\Filters\SearchFilter::class,
         JeroenNoten\LaravelAdminLte\Menu\Filters\ActiveFilter::class,
-        JeroenNoten\LaravelAdminLte\Menu\Filters\SubmenuFilter::class,
+        // JeroenNoten\LaravelAdminLte\Menu\Filters\SubmenuFilter::class,
         JeroenNoten\LaravelAdminLte\Menu\Filters\ClassesFilter::class,
         JeroenNoten\LaravelAdminLte\Menu\Filters\GateFilter::class,
         JeroenNoten\LaravelAdminLte\Menu\Filters\LangFilter::class,

@@ -1,13 +1,20 @@
 <template>
   <v-app>
-    <v-alert type="warning" :value="true">
-      Vuetify was installed properly
-    </v-alert>
+    <router-view></router-view>
   </v-app>
 </template>
 
 <script>
+import Master from './components/partials/Master.vue';
 export default {
-  name: "App"
+  components: {
+    Master
+  },
+  name: "App",
+  watch: {
+    '$route' (to, from) {
+      document.title = to.meta.title || 'Lakasir'
+    }
+  }
 };
 </script>

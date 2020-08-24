@@ -20,3 +20,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::post('/formvalidation', 'Api\CheckValidation')->withoutMiddleware('throttle');
 Route::get('/item/{id}', 'Api\Item')->name('api.item.show');
+
+Route::group(['prefix' => 'v1', 'as' => 'api.'], function () {
+    Route::post('/auth/login', 'Api\Auth\Login@login')->name('auth.login');
+    // Route::post('/sell', 'Api\Selling@store')->name('selling.store');
+});

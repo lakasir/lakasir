@@ -17,6 +17,20 @@ Vue.component('v-dropdown', require('./components/Form/Dropdown').default)
 Vue.component('select2', require('./components/Form/Select2').default)
 
 Vue.component('v-add-item', require('./components/Purchasing/AddItem').default)
+Vue.component(
+    'passport-clients',
+    require('./components/passport/Clients.vue').default
+);
+
+Vue.component(
+    'passport-authorized-clients',
+    require('./components/passport/AuthorizedClients.vue').default
+);
+
+Vue.component(
+    'passport-personal-access-tokens',
+    require('./components/passport/PersonalAccessTokens.vue').default
+);
 
 const app = new Vue({
   el: '#app',
