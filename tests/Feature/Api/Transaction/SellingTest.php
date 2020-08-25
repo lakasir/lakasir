@@ -11,11 +11,13 @@ class SellingTest extends TestCase
 {
     use SetClietnCredentials;
 
-    public function test_selling_list_item_success()
+    public function test_selling_list_item_success($search = null)
     {
         $this->setClientCredentialsToken();
 
-        $response = $this->get(route('api.selling.index'), $this->oauth_headers);
+        $response = $this->get(route('api.selling.index', [
+            'search' => $search
+        ]), $this->oauth_headers);
 
         $response->dump()
             ->assertStatus(200)

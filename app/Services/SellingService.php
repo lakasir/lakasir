@@ -28,7 +28,11 @@ class SellingService
      */
     public function list_item(Request $request): array
     {
-        $items = $this->item->getModel()::select('name', 'id')->with('media', 'prices', 'log_stocks')
+        $items = $this->item->getModel()::select('name', 'id')
+                            ->with('media', 'prices', 'log_stocks')
+                            ->when($request->search, function ($query) use ($request) {
+                                return $query->where('name', 'LIKE', $request->search.'%') ;
+                            })
                             ->get()->map(function ($item) {
                                 return [
                                     'id' => $item->id,
