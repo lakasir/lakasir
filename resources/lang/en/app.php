@@ -60,6 +60,8 @@ return [
         'label' => [
             'remember' => 'Remeber Me'
         ],
+        'login' => 'Login',
+        'forgot_password' => 'Forgot Password'
     ],
     'items' => [
         'title' => 'Item Data',

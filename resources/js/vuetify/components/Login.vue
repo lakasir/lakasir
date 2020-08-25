@@ -14,28 +14,29 @@
         v-model="form.email"
         :rules="emailRules"
         :counter="10"
-        label="Email"
+        :label="__('app.auth.placeholder.email')"
         required
         ></v-text-field>
       <v-text-field
         v-model="form.password"
         :rules="passwordRules"
         :counter="10"
-        label="Password"
+        :label="__('app.auth.placeholder.password')"
         required
         type="password"
         ></v-text-field>
       <br>
         <v-btn
+          @click="loginSubmit"
               color="blue darken-1"
               dark
               block
               >
-              Login
+              {{ __('app.auth.login') }}
             </v-btn>
       <br>
       <router-link :to="{ path: 'forgot-password' }" class="text-decoration-none">
-          <p class="text-center">Forgot Password</p>
+        <p class="text-center">{{ __('app.auth.forgot_password') }}</p>
       </router-link>
     </v-container>
   </v-app>
@@ -43,6 +44,7 @@
 
 <script>
 const config = require('./../config/app').default;
+
 export default {
   name: 'Login',
 
@@ -68,7 +70,20 @@ export default {
   }),
 
   methods: {
+    loginSubmit() {
+      this.$store.dispatch('auth/loginSubmit', {
+        email: this.form.email,
+        password: this.form.password
+      })
+        .then(res => {
+          this.$router.push('/')
+        })
+        .catch(err => {
+          if (err?.request?.status == 422) {
 
+          }
+        })
+    }
   },
 
   mounted() {
