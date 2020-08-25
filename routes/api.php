@@ -25,6 +25,6 @@ Route::group(['prefix' => 'v1', 'as' => 'api.'], function () {
     Route::post('/auth/login', 'Api\Auth\Login@login')->name('auth.login');
     Route::group(['middleware' => [ 'auth:api' ]], function () {
         Route::get('/auth/profile', 'Api\Auth\Profile@get')->name('auth.profile');
-        Route::resource('/selling', 'Api\Selling');
+        Route::resource('/selling', 'Api\Transaction\Selling');
     });
 });

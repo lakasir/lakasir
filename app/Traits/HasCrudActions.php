@@ -3,6 +3,7 @@
 namespace App\Traits;
 
 use App\Exceptions\ServiceActionsException;
+use App\Facades\Response;
 use App\Http\Requests\Master\Unit\Index;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\RedirectResponse;
@@ -37,7 +38,7 @@ trait HasCrudActions
 
         $this->authorize("browse-$this->permission");
 
-        if ($request->ajax()) {
+        if ($request->ajax() || isset($this->return) && $this->return == 'api') {
             if (isset($this->indexService)) {
                 if (count($this->indexService) > 2) {
                     throw new ServiceActionsException('Index Service property is cant to more 2 index');
@@ -47,11 +48,19 @@ trait HasCrudActions
                 }
                 $resources = ( new $this->indexService[0] )->{$this->indexService[1]}($request);
 
-                return $this->repository->getobjectmodel()->table($resources);
+                if (isset($this->return) && $this->return == 'api') {
+                    return Response::success($resources);
+                }
+
+                return $this->repository->getObjectModel()->table($resources);
             } else {
-                if (isset($this->indexReturn) && $this->indexReturn == 'index') {
+                if (isset($this->return) && $this->return == 'index') {
                     return;
                 }
+                if (isset($this->return) && $this->return == 'api') {
+                    return Response::success($this->repository->getModel()::get()->toArray());
+                }
+
                 return $this->repository->datatable($request);
             }
         }

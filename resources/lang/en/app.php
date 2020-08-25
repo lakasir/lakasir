@@ -98,7 +98,8 @@ return [
             ],
             'stock' => [
                 'amount' => 'Amount',
-                'stock' => 'Stock'
+                'stock' => 'Stock',
+                'empty' => 'Empty Stock'
             ]
         ],
         'edit' => [
