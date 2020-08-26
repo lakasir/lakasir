@@ -76,7 +76,7 @@ export default {
         password: this.form.password
       })
         .then(res => {
-          this.$router.push('/')
+          this.$router.push('/cashier/selling')
         })
         .catch(err => {
           if (err?.request?.status == 422) {

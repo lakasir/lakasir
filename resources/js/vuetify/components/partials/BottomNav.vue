@@ -4,17 +4,17 @@
     :value="value"
     color="primary"
     >
-    <v-btn>
-      <span>Recents</span>
+    <v-btn :to="{ name: 'cashier.activity' }">
+      <span>{{ __('app.sellings.menu.activity') }}</span>
       <v-icon>mdi-history</v-icon>
     </v-btn>
-    <v-btn>
-      <span>Favorites</span>
-      <v-icon>mdi-heart</v-icon>
+    <v-btn :to="{ name: 'cashier.selling' }">
+      <span>{{ __('app.sellings.menu.sell') }}</span>
+      <v-icon>mdi-cart</v-icon>
     </v-btn>
-    <v-btn>
-      <span>Nearby</span>
-      <v-icon>mdi-map-marker</v-icon>
+    <v-btn :to="{ name: 'cashier.profile' }">
+      <span>{{ __('app.sellings.menu.profile') }}</span>
+      <v-icon>mdi-face</v-icon>
     </v-btn>
   </v-bottom-navigation>
 </template>

@@ -109,6 +109,20 @@ return [
             'title' => 'Tambah Items'
         ],
     ],
+    'sellings' => [
+        'title' => [
+            'cashier' => 'Kasir',
+            'index' => 'Index'
+        ],
+        'placeholder' => [
+            'search_item' => 'Cari Item'
+        ],
+        'menu' => [
+            'activity' => 'Aktifitas',
+            'sell' => 'Jual',
+            'profile' => 'Profil'
+        ]
+    ],
     'purchasings' => [
         'title' => 'Pembelian',
         'column' => [

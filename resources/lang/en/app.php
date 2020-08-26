@@ -111,13 +111,18 @@ return [
             'title' => 'Create Items'
         ],
     ],
-    'selling' => [
+    'sellings' => [
         'title' => [
             'cashier' => 'Cashier',
             'index' => 'Index'
         ],
         'placeholder' => [
             'search_item' => 'Search Item'
+        ],
+        'menu' => [
+            'activity' => 'Activity',
+            'sell' => 'Sell',
+            'profile' => 'Profile'
         ]
     ],
     'purchasings' => [

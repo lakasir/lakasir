@@ -1,17 +1,12 @@
 <template>
   <div>
-    <router-view></router-view>
-    <bottom-nav></bottom-nav>
+  Activity
   </div>
 </template>
 
 <script>
-import BottomNav from './BottomNav.vue';
 export default {
-  components: {
-    BottomNav
-  },
-  name: 'Master',
+  name: 'Activity',
 
   props: {
 
