@@ -18,7 +18,7 @@ class PurchasingTable extends LaTable
                 return view('partials.table.date')->with('date', $date);
             })
             ->addColumn('payment_method', function ($model) {
-                return dash_to_space($model->payment_method);
+                return optional($model->paymentMethod)->name;
             })
             ->addColumn('total_initial_price', function ($model) {
                 return price_format($model->total_initial_price);

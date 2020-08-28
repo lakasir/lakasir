@@ -14,7 +14,6 @@ class Purchasing extends Model
 
     protected $fillable = [
         'date',
-        'payment_method',
         'invoice_number',
         'total_initial_price',
         'total_selling_price',
@@ -22,6 +21,12 @@ class Purchasing extends Model
         'note',
         'is_paid'
     ];
+
+    public function paymentMethod()
+    {
+        return $this->belongsTo(PaymentMethod::class, 'payment_method_id');
+    }
+
 
     public function purchasingDetails()
     {

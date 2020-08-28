@@ -8,6 +8,7 @@ use App\Http\Requests\Transaction\Purchasing\Index;
 use App\Http\Requests\Transaction\Purchasing\Store;
 use App\Http\Requests\Transaction\Purchasing\Update;
 use App\Repositories\Item;
+use App\Repositories\PaymentMethod;
 use App\Repositories\Purchasing as PurchasingRepository;
 use App\Repositories\Supplier;
 use App\Services\PurchasingService;
@@ -51,9 +52,10 @@ class Purchasing extends Controller
         $options->put('Supplier', (new Supplier)->getModel()::get()->map(function ($c) {
             return ['id' => $c->id, 'text' => $c->name];
         }));
-        $options->put('PaymentMethod', collect(config('array_options.payment_method'))->map(function ($c) {
-            return ['id' => $c, 'text' => dash_to_space($c)];
-        }));
+        $options->put('PaymentMethod', (new PaymentMethod())->getModel()::where('visible_in->purchasing', true)
+            ->get()->map(function ($c) {
+                return ['id' => $c->id, 'text' => dash_to_space($c->name)];
+            }));
         $options->put('Item', (new Item)->getModel()::get()->map(function ($c) {
             return ['id' => $c->id, 'text' => $c->name];
         }));
@@ -77,8 +79,12 @@ class Purchasing extends Controller
         $options->put('Supplier', (new Supplier)->getModel()::get()->map(function ($c) {
             return ['id' => $c->id, 'text' => $c->name];
         }));
-        $options->put('PaymentMethod', collect(config('array_options.payment_method'))->map(function ($c) {
-            return ['id' => $c, 'text' => dash_to_space($c)];
+        $options->put('PaymentMethod', (new PaymentMethod())->getModel()::where('visible_in->purchasing', true)
+            ->get()->map(function ($c) {
+                return ['id' => $c->id, 'text' => dash_to_space($c->name)];
+            }));
+        $options->put('Item', (new Item)->getModel()::get()->map(function ($c) {
+            return ['id' => $c->id, 'text' => $c->name];
         }));
 
         return view("{$this->viewPath}.edit", compact('options', 'data'));

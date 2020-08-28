@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Builder\NumberGeneratorBuilder;
 use App\Repositories\Item;
+use App\Repositories\PaymentMethod;
 use App\Repositories\Purchasing;
 use App\Repositories\PurchasingDetail;
 use App\Repositories\Stock;
@@ -24,6 +25,7 @@ class PurchasingService
                 $purchasingRepository = new Purchasing();
                 $purchasingDetailRepository = new PurchasingDetail();
                 $supplier = ( new Supplier() )->find($request->supplier_id);
+                $paymentMethod = ( new PaymentMethod() )->find($request->payment_method);
 
                 $totalIntialPrice = 0;
                 $totalSellingPrice = 0;
@@ -53,7 +55,7 @@ class PurchasingService
                     'date' => $date,
                     'invoice_number' => $invoiceNumber
                 ]);
-                $purchasing = $purchasingRepository->hasParent('supplier_id', $supplier)->create($request);
+                $purchasing = $purchasingRepository->hasParent('payment_method_id', $paymentMethod)->hasParent('supplier_id', $supplier)->create($request);
 
                 foreach ($request->items as $itemData) {
                     $item = (new Item())->find($itemData['item_id']);

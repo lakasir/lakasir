@@ -3,6 +3,7 @@
 namespace Tests\Feature\Transaction;
 
 use App\Models\Item;
+use App\Models\PaymentMethod;
 use App\Models\Price;
 use App\Models\Supplier;
 use App\Models\User;
@@ -14,17 +15,27 @@ class PurchasingTest extends TestCase
 {
     public function test_success_create_purchasing(): void
     {
+        $user = User::find(1);
+        $response = $this->actingAs($user)->post('/transaction/purchasing', $this->data());
+        /* dump($item->log_stocks->last(), $item2->log_stocks->last()); */
+
+        $response->assertStatus(302);
+        $response->assertRedirect('/transaction/purchasing');
+    }
+
+    protected function data()
+    {
         factory(Supplier::class, 5)->create();
         factory(Price::class, 10)->create();
+        $paymentMethod = PaymentMethod::inRandomOrder()->where('visible_in->purchasing', true)->first();
         $items = Item::where('internal_production', false)->inRandomOrder()->limit(2)->get();
         $item2 = $items->last();
         $item = $items->first();
         /* dump($item->log_stocks->last(), $item2->log_stocks->last()); */
         $supplier = Supplier::inRandomOrder()->limit(1)->first();
-        $user = User::find(1);
-        $response = $this->actingAs($user)->post('/transaction/purchasing', [
+        return [
             'supplier_id' => $supplier->id,
-            'payment_method' => 'cash_full',
+            'payment_method' => $paymentMethod->id,
             'items' => [
                 [
                     'item_id' => $item->id,
@@ -39,10 +50,6 @@ class PurchasingTest extends TestCase
                     'qty' => 20
                 ]
             ]
-        ]);
-        /* dump($item->log_stocks->last(), $item2->log_stocks->last()); */
-
-        $response->assertStatus(302);
-        $response->assertRedirect('/transaction/purchasing');
+        ];
     }
 }

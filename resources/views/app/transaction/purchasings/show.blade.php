@@ -15,7 +15,7 @@
         <div class="row">
           <div class="col-md-6">
             <label>{{ __('app.purchasings.column.payment_method') }}</label>
-            <p class="card-text">{{ dash_to_space($data->payment_method) }}</p>
+            <p class="card-text">{{ dash_to_space($data->paymentMethod->name) }}</p>
           </div>
           <div class="col-md-6">
             <label>{{ __('app.purchasings.column.paid') }}</label>

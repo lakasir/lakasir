@@ -13,7 +13,7 @@ abstract class Repository implements RepositoryInterface
 
     public function datatable(Request $request)
     {
-        $items = $this->model::toBase()->latest()->get();
+        $items = $this->model::latest()->get();
 
         return $this->getObjectModel()->table($items);
     }
