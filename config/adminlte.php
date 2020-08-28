@@ -317,6 +317,11 @@ return [
                     'url'  => 'master/supplier',
                     'can' => 'browse-supplier'
                 ],
+                [
+                    'text' => 'menu.payment_method',
+                    'url'  => 'master/payment_method',
+                    'can' => 'browse-payment_method'
+                ],
             ],
         ],
         /* ['header' => 'menu.user_management'], */
