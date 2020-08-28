@@ -63,6 +63,7 @@ services:
     command: >
       sh -c 'composer install
       && yarn install
+      && yarn run dev
       && php artisan migrate
       && php artisan key:generate
       && php-fpm'
