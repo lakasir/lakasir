@@ -28,3 +28,10 @@ if (! function_exists('get_lang')) {
         app()->setLocale(optional(auth()->user() ?? 'en')->localization);
     }
 }
+
+if (! function_exists('activity')) {
+    function activity()
+    {
+        return new \App\Helpers\Activity();
+    }
+}

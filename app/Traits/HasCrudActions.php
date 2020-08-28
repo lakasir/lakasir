@@ -8,6 +8,7 @@ use App\Http\Requests\Master\Unit\Index;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
+use App\Facades\Activity;
 
 /**
  * Trait HasCrudActions
@@ -27,7 +28,6 @@ trait HasCrudActions
     /**
      * Display a listing of the resource.
      *
-     * @param Yajra\DataTables\Html\Builder $builder
      * @return mix
      */
     public function index()
@@ -122,6 +122,10 @@ trait HasCrudActions
             return response()->json($data, 200);
         }
 
+        activity()->model($data)->auth()->creating();
+        // activity()->model($data)->auth()->info('Ngapain');
+        // Activity::model($data)->auth()->creating();
+
         flash()->success($message);
 
 
@@ -198,6 +202,8 @@ trait HasCrudActions
             return response()->json($data, 200);
         }
 
+        activity()->model($data)->auth()->updating();
+
         flash()->success($message);
 
         return redirect()->to($this->redirect);
@@ -215,7 +221,12 @@ trait HasCrudActions
 
         $this->authorize("delete-{$this->permission}");
 
-        $this->repository->find($model)->delete();
+
+        $data = $this->repository->find($model);
+
+        activity()->model($data)->auth()->deleting();
+
+        $data->delete();
 
         $message = __('app.global.message.delete').' '. ucfirst($this->permission);
 

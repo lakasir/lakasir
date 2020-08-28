@@ -53,5 +53,9 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind('ResponseHelper', function () {
             return new Response();
         });
+
+        $this->app->bind('Activity', function () {
+            return new \App\Helpers\Activity();
+        });
     }
 }
