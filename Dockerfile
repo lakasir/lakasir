@@ -49,5 +49,7 @@ RUN docker-php-ext-install zip
 RUN docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/
 RUN docker-php-ext-install gd -j$(nproc) gd
 RUN pecl install -o -f redis && rm -rf /tmp/pear && docker-php-ext-enable redis
+RUN docker-php-ext-install opcache
+ADD ./opcache/opcache.ini "$PHP_INI_DIR/conf.d/opcache.ini"
 
 EXPOSE 9000
