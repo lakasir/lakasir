@@ -32,6 +32,26 @@ return [
             ]
         ],
     ],
+    'payment_methods' => [
+        'title' => 'Metode Pembayaran',
+        'column' => [
+            'name' => 'Nama',
+            'code' => 'Kode',
+            'visible_in' => 'Terlihat Di',
+            'can_delete' => 'Dapat Dihapus'
+        ],
+        'placeholder' => [
+            'name' => 'Nama',
+            'code' => 'Kode',
+            'visible_in' => 'Terlihat Di',
+            'can_delete' => 'Dapat Dihapus'
+        ],
+        'info' => [
+            'visible_in' => [
+                'empty' => 'Kosong'
+            ]
+        ]
+    ],
     'profiles' => [
         'column' => [
             'bio' => 'Bio',

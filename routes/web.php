@@ -25,12 +25,14 @@ Route::group(['middleware' => [ 'auth', 'installed' ]], function () {
     Route::get('dashboard', 'Dashboard')->name('dashboard');
 
     Route::group(['prefix' => 'master'], function () {
+        Route::delete('/payment_method/bulk-destroy', 'Master\PaymentMethod@bulkDestroy');
+        Route::resource('/payment_method', 'Master\PaymentMethod');
+
         Route::delete('/unit/bulk-destroy', 'Master\Unit@bulkDestroy');
         Route::resource('/unit', 'Master\Unit');
 
         Route::delete('/category/bulk-destroy', 'Master\Category@bulkDestroy');
         Route::resource('/category', 'Master\Category');
-
 
         Route::delete('/item/bulk-destroy', 'Master\Item@bulkDestroy');
         Route::resource('/item', 'Master\Item');
@@ -61,7 +63,7 @@ Route::group(['middleware' => [ 'auth', 'installed' ]], function () {
 
     Route::group(['prefix' => 'transaction'], function () {
         Route::resource('/purchasing', 'Transaction\Purchasing');
-        // Route::resource('/selling', 'Transaction\Selling');
+        Route::resource('/selling', 'Transaction\Selling');
         // Route::get('/cashier', 'Transaction\Selling@cashier');
     });
 

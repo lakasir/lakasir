@@ -21,5 +21,6 @@ return [
     'account_settings' => 'Account Settings',
     'profile' => 'Profile',
     'change_password' => 'Change Password',
-    'cashier' => 'Cashier'
+    'cashier' => 'Cashier',
+    'payment_method' => 'Payment Method'
 ];

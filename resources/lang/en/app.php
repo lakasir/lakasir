@@ -32,6 +32,26 @@ return [
             ]
         ],
     ],
+    'payment_methods' => [
+        'title' => 'Payment Method',
+        'column' => [
+            'name' => 'Name',
+            'code' => 'Code',
+            'visible_in' => 'Visible In',
+            'can_delete' => 'Can Delete'
+        ],
+        'placeholder' => [
+            'name' => 'Name',
+            'code' => 'Code',
+            'visible_in' => 'Visible In',
+            'can_delete' => 'Can Delete'
+        ],
+        'info' => [
+            'visible_in' => [
+                'empty' => 'Empty'
+            ]
+        ]
+    ],
     'profiles' => [
         'column' => [
             'bio' => 'Bio',

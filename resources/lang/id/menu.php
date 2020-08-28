@@ -21,5 +21,6 @@ return [
     'account_settings' => 'Pengaturan Akun',
     'profile' => 'Profil',
     'change_password' => 'Ganti Password',
-    'cashier' => 'Kasir'
+    'cashier' => 'Kasir',
+    'payment_method' => 'Metode Pembayaran'
 ];
