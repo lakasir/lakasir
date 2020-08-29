@@ -99,7 +99,8 @@ return [
             ],
             'stock' => [
                 'amount' => 'Jumlah',
-                'stock' => 'Stok'
+                'stock' => 'Stok',
+                'last_stock' => 'Sisa Stok'
             ]
         ],
         'column' => [
@@ -119,7 +120,8 @@ return [
             'stock' => [
                 'amount' => 'Jumlah',
                 'stock' => 'Stok',
-                'empty' => 'Stock Kosong'
+                'empty' => 'Stock Kosong',
+                'last_stock' => 'Sisa Stok'
             ]
         ],
         'edit' => [
@@ -155,6 +157,7 @@ return [
             'total_qty' => 'Total Jumlah',
             'note' => 'Catatan',
             'paid' => 'Lunas',
+            'user' => 'User',
             'items' => [
                 'header' => 'Item',
                 'name' => 'Nama Item',
@@ -174,7 +177,8 @@ return [
             'total_selling_price' => 'Total Harga Jual',
             'total_qty' => 'Total Jumlah',
             'note' => 'Catatan',
-            'paid' => 'Lunas'
+            'paid' => 'Lunas',
+            'user' => 'User',
         ],
         'paid' => [
             'true' => 'Sudah Terbayarkan',

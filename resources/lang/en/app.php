@@ -101,7 +101,8 @@ return [
             ],
             'stock' => [
                 'amount' => 'Amount',
-                'stock' => 'Stock'
+                'stock' => 'Stock',
+                'last_stock' => 'Last Stock'
             ]
         ],
         'column' => [
@@ -121,7 +122,8 @@ return [
             'stock' => [
                 'amount' => 'Amount',
                 'stock' => 'Stock',
-                'empty' => 'Empty Stock'
+                'empty' => 'Empty Stock',
+                'last_stock' => 'Last Stock'
             ]
         ],
         'edit' => [
@@ -157,6 +159,7 @@ return [
             'total_qty' => 'Total Qty',
             'note' => 'Note',
             'paid' => 'Paid',
+            'user' => 'User',
             'items' => [
                 'header' => 'Item',
                 'name' => 'Item Name',
@@ -176,7 +179,8 @@ return [
             'total_selling_price' => 'Total Selling Price',
             'total_qty' => 'Total Qty',
             'note' => 'Note',
-            'paid' => 'Paid'
+            'paid' => 'Paid',
+            'user' => 'User',
         ],
         'paid' => [
             'true' => 'Already Paid Off',

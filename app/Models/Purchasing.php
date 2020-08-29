@@ -3,12 +3,13 @@
 namespace App\Models;
 
 use App\DataTables\PurchasingTable;
+use App\Traits\HasLog;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\HasLaTable;
 
 class Purchasing extends Model
 {
-    use HasLaTable;
+    use HasLaTable, HasLog;
 
     protected $latable = PurchasingTable::class;
 
@@ -21,6 +22,12 @@ class Purchasing extends Model
         'note',
         'is_paid'
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
 
     public function paymentMethod()
     {

@@ -66,7 +66,9 @@ class User extends RepositoryAbstract
 
     public function updatePassword(Request $request, $user)
     {
-        return $user->update($request->all());
+        $user->update($request->only(['password']));
+
+        return $user;
     }
 
 

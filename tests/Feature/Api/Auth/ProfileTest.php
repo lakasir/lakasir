@@ -17,8 +17,7 @@ class ProfileTest extends TestCase
         $this->setClientCredentialsToken();
 
         $response = $this->get(route('api.auth.profile'), $this->oauth_headers);
-        $response->dump()
-                 ->assertStatus(200)
+        $response->assertStatus(200)
                  ->assertJsonStructure(
                      ['success', 'payload' => [
                          'id',

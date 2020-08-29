@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 
 class Activity extends Model
 {
@@ -14,12 +15,19 @@ class Activity extends Model
         'url',
         'referer',
         'request',
-        'browser',
+        'devices',
         'property',
     ];
 
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function scopeGetProperty()
+    {
+        $property = json_decode($this->property, 1);
+
+        return $property;
     }
 }

@@ -17,9 +17,6 @@ class PurchasingTable extends LaTable
                 $date = (new Carbon($model->created_at))->diffForHumans();
                 return view('partials.table.date')->with('date', $date);
             })
-            ->addColumn('payment_method', function ($model) {
-                return dash_to_space(optional($model->paymentMethod)->name);
-            })
             ->addColumn('total_initial_price', function ($model) {
                 return price_format($model->total_initial_price);
             })

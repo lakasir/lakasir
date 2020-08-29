@@ -15,9 +15,9 @@
             @if (app()->environment('local', 'stagging'))
               <li class="nav-item"><a class="nav-link" href="#activity" data-toggle="tab"> {{ __('app.profiles.activity') }}</a></li>
             @endif
-            @if (app()->environment('local', 'stagging'))
-              <li class="nav-item"><a class="nav-link" href="#timeline" data-toggle="tab"> {{ __('app.profiles.timeline') }}</a></li>
-            @endif
+            {{-- @if (app()->environment('local', 'stagging')) --}}
+            {{--   <li class="nav-item"><a class="nav-link" href="#timeline" data-toggle="tab"> {{ __('app.profiles.timeline') }}</a></li> --}}
+            {{-- @endif --}}
           </ul>
         </div><!-- /.card-header -->
         <div class="card-body">
@@ -32,11 +32,11 @@
               </div>
             @endif
             <!-- /.tab-pane -->
-            @if (app()->environment('local', 'stagging'))
-              <div class="tab-pane" id="timeline">
-                @include('app.user.profiles.components.tab.timeline')
-              </div>
-            @endif
+            {{-- @if (app()->environment('local', 'stagging')) --}}
+            {{--   <div class="tab-pane" id="timeline"> --}}
+            {{--     @include('app.user.profiles.components.tab.timeline') --}}
+            {{--   </div> --}}
+            {{-- @endif --}}
             <!-- /.tab-pane -->
 
           </div>

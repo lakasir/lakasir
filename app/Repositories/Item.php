@@ -24,6 +24,7 @@ class Item extends RepositoryAbstract
             'category_name' => Category::select('name')->whereColumn('category_id', 'categories.id')->latest()->limit(1),
             'initial_price' => Price::select('initial_price')->whereColumn('item_id', 'items.id')->latest()->limit(1),
             'selling_price' => Price::select('selling_price')->whereColumn('item_id', 'items.id')->latest()->limit(1),
+            'last_stock' => Stock::select('current_stock')->whereColumn('item_id', 'items.id')->latest()->limit(1)
         ])->latest()->get();
 
         return $this->getObjectModel()->table($items);

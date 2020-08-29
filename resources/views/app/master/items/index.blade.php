@@ -9,6 +9,7 @@
   <x-index-table :title="__('app.items.title')" :resources="$resources">
     @slot('thead')
       <th> {{ __('app.items.column.name') }} </th>
+      <th> {{ __('app.items.column.stock.last_stock') }} </th>
       <th> {{ __('app.items.column.internal_production') }} </th>
       <th> {{ __('app.items.column.category.name') }} </th>
       <th> {{ __('app.items.column.unit.name') }} </th>
@@ -30,6 +31,7 @@
           { data: 'name', name: 'name', render: function ( data, type, row ) {
             return '<a href='+ route('{{ $resources }}.edit', row) +'>'+data+'</a>'
           }},
+          { data: 'last_stock', name: 'last_stock' },
           { data: 'internal_production', name: 'internal_production' },
           { data: 'category_name', name: 'category_name' },
           { data: 'unit_name', name: 'unit_name' },

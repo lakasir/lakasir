@@ -11,44 +11,41 @@ class LoginTest extends TestCase
 {
     public function test_login_api_success()
     {
-        $user = User::inRandomOrder()->take(1)->first();
-        $data = ['email' => $user->email, 'password' => '12345678'];
-        $response = $this->post(route('api.auth.login'), $data);
+        $response = $this->post(route('api.auth.login'), $this->data());
 
-        $response->dump();
         $response->assertStatus(200)
                  ->assertJsonStructure(['success', 'payload' => ['token']]);
     }
 
     public function test_login_api_client_error()
     {
-        $user = User::inRandomOrder()->take(1)->first();
-        $data = ['email' => $user->email];
-        $response = $this->post(route('api.auth.login'), $data);
+        $response = $this->post(route('api.auth.login'), array_merge($this->data(), [ 'password' => '' ]));
 
-        $response->dump();
         $response->assertStatus(422)
                  ->assertJsonStructure(['success', 'errors']);
     }
 
     public function test_login_api_password_missmatch()
     {
-        $user = User::inRandomOrder()->take(1)->first();
-        $data = ['email' => $user->email, 'password' => '23979843'];
-        $response = $this->post(route('api.auth.login'), $data);
+        $response = $this->post(route('api.auth.login'), array_merge($this->data(), ['password' => 'dhfids[p]']));
 
-        $response->dump();
         $response->assertStatus(422)
                  ->assertJsonStructure(['success', 'message']);
     }
 
     public function test_login_api_user_not_found()
     {
-        $data = ['email' => 'admin21213@example.com', 'password' => '23979843'];
-        $response = $this->post(route('api.auth.login'), $data);
+        $response = $this->post(route('api.auth.login'), array_merge($this->data(), ['email' => 'fasd@mail.com']));
 
-        $response->dump();
         $response->assertStatus(422)
                  ->assertJsonStructure(['success', 'message']);
+    }
+
+    protected function data()
+    {
+        $user = User::first();
+        $data = ['email' => $user->email, 'password' => '12345678'];
+
+        return $data;
     }
 }

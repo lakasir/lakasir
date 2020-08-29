@@ -9,6 +9,7 @@
   <x-index-table :title="__('app.purchasings.title')" resources="purchasing">
     @slot('thead')
       <th> {{ __('app.purchasings.column.invoice_number') }} </th>
+      <th> {{ __('app.purchasings.column.user') }} </th>
       <th> {{ __('app.purchasings.column.date') }} </th>
       <th> {{ __('app.purchasings.column.payment_method') }} </th>
       <th> {{ __('app.purchasings.column.total_initial_price') }} </th>
@@ -31,6 +32,7 @@
           { data: 'invoice_number', name: 'invoice_number', render: function ( data, type, row ) {
             return '<a href='+ route('{{ $resources }}.show', row) +'>'+data+'</a>'
           }},
+          { data: 'user', name: 'User' },
           { data: 'date', name: 'Date' },
           { data: 'payment_method', name: 'Payment Method' },
           { data: 'total_initial_price', name: 'Total Initial Price' },

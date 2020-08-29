@@ -42,6 +42,7 @@ class ProfileService
                 if (!$user->profile) {
                     $self->profile->hasParent('user_id', $user)->create($request)->createMediaFromFile($request->photo_profile);
                 }
+                return $user;
             });
         } catch (\Exception $e) {
             Log::error($e->getMessage());

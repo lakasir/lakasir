@@ -19,13 +19,26 @@ class SellingTest extends TestCase
             'search' => $search
         ]), $this->oauth_headers);
 
-        $response->dump()
-            ->assertStatus(200)
+        $response->assertStatus(200)
             ->assertJsonStructure([
                 'success',
                 'payload' => [
                     ['id']
                 ]
             ]);
+    }
+
+    protected function data()
+    {
+        return [
+            'payment_method_id' => 1,
+            'money' => $money,
+            'items' => [
+                [
+                    'id' => $id,
+                    'qty' => 5,
+                ]
+            ],
+        ];
     }
 }

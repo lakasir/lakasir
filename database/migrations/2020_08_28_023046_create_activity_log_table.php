@@ -22,7 +22,7 @@ class CreateActivityLogTable extends Migration
             $table->string('url');
             $table->string('referer');
             $table->json('request')->nullable();
-            $table->string('browser');
+            $table->string('devices');
             $table->json('property')->nullable();
             $table->softDeletes();
             $table->timestamps();

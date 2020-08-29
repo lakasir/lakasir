@@ -13,9 +13,9 @@ class Activity extends ActivityAbstract
         $this->request = request();
     }
 
-    public function model(object $model)
+    public function parent(object $parent)
     {
-        $this->model = $model;
+        $this->parent = $parent;
         return $this;
     }
 
@@ -35,18 +35,31 @@ class Activity extends ActivityAbstract
     public function creating()
     {
         $this->info = self::CREATING;
+        $this->property = json_encode(['created' => $this->parent->toArray()]);
+
         return $this->create();
     }
 
     public function updating()
     {
         $this->info = self::UPDATING;
+        $this->property = json_encode(['created' => $this->parent->toArray()]);
+
         return $this->create();
     }
 
     public function deleting()
     {
         $this->info = self::DELETING;
+        $this->property = json_encode(['deleted' => $this->parent->toArray()]);
+
         return $this->create();
+    }
+
+    public function sync()
+    {
+        $this->queue = false;
+
+        return $this;
     }
 }

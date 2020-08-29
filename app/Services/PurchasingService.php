@@ -55,7 +55,7 @@ class PurchasingService
                     'date' => $date,
                     'invoice_number' => $invoiceNumber
                 ]);
-                $purchasing = $purchasingRepository->hasParent('payment_method_id', $paymentMethod)->hasParent('supplier_id', $supplier)->create($request);
+                $purchasing = $purchasingRepository->hasParent('user_id', auth()->user())->hasParent('payment_method_id', $paymentMethod)->hasParent('supplier_id', $supplier)->create($request);
 
                 foreach ($request->items as $itemData) {
                     $item = (new Item())->find($itemData['item_id']);

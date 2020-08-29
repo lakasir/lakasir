@@ -122,9 +122,7 @@ trait HasCrudActions
             return response()->json($data, 200);
         }
 
-        activity()->model($data)->auth()->creating();
-        // activity()->model($data)->auth()->info('Ngapain');
-        // Activity::model($data)->auth()->creating();
+        activity()->parent($data)->auth()->creating();
 
         flash()->success($message);
 
@@ -202,7 +200,7 @@ trait HasCrudActions
             return response()->json($data, 200);
         }
 
-        activity()->model($data)->auth()->updating();
+        activity()->parent($data)->auth()->updating();
 
         flash()->success($message);
 
@@ -224,7 +222,7 @@ trait HasCrudActions
 
         $data = $this->repository->find($model);
 
-        activity()->model($data)->auth()->deleting();
+        activity()->sync()->parent($data)->auth()->deleting();
 
         $data->delete();
 

@@ -26,4 +26,29 @@ class Profile extends Controller
     protected $repositoryClass = ProfileRepository::class;
 
     protected $storeService = [ProfileService::class, 'create'];
+    /**
+     * Display a listing of the resource.
+     *
+     * @return mix
+     */
+    public function index()
+    {
+        get_lang();
+
+        $request = resolve($this->indexRequest);
+
+        $this->authorize("browse-$this->permission");
+
+        $data = collect();
+        $data->put('activity', activity()->query()->where('user_id', auth()->user()->id)->latest()->cursor()->groupBy(function ($activity) {
+            return $activity->created_at->format('Y-m-d');
+        }));
+
+        $resources = $this->permission;
+
+        return view("{$this->viewPath}.index", [
+            'resources' => $resources,
+            'data' => $data
+        ]);
+    }
 }

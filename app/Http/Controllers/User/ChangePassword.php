@@ -24,7 +24,7 @@ class ChangePassword extends Controller
 
     protected $repositoryClass = UserRepository::class;
 
-    protected $storeService = [UserService::class, 'updatePassword'];
+    protected $storeService = [ UserService::class, 'updatePassword' ];
 
     public function index()
     {

@@ -2,6 +2,7 @@
 
 namespace App\Abstracts;
 
+use App\Jobs\ActivityCreate;
 use Illuminate\Http\Request;
 use DB;
 
@@ -13,10 +14,16 @@ abstract class ActivityAbstract
     /** @var boolean auth  */
     protected bool $auth = false;
 
+    protected bool $queue = true;
+
     /** @var \Illuminate\Http\Request request*/
     protected Request $request;
 
-    protected object $model;
+    protected object $parent;
+
+    protected string $model = \App\Models\Activity::class;
+
+    protected string $property;
 
     protected const CREATING = 'creating';
 
@@ -26,40 +33,45 @@ abstract class ActivityAbstract
 
     protected function create()
     {
-        if (method_exists($this->model, 'logs')) {
-            $self = $this;
-            return DB::transaction(static function () use ($self) {
-                $activity = new \App\Models\Activity();
-                $activity->fill($self->data());
-                if ($self->auth) {
-                    $activity->user()->associate(auth()->user());
-                }
-                $activity->save();
-                if (isset($self->model)) {
-                    $self->model->logs()->save($activity);
-                }
-
-                return $activity;
-            });
+        if (method_exists($this->parent, 'logs')) {
+            $auth = false;
+            if ($this->auth) {
+                $auth = auth()->user();
+            }
+            if ($this->queue) {
+                dispatch(new ActivityCreate($this->data(), $this->model, $auth, $this->parent))->delay(now()->addSeconds(1));
+            } else {
+                dispatch_now(new ActivityCreate($this->data(), $this->model, $auth, $this->parent));
+            }
         }
     }
 
     private function data()
     {
-        $browser = $this->request->header('user-agent');
+        if (isset($this->property)) {
+            $property = $this->property;
+        }
+        $devices = $this->request->header('user-agent');
         $ip_address = $this->request->server('REMOTE_ADDR');
         $url = $this->request->path();
         $referer = $this->request->header('referer');
         if (app()->environment() == 'testing') {
             $referer = app()->environment();
         }
+
         return $data = [
             'url' => $url,
             'ip' => $ip_address,
-            'browser' => $browser,
+            'devices' => $devices,
             'referer' => $referer,
             'info' => $this->info,
-            'request' => json_encode($this->request->all())
+            'request' => json_encode($this->request->all()),
+            'property' => $property
         ];
+    }
+
+    public function query()
+    {
+        return $this->model::query();
     }
 }
