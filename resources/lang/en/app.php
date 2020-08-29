@@ -50,6 +50,12 @@ return [
             'visible_in' => [
                 'empty' => 'Empty'
             ]
+        ],
+        'create' => [
+            'title' => 'Create Payment Method'
+        ],
+        'edit' => [
+            'title' => 'Edit Payment Method'
         ]
     ],
     'profiles' => [
@@ -136,7 +142,8 @@ return [
     'sellings' => [
         'title' => [
             'cashier' => 'Cashier',
-            'index' => 'Index'
+            'index' => 'Index',
+            'name' => 'Selling'
         ],
         'placeholder' => [
             'search_item' => 'Search Item'

@@ -26,4 +26,9 @@ class PaymentMethod extends Model
             $query->can_delete = true;
         });
     }
+
+    public function getArrayVisibleInAttribute()
+    {
+        return json_decode($this->getAttribute('visible_in'), 1);
+    }
 }

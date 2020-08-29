@@ -50,6 +50,12 @@ return [
             'visible_in' => [
                 'empty' => 'Kosong'
             ]
+        ],
+        'create' => [
+            'title' => 'Tambah Metode Pembayaran'
+        ],
+        'edit' => [
+            'title' => 'Edit Metode Pembayaran'
         ]
     ],
     'profiles' => [
@@ -134,7 +140,8 @@ return [
     'sellings' => [
         'title' => [
             'cashier' => 'Kasir',
-            'index' => 'Index'
+            'index' => 'Index',
+            'name' => 'Penjualan'
         ],
         'placeholder' => [
             'search_item' => 'Cari Item'
