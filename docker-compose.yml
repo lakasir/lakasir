@@ -66,7 +66,7 @@ services:
       && yarn run dev
       && php artisan migrate
       && php artisan key:generate
-      && chmod 777 -R /var/www/html/storage
+      && chmod 777 -R /var/www/html/storage/
       && php-fpm'
     networks:
       - laravel
