@@ -23,7 +23,7 @@ class SellingTest extends TestCase
             ->assertJsonStructure([
                 'success',
                 'payload' => [
-                    ['id']
+                    ['id', 'name', 'image', 'stock', 'selling_price']
                 ]
             ]);
     }
