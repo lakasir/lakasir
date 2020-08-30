@@ -27,13 +27,15 @@
     {{ __('app.payment_methods.placeholder.visible_in') }}
   </label>
   <div class="form-check">
-    <input class="form-check-input" type="checkbox" name="visible_in[purchasing]" value="true" id="purchasing" {{ isset(optional($data)->array_visible_in['purchasing']) ? 'checked' : '' }} >
+    <input class="form-check-input" type="checkbox" name="visible_in[purchasing]" value="true" id="purchasing"
+    @if (isset($data)) {{ isset($data->array_visible_in['purchasing']) ? 'checked' : '' }} @endif>
     <label class="form-check-label" for="purchasing">
       {{ __('app.purchasings.title') }}
     </label>
   </div>
   <div class="form-check">
-    <input class="form-check-input" type="checkbox" name="visible_in[selling]" value="true" id="selling" {{ isset(optional($data)->array_visible_in['selling']) ? 'checked' : '' }}>
+    <input class="form-check-input" type="checkbox" name="visible_in[selling]" value="true" id="selling"
+    @if (isset($data)) {{ isset($data->array_visible_in['selling']) ? 'checked' : '' }} @endif>
     <label class="form-check-label" for="selling">
       {{ __('app.sellings.title.name') }}
     </label>
