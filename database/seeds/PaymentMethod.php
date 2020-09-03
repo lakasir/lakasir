@@ -12,6 +12,7 @@ class PaymentMethod extends Seeder
      */
     public function run()
     {
+        PaymentMethodModel::truncate();
         $json = json_encode([
             'purchasing' => true,
             'selling' => true

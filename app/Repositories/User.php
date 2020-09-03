@@ -21,7 +21,7 @@ class User extends RepositoryAbstract
     {
         $self = $this;
         return DB::transaction(static function () use ($request, $self) {
-            if (getenv('INSTALL') == 'false') {
+            if (!config('lakasir.installed')) {
                 $session = $request->session()->all()['user'];
                 $request->merge($session);
             }
@@ -43,7 +43,7 @@ class User extends RepositoryAbstract
     {
         $self = $this;
         return DB::transaction(static function () use ($request, $self, $user) {
-            if (getenv('INSTALL') == 'false') {
+            if (!config('lakasir.installed')) {
                 $session = $request->session()->all()['user'];
                 $request->merge($session);
             }
