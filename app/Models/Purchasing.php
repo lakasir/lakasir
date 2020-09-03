@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
-use App\DataTables\PurchasingTable;
-use App\Traits\HasLog;
-use Illuminate\Database\Eloquent\Model;
 use App\Traits\HasLaTable;
+use App\DataTables\PurchasingTable;
+use Illuminate\Database\Eloquent\Model;
+use Lakasir\UserLoggingActivity\Traits\HasLog;
 
 class Purchasing extends Model
 {

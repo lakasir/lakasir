@@ -8,6 +8,7 @@ use App\Http\Requests\User\Profile\Store;
 use App\Repositories\Profile as ProfileRepository;
 use App\Services\ProfileService;
 use App\Traits\HasCrudActions;
+use Lakasir\UserLoggingActivity\Models\Activity;
 
 class Profile extends Controller
 {
@@ -40,7 +41,7 @@ class Profile extends Controller
         $this->authorize("browse-$this->permission");
 
         $data = collect();
-        $data->put('activity', activity()->query()->where('user_id', auth()->user()->id)->latest()->cursor()->groupBy(function ($activity) {
+        $data->put('activity', Activity::where('user_id', auth()->user()->id)->latest()->cursor()->groupBy(function ($activity) {
             return $activity->created_at->format('Y-m-d');
         }));
 

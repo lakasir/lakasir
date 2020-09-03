@@ -5,10 +5,11 @@ namespace App\Traits;
 use App\Exceptions\ServiceActionsException;
 use App\Facades\Response;
 use App\Http\Requests\Master\Unit\Index;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
-use App\Facades\Activity;
+use Lakasir\UserLoggingActivity\Facades\Activity;
 
 /**
  * Trait HasCrudActions
@@ -122,9 +123,11 @@ trait HasCrudActions
             return response()->json($data, 200);
         }
 
-        activity()->parent($data)->auth()->creating();
+        if (!$data instanceof User) {
+            Activity::modelable($data)->auth()->creating();
+        }
 
-        flash()->success($message);
+        flash()->success(dash_to_space($message));
 
 
         return redirect()->to($this->redirect);
@@ -200,9 +203,9 @@ trait HasCrudActions
             return response()->json($data, 200);
         }
 
-        activity()->parent($data)->auth()->updating();
+        Activity::modelable($data)->auth()->updating();
 
-        flash()->success($message);
+        flash()->success(dash_to_space($message));
 
         return redirect()->to($this->redirect);
     }
@@ -222,13 +225,13 @@ trait HasCrudActions
 
         $data = $this->repository->find($model);
 
-        activity()->sync()->parent($data)->auth()->deleting();
+        Activity::sync()->modelable($data)->auth()->deleting();
 
         $data->delete();
 
         $message = __('app.global.message.delete').' '. ucfirst($this->permission);
 
-        flash()->success($message);
+        flash()->success(dash_to_space($message));
 
         return redirect()->to($this->redirect);
     }
@@ -248,7 +251,7 @@ trait HasCrudActions
 
         $message = __('app.global.message.delete').' '. ucfirst($this->permission);
 
-        flash()->success($message);
+        flash()->success(dash_to_space($message));
 
         return redirect()->back();
     }

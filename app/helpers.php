@@ -9,11 +9,12 @@ if (! function_exists('action')) {
 }
 
 if (! function_exists('dash_to_space')) {
-    function dash_to_space(string $string)
+    function dash_to_space(string $string, bool $capital = false)
     {
-        $name = str_replace('-', ' ', Str::upper($string));
-        $name = str_replace('_', ' ', Str::upper($name));
-        return $name;
+        $name = str_replace('-', ' ', $string);
+        $name = str_replace('_', ' ', $name);
+
+        return $capital ? Str::upper($name) : $name;
     }
 }
 if (! function_exists('price_format')) {
@@ -26,12 +27,5 @@ if (! function_exists('get_lang')) {
     function get_lang()
     {
         app()->setLocale(optional(auth()->user() ?? 'en')->localization);
-    }
-}
-
-if (! function_exists('activity')) {
-    function activity()
-    {
-        return new \App\Helpers\Activity();
     }
 }

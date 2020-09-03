@@ -27,7 +27,7 @@ class Store extends FormRequest
     {
         return [
             'money' => ['required'],
-            'items' => ['array']
+            'items' => ['required', 'array']
         ];
     }
 }
