@@ -130,6 +130,25 @@ return [
                 'last_stock' => 'Sisa Stok'
             ]
         ],
+        'export' => [
+            'name' => 'Nama',
+            'images' => 'Gambar',
+            'internal_production' => 'Produksi Sendiri (Ya / Tidak)',
+            'category' => [
+                'name' => 'Nama Kategori ( Kosongi untuk memilih umum )',
+            ],
+            'unit' => [
+                'name' => 'Nama Satuan'
+            ],
+            'price' => [
+                'selling_price' => 'Harga Jual',
+                'initial_price' => 'Harga Beli'
+            ],
+            'stock' => [
+                'amount' => 'Jumlah',
+                'last_stock' => 'Sisa Stok ( Jika Kosong tidak perlu di isi )'
+            ]
+        ],
         'edit' => [
             'title' => 'Ubah Item'
         ],
@@ -369,6 +388,8 @@ return [
         'error_old_password' => 'Password Kamu tidak valid',
         'cancel' => 'Batal',
         'total' => 'Total',
+        'download' => 'Unduh :title',
+        'import' => 'Import :title',
         'message' => [
             'create' => 'Menambahkan',
             'update' => 'Memeperbarui',

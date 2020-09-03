@@ -3,17 +3,21 @@
 namespace App\Http\Controllers\Master;
 
 use App\DataTables\ItemDataTable;
+use App\Exports\TemplateItemExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Master\Item\BulkDelete;
 use App\Http\Requests\Master\Item\Delete;
 use App\Http\Requests\Master\Item\Index;
 use App\Http\Requests\Master\Item\Store;
 use App\Http\Requests\Master\Item\Update;
+use App\Imports\ItemImport;
 use App\Models\Category;
 use App\Models\Unit;
 use App\Repositories\Item as ItemRepository;
 use App\Traits\HasCrudActions;
+use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Maatwebsite\Excel\Facades\Excel;
 use Yajra\DataTables\Html\Builder;
 
 class Item extends Controller
@@ -76,5 +80,17 @@ class Item extends Controller
         });
 
         return view("{$this->viewPath}.edit", compact('categories', 'data', 'units'));
+    }
+
+    public function downloadTemplate()
+    {
+        return Excel::download(new TemplateItemExport, now()->format('Y-m-d-his') . '-template-items.xlsx');
+    }
+
+    public function importTemplate(Request $request)
+    {
+        Excel::import(new ItemImport, $request->file('item-import'));
+
+        return;
     }
 }

@@ -2,7 +2,16 @@
 
 @section('content')
   <div class="row col">
-    <v-button float="right" text="{{ __('app.global.create') }}" to="{{ route($resources.'.create') }}" icon="fas fa-plus"></v-button>
+    <div class="mr-2">
+      <v-button float="right" text="{{ __('app.global.create') }}" to="{{ route($resources.'.create') }}" icon="fas fa-plus"></v-button>
+    </div>
+    <div class="mr-2">
+      <a href="{{ route($resources.'.download-template') }}" class="btn btn-info"><i class="fas fa-download"></i><span class="mr-1"></span>{{ __('app.global.download', ['title' => 'Template']) }}</a>
+    </div>
+
+    <div class="mr-2">
+      <v-button-upload float="right" name="item-import" to="{{ route($resources.'.import') }}" text="{{ __('app.global.import', ['title' => 'Item Template']) }}" color="info" icon="fas fa-upload"></v-button-upload>
+    </div>
   </div>
   <br>
 

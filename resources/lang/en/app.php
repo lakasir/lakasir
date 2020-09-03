@@ -132,6 +132,25 @@ return [
                 'last_stock' => 'Last Stock'
             ]
         ],
+        'export' => [
+            'name' => 'Name',
+            'images' => 'Images',
+            'internal_production' => 'Internal Production (Yes / No)',
+            'category' => [
+                'name' => 'Category Name ( Leave empty for use Umum )',
+            ],
+            'unit' => [
+                'name' => 'Unit Name'
+            ],
+            'price' => [
+                'selling_price' => 'Selling Price',
+                'initial_price' => 'Initial Price'
+            ],
+            'stock' => [
+                'amount' => 'Amount',
+                'last_stock' => 'Last Stock ( If stock is empty do not need to be filled )'
+            ],
+        ],
         'edit' => [
             'title' => 'Edit Items'
         ],
@@ -371,6 +390,8 @@ return [
         'error_old_password' => 'Your Old Password is Not Valid',
         'cancel' => 'Cancel',
         'total' => 'Total',
+        'download' => 'Download :title',
+        'import' => 'Import :title',
         'message' => [
             'create' => 'Create',
             'update' => 'Update',
