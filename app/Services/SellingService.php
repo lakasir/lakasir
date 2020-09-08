@@ -2,33 +2,117 @@
 
 namespace App\Services;
 
+use App\Builder\NumberGeneratorBuilder;
+use App\Repositories\Customer;
 use App\Repositories\Item;
+use App\Repositories\PaymentMethod;
+use App\Repositories\Selling;
+use App\Repositories\SellingDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+
+
+
 
 /**
  * Service For Complect Logic which related with Selling
  */
 class SellingService
 {
+    /**
+     * @var App\Repositories\Item
+     */
+    private $item;
+
+    /**
+     * @var Customer
+     */
+    private $customer;
+
+    /**
+     * @var PaymentMethod
+     */
+    private $paymentMethod;
+
+    /**
+     * @var Selling
+     */
+    private $selling;
+
+
     public function __construct()
     {
-        $this->item = new Item;
+        $this->item = new Item();
+        $this->customer = new Customer();
+        $this->paymentMethod = new PaymentMethod();
+        $this->selling = new Selling;
+        $this->sellingDetail = new SellingDetail;
     }
 
-
-    public function create(Request $request)
+    /**
+     * create item selling
+     *
+     * @param App\Http\Request $request
+     * @return array
+     */
+    public function create(Request $request): array
     {
+        $self = $this;
+        return DB::transaction(static function () use ($request, $self): array
+        {
+            $customer = $self->customer->query()->find($request->customer_id);
+            $paymentMethod = $self->paymentMethod->find($request->payment_method_id);
+            $numberGeneratorBuilder = new NumberGeneratorBuilder();
+            $numberTransaction = $numberGeneratorBuilder->model($self->selling->getModel())->prefix('SEL')->build();
+            $totalSellingPrice = $self->item->totalPriceByRequest($request->items);
+            $totalInitialPrice = $self->item->totalPriceByRequest($request->items, 'initial_price');
+            $totalQty = 0;
+            foreach ($request->items as $item) {
+                $totalQty += $item['qty'];
+            }
+            $request->merge([
+                'number_transaction' => $numberTransaction->create(),
+                'transaction_date' => now()->format('Y-m-d'),
+                'total_price' => $totalSellingPrice,
+                'total_qty' => $totalQty,
+                'total_profit' => $totalSellingPrice - $totalInitialPrice,
+                'refund' => $request->money - $totalInitialPrice,
+            ]);
+            $selling = $self->selling->if($customer, function ($repository) use ($customer)
+            {
+                return $repository->hasParent('customer_id', $customer);
+            })->if($paymentMethod, function ($repository) use ($paymentMethod)
+            {
+                return $repository->hasParent('payment_method_id', $paymentMethod);
+            })->hasParent('user_id', auth()->user())
+              ->create($request);
+
+            foreach ($request->items as $itemRequest) {
+               $item = $self->item->find($item['id']);
+               $request->merge([
+                   'price' => $item->last_price->selling_price,
+                   'profit' => $item->last_price->selling_price - $item->last_price->initial_price,
+                   'qty' => $itemRequest['qty'],
+               ]);
+               $sellingDetail = $self->sellingDetail->if($item, function ($repository) use ($item)
+               {
+                   return $repository->hasParent('item_id', $item);
+               })->hasParent('selling_id', $selling)->create($request);
+            }
+
+            return $selling->toArray();
+        });
     }
     /**
      * get List Item for cashier list Item
      *
-     * @params App\Http\Request $request
+     * @param App\Http\Request $request
      * @return array
      */
     public function list_item(Request $request): array
     {
-        $items = $this->item->getModel()::select('name', 'id')
+        $query = $this->item->query();
+        $items = $query->select('name', 'id')
                             ->with('media', 'prices', 'log_stocks')
                             ->when($request->search, function ($query) use ($request) {
                                 return $query->where('name', 'LIKE', $request->search.'%') ;

@@ -2,12 +2,17 @@
 
 namespace App\Http\Requests\Transaction\Selling;
 
+use App\Rules\ItemSellingNotfound;
+use App\Rules\PriceSelling;
+use App\Traits\JsonValidateResponse;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rule;
 
 class Store extends FormRequest
 {
+
+    use JsonValidateResponse;
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -26,8 +31,9 @@ class Store extends FormRequest
     public function rules()
     {
         return [
-            'money' => ['required'],
-            'items' => ['required', 'array']
+            'items' => ['required', 'array', new ItemSellingNotfound()],
+            'money' => ['required', new PriceSelling($this->items)],
+            'payment_method_id' => ['required']
         ];
     }
 }
