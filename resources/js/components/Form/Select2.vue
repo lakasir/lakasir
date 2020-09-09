@@ -31,6 +31,10 @@ export default {
       type: String,
       value: ''
     },
+    placeholder: {
+      type: String,
+      value: "",
+    },
     label: {
       type: String,
       value: "",
@@ -51,9 +55,12 @@ export default {
       type: String,
       value: null
     },
+    url: '',
+    keytext: '',
+    text: '',
     old: null,
     prepend: false,
-    getValue: false
+    getValue: false,
 
   },
 
@@ -66,28 +73,49 @@ export default {
     }
   },
 
+  methods: {
+    ajaxOptions() {
+      let keytext = this.keytext
+      let text = this.text
+      return {
+          url: this.url,
+          dataType: 'Json',
+          delay: 250,
+          tags: true,
+          data: function(params) {
+            return {
+              key: text,
+              term: params.term,
+              type: 'select2'
+            }
+          },
+          processResults: function(data) {
+            let res = data.payload.map((el) => {
+              return {
+                id: el[keytext],
+                text: el[text]
+              }
+            })
+            return {
+              results: res
+            }
+          }
+        }
+    }
+  },
+
   mounted() {
-    if (this.error) {
-      this.dataErrorMessage = this.errorMessage
-      this.dataError = this.error
-    }
-    if (this.defaultValue) {
-      let defaultValue = ''
-      if (!this.multiple) {
-       defaultValue = this.defaultValue
-      } else {
-       defaultValue = JSON.parse(this.defaultValue)
-      }
-      this.value = defaultValue
-    }
-    if (this.old != 'null') {
-      this.value = JSON.parse(this.old)
-    }
     let vm = this;
     let selectElement = this.$el.children[1];
     $(selectElement)
       // init select2
-      .select2({ data: this.options, width: '100%' })
+      .select2({
+        // data: this.options,
+        ajax: this.ajaxOptions(),
+        width: '100%',
+        placeholder: this.placeholder,
+
+      })
       .val(this.value)
       .trigger("change")
       // emit event on change.
@@ -101,7 +129,9 @@ export default {
   watch: {
     value: function (value) {
       // update value
-      $(this.$el).val(value).trigger("change");
+      // $(this.$el).val(value).trigger("change");
+      this.ajaxOptions().url = this.url
+      $(this.$el).select2({ ajax: this.ajaxOptions() })
     },
     options: function (options) {
       // update options
