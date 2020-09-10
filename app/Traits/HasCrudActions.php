@@ -40,7 +40,9 @@ trait HasCrudActions
 
         $request = resolve($this->indexRequest);
 
-        $this->authorize("browse-$this->permission");
+        if ($this->permission) {
+            $this->authorize("browse-$this->permission");
+        }
 
         if ($request->ajax() || isset($this->return) && $this->return == 'api') {
             if (isset($this->indexService)) {
@@ -86,6 +88,9 @@ trait HasCrudActions
                                 }
                                 return $query->where('id', $request->oldValue);
                             }
+                        })->when($request->filter, function ($query) use ($request)
+                        {
+                            return $query->where($request->filter['key'], $request->filter['value']);
                         })->get()->toArray();
 
                     return Response::success($result);
