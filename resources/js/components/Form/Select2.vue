@@ -104,9 +104,19 @@ export default {
     }
   },
 
-  mounted() {
+  async mounted() {
     let vm = this;
     let selectElement = this.$el.children[1];
+    let option;
+    if (this.old !== "null") {
+      let { data } = await axios.get(`${this.url}?type=select2&oldValue=${JSON.parse(this.old)}&key=${this.text}`)
+      option = new Option(data.payload[0][this.text], data.payload[0][this.keytext], true, true)
+      // selectElement.append(option).trigger('change');
+    }
+    if (this.defaultValue) {
+      let { data } = await axios.get(`${this.url}?type=select2&oldValue=${this.defaultValue}&key=${this.text}`)
+      option = new Option(data.payload[0][this.text], data.payload[0][this.keytext], true, true)
+    }
     $(selectElement)
       // init select2
       .select2({
@@ -117,6 +127,7 @@ export default {
 
       })
       .val(this.value)
+      .append(option)
       .trigger("change")
       // emit event on change.
       .on("change", function () {
