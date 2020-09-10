@@ -101,6 +101,20 @@ export default {
             }
           }
         }
+    },
+    getOptions(data) {
+      let option;
+      if (data.payload.length > 1) {
+        let arr = [];
+        for (let i = 0, len = data.payload.length; i < len; i++) {
+          arr[i] = new Option(data.payload[i][this.text], data.payload[i][this.keytext], true, true);
+        }
+        option = arr
+      } else {
+        option = new Option(data.payload[0][this.text], data.payload[0][this.keytext], true, true);
+      }
+
+      return option;
     }
   },
 
@@ -110,12 +124,11 @@ export default {
     let option;
     if (this.old !== "null") {
       let { data } = await axios.get(`${this.url}?type=select2&oldValue=${JSON.parse(this.old)}&key=${this.text}`)
-      option = new Option(data.payload[0][this.text], data.payload[0][this.keytext], true, true)
-      // selectElement.append(option).trigger('change');
+      option = this.getOptions(data)
     }
     if (this.defaultValue) {
       let { data } = await axios.get(`${this.url}?type=select2&oldValue=${this.defaultValue}&key=${this.text}`)
-      option = new Option(data.payload[0][this.text], data.payload[0][this.keytext], true, true)
+      option = this.getOptions(data)
     }
     $(selectElement)
       // init select2

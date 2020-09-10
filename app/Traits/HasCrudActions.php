@@ -8,8 +8,11 @@ use App\Http\Requests\Master\Unit\Index;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 use Lakasir\UserLoggingActivity\Facades\Activity;
+use Maatwebsite\Excel\Facades\Excel;
 
 /**
  * Trait HasCrudActions
@@ -59,7 +62,33 @@ trait HasCrudActions
                     return;
                 }
                 if (isset($this->return) && $this->return == 'api') {
-                    return Response::success($this->repository->getModel()::get()->toArray());
+                    $result = $this->repository->query()->get()->toArray();
+
+                    return Response::success($result);
+                }
+
+                if ($request->type == 'select2') {
+                    $result = $this->repository->query()->select('id', $request->key)->when(
+                        $request->term && $request->key,
+                        function ($query) use ($request)
+                        {
+                            return $query->where($request->key, 'LIKE', '%%'.$request->term.'%%');
+                        })->when(
+                        $request->oldValue,
+                        function ($query) use($request)
+                        {
+                            $str = ltrim($request->oldValue, '[');
+                            $str = rtrim($str, ']');
+                            $array = explode(',', $str);
+                            if ($request->oldValue) {
+                                if (is_array($array) && count($array) > 1) {
+                                    return $query->whereIn('id', $array);
+                                }
+                                return $query->where('id', $request->oldValue);
+                            }
+                        })->get()->toArray();
+
+                    return Response::success($result);
                 }
 
                 return $this->repository->datatable($request);
@@ -94,9 +123,9 @@ trait HasCrudActions
     /**
      * Store a newly created resource in storage.
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return mix
      */
-    public function store(): RedirectResponse
+    public function store()
     {
         get_lang();
 
@@ -123,7 +152,7 @@ trait HasCrudActions
             return response()->json($data, 200);
         }
 
-        if (!$data instanceof User) {
+        if (method_exists($data, 'logs')) {
             Activity::modelable($data)->auth()->creating();
         }
 
@@ -203,7 +232,9 @@ trait HasCrudActions
             return response()->json($data, 200);
         }
 
-        Activity::modelable($data)->auth()->updating();
+        if (method_exists($data, 'logs')) {
+            Activity::modelable($data)->auth()->updating();
+        }
 
         flash()->success(dash_to_space($message));
 
@@ -225,7 +256,9 @@ trait HasCrudActions
 
         $data = $this->repository->find($model);
 
-        Activity::sync()->modelable($data)->auth()->deleting();
+        if (method_exists($data, 'logs')) {
+            Activity::sync()->modelable($data)->auth()->deleting();
+        }
 
         $data->delete();
 
@@ -254,5 +287,32 @@ trait HasCrudActions
         flash()->success(dash_to_space($message));
 
         return redirect()->back();
+    }
+
+    public function downloadTemplate()
+    {
+        if ($this->permission) {
+            $this->authorize("create-$this->permission");
+        }
+
+        $string = Str::title(dash_to_space($this->permission));
+
+        $classExport = 'App\Exports\\Template' . $string . 'Export';
+
+        return Excel::download(new $classExport, now()->format('Y-m-d-his') . "-template-{$this->permission}s.xlsx");
+    }
+
+    public function importTemplate(Request $request)
+    {
+        if ($this->permission) {
+            $this->authorize("create-$this->permission");
+        }
+        $string = Str::title(dash_to_space($this->permission));
+
+        $classExport = 'App\Imports\\' . $string . 'Import';
+
+        Excel::import(new $classExport, $request->file("{$this->permission}-import"));
+
+        return;
     }
 }
