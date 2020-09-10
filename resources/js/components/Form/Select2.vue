@@ -122,23 +122,42 @@ export default {
     let vm = this;
     let selectElement = this.$el.children[1];
     let option;
-    if (this.old !== "null") {
-      let { data } = await axios.get(`${this.url}?type=select2&oldValue=${JSON.parse(this.old)}&key=${this.text}`)
-      option = this.getOptions(data)
+    let property = {
+      width: '100%',
+      placeholder: this.placeholder,
     }
-    if (this.defaultValue) {
-      let { data } = await axios.get(`${this.url}?type=select2&oldValue=${this.defaultValue}&key=${this.text}`)
-      option = this.getOptions(data)
+    if (this.url) {
+      property.ajax = this.ajaxOptions()
+      if (this.old !== "null") {
+        let { data } = await axios.get(`${this.url}?type=select2&oldValue=${JSON.parse(this.old)}&key=${this.text}`)
+        option = this.getOptions(data)
+      }
+      if (this.defaultValue) {
+        let { data } = await axios.get(`${this.url}?type=select2&oldValue=${this.defaultValue}&key=${this.text}`)
+        option = this.getOptions(data)
+      }
+    } else {
+      property.data = this.options
+      if (this.error) {
+        this.dataErrorMessage = this.errorMessage
+        this.dataError = this.error
+      }
+      if (this.defaultValue) {
+        let defaultValue = ''
+        if (!this.multiple) {
+          defaultValue = this.defaultValue
+        } else {
+          defaultValue = JSON.parse(this.defaultValue)
+        }
+        this.value = defaultValue
+      }
+      if (this.old != 'null') {
+        this.value = JSON.parse(this.old)
+      }
     }
     $(selectElement)
       // init select2
-      .select2({
-        // data: this.options,
-        ajax: this.ajaxOptions(),
-        width: '100%',
-        placeholder: this.placeholder,
-
-      })
+      .select2(property)
       .val(this.value)
       .append(option)
       .trigger("change")
@@ -153,9 +172,9 @@ export default {
   watch: {
     value: function (value) {
       // update value
-      // $(this.$el).val(value).trigger("change");
-      this.ajaxOptions().url = this.url
-      $(this.$el).select2({ ajax: this.ajaxOptions() })
+      $(this.$el).val(value).trigger("change");
+      // this.ajaxOptions().url = this.url
+      // $(this.$el).select2({ ajax: this.ajaxOptions() })
     },
     options: function (options) {
       // update options
