@@ -43,12 +43,16 @@ class Login extends Controller
 
                 return Response::success($response);
             } else {
-                $errors = ['message' => __('app.auth.password.missmatch')];
+                $errors = ['errors' => [
+                    'password' => [ __('app.auth.password.missmatch') ]
+                ]];
 
                 return Response::clientError($errors, JsonResponse::HTTP_UNPROCESSABLE_ENTITY);
             }
         } else {
-            $errors = ['message' => __('app.auth.user.doesnotexist')];
+            $errors = ['errors' => [
+                'email' => [__('app.auth.user.doesnotexist')]
+            ]];
 
             return Response::clientError($errors, JsonResponse::HTTP_UNPROCESSABLE_ENTITY);
         }
