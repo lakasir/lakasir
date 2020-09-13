@@ -89,6 +89,11 @@ class SellingService
 
             foreach ($request->items as $itemRequest) {
                $item = $self->item->find($item['id']);
+               // get stock paling awal dibeli
+               $lastStock = $item->last_stock;
+               $lastStock->amount = $lastStock->amount - $itemRequest['qty'];
+               $lastStock->save();
+
                $request->merge([
                    'price' => $item->last_price->selling_price,
                    'profit' => $item->last_price->selling_price - $item->last_price->initial_price,
@@ -117,12 +122,13 @@ class SellingService
                             ->when($request->search, function ($query) use ($request) {
                                 return $query->where('name', 'LIKE', $request->search.'%') ;
                             })
+                            ->latest()
                             ->get()->map(function ($item) {
                                 return [
                                     'id' => $item->id,
                                     'name' => $item->name,
                                     'image' => optional($item->media->first())->get_full_name ?? config('setting.image.empty'),
-                                    'stock' => optional($item->last_stock)->current_stock ?? __('app.items.column.stock.empty'),
+                                    'stock' => optional($item->last_stock)->sum('amount') ?? __('app.items.column.stock.empty'),
                                     'selling_price' => optional($item->last_price)->selling_price,
                                     'selling_price_format' => price_format(optional($item->last_price)->selling_price)
                                 ];

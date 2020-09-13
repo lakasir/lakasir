@@ -61,6 +61,7 @@ class PurchasingService
                     $item = (new Item())->find($itemData['item_id']);
                     $intial_price = $item->prices->last()->initial_price;
                     $selling_price = $item->prices->last()->selling_price;
+                    $price = $item->prices->last();
                     if ($intial_price != $itemData['initial_price'] || $selling_price != $itemData['selling_price']) {
                         /**
                          * TODO: create update price <sheenazien8 2020-07-25>
@@ -74,17 +75,11 @@ class PurchasingService
                      * TODO: Update Stock <sheenazien8 2020-07-25>
                      */
                     $item = ( new Item )->find($itemData['item_id']);
-                    if (!$item->last_stock) {
-                        $last_stock = 0;
-                    } else {
-                        $last_stock = $item->last_stock->current_stock;
-                    }
                     $request->merge([
-                        'current_stock' => $last_stock + $itemData['qty'],
-                        'last_stock' => $last_stock,
+                        'amount' =>$itemData['qty'],
                         'date' => $date
                     ]);
-                    $stock = ( new Stock )->hasParent('itemd_id', $item)->create($request);
+                    $stock = ( new Stock )->hasParent('itemd_id', $item)->hasParent('price_id', $price)->create($request);
 
                     /**
                      * TODO: create jurnal accounting <sheenazien8 2020-07-26>

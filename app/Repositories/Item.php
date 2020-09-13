@@ -25,7 +25,7 @@ class Item extends RepositoryAbstract
             'category_name' => Category::select('name')->whereColumn('category_id', 'categories.id')->latest()->limit(1),
             'initial_price' => Price::select('initial_price')->whereColumn('item_id', 'items.id')->latest()->limit(1),
             'selling_price' => Price::select('selling_price')->whereColumn('item_id', 'items.id')->latest()->limit(1),
-            'last_stock' => Stock::select('current_stock')->whereColumn('item_id', 'items.id')->latest()->limit(1)
+            'last_stock' => Stock::select(DB::raw('(CASE WHEN (SUM(amount) > 0) THEN SUM(amount) ELSE 0 END)'))->whereColumn('item_id', 'items.id')->latest()->limit(1)
         ])->latest()->get();
 
         return $this->getObjectModel()->table($items);
@@ -42,8 +42,7 @@ class Item extends RepositoryAbstract
         return DB::transaction(static function () use ($request, $self) {
             $request->merge([
                 'date' => now()->format('Y-m-d'),
-                'current_stock' => $request->stock,
-                'last_stock' => $request->stock
+                'amount' => $request->stock,
             ]);
             $item = new $self->model();
             $item->fill($request->only('internal_production', 'name'));
@@ -60,8 +59,9 @@ class Item extends RepositoryAbstract
 
             // create stock
             $stock = new Stock();
-            $stock->fill($request->only('current_stock', 'last_stock', 'date'));
+            $stock->fill($request->only('amount', 'date'));
             $stock->item()->associate($item);
+            $stock->price()->associate($item);
             $stock->save();
 
             return $item;
