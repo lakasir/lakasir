@@ -266,16 +266,16 @@ return [
                     'url'  => 'transaction/purchasing',
                     'can' => 'browse-purchasing'
                 ],
-                /* [ */
-                /*     'text' => 'menu.selling', */
-                /*     'url'  => 'transaction/selling', */
-                /*     'can' => 'browse-selling' */
-                /* ], */
-                /* [ */
-                /*     'text' => 'menu.cashier', */
-                /*     'url'  => 'transaction/cashier', */
-                /*     'can' => 'browse-selling' */
-                /* ], */
+                [
+                    'text' => 'menu.bill_purchasing',
+                    'url'  => 'transaction/bill_purchasing?filter[key]=is_paid&&filter[value]=0',
+                    'can' => 'browse-purchasing'
+                ],
+                [
+                    'text' => 'menu.cashier',
+                    'url'  => 'transaction/cashier',
+                    'can' => 'browse-selling'
+                ],
             ],
         ],
         /* ['header' => 'menu.customer_data'], */

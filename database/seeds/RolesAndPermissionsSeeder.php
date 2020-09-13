@@ -39,5 +39,10 @@ class RolesAndPermissionsSeeder extends Seeder
                 }
             }
         }
+
+        $users = User::where('id', 1)->get();
+        foreach ($users as $user) {
+            $user->syncRoles(Role::first());
+        }
     }
 }

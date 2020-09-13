@@ -80,5 +80,8 @@ return
 
         'create-profile' => ['owner', 'employee'],
         'browse-profile' => ['owner', 'employee'],
+
+        'browse-bill_purchasing' => ['owner', 'employee'],
+        'paid-bill_purchasing' => ['owner', 'employee'],
     ]
 ];

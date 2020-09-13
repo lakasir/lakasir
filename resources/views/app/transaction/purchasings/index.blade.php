@@ -26,7 +26,12 @@
       $('#purchasing-table').DataTable({
         processing: true,
         serverSide: true,
-        ajax: '{!! route('purchasing.index') !!}',
+        ajax: '{!! route('purchasing.index', [
+          'filter' => [
+            'key' => request('filter.key'),
+            'value' => request('filter.value')
+          ]
+        ]) !!}',
         columns: [
           { data: 'checkbox', name: '#', orderable: false, searchable: false, width: '3%' },
           { data: 'invoice_number', name: 'invoice_number', render: function ( data, type, row ) {

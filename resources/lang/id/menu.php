@@ -22,5 +22,6 @@ return [
     'profile' => 'Profil',
     'change_password' => 'Ganti Password',
     'cashier' => 'Kasir',
-    'payment_method' => 'Metode Pembayaran'
+    'payment_method' => 'Metode Pembayaran',
+    'bill_purchasing' => 'Tagihan Pembelian'
 ];

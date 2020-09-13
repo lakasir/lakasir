@@ -43,6 +43,10 @@ class Item extends Model
 
     public function getLastPriceAttribute()
     {
-        return optional($this->last_stock)->price;
+        $stockPrice = optional($this->last_stock)->price;
+        if (!$stockPrice) {
+           return $this->prices->last();
+        }
+        return $stockPrice;
     }
 }
