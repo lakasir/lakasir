@@ -1,6 +1,6 @@
 <?php
 return [
     'image' => [
-        'empty' => 'default_image'
+        'empty' => '/assets/shop.png'
     ],
 ];

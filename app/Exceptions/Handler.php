@@ -5,6 +5,7 @@ namespace App\Exceptions;
 use App\Facades\Response;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\JsonResponse;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -61,7 +62,7 @@ class Handler extends ExceptionHandler
         return parent::render($request, $exception);
     }
 
-    private function handleApiException($request, \Exception $exception)
+    private function handleApiException($request, Throwable $exception)
     {
         $exception = $this->prepareException($exception);
 
@@ -89,6 +90,7 @@ class Handler extends ExceptionHandler
         }
 
         $response = [];
+        dd($exception);
 
         switch ($statusCode) {
             case 401:
@@ -113,7 +115,11 @@ class Handler extends ExceptionHandler
         }
 
         /* if (config('app.debug')) { */
-        /*     $response['trace'] = $exception->getTrace(); */
+        /*     if ($exception instanceof JsonResponse) { */
+        /*         $response['trace'] = $exception->getData(); */
+        /*     } else { */
+        /*         $response['trace'] = $exception->getTrace(); */
+        /*     } */
         /*     $response['code'] = $exception->getCode(); */
         /* } */
 

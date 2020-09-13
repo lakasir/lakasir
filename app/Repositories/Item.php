@@ -10,6 +10,7 @@ use App\Models\Stock;
 use App\Models\Unit;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\DataTables;
 
@@ -19,7 +20,7 @@ class Item extends RepositoryAbstract
 
     public function datatable(Request $request)
     {
-        $items = $this->model::toBase()->addSelect([
+        $items = $this->query()->toBase()->addSelect([
             'unit_name' => Unit::select('name')->whereColumn('unit_id', 'units.id')->latest()->limit(1),
             'category_name' => Category::select('name')->whereColumn('category_id', 'categories.id')->latest()->limit(1),
             'initial_price' => Price::select('initial_price')->whereColumn('item_id', 'items.id')->latest()->limit(1),
@@ -30,6 +31,11 @@ class Item extends RepositoryAbstract
         return $this->getObjectModel()->table($items);
     }
 
+    /**
+     * store item
+     *
+     * @return App\Models\Item as ItemModel
+     */
     public function create(Request $request): ItemModel
     {
         $self = $this;
@@ -62,6 +68,11 @@ class Item extends RepositoryAbstract
         });
     }
 
+    /**
+     * update item
+     *
+     * @return App\Models\Item as ItemModel
+     */
     public function update(Request $request, $item): ItemModel
     {
         $self = $this;
@@ -85,5 +96,22 @@ class Item extends RepositoryAbstract
 
             return $item;
         });
+    }
+
+    public function totalPriceByRequest(array $items, string $key = 'selling_price'): ?float
+    {
+        $self = $this;
+        $itemPrice = array_map( function($el) use ($self, $key)
+        {
+            $item = $self->find($el['id']);
+            if ($item) {
+                $lastPrice = $item->last_price->{$key} * $el['qty'];
+
+                return $lastPrice;
+            }
+        }, $items);
+
+
+        return array_sum($itemPrice);
     }
 }

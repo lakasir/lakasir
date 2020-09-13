@@ -13,6 +13,8 @@ class Purchasing extends Model
 
     protected $latable = PurchasingTable::class;
 
+    protected $appends = ['total_purchasing'];
+
     protected $fillable = [
         'date',
         'invoice_number',

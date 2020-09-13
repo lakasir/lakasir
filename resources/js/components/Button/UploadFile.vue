@@ -41,7 +41,7 @@ export default {
       if (!files.length)
         return;
 
-      let message = this.__('app.items.import.success')
+      let message = this.__(`app.${this.name}.success`)
       formData.append(this.name, files[0]);
       axios.post(this.to,
         formData,

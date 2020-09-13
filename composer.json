@@ -20,6 +20,7 @@
         "laravel/tinker": "^2.0",
         "laravel/ui": "^2.0",
         "maatwebsite/excel": "^3.1",
+        "pusher/pusher-php-server": "~4.0",
         "spatie/laravel-flash": "^1.6",
         "spatie/laravel-permission": "^3.13",
         "tightenco/ziggy": "^0.9.4",

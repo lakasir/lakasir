@@ -12,35 +12,7 @@
         </tr>
       </thead>
       <tbody>
-        @foreach ($data->purchasingDetails as $purchasingDetail)
-          <tr>
-            <td>
-              @if (app()->environment(['local', 'staging']))
-                <button type="button" class="btn btn-outline-info"><i class="fas fa-pen"></i></button>
-              @endif
-            </td>
-            <td>
-              {{ $purchasingDetail->item->name }}
-            </td>
-            <td>
-              {{ $purchasingDetail->qty }}
-            </td>
-            <td class="text-right">
-              {{ price_format( $purchasingDetail->initial_price ) }}
-            </td>
-            <td class="text-right">
-              {{ price_format( $purchasingDetail->selling_price ) }}
-            </td>
-            <td class="text-right">
-              {{ $purchasingDetail->row_total }}
-            </td>
-          </tr>
-        @endforeach
-        {{-- <tr> --}}
-          {{--   <td colspan="6"> --}}
-            {{--     <button type="button" class="btn btn-outline-success"><i class="fas fa-plus"></i></button> --}}
-            {{--   </td> --}}
-          {{-- </tr> --}}
+        @each('app.transaction.purchasings.components.each', $data->purchasingDetails, 'purchasingDetail')
         <tr>
           <td colspan="4"></td>
           <th class="text-right">{{ __('app.global.total') }}</th>
@@ -52,3 +24,41 @@
     </table>
   </div>
 </div>
+@push('js')
+  <script>
+    $(document).ready(function() {
+      $('.add').click(function(e) {
+        let id = e.target.id
+        $(e.target).addClass('d-none')
+        // $(`#${id}`).removeClass('d-none')
+        let itemName = $(`#input-item-name-${id}`)
+        let itemQty = $(`#input-item-qty-${id}`)
+        let initialPrice = $(`#input-initial-price-${id}`)
+        let sellingPrice = $(`#input-selling-price-${id}`)
+        let rowTotal = $(`#input-row-total-${id}`)
+
+        console.log(itemName)
+      })
+
+      $('.edit').click(function(e) {
+        let id = e.target.id
+        $(e.target).addClass('d-none')
+        $(`#add-${id}`).removeClass('d-none')
+        let itemName = $(`#item-name-${id}`)
+        let itemQty = $(`#item-qty-${id}`)
+        let initialPrice = $(`#initial-price-${id}`)
+        let sellingPrice = $(`#selling-price-${id}`)
+        let rowTotal = $(`#row-total-${id}`)
+        let input = (value, id, type = 'text') => {
+          return `<input value="${value}" id="input-${id}" class="form-control" type="${type}">`
+        }
+
+        itemName.html(input(itemName.data('value'), $(itemName).attr('id')))
+        itemQty.html(input(itemQty.data('value'), $(itemQty).attr('id'), 'number'))
+        initialPrice.html(input(initialPrice.data('value'), $(initialPrice).attr('id'), 'number'))
+        sellingPrice.html(input(sellingPrice.data('value'), $(sellingPrice).attr('id'), 'number'))
+        rowTotal.html(input(rowTotal.data('value'), $(rowTotal).attr('id'), 'number'))
+      })
+    })
+  </script>
+@endpush

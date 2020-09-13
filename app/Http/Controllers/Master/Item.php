@@ -15,10 +15,7 @@ use App\Models\Category;
 use App\Models\Unit;
 use App\Repositories\Item as ItemRepository;
 use App\Traits\HasCrudActions;
-use Illuminate\Http\Request;
 use Illuminate\View\View;
-use Maatwebsite\Excel\Facades\Excel;
-use Yajra\DataTables\Html\Builder;
 
 class Item extends Controller
 {
@@ -39,58 +36,4 @@ class Item extends Controller
     protected $redirect = '/master/item';
 
     protected $repositoryClass = ItemRepository::class;
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\View\View
-     */
-    public function create(): View
-    {
-        get_lang();
-        $this->authorize("create-$this->permission");
-        $categories = Category::toBase()->get()->map(function ($c) {
-            return ['id' => $c->id, 'text' => $c->name];
-        });
-        $units = Unit::toBase()->get()->map(function ($c) {
-            return ['id' => $c->id, 'text' => $c->name];
-        });
-
-        return view("{$this->viewPath}.create", compact('categories', 'units'));
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\View\View
-     */
-    public function edit(int $model): View
-    {
-        get_lang();
-        $data = $this->repository->find($model);
-
-        $this->authorize("update-$this->permission");
-
-        $categories = Category::toBase()->get()->map(function ($c) {
-            return ['id' => $c->id, 'text' => $c->name];
-        });
-
-        $units = Unit::toBase()->get()->map(function ($c) {
-            return ['id' => $c->id, 'text' => $c->name];
-        });
-
-        return view("{$this->viewPath}.edit", compact('categories', 'data', 'units'));
-    }
-
-    public function downloadTemplate()
-    {
-        return Excel::download(new TemplateItemExport, now()->format('Y-m-d-his') . '-template-items.xlsx');
-    }
-
-    public function importTemplate(Request $request)
-    {
-        Excel::import(new ItemImport, $request->file('item-import'));
-
-        return;
-    }
 }

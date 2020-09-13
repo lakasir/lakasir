@@ -16,7 +16,6 @@
           <th> {{ __('app.items.export.unit.name') }}</th>
           <th> {{ __('app.items.export.price.initial_price') }}</th>
           <th> {{ __('app.items.export.price.selling_price') }}</th>
-          <th> {{ __('header') }}</th>
         </tr>
       </thead>
       <tbody>

@@ -44,17 +44,16 @@
     </div>
     @enderror
   </div>
-  <select2
-    :options="{{ collect([['id' => 'en', 'text' => 'English USA'],['id' => 'id', 'text' => 'Bahasa Indonesia'],]) }}"
-    default-value="{{optional(optional(auth()->user() ?? '')->profile)->lang}}"
-     label="{{ __('app.profiles.column.lang') }}"
-     name="lang"
-     old="{{ json_encode(old('lang')) }}"
-     @error('lang')
-     error-message="{{ $message }}"
-     :error="true"
-     @enderror
-     >
-     <option disabled value="0"> {{ __('app.profiles.placeholder.lang') }}</option>
-  </select2>
+  <v-select icon="fa-building"
+           placeholder="{{ __('app.profiles.placeholder.lang') }}"
+           options="{{ collect([['id' => 'en', 'text' => 'English USA'],['id' => 'id', 'text' => 'Bahasa Indonesia'],]) }}"
+           default-value="{{optional(optional(auth()->user() ?? '')->profile)->lang}}"
+           label="{{ __('app.profiles.column.lang') }}"
+           name="lang"
+           old="{{ old('lang') }}"
+           @error('lang')
+           :error="true"
+           error-message="{{ $message }}"
+           @enderror
+    ></v-select>
 </x-form>

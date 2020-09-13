@@ -26,6 +26,10 @@
                 old="null"
                 :name="`items[${i}][item_id]`"
                 class="select-item"
+                :placeholder="__('app.purchasings.column.items.name')"
+                :url="route('item.index')"
+                keytext="id"
+                text="name"
                 :id="i"
                 >
                 <option disabled value="0"> {{ __('app.purchasings.column.items.name') }}</option>

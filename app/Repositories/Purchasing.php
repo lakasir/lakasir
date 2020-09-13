@@ -18,8 +18,9 @@ class Purchasing extends RepositoryAbstract
         $paymentMethd = new PaymentMethod();
         $user = new User();
         $purchasing = $this->model::toBase()->addSelect([
-            'payment_method' => $paymentMethd->getModel()::select('name')->whereColumn('payment_method_id', 'payment_methods.id')->latest()->limit(1),
-            'user' => $user->getModel()::select('username')->whereColumn('user_id', 'users.id')->latest()->limit(1)
+            'payment_method' => $paymentMethd->getModel()
+            ::select('name')->whereColumn('payment_method_id', 'payment_methods.id')->latest()->limit(1),
+            'user' => $user->getModel()::select('username')->whereColumn('user_id', 'users.id')->latest()->limit(1),
         ])->latest()->get();
 
         return $this->getObjectModel()->table($purchasing);

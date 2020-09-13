@@ -96,7 +96,6 @@
         -moz-appearance: textfield;
       }
     </style>
-    @livewireStyles
     <script>
       window._locale = '{{ app()->getLocale() }}';
       window._translations = {!! cache('translations') !!};
@@ -131,7 +130,6 @@
       });
     </script>
     @routes
-    @livewireScripts
 </body>
 
 </html>

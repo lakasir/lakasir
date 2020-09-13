@@ -7,7 +7,7 @@
         <h5 class="card-title">{{ $data->invoice_number }}</h5>
         @if (app()->environment(['local', 'staging']))
           <div class="card-action float-right">
-            <button type="button" class="btn btn-sm btn-outline-info"><i class="fas fa-pen"></i></button>
+            <a href="{{ route('purchasing.edit', $data) }}" class="btn btn-sm btn-outline-info"><i class="fas fa-pen"></i></a>
           </div>
         @endif
       </div>
