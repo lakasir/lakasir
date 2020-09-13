@@ -94,10 +94,10 @@ return [
             'images' => 'Gambar',
             'internal_production' => 'Produksi Sendiri',
             'category' => [
-                'name' => 'Nama Kategori',
+                'name' => 'Pilih satu dari kategori',
             ],
             'unit' => [
-                'name' => 'Nama Satuan'
+                'name' => 'Pilih satu dari satuan'
             ],
             'price' => [
                 'selling_price' => 'Harga Jual',
@@ -126,7 +126,7 @@ return [
             'stock' => [
                 'amount' => 'Jumlah',
                 'stock' => 'Stok',
-                'empty' => 'Stock Kosong',
+                'empty' => 'Kosong',
                 'last_stock' => 'Sisa Stok'
             ]
         ],
@@ -160,7 +160,8 @@ return [
         'title' => [
             'cashier' => 'Kasir',
             'index' => 'Index',
-            'name' => 'Penjualan'
+            'name' => 'Penjualan',
+            'submit' => 'Submit Pesanan'
         ],
         'placeholder' => [
             'search_item' => 'Cari Item'
@@ -195,9 +196,9 @@ return [
             ]
         ],
         'placeholder' => [
-            'supplier' => 'Pemasok',
+            'supplier' => 'Pilih Satu Dari Pemasok',
             'date' => 'Tanggal',
-            'payment_method' => 'Metode Pembayaran',
+            'payment_method' => 'Pilih Satu Dari Metode Pembayaran',
             'invoice_number' => 'Nomor Pembayaran',
             'total_initial_price' => 'Total Harga Beli',
             'total_selling_price' => 'Total Harga Jual',
@@ -205,6 +206,15 @@ return [
             'note' => 'Catatan',
             'paid' => 'Lunas',
             'user' => 'User',
+            'items' => [
+                'header' => 'Item',
+                'name' => 'Pilih satu dari item',
+                'qty' => 'Kuantitas',
+                'initial_price' => 'Harga Beli',
+                'selling_price' => 'Harga Jual',
+                'price' => 'Harga',
+                'total' => 'Total'
+            ]
         ],
         'paid' => [
             'true' => 'Sudah Terbayarkan',
@@ -318,6 +328,13 @@ return [
         ],
         'create' => [
             'title' => 'Tambah Pemasok'
+        ],
+        'export' => [
+            'name' => 'Nama Supplier ( wajib )',
+            'code' => 'Kode ( Kosongi untuk kode ototmatis )',
+            'shop_name' => 'Nama Toko',
+            'phone' => 'No. Hp',
+            'address' => 'Alamat'
         ],
     ],
     'user' => [

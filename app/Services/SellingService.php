@@ -123,7 +123,8 @@ class SellingService
                                     'name' => $item->name,
                                     'image' => optional($item->media->first())->get_full_name ?? config('setting.image.empty'),
                                     'stock' => optional($item->last_stock)->current_stock ?? __('app.items.column.stock.empty'),
-                                    'selling_price' => optional($item->last_price)->selling_price
+                                    'selling_price' => optional($item->last_price)->selling_price,
+                                    'selling_price_format' => price_format(optional($item->last_price)->selling_price)
                                 ];
                             });
 

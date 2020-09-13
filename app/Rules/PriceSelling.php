@@ -23,7 +23,7 @@ class PriceSelling implements Rule
      *
      * @return void
      */
-    public function __construct(array $items)
+    public function __construct(?array $items = null)
     {
         $this->items = $items;
     }
@@ -39,7 +39,10 @@ class PriceSelling implements Rule
     {
         $item = new Item();
         $items = $this->items;
-        $totalPrice = $item->totalPriceByRequest($items);
+        $totalPrice = 0;
+        if ($this->items) {
+            $totalPrice = $item->totalPriceByRequest($items);
+        }
         $this->totalPrice = $totalPrice;
 
         return $value >= $totalPrice;

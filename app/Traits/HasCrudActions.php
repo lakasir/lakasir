@@ -63,12 +63,6 @@ trait HasCrudActions
                 if (isset($this->return) && $this->return == 'index') {
                     return;
                 }
-                if (isset($this->return) && $this->return == 'api') {
-                    $result = $this->repository->query()->get()->toArray();
-
-                    return Response::success($result);
-                }
-
                 if ($request->type == 'select2') {
                     $result = $this->repository->query()->select('id', $request->key)->when(
                         $request->term && $request->key,
@@ -92,6 +86,12 @@ trait HasCrudActions
                         {
                             return $query->where($request->filter['key'], $request->filter['value']);
                         })->get()->toArray();
+
+                    return Response::success($result);
+                }
+
+                if (isset($this->return) && $this->return == 'api') {
+                    $result = $this->repository->query()->get()->toArray();
 
                     return Response::success($result);
                 }

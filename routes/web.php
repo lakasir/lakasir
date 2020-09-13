@@ -65,8 +65,6 @@ Route::group(['middleware' => [ 'installed', 'auth' ]], function () {
     Route::group(['prefix' => 'transaction'], function () {
         Route::get('/purchasing/{purchasing}/detail/{purchasing-detail}/edit', 'Transaction\Purchasing@editDetail')->name('purchasing.detail.edit');
         Route::resource('/purchasing', 'Transaction\Purchasing');
-        Route::resource('/selling', 'Transaction\Selling');
-        // Route::get('/cashier', 'Transaction\Selling@cashier');
     });
 
     Route::post('/cashdrawer/open', 'Transaction\CashDrawer@open')->name('cashdrawer.open');

@@ -26,5 +26,6 @@ Route::group(['prefix' => 'v1', 'as' => 'api.'], function () {
     Route::group(['middleware' => [ 'auth:api' ]], function () {
         Route::get('/auth/profile', 'Api\Auth\Profile@get')->name('auth.profile');
         Route::resource('/selling', 'Api\Transaction\Selling');
+        Route::resource('/payment_method', 'Api\Master\PaymentMethod')->only(['index']);
     });
 });

@@ -1,6 +1,20 @@
 const _ = require('lodash');
 window.Vue = require('vue');
 Vue.mixin(require('./../trans'));
+const mixin = {
+  methods: {
+    priceFormat: (number) => {
+      const formatter = new Intl.NumberFormat('id-ID', {
+        style: 'currency',
+        currency: 'IDR',
+        minimumFractionDigits: 2
+      })
+      return formatter.format(number)
+    }
+  }
+}
+
+Vue.mixin(mixin)
 
 import vuetify from './config';
 import App from './App';

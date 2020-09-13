@@ -3,6 +3,7 @@ import api from './../../../api'
 const state = () => ({
   token: localStorage.getItem('bearer-token') || '',
   status: '',
+  errors: []
 })
 
 const actions = {
@@ -16,6 +17,11 @@ const actions = {
           resolve(res.data)
         })
         .catch(err => {
+          let errors = JSON.parse(err.request.response)
+          commit({
+            type: 'authError',
+            errors: errors.errors ?? errors.message
+          })
           reject(err)
         })
     })
@@ -35,8 +41,9 @@ const mutations = {
     state.status = 'success'
     state.token = token
   },
-  authError: (state) => {
+  authError: (state, payload) => {
     state.status = 'error'
+    state.errors = payload.errors
   },
 }
 

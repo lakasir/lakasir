@@ -1,15 +1,31 @@
 <template>
   <div>
-    <router-view></router-view>
-    <bottom-nav></bottom-nav>
+    <top-nav></top-nav>
+    <v-snackbar
+      v-model="$store.state.snackbar"
+      :timeout="timeout"
+      >
+      {{ $store.state.message }}
+
+      <template v-slot:action="{ attrs }">
+        <v-btn
+          color="blue"
+          text
+          v-bind="attrs"
+          @click="snackbar = false"
+          >
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
   </div>
 </template>
 
 <script>
-import BottomNav from './BottomNav.vue';
+import TopNav from './TopNav.vue';
 export default {
   components: {
-    BottomNav
+    TopNav
   },
   name: 'Master',
 
@@ -17,11 +33,10 @@ export default {
 
   },
 
-  data() {
-    return {
-
-    }
-  },
+  data: () => ({
+    snackbar: false,
+    timeout: 2000,
+  }),
 
   methods: {
 

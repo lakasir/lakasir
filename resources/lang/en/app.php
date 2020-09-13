@@ -96,10 +96,10 @@ return [
             'images' => 'Images',
             'internal_production' => 'Internal Production',
             'category' => [
-                'name' => 'Category Name',
+                'name' => 'Choose one of category',
             ],
             'unit' => [
-                'name' => 'Unit Name'
+                'name' => 'Choose one of unit'
             ],
             'price' => [
                 'selling_price' => 'Selling Price',
@@ -128,7 +128,7 @@ return [
             'stock' => [
                 'amount' => 'Amount',
                 'stock' => 'Stock',
-                'empty' => 'Empty Stock',
+                'empty' => 'Empty',
                 'last_stock' => 'Last Stock'
             ]
         ],
@@ -162,15 +162,22 @@ return [
         'title' => [
             'cashier' => 'Cashier',
             'index' => 'Index',
-            'name' => 'Selling'
+            'name' => 'Selling',
+            'submit' => 'Submit Order'
         ],
         'placeholder' => [
             'search_item' => 'Search Item'
+        ],
+        'column' => [
+            'payment_method' => 'Payment Method'
         ],
         'menu' => [
             'activity' => 'Activity',
             'sell' => 'Sell',
             'profile' => 'Profile'
+        ],
+        'validation' => [
+            'less_price' => 'The Money entered is less than :money'
         ]
     ],
     'purchasings' => [
@@ -198,8 +205,8 @@ return [
         ],
         'placeholder' => [
             'date' => 'Date',
-            'supplier' => 'Supplier',
-            'payment_method' => 'Payment Method',
+            'supplier' => 'Choose one of Payment Supplier',
+            'payment_method' => 'Choose one of Payment Method',
             'invoice_number' => 'Invoice Number',
             'total_initial_price' => 'Total Initial Price',
             'total_selling_price' => 'Total Selling Price',
@@ -207,6 +214,15 @@ return [
             'note' => 'Note',
             'paid' => 'Paid',
             'user' => 'User',
+            'items' => [
+                'header' => 'Item',
+                'name' => 'Choose one of items',
+                'qty' => 'Qty',
+                'price' => 'Price',
+                'initial_price' => 'Initial Price',
+                'selling_price' => 'Selling Price',
+                'total' => 'Total'
+            ]
         ],
         'paid' => [
             'true' => 'Already Paid Off',
@@ -320,6 +336,13 @@ return [
         ],
         'create' => [
             'title' => 'Create Supplier'
+        ],
+        'export' => [
+            'name' => 'Supplier Name ( required )',
+            'code' => 'Code ( Empty for default code )',
+            'shop_name' => 'Shop Name',
+            'phone' => 'Phone',
+            'address' => 'Address'
         ],
     ],
     'user' => [

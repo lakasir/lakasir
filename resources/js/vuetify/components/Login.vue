@@ -12,17 +12,15 @@
     <v-container>
       <v-text-field
         v-model="form.email"
-        :rules="emailRules"
+        :error-messages="error.email"
         :counter="10"
         :label="__('app.auth.placeholder.email')"
-        required
         ></v-text-field>
       <v-text-field
         v-model="form.password"
-        :rules="passwordRules"
+        :error-messages="error.password"
         :counter="10"
         :label="__('app.auth.placeholder.password')"
-        required
         type="password"
         ></v-text-field>
       <br>
@@ -44,6 +42,7 @@
 
 <script>
 const config = require('./../config/app').default;
+import { mapState } from 'vuex'
 
 export default {
   name: 'Login',
@@ -58,31 +57,32 @@ export default {
       email: '',
       password: ''
     },
-    valid: false,
-    passwordRules: [
-      v => !!v || 'Password is required',
-    ],
-    email: '',
-    emailRules: [
-      v => !!v || 'E-mail is required',
-      v => /.+@.+/.test(v) || 'E-mail must be valid',
-    ],
+    error: {
+      email: '',
+      password: '',
+    }
   }),
+
+  computed: mapState('auth', {
+    errors: state => state.errors,
+    status: state => state.status
+  }),
+
+  watch: {
+    errors: function(val) {
+      this.error.email = val.email
+      this.error.password = val.password
+    },
+  },
 
   methods: {
     loginSubmit() {
       this.$store.dispatch('auth/loginSubmit', {
         email: this.form.email,
         password: this.form.password
+      }).then(res => {
+        this.$router.push({ name: 'cashier.selling' })
       })
-        .then(res => {
-          this.$router.push('/cashier/selling')
-        })
-        .catch(err => {
-          if (err?.request?.status == 422) {
-
-          }
-        })
     }
   },
 

@@ -1,5 +1,6 @@
 
 export default [
+  { path: '/', redirect: { name: 'cashier.selling' }},
   {
     path: '*',
     component: () => import('./../components/error/404.vue'),
@@ -9,6 +10,7 @@ export default [
   },
   {
     path: '/login',
+    name: 'login',
     component: () => import('./../components/Login.vue'),
     meta: {
       title: 'Login'
@@ -28,7 +30,16 @@ export default [
         component: () => import('./../components/Sell.vue'),
         meta: {
           requiresAuth: true,
-          title: 'Cashier | List Item'
+          title: 'Selling'
+        },
+      },
+      {
+        path: 'selling/cart',
+        name: 'cashier.selling.cart',
+        component: () => import('./../components/Cart.vue'),
+        meta: {
+          requiresAuth: true,
+          title: 'Selling Cart'
         },
       },
       {
@@ -37,7 +48,7 @@ export default [
         component: () => import('./../components/Activity.vue'),
         meta: {
           requiresAuth: true,
-          title: 'Cashier | Activity'
+          title: 'Activity'
         },
       },
       {
@@ -46,7 +57,7 @@ export default [
         component: () => import('./../components/Profile.vue'),
         meta: {
           requiresAuth: true,
-          title: 'Cashier | Profile'
+          title: 'Profile'
         },
       }
     ]
