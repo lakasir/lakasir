@@ -43,7 +43,16 @@ export default {
   },
 
   mounted() {
+    console.log(this.$vuetify.breakpoint.smOnly);
   }
 }
 
 </script>
+
+<style lang="sass">
+
+@media only screen and (min-width: 960px)
+.container
+  max-width: 960px
+
+</style>

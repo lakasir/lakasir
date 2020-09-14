@@ -10,6 +10,7 @@ use App\Http\Requests\Transaction\Selling\Index;
 use App\Http\Requests\Transaction\Selling\Store;
 use App\Traits\HasCrudActions;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 /**
  * TODO: create resources of selling <sheenazien8 2020-08-24>
@@ -38,4 +39,20 @@ class Selling extends Controller
     protected $indexService = [SellingService::class, 'list_item'];
 
     protected $return =  'api';
+
+    /**
+     * get all activity by user and by sellig
+     *
+     * @return JsonResponse
+     */
+
+    public function activity(Request $request): JsonResponse
+    {
+        $this->authorize('browse-selling');
+
+        $service = new SellingService();
+
+        return Response::success($service->activity($request));
+    }
+
 }

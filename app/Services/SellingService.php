@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Builder\NumberGeneratorBuilder;
+use App\Models\Selling as SellingModel;
 use App\Repositories\Customer;
 use App\Repositories\Item;
 use App\Repositories\PaymentMethod;
@@ -10,7 +11,7 @@ use App\Repositories\Selling;
 use App\Repositories\SellingDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-
+use Lakasir\UserLoggingActivity\Facades\Activity;
 
 
 
@@ -104,6 +105,7 @@ class SellingService
                    return $repository->hasParent('item_id', $item);
                })->hasParent('selling_id', $selling)->create($request);
             }
+            Activity::modelable($selling)->auth()->creating();
 
             return $selling->toArray();
         });
@@ -136,4 +138,38 @@ class SellingService
 
         return $items->toArray();
     }
+
+    /**
+     * map activity to get i want response
+     *
+     * @param App\Http\Request $request
+     * @return array
+     */
+    public function activity(Request $request): array
+    {
+        $activities = $this->selling->activity($request);
+        $previousDate;
+        $transactionDate = [];
+        $activities->each(function(SellingModel $activity, int $key)
+            use($activities, &$previousDate, &$transactionDate)
+            {
+                if ($previousDate != $activity->transaction_date) {
+                    $transactionDate[$key] = $activity->transaction_date;
+                }
+                $previousDate = $activity->transaction_date;
+            });
+        $resultActivities = [];
+        for ($i = 0; $i < count($transactionDate); $i++) {
+            $activities->map(function(SellingModel $activity, int $key)
+                use($transactionDate, $i, &$resultActivities)
+                {
+                    if ($transactionDate[$i] == $activity->transaction_date) {
+                        return $resultActivities[$transactionDate[$i]][$key] = $activity->toArray();
+                    }
+                });
+        }
+
+        return $resultActivities;
+    }
+
 }

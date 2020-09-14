@@ -153,12 +153,12 @@ trait HasCrudActions
         }
         $message = __('app.global.message.create').' '. ucfirst($this->permission);
 
-        if (isset($this->return) && $this->return == 'api') {
-            return response()->json($data, 200);
-        }
-
         if (method_exists($data, 'logs')) {
             Activity::modelable($data)->auth()->creating();
+        }
+
+        if (isset($this->return) && $this->return == 'api') {
+            return Response::success($data);
         }
 
         flash()->success(dash_to_space($message));

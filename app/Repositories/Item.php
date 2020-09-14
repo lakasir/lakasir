@@ -23,8 +23,8 @@ class Item extends RepositoryAbstract
         $items = $this->query()->toBase()->addSelect([
             'unit_name' => Unit::select('name')->whereColumn('unit_id', 'units.id')->latest()->limit(1),
             'category_name' => Category::select('name')->whereColumn('category_id', 'categories.id')->latest()->limit(1),
-            'initial_price' => Price::select('initial_price')->whereColumn('item_id', 'items.id')->latest()->limit(1),
-            'selling_price' => Price::select('selling_price')->whereColumn('item_id', 'items.id')->latest()->limit(1),
+            'initial_price' => Price::select('initial_price')->whereColumn('item_id', 'items.id')->orderBy('date', 'asc')->limit(1),
+            'selling_price' => Price::select('selling_price')->whereColumn('item_id', 'items.id')->orderBy('date', 'asc')->limit(1),
             'last_stock' => Stock::select(DB::raw('(CASE WHEN (SUM(amount) > 0) THEN SUM(amount) ELSE 0 END)'))->whereColumn('item_id', 'items.id')->latest()->limit(1)
         ])->latest()->get();
 

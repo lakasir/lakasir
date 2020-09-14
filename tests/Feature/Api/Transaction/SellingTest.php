@@ -53,6 +53,19 @@ class SellingTest extends TestCase
         $response->assertStatus(JsonResponse::HTTP_OK);
     }
 
+    public function test_list_selling_activity(string $search = null): void
+    {
+        $this->setClientCredentialsToken();
+
+        $response = $this->get(route('api.selling.activity', [
+            'search' => $search
+        ]), $this->oauth_headers);
+
+        $response->assertStatus(200);
+        $response->assertJsonStructure(['success']);
+    }
+
+
 
     protected function data($money = 8000): array
     {

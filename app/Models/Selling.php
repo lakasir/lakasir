@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Lakasir\UserLoggingActivity\Traits\HasLog;
 
 class Selling extends Model
 {
+    use HasLog;
+
     protected $fillable = [
         'number_transaction',
         'transaction_date',
