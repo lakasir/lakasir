@@ -4,6 +4,6 @@ return [
         'empty' => '/assets/shop.png'
     ],
     'profile' => [
-        'image_empty' => 'default_image'
+        'image_empty' => '/assets/man-2.png'
     ]
 ];
