@@ -19,6 +19,7 @@ Lakasir uses [Laravel](http://laravel.com), the best existing PHP framework, as 
 
 * Install [Composer](https://getcomposer.org/download) and [Npm](https://nodejs.org/en/download)
 * Clone the repository: `git clone https://github.com/lakasir/lakasir.git`
+* Or `use composer create-project lakasir/lakasir your-project-name` 
 * Install dependencies: `composer install ; npm install ; npm run dev`
 
 ## Contributing
@@ -27,44 +28,9 @@ Please, be very clear on your commit messages and pull requests, empty pull requ
 
 When contributing code to Lakasir, you must follow the PSR coding standards. The golden rule is: Imitate the existing Lakasir code
 
-## Todo
-* [x] install method
-* [x] Profile
-* [x] Change Password
-* [ ] Master Data 
-  * [x] Unit
-  * [x] Category
-  * [x] Items
-  * [ ] Log Price
-  * [ ] Log Stock
-  * [x] Supplier
-* [x] User Management
-  * [x] List
-  * [x] Role Management
-* [ ] Employee
-  * [ ] Attendance
-  * [ ] Salary
-* [x] Customer / Member
-  * [x] List
-  * [x] Group
-  * [x] Point Customer
-* [ ] Transaction
-  * [x] Purchasing
-  * [x] Selling
-  * [ ] Print Invoice Purchasing / Selling
-* [ ] Accounting
-  * [ ] Coa Master
-  * [ ] General Ledger
-  * [ ] Track Transaction
-    * [ ] Purchasing
-    * [ ] Selliing
-    * [ ] Log Stock
-    * [ ] log Price
-* [ ] Dashboard
-* [ ] Setting
-  * [ ] Appreance
-  * [x] Localization
-  * [ ] Mailling
+## Ideas
+
+if you want to contribute and add some ideas, please check this link [ideas] (https://github.com/orgs/lakasir/projects/1), you can add notes to the ideas card.
   
 ## Credits
 
