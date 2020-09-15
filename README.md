@@ -30,7 +30,7 @@ When contributing code to Lakasir, you must follow the PSR coding standards. The
 
 ## Ideas
 
-if you want to contribute and add some ideas, please check this link [ideas] (https://github.com/orgs/lakasir/projects/1), you can add notes to the ideas card.
+if you want to contribute and add some ideas, please check this link [ideas](https://github.com/orgs/lakasir/projects/1), you can add notes to the ideas card.
   
 ## Credits
 
