@@ -16,20 +16,15 @@ jobs:
       matrix:
         php-version: [7.4.x]
     services:
-      mysql-service:
+      mysql:
         image: mysql:5.7
-        ports:
-          - 33306:3306
         env:
           MYSQL_DATABASE: ${{ secrets.DB_DATABASE }}
           MYSQL_USER: ${{ secrets.DB_USERNAME }}
           MYSQL_PASSWORD: ${{ secrets.DB_PASSWORD }}
           MYSQL_ROOT_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          MYSQL_ALLOW_EMPTY_PASSWORD: yes
           SERVICE_NAME: mysql
-        options: >-
-          --health-cmd="mysqladmin ping" --health-interval=4s
-          --health-timeout=5s --health-retries=2
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -52,9 +47,8 @@ jobs:
       - name: Setup database
         env:
           DB_CONNECTION: mysql
-          DB_HOST: mysql-service
+          DB_HOST: mysql
           DB_DATABASE: ${{ secrets.DB_DATABASE }}
-          DB_PORT: 33306
           DB_USER: ${{ secrets.DB_USERNAME }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
         run: php artisan migrate
