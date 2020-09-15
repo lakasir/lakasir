@@ -18,6 +18,8 @@ jobs:
     services:
       mysql:
         image: mysql:5.7
+        ports:
+          - 33306:3306
         env:
           MYSQL_DATABASE: ${{ secrets.DB_DATABASE }}
           MYSQL_ROOT_PASSWORD: ${{ secrets.DB_PASSWORD }}
@@ -44,6 +46,7 @@ jobs:
         env:
           DB_CONNECTION: mysql
           DB_DATABASE: ${{ secrets.DB_DATABASE }}
+          DB_PORT: 33306
           DB_USER: ${{ secrets.DB_USERNAME }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
         run: php artisan migrate
