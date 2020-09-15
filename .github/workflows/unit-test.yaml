@@ -19,11 +19,10 @@ jobs:
       mysql:
         image: mysql:5.7
         env:
-          MYSQL_DATABASE: ${{ secrets.DB_DATABASE }}
-          MYSQL_USER: ${{ secrets.DB_USERNAME }}
-          MYSQL_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          MYSQL_ROOT_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          SERVICE_NAME: mysql
+          MYSQL_DATABASE: '${{ secrets.DB_DATABASE }}'
+          MYSQL_USER: '${{ secrets.DB_USERNAME }}'
+          MYSQL_PASSWORD: '${{ secrets.DB_PASSWORD }}'
+          MYSQL_ROOT_PASSWORD: '${{ secrets.DB_PASSWORD }}'
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
     steps:
       - name: Checkout
