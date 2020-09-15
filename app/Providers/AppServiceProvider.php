@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Helpers\Response;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Validator;
@@ -47,6 +48,10 @@ class AppServiceProvider extends ServiceProvider
             $keyConfirmed = explode('_', request()->key)[0];
 
             return $value == request()->{ $keyConfirmed };
+        });
+
+        $this->app->bind('ResponseHelper', function () {
+            return new Response();
         });
     }
 }

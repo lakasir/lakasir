@@ -1,4 +1,5 @@
 const mix = require('laravel-mix');
+const path = require('path');
 
 /*
  |--------------------------------------------------------------------------
@@ -12,4 +13,13 @@ const mix = require('laravel-mix');
  */
 
 mix.js('resources/js/app.js', 'public/js')
+  .js('resources/js/vuetify/app.js', 'public/js/vuetify')
     .sass('resources/sass/app.scss', 'public/css');
+
+mix.webpackConfig({
+    resolve: {
+        alias: {
+            ziggy: path.resolve('vendor/tightenco/ziggy/src/js/route.js'),
+        },
+    },
+});

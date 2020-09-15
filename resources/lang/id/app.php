@@ -32,6 +32,32 @@ return [
             ]
         ],
     ],
+    'payment_methods' => [
+        'title' => 'Metode Pembayaran',
+        'column' => [
+            'name' => 'Nama',
+            'code' => 'Kode',
+            'visible_in' => 'Terlihat Di',
+            'can_delete' => 'Dapat Dihapus'
+        ],
+        'placeholder' => [
+            'name' => 'Nama',
+            'code' => 'Kode',
+            'visible_in' => 'Terlihat Di',
+            'can_delete' => 'Dapat Dihapus'
+        ],
+        'info' => [
+            'visible_in' => [
+                'empty' => 'Kosong'
+            ]
+        ],
+        'create' => [
+            'title' => 'Tambah Metode Pembayaran'
+        ],
+        'edit' => [
+            'title' => 'Edit Metode Pembayaran'
+        ]
+    ],
     'profiles' => [
         'column' => [
             'bio' => 'Bio',
@@ -68,10 +94,10 @@ return [
             'images' => 'Gambar',
             'internal_production' => 'Produksi Sendiri',
             'category' => [
-                'name' => 'Nama Kategori',
+                'name' => 'Pilih satu dari kategori',
             ],
             'unit' => [
-                'name' => 'Nama Satuan'
+                'name' => 'Pilih satu dari satuan'
             ],
             'price' => [
                 'selling_price' => 'Harga Jual',
@@ -79,7 +105,8 @@ return [
             ],
             'stock' => [
                 'amount' => 'Jumlah',
-                'stock' => 'Stok'
+                'stock' => 'Stok',
+                'last_stock' => 'Sisa Stok'
             ]
         ],
         'column' => [
@@ -98,7 +125,28 @@ return [
             ],
             'stock' => [
                 'amount' => 'Jumlah',
-                'stock' => 'Stok'
+                'stock' => 'Stok',
+                'empty' => 'Kosong',
+                'last_stock' => 'Sisa Stok'
+            ]
+        ],
+        'export' => [
+            'name' => 'Nama',
+            'images' => 'Gambar',
+            'internal_production' => 'Produksi Sendiri (Ya / Tidak)',
+            'category' => [
+                'name' => 'Nama Kategori ( Kosongi untuk memilih umum )',
+            ],
+            'unit' => [
+                'name' => 'Nama Satuan'
+            ],
+            'price' => [
+                'selling_price' => 'Harga Jual',
+                'initial_price' => 'Harga Beli'
+            ],
+            'stock' => [
+                'amount' => 'Jumlah',
+                'last_stock' => 'Sisa Stok ( Jika Kosong tidak perlu di isi )'
             ]
         ],
         'edit' => [
@@ -107,6 +155,22 @@ return [
         'create' => [
             'title' => 'Tambah Items'
         ],
+    ],
+    'sellings' => [
+        'title' => [
+            'cashier' => 'Kasir',
+            'index' => 'Index',
+            'name' => 'Penjualan',
+            'submit' => 'Submit Pesanan'
+        ],
+        'placeholder' => [
+            'search_item' => 'Cari Item'
+        ],
+        'menu' => [
+            'activity' => 'Aktifitas',
+            'sell' => 'Jual',
+            'profile' => 'Profil'
+        ]
     ],
     'purchasings' => [
         'title' => 'Pembelian',
@@ -120,6 +184,7 @@ return [
             'total_qty' => 'Total Jumlah',
             'note' => 'Catatan',
             'paid' => 'Lunas',
+            'user' => 'User',
             'items' => [
                 'header' => 'Item',
                 'name' => 'Nama Item',
@@ -131,15 +196,25 @@ return [
             ]
         ],
         'placeholder' => [
-            'supplier' => 'Pemasok',
+            'supplier' => 'Pilih Satu Dari Pemasok',
             'date' => 'Tanggal',
-            'payment_method' => 'Metode Pembayaran',
+            'payment_method' => 'Pilih Satu Dari Metode Pembayaran',
             'invoice_number' => 'Nomor Pembayaran',
             'total_initial_price' => 'Total Harga Beli',
             'total_selling_price' => 'Total Harga Jual',
             'total_qty' => 'Total Jumlah',
             'note' => 'Catatan',
-            'paid' => 'Lunas'
+            'paid' => 'Lunas',
+            'user' => 'User',
+            'items' => [
+                'header' => 'Item',
+                'name' => 'Pilih satu dari item',
+                'qty' => 'Kuantitas',
+                'initial_price' => 'Harga Beli',
+                'selling_price' => 'Harga Jual',
+                'price' => 'Harga',
+                'total' => 'Total'
+            ]
         ],
         'paid' => [
             'true' => 'Sudah Terbayarkan',
@@ -254,6 +329,13 @@ return [
         'create' => [
             'title' => 'Tambah Pemasok'
         ],
+        'export' => [
+            'name' => 'Nama Supplier ( wajib )',
+            'code' => 'Kode ( Kosongi untuk kode ototmatis )',
+            'shop_name' => 'Nama Toko',
+            'phone' => 'No. Hp',
+            'address' => 'Alamat'
+        ],
     ],
     'user' => [
         'title' => 'Pengguna',
@@ -323,6 +405,8 @@ return [
         'error_old_password' => 'Password Kamu tidak valid',
         'cancel' => 'Batal',
         'total' => 'Total',
+        'download' => 'Unduh :title',
+        'import' => 'Import :title',
         'message' => [
             'create' => 'Menambahkan',
             'update' => 'Memeperbarui',

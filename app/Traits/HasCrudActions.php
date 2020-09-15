@@ -3,10 +3,16 @@
 namespace App\Traits;
 
 use App\Exceptions\ServiceActionsException;
+use App\Facades\Response;
 use App\Http\Requests\Master\Unit\Index;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
+use Lakasir\UserLoggingActivity\Facades\Activity;
+use Maatwebsite\Excel\Facades\Excel;
 
 /**
  * Trait HasCrudActions
@@ -26,15 +32,19 @@ trait HasCrudActions
     /**
      * Display a listing of the resource.
      *
-     * @param Yajra\DataTables\Html\Builder $builder
      * @return mix
      */
     public function index()
     {
-        app()->setLocale(optional(auth()->user() ?? 'en')->localization);
+        get_lang();
+
         $request = resolve($this->indexRequest);
-        $this->authorize("browse-$this->permission");
-        if ($request->ajax()) {
+
+        if ($this->permission) {
+            $this->authorize("browse-$this->permission");
+        }
+
+        if ($request->ajax() || isset($this->return) && $this->return == 'api') {
             if (isset($this->indexService)) {
                 if (count($this->indexService) > 2) {
                     throw new ServiceActionsException('Index Service property is cant to more 2 index');
@@ -44,8 +54,48 @@ trait HasCrudActions
                 }
                 $resources = ( new $this->indexService[0] )->{$this->indexService[1]}($request);
 
-                return $this->repository->getobjectmodel()->table($resources);
+                if (isset($this->return) && $this->return == 'api') {
+                    return Response::success($resources);
+                }
+
+                return $this->repository->getObjectModel()->table($resources);
             } else {
+                if (isset($this->return) && $this->return == 'index') {
+                    return;
+                }
+                if ($request->type == 'select2') {
+                    $result = $this->repository->query()->select('id', $request->key)->when(
+                        $request->term && $request->key,
+                        function ($query) use ($request)
+                        {
+                            return $query->where($request->key, 'LIKE', '%%'.$request->term.'%%');
+                        })->when(
+                        $request->oldValue,
+                        function ($query) use($request)
+                        {
+                            $str = ltrim($request->oldValue, '[');
+                            $str = rtrim($str, ']');
+                            $array = explode(',', $str);
+                            if ($request->oldValue) {
+                                if (is_array($array) && count($array) > 1) {
+                                    return $query->whereIn('id', $array);
+                                }
+                                return $query->where('id', $request->oldValue);
+                            }
+                        })->when($request->filter, function ($query) use ($request)
+                        {
+                            return $query->where($request->filter['key'], $request->filter['value']);
+                        })->get()->toArray();
+
+                    return Response::success($result);
+                }
+
+                if (isset($this->return) && $this->return == 'api') {
+                    $result = $this->repository->query()->get()->toArray();
+
+                    return Response::success($result);
+                }
+
                 return $this->repository->datatable($request);
             }
         }
@@ -68,7 +118,7 @@ trait HasCrudActions
      */
     public function create(): View
     {
-        app()->setLocale(optional(auth()->user() ?? 'en')->localization);
+        get_lang();
 
         $this->authorize("create-$this->permission");
 
@@ -78,11 +128,11 @@ trait HasCrudActions
     /**
      * Store a newly created resource in storage.
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return mix
      */
-    public function store(): RedirectResponse
+    public function store()
     {
-        app()->setLocale(optional(auth()->user() ?? 'en')->localization);
+        get_lang();
 
         $request = resolve($this->storeRequest);
 
@@ -97,11 +147,22 @@ trait HasCrudActions
             if (!is_array($this->storeService)) {
                 throw new ServiceActionsException('Store Service property must be array');
             }
-            ( new $this->storeService[0] )->{$this->storeService[1]}($request);
+            $data = ( new $this->storeService[0] )->{$this->storeService[1]}($request);
         } else {
-            $this->repository->create($request);
+            $data = $this->repository->create($request);
         }
-        flash()->success(__('app.global.message.create').' '. ucfirst($this->permission));
+        $message = __('app.global.message.create').' '. ucfirst($this->permission);
+
+        if (method_exists($data, 'logs')) {
+            Activity::modelable($data)->auth()->creating();
+        }
+
+        if (isset($this->return) && $this->return == 'api') {
+            return Response::success($data);
+        }
+
+        flash()->success(dash_to_space($message));
+
 
         return redirect()->to($this->redirect);
     }
@@ -114,7 +175,7 @@ trait HasCrudActions
      */
     public function show(int $model): View
     {
-        app()->setLocale(optional(auth()->user() ?? 'en')->localization);
+        get_lang();
 
         $data = $this->repository->find($model);
 
@@ -131,7 +192,7 @@ trait HasCrudActions
      */
     public function edit(int $model)
     {
-        app()->setLocale(optional(auth()->user() ?? 'en')->localization);
+        get_lang();
 
         $data = $this->repository->find($model);
 
@@ -148,7 +209,7 @@ trait HasCrudActions
      */
     public function update(int $model): RedirectResponse
     {
-        app()->setLocale(optional(auth()->user() ?? 'en')->localization);
+        get_lang();
 
         $data = $this->repository->find($model);
 
@@ -165,11 +226,22 @@ trait HasCrudActions
             if (!is_array($this->updateService)) {
                 throw new ServiceActionsException('Store Service property must be array');
             }
-            ( new $this->updateService[0] )->{$this->updateService[1]}($data, $request);
+            $data = (new $this->updateService[0])->{$this->updateService[1]}($data, $request);
         } else {
-            $this->repository->update($request, $data);
+            $data = $this->repository->update($request, $data);
         }
-        flash()->success(__('app.global.message.update').' '. ucfirst($this->permission));
+
+        $message = __('app.global.message.update').' '. ucfirst($this->permission);
+
+        if (isset($this->return) && $this->return == 'api') {
+            return response()->json($data, 200);
+        }
+
+        if (method_exists($data, 'logs')) {
+            Activity::modelable($data)->auth()->updating();
+        }
+
+        flash()->success(dash_to_space($message));
 
         return redirect()->to($this->redirect);
     }
@@ -182,13 +254,22 @@ trait HasCrudActions
      */
     public function destroy(int $model): RedirectResponse
     {
-        app()->setLocale(optional(auth()->user() ?? 'en')->localization);
+        get_lang();
 
         $this->authorize("delete-{$this->permission}");
 
-        $this->repository->find($model)->delete();
 
-        flash()->success(__('app.global.message.delete').' '. ucfirst($this->permission));
+        $data = $this->repository->find($model);
+
+        if (method_exists($data, 'logs')) {
+            Activity::sync()->modelable($data)->auth()->deleting();
+        }
+
+        $data->delete();
+
+        $message = __('app.global.message.delete').' '. ucfirst($this->permission);
+
+        flash()->success(dash_to_space($message));
 
         return redirect()->to($this->redirect);
     }
@@ -200,14 +281,43 @@ trait HasCrudActions
      */
     public function bulkDestroy(): RedirectResponse
     {
-        app()->setLocale(optional(auth()->user() ?? 'en')->localization);
+        get_lang();
 
         $request = resolve($this->bulkDestroyRequest);
 
         $this->repository->bulkDestroy($request);
 
-        flash()->success(__('app.global.message.delete').' '. ucfirst($this->permission));
+        $message = __('app.global.message.delete').' '. ucfirst($this->permission);
+
+        flash()->success(dash_to_space($message));
 
         return redirect()->back();
+    }
+
+    public function downloadTemplate()
+    {
+        if ($this->permission) {
+            $this->authorize("create-$this->permission");
+        }
+
+        $string = Str::title(dash_to_space($this->permission));
+
+        $classExport = 'App\Exports\\Template' . $string . 'Export';
+
+        return Excel::download(new $classExport, now()->format('Y-m-d-his') . "-template-{$this->permission}s.xlsx");
+    }
+
+    public function importTemplate(Request $request)
+    {
+        if ($this->permission) {
+            $this->authorize("create-$this->permission");
+        }
+        $string = Str::title(dash_to_space($this->permission));
+
+        $classExport = 'App\Imports\\' . $string . 'Import';
+
+        Excel::import(new $classExport, $request->file("{$this->permission}-import"));
+
+        return;
     }
 }

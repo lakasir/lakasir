@@ -8,7 +8,7 @@
            :error="true"
            @enderror
            name="code"
-           :validation="['required']"
+           :validation="['']"
            default-value="{{ optional( $data ?? '' )->code }}"
            info=" {{ __('app.customers.info.code') }}"
            ></v-input>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\ChangePassword\Store;
+use App\Http\Requests\User\Index;
 use App\Repositories\User as UserRepository;
 use App\Services\UserService;
 use App\Traits\HasCrudActions;
@@ -24,12 +25,5 @@ class ChangePassword extends Controller
 
     protected $repositoryClass = UserRepository::class;
 
-    protected $storeService = [UserService::class, 'updatePassword'];
-
-    public function index()
-    {
-        app()->setLocale(optional(auth()->user() ?? 'en')->localization);
-
-        return view("{$this->viewPath}.index");
-    }
+    protected $storeService = [ UserService::class, 'updatePassword' ];
 }

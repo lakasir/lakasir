@@ -3,6 +3,7 @@
 namespace App\Abstracts;
 
 use App\Interfaces\Repository as RepositoryInterface;
+use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -15,7 +16,7 @@ abstract class Repository implements RepositoryInterface
     {
         $items = $this->model::toBase()->latest()->get();
 
-        return $this->getobjectmodel()->table($items);
+        return $this->getObjectModel()->table($items);
     }
 
     public function find(int $id)
@@ -125,5 +126,20 @@ abstract class Repository implements RepositoryInterface
     public function getObjectModel(): Object
     {
         return new $this->model;
+    }
+
+    public function query(): Object
+    {
+        return $this->getObjectModel()->query();
+    }
+
+    public function if($true = false, Closure $closure)
+    {
+        if ($true) {
+            $self = $this;
+            return $closure($self);
+        }
+
+        return $this;
     }
 }

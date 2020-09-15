@@ -47,6 +47,7 @@ class Install extends Controller
      */
     public function show(): View
     {
+        get_lang();
         return view('app.install.index');
     }
 
@@ -56,6 +57,7 @@ class Install extends Controller
 
     public function databaseStore(Database $request): RedirectResponse
     {
+        get_lang();
         $is_connected = $this->checkDatabaseConnection($request, true);
 
         if ($is_connected !==true) {
@@ -74,6 +76,7 @@ class Install extends Controller
 
     public function userStore(User $request): RedirectResponse
     {
+        get_lang();
         $is_connected = $this->checkDatabaseConnection($request);
 
         if ($is_connected !==true) {
@@ -87,6 +90,7 @@ class Install extends Controller
 
     public function companyStore(Company $request): RedirectResponse
     {
+        get_lang();
         $is_connected = $this->checkDatabaseConnection($request);
 
         if ($is_connected !==true) {
@@ -111,6 +115,7 @@ class Install extends Controller
 
     private function checkDatabaseConnection($request = null, $set_config = false)
     {
+        get_lang();
         try {
             if ($set_config) {
                 \Config::set('database.connections.mysql', [

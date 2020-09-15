@@ -12,8 +12,10 @@
            default-value="{{ optional( $data ?? '' )->name }}"
            ></v-input>
     <select2
-      :options="{{ $customers }}"
       :multiple="true"
+      url="{{ route('customer.index') }}"
+      keytext="id"
+      text="name"
       default-value="{{ optional(optional( $data ?? '' )->customers ?? '')->pluck('id') }}"
       label="{{ __('app.groups.column.customer') }}"
       name="customer_id[]"

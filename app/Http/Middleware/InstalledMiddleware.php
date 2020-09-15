@@ -15,7 +15,7 @@ class InstalledMiddleware
      */
     public function handle($request, Closure $next)
     {
-        if (!env('INSTALL')) {
+        if (!config('lakasir.installed')) {
             return redirect('install?tab=database');
         }
         return $next($request);

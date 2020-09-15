@@ -63,6 +63,10 @@
         <meta name="msapplication-TileImage" content="{{ asset('favicon/ms-icon-144x144.png') }}">
     @endif
     <style>
+      div.overflow {
+        width: 100%;
+        height: 400px;
+      }
       .img-cover {
         border: 2px solid black;
         padding: 25px;
@@ -92,7 +96,6 @@
         -moz-appearance: textfield;
       }
     </style>
-    @livewireStyles
     <script>
       window._locale = '{{ app()->getLocale() }}';
       window._translations = {!! cache('translations') !!};
@@ -127,7 +130,6 @@
       });
     </script>
     @routes
-    @livewireScripts
 </body>
 
 </html>

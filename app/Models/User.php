@@ -7,6 +7,7 @@ use App\Traits\HasLaTable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Passport\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
@@ -14,6 +15,7 @@ class User extends Authenticatable
     use HasRoles;
     use Notifiable;
     use HasLaTable;
+    use HasApiTokens;
 
     protected $latable = UserTable::class;
 

@@ -4,12 +4,13 @@ namespace App\Repositories;
 
 use App\Abstracts\Repository as RepositoryAbstract;
 use Illuminate\Http\Request;
+use App\Models\User as UserModel;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 
 class User extends RepositoryAbstract
 {
-    protected string $model = 'App\Models\User';
+    protected string $model = UserModel::class;
 
     /**
      * @var string
@@ -20,7 +21,7 @@ class User extends RepositoryAbstract
     {
         $self = $this;
         return DB::transaction(static function () use ($request, $self) {
-            if (getenv('INSTALL') == 'false') {
+            if (!config('lakasir.installed')) {
                 $session = $request->session()->all()['user'];
                 $request->merge($session);
             }
@@ -42,7 +43,7 @@ class User extends RepositoryAbstract
     {
         $self = $this;
         return DB::transaction(static function () use ($request, $self, $user) {
-            if (getenv('INSTALL') == 'false') {
+            if (!config('lakasir.installed')) {
                 $session = $request->session()->all()['user'];
                 $request->merge($session);
             }
@@ -65,7 +66,9 @@ class User extends RepositoryAbstract
 
     public function updatePassword(Request $request, $user)
     {
-        return $user->update($request->all());
+        $user->update($request->only(['password']));
+
+        return $user;
     }
 
 

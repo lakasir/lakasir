@@ -33,16 +33,20 @@ class Item extends Model
 
     public function log_stocks()
     {
-        return $this->hasMany(Stock::class, 'item_id');
+        return $this->hasMany(Stock::class, 'item_id')->orderBy('date', 'asc');
     }
 
     public function getLastStockAttribute()
     {
-        return $this->log_stocks->last();
+        return Stock::where('item_id', $this->id)->orderBy('date', 'asc')->first();
     }
 
     public function getLastPriceAttribute()
     {
-        return $this->prices->last();
+        $stockPrice = optional($this->last_stock)->price;
+        if (!$stockPrice) {
+           return $this->prices->last();
+        }
+        return $stockPrice;
     }
 }

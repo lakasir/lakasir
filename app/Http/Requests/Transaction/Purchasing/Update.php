@@ -28,9 +28,8 @@ class Update extends FormRequest
             'supplier_id' => ['required'],
             'payment_method' => [
                 'required',
-                Rule::in(config('array_options.payment_method'))
             ],
-            'items' => ['array', 'required']
+            // 'items' => ['array', 'required']
         ];
     }
 }

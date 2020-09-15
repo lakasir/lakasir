@@ -40,12 +40,9 @@ class RolesAndPermissionsSeeder extends Seeder
             }
         }
 
-        $user = User::first();
-        $user->assignRole(Role::whereName('owner')->first());
-
-        $user = User::where('id', '!=', 1)->get();
-        foreach ($user as $u) {
-            $u->assignRole(Role::whereName('employee')->first());
+        $users = User::where('id', 1)->get();
+        foreach ($users as $user) {
+            $user->syncRoles(Role::first());
         }
     }
 }

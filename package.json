@@ -10,6 +10,7 @@
         "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
     },
     "devDependencies": {
+        "@mdi/js": "^5.5.55",
         "axios": "^0.19",
         "cross-env": "^7.0",
         "laravel-mix": "^5.0.1",
@@ -23,10 +24,15 @@
         "bootstrap4-toggle": "^3.6.1",
         "datatables.net-bs4": "^1.10.21",
         "datatables.net-buttons-bs4": "^1.6.2",
+        "es6-promise": "^4.2.8",
         "jquery-ujs": "^1.2.2",
+        "vue": "^2.6.11",
+        "vue-i18n": "^8.21.0",
+        "vue-router": "^3.4.3",
+        "vuetify": "^2.3.9",
+        "vuex": "^3.5.1",
         "npm": "^6.14.8",
         "production": "0.0.2",
-        "run": "^1.4.0",
-        "vue": "^2.6.11"
+        "run": "^1.4.0"
     }
 }
