@@ -2,39 +2,28 @@
 
 namespace App\Http\Controllers\Api\Auth;
 
-use App\Facades\Response;
-use App\Http\Controllers\Controller;
-use App\Http\Requests\Api\Auth\Login as Request;
 use App\Repositories\User;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Hash;
+use App\Traits\HasCrudActions;
+use App\Services\ProfileService;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\User\Profile\Index;
+use App\Http\Requests\User\Profile\Store;
 
 class Profile extends Controller
 {
-    /**
-     * @var User
-     */
-    private $user;
+    use HasCrudActions;
 
-    /**
-     * @param App\Repositories\User user
-     */
-    public function __construct(User $user)
-    {
-        $this->user = $user;
-    }
+    protected $return =  'api';
 
-    /**
-     *
-     * Profile Auth User
-     *
-     * @return Illuminate\Http\JsonResponse
-     */
-    public function get(): JsonResponse
-    {
-        $user = auth()->user();
-        $data = $user->load('profile', 'profile.media');
+    protected $permission =  null;
 
-        return Response::success($data->toArray());
-    }
+    protected $indexRequest = Index::class;
+
+    protected $storeRequest = Store::class;
+
+    protected $repositoryClass = User::class;
+
+    protected $indexService = [ ProfileService::class, 'getProfile' ];
+
+    protected $storeService = [ ProfileService::class, 'create' ];
 }

@@ -2,11 +2,13 @@
 
 namespace App\Http\Requests\User\Profile;
 
+use App\Traits\JsonValidateResponse;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 
 class Store extends FormRequest
 {
+    use JsonValidateResponse;
     /**
      * Determine if the user is authorized to make this request.
      *

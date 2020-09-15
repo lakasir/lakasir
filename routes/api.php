@@ -24,7 +24,7 @@ Route::get('/item/{id}', 'Api\Item')->name('api.item.show');
 Route::group(['prefix' => 'v1', 'as' => 'api.'], function () {
     Route::post('/auth/login', 'Api\Auth\Login@login')->name('auth.login');
     Route::group(['middleware' => [ 'auth:api' ]], function () {
-        Route::get('/auth/profile', 'Api\Auth\Profile@get')->name('auth.profile');
+        Route::resource('/auth/profile', 'Api\Auth\Profile')->only(['index', 'store']);
         Route::get('/selling/activity', 'Api\Transaction\Selling@activity')->name('selling.activity');
         Route::resource('/selling', 'Api\Transaction\Selling');
         Route::resource('/payment_method', 'Api\Master\PaymentMethod')->only(['index']);
