@@ -37,9 +37,8 @@ jobs:
 
       - name: Setup laravel
         run: >
-          cp .env.ci .env
+          php -r "file_exists('.env') || copy('.env.ci', '.env');"
           php artisan key:generate
-          chmod -R 777 storage bootstrap/cache
 
       - name: Setup database
         env:
