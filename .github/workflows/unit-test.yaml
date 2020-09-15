@@ -43,7 +43,6 @@ jobs:
       - name: Setup database
         env:
           DB_CONNECTION: mysql
-          DB_HOST: mysql
           DB_DATABASE: ${{ secrets.DB_DATABASE }}
           DB_USER: ${{ secrets.DB_USERNAME }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
