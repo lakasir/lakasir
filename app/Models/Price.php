@@ -16,5 +16,4 @@ class Price extends Model
     {
         return $this->belongsTo(Unit::class, 'item_id');
     }
-
 }

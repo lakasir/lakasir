@@ -45,6 +45,8 @@ class Role extends Controller
      */
     public function create(): View
     {
+        get_lang();
+
         $this->authorize("create-$this->permission");
         $permissions = Permission::toBase()->get()->map(function ($c, $i) {
             $name = str_replace('-', ' ', Str::title($c->name));
@@ -67,6 +69,8 @@ class Role extends Controller
      */
     public function edit(int $model): View
     {
+        get_lang();
+
         $data = $this->repository->find($model);
 
         $this->authorize("update-$this->permission");

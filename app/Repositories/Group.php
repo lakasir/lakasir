@@ -13,21 +13,25 @@ class Group extends RepositoryAbstract
     public function create(Request $request)
     {
         $self = $this;
-        DB::transaction(static function () use ($self, $request) {
+        return DB::transaction(static function () use ($self, $request) {
             $group = $self->model::create($request->all());
             $customer = ( new Customer() )->findByKeyArray($request->customer_id);
             $group->customers()->attach($customer);
+
+            return $group;
         });
     }
 
     public function update(Request $request, $group)
     {
         $self = $this;
-        DB::transaction(static function () use ($self, $request, $group) {
+        return DB::transaction(static function () use ($self, $request, $group) {
             $group->fill($request->all());
             $group->save();
             $customer = ( new Customer() )->findByKeyArray($request->customer_id);
             $group->customers()->sync($customer);
+
+            return $group;
         });
     }
 

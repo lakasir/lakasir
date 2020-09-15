@@ -30,7 +30,7 @@ trait HasParent
         $this->parentCollection = collect();
     }
 
-    public function hasParent(string $column, Object $parent)
+    public function hasParent(string $column, ?Object $parent)
     {
         $this->parent = $parent;
         $this->column = $column;

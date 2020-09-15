@@ -32,6 +32,32 @@ return [
             ]
         ],
     ],
+    'payment_methods' => [
+        'title' => 'Payment Method',
+        'column' => [
+            'name' => 'Name',
+            'code' => 'Code',
+            'visible_in' => 'Visible In',
+            'can_delete' => 'Can Delete'
+        ],
+        'placeholder' => [
+            'name' => 'Name',
+            'code' => 'Code',
+            'visible_in' => 'Visible In',
+            'can_delete' => 'Can Delete'
+        ],
+        'info' => [
+            'visible_in' => [
+                'empty' => 'Empty'
+            ]
+        ],
+        'create' => [
+            'title' => 'Create Payment Method'
+        ],
+        'edit' => [
+            'title' => 'Edit Payment Method'
+        ]
+    ],
     'profiles' => [
         'column' => [
             'bio' => 'Bio',
@@ -60,6 +86,8 @@ return [
         'label' => [
             'remember' => 'Remeber Me'
         ],
+        'login' => 'Login',
+        'forgot_password' => 'Forgot Password'
     ],
     'items' => [
         'title' => 'Item Data',
@@ -68,10 +96,10 @@ return [
             'images' => 'Images',
             'internal_production' => 'Internal Production',
             'category' => [
-                'name' => 'Category Name',
+                'name' => 'Choose one of category',
             ],
             'unit' => [
-                'name' => 'Unit Name'
+                'name' => 'Choose one of unit'
             ],
             'price' => [
                 'selling_price' => 'Selling Price',
@@ -79,7 +107,8 @@ return [
             ],
             'stock' => [
                 'amount' => 'Amount',
-                'stock' => 'Stock'
+                'stock' => 'Stock',
+                'last_stock' => 'Last Stock'
             ]
         ],
         'column' => [
@@ -98,8 +127,29 @@ return [
             ],
             'stock' => [
                 'amount' => 'Amount',
-                'stock' => 'Stock'
+                'stock' => 'Stock',
+                'empty' => 'Empty',
+                'last_stock' => 'Last Stock'
             ]
+        ],
+        'export' => [
+            'name' => 'Name',
+            'images' => 'Images',
+            'internal_production' => 'Internal Production (Yes / No)',
+            'category' => [
+                'name' => 'Category Name ( Leave empty for use Umum )',
+            ],
+            'unit' => [
+                'name' => 'Unit Name'
+            ],
+            'price' => [
+                'selling_price' => 'Selling Price',
+                'initial_price' => 'Initial Price'
+            ],
+            'stock' => [
+                'amount' => 'Amount',
+                'last_stock' => 'Last Stock ( If stock is empty do not need to be filled )'
+            ],
         ],
         'edit' => [
             'title' => 'Edit Items'
@@ -107,6 +157,28 @@ return [
         'create' => [
             'title' => 'Create Items'
         ],
+    ],
+    'sellings' => [
+        'title' => [
+            'cashier' => 'Cashier',
+            'index' => 'Index',
+            'name' => 'Selling',
+            'submit' => 'Submit Order'
+        ],
+        'placeholder' => [
+            'search_item' => 'Search Item'
+        ],
+        'column' => [
+            'payment_method' => 'Payment Method'
+        ],
+        'menu' => [
+            'activity' => 'Activity',
+            'sell' => 'Sell',
+            'profile' => 'Profile'
+        ],
+        'validation' => [
+            'less_price' => 'The Money entered is less than :money'
+        ]
     ],
     'purchasings' => [
         'title' => 'Purchasing',
@@ -120,6 +192,7 @@ return [
             'total_qty' => 'Total Qty',
             'note' => 'Note',
             'paid' => 'Paid',
+            'user' => 'User',
             'items' => [
                 'header' => 'Item',
                 'name' => 'Item Name',
@@ -132,14 +205,24 @@ return [
         ],
         'placeholder' => [
             'date' => 'Date',
-            'supplier' => 'Supplier',
-            'payment_method' => 'Payment Method',
+            'supplier' => 'Choose one of Payment Supplier',
+            'payment_method' => 'Choose one of Payment Method',
             'invoice_number' => 'Invoice Number',
             'total_initial_price' => 'Total Initial Price',
             'total_selling_price' => 'Total Selling Price',
             'total_qty' => 'Total Qty',
             'note' => 'Note',
-            'paid' => 'Paid'
+            'paid' => 'Paid',
+            'user' => 'User',
+            'items' => [
+                'header' => 'Item',
+                'name' => 'Choose one of items',
+                'qty' => 'Qty',
+                'price' => 'Price',
+                'initial_price' => 'Initial Price',
+                'selling_price' => 'Selling Price',
+                'total' => 'Total'
+            ]
         ],
         'paid' => [
             'true' => 'Already Paid Off',
@@ -254,6 +337,13 @@ return [
         'create' => [
             'title' => 'Create Supplier'
         ],
+        'export' => [
+            'name' => 'Supplier Name ( required )',
+            'code' => 'Code ( Empty for default code )',
+            'shop_name' => 'Shop Name',
+            'phone' => 'Phone',
+            'address' => 'Address'
+        ],
     ],
     'user' => [
         'title' => 'User',
@@ -323,6 +413,8 @@ return [
         'error_old_password' => 'Your Old Password is Not Valid',
         'cancel' => 'Cancel',
         'total' => 'Total',
+        'download' => 'Download :title',
+        'import' => 'Import :title',
         'message' => [
             'create' => 'Create',
             'update' => 'Update',

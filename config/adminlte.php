@@ -46,7 +46,7 @@ return [
     */
 
     'logo' => '<b>Akasir</b>',
-    'logo_img' => '/assets/Lakasir.png',
+    'logo_img' => '/assets/lakasir-sm.png',
     'logo_img_class' => 'brand-image img-circle elevation-3',
     'logo_img_xl' => null,
     'logo_img_xl_class' => 'brand-image-xl',
@@ -267,8 +267,13 @@ return [
                     'can' => 'browse-purchasing'
                 ],
                 [
-                    'text' => 'menu.selling',
-                    'url'  => 'transaction/selling',
+                    'text' => 'menu.bill_purchasing',
+                    'url'  => 'transaction/bill_purchasing?filter[key]=is_paid&&filter[value]=0',
+                    'can' => 'browse-purchasing'
+                ],
+                [
+                    'text' => 'menu.cashier',
+                    'url'  => 'transaction/cashier',
                     'can' => 'browse-selling'
                 ],
             ],
@@ -311,6 +316,11 @@ return [
                     'text' => 'menu.supplier',
                     'url'  => 'master/supplier',
                     'can' => 'browse-supplier'
+                ],
+                [
+                    'text' => 'menu.payment_method',
+                    'url'  => 'master/payment_method',
+                    'can' => 'browse-payment_method'
                 ],
             ],
         ],
@@ -362,7 +372,7 @@ return [
         JeroenNoten\LaravelAdminLte\Menu\Filters\HrefFilter::class,
         JeroenNoten\LaravelAdminLte\Menu\Filters\SearchFilter::class,
         JeroenNoten\LaravelAdminLte\Menu\Filters\ActiveFilter::class,
-        JeroenNoten\LaravelAdminLte\Menu\Filters\SubmenuFilter::class,
+        // JeroenNoten\LaravelAdminLte\Menu\Filters\SubmenuFilter::class,
         JeroenNoten\LaravelAdminLte\Menu\Filters\ClassesFilter::class,
         JeroenNoten\LaravelAdminLte\Menu\Filters\GateFilter::class,
         JeroenNoten\LaravelAdminLte\Menu\Filters\LangFilter::class,
@@ -389,17 +399,17 @@ return [
                 [
                     'type' => 'js',
                     'asset' => true,
-                    'location' => '//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js',
+                    'location' => '//cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js',
                 ],
                 [
                     'type' => 'js',
                     'asset' => true,
-                    'location' => '//cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js',
+                    'location' => '//cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js',
                 ],
                 [
                     'type' => 'css',
                     'asset' => true,
-                    'location' => '//cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css',
+                    'location' => '//cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css',
                 ],
             ],
         ],

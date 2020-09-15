@@ -72,7 +72,16 @@ return
         'update-role' => ['owner', 'employee'],
         'bulk-delete-role' => ['owner', 'employee'],
 
+        'create-payment_method' => ['owner', 'employee'],
+        'browse-payment_method' => ['owner', 'employee'],
+        'delete-payment_method' => ['owner', 'employee'],
+        'update-payment_method' => ['owner', 'employee'],
+        'bulk-delete-payment_method' => ['owner', 'employee'],
+
         'create-profile' => ['owner', 'employee'],
         'browse-profile' => ['owner', 'employee'],
+
+        'browse-bill_purchasing' => ['owner', 'employee'],
+        'paid-bill_purchasing' => ['owner', 'employee'],
     ]
 ];

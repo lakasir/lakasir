@@ -2,19 +2,21 @@
 
 namespace App\Models;
 
+use App\Traits\HasLaTable;
 use App\DataTables\PurchasingTable;
 use Illuminate\Database\Eloquent\Model;
-use App\Traits\HasLaTable;
+use Lakasir\UserLoggingActivity\Traits\HasLog;
 
 class Purchasing extends Model
 {
-    use HasLaTable;
+    use HasLaTable, HasLog;
 
     protected $latable = PurchasingTable::class;
 
+    protected $appends = ['total_purchasing'];
+
     protected $fillable = [
         'date',
-        'payment_method',
         'invoice_number',
         'total_initial_price',
         'total_selling_price',
@@ -22,6 +24,18 @@ class Purchasing extends Model
         'note',
         'is_paid'
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+
+    public function paymentMethod()
+    {
+        return $this->belongsTo(PaymentMethod::class, 'payment_method_id');
+    }
+
 
     public function purchasingDetails()
     {

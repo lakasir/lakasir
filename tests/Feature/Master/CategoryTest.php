@@ -62,7 +62,7 @@ class CategoryTest extends TestCase
     {
         $user = User::find(1);
         factory(Category::class, 10)->create();
-        $response = $this->actingAs($user)->put('/master/category/' . Category::inRandomOrder()->first()->id,[
+        $response = $this->actingAs($user)->put('/master/category/' . Category::inRandomOrder()->first()->id, [
             'name' => 'siap'
         ]);
 
@@ -100,5 +100,4 @@ class CategoryTest extends TestCase
 
         $response->assertStatus(302);
     }
-
 }

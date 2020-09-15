@@ -31,6 +31,10 @@ export default {
       type: String,
       value: ''
     },
+    placeholder: {
+      type: String,
+      value: "",
+    },
     label: {
       type: String,
       value: "",
@@ -51,9 +55,12 @@ export default {
       type: String,
       value: null
     },
+    url: '',
+    keytext: '',
+    text: '',
     old: null,
     prepend: false,
-    getValue: false
+    getValue: false,
 
   },
 
@@ -66,29 +73,93 @@ export default {
     }
   },
 
-  mounted() {
-    if (this.error) {
-      this.dataErrorMessage = this.errorMessage
-      this.dataError = this.error
-    }
-    if (this.defaultValue) {
-      let defaultValue = ''
-      if (!this.multiple) {
-       defaultValue = this.defaultValue
+  methods: {
+    ajaxOptions() {
+      let keytext = this.keytext
+      let text = this.text
+      return {
+          url: this.url,
+          dataType: 'Json',
+          delay: 250,
+          tags: true,
+          data: function(params) {
+            return {
+              key: text,
+              term: params.term,
+              type: 'select2'
+            }
+          },
+          processResults: function(data) {
+            let res = data.payload.map((el) => {
+              return {
+                id: el[keytext],
+                text: el[text]
+              }
+            })
+            return {
+              results: res
+            }
+          }
+        }
+    },
+    getOptions(data) {
+      let option;
+      if (data.payload.length > 1) {
+        let arr = [];
+        for (let i = 0, len = data.payload.length; i < len; i++) {
+          arr[i] = new Option(data.payload[i][this.text], data.payload[i][this.keytext], true, true);
+        }
+        option = arr
       } else {
-       defaultValue = JSON.parse(this.defaultValue)
+        option = new Option(data.payload[0][this.text], data.payload[0][this.keytext], true, true);
       }
-      this.value = defaultValue
+
+      return option;
     }
-    if (this.old != 'null') {
-      this.value = JSON.parse(this.old)
-    }
+  },
+
+  async mounted() {
     let vm = this;
     let selectElement = this.$el.children[1];
+    let option;
+    let property = {
+      width: '100%',
+      placeholder: this.placeholder,
+    }
+    if (this.url) {
+      property.ajax = this.ajaxOptions()
+      if (this.old !== "null") {
+        let { data } = await axios.get(`${this.url}?type=select2&oldValue=${JSON.parse(this.old)}&key=${this.text}`)
+        option = this.getOptions(data)
+      }
+      if (this.defaultValue) {
+        let { data } = await axios.get(`${this.url}?type=select2&oldValue=${this.defaultValue}&key=${this.text}`)
+        option = this.getOptions(data)
+      }
+    } else {
+      property.data = this.options
+      if (this.error) {
+        this.dataErrorMessage = this.errorMessage
+        this.dataError = this.error
+      }
+      if (this.defaultValue) {
+        let defaultValue = ''
+        if (!this.multiple) {
+          defaultValue = this.defaultValue
+        } else {
+          defaultValue = JSON.parse(this.defaultValue)
+        }
+        this.value = defaultValue
+      }
+      if (this.old != 'null') {
+        this.value = JSON.parse(this.old)
+      }
+    }
     $(selectElement)
       // init select2
-      .select2({ data: this.options, width: '100%' })
+      .select2(property)
       .val(this.value)
+      .append(option)
       .trigger("change")
       // emit event on change.
       .on("change", function () {
@@ -102,6 +173,8 @@ export default {
     value: function (value) {
       // update value
       $(this.$el).val(value).trigger("change");
+      // this.ajaxOptions().url = this.url
+      // $(this.$el).select2({ ajax: this.ajaxOptions() })
     },
     options: function (options) {
       // update options

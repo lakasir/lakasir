@@ -44,13 +44,15 @@ trait Media
         $this->media()->save($media);
     }
 
-    public function deleteMedia(MediaModel $media): self
+    public function deleteMedia(MediaModel $media = null): self
     {
         /**
          * FIXME: deleted image and media <sheenazien8 2020-07-07>
          *
          */
-        $media->delete();
+        if ($media) {
+            $media->delete();
+        }
 
         return $this;
     }
