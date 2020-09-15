@@ -50,7 +50,7 @@ When contributing code to Lakasir, you must follow the PSR coding standards. The
   * [x] Point Customer
 * [ ] Transaction
   * [x] Purchasing
-  * [ ] Selling
+  * [x] Selling
   * [ ] Print Invoice Purchasing / Selling
 * [ ] Accounting
   * [ ] Coa Master
