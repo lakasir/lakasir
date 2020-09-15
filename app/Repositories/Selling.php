@@ -22,6 +22,7 @@ class Selling extends RepositoryAbstract
                         })
                         ->where('user_id', auth()->id())
                         ->orderBy('transaction_date', 'desc')
+                        ->limit(30)
                         ->get();
 
         return $selling;

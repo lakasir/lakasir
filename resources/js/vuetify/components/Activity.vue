@@ -1,58 +1,36 @@
 <template>
   <v-app>
-    <v-chip
-      class="ma-2"
+
+    <v-timeline dense
+      v-for="( activity, index ) in activities" :key="index"
       >
-      2020-09-14
+    <v-chip
+      class="ma-2">
+      {{ index }}
     </v-chip>
-    <v-timeline dense>
       <v-slide-x-reverse-transition
         group
         hide-on-leave
         >
         <v-timeline-item
-          v-for="item in items"
-          :key="item.id"
-          :color="item.color"
+          v-for="ac in activity"
+          :key="ac.id"
+          color="info"
           small
           fill-dot
           >
           <v-alert
             :value="true"
-            :color="item.color"
-            :icon="item.icon"
+            color="primary"
+            icon="mdi-information"
             class="white--text"
             >
-            Lorem ipsum dolor sit amet, no nam oblique veritus. Commune scaevola imperdiet nec ut, sed euismod convenire principes at. Est et nobis iisque percipit, an vim zril disputando voluptatibus, vix an salutandi sententiae.
-          </v-alert>
-        </v-timeline-item>
-      </v-slide-x-reverse-transition>
-    </v-timeline>
-    <v-chip
-      class="ma-2"
-      >
-      2020-09-14
-    </v-chip>
-    <v-timeline dense>
-      <v-slide-x-reverse-transition
-        group
-        hide-on-leave
-        >
-        <v-timeline-item
-          v-for="item in items"
-          :key="item.id"
-          :color="item.color"
-          small
-          fill-dot
-          >
-          <v-alert
-            :value="true"
-            :color="item.color"
-            :icon="item.icon"
-            class="white--text"
-            >
-            Lorem ipsum dolor sit amet, no nam oblique veritus. Commune scaevola imperdiet nec ut, sed euismod convenire principes at. Est et nobis iisque percipit, an vim zril disputando voluptatibus, vix an salutandi sententiae.
-          </v-alert>
+            <p><b>{{ __('number_transaction') }}: </b><span>{{ ac.number_transaction }}</span></p>
+            <p><b>{{ __('transaction_date') }}: </b><span>{{ ac.transaction_date }}</span></p>
+            <p><b>{{ __('total_price') }}: </b><span>{{ ac.total_price }}</span></p>
+            <p><b>{{ __('total_qty') }}: </b><span>{{ ac.total_qty }}</span></p>
+            <p><b>{{ __('total_profit') }}: </b><span>{{ ac.total_profit }}</span></p>
+            </v-alert>
         </v-timeline-item>
       </v-slide-x-reverse-transition>
     </v-timeline>
@@ -60,6 +38,8 @@
 </template>
 
 <script>
+  import { mapState, mapActions } from 'vuex';
+
   const COLORS = [
     'info',
     'warning',
@@ -88,11 +68,18 @@
       nonce: 2,
     }),
 
+    computed: mapState('activity', {
+      activities: state => state.activities
+    }),
+
     beforeDestroy () {
       this.stop()
     },
 
     methods: {
+      ...mapActions('activity', [
+        'getActivity'
+      ]),
       addEvent () {
         let { color, icon } = this.genAlert()
 
@@ -134,5 +121,9 @@
         this.interval = null
       },
     },
+
+    mounted() {
+      this.getActivity()
+    }
   }
 </script>

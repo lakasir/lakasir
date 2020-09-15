@@ -150,18 +150,20 @@ class SellingService
         $activities = $this->selling->activity($request);
         $previousDate;
         $transactionDate = [];
+        $index = 0;
         $activities->each(function(SellingModel $activity, int $key)
-            use($activities, &$previousDate, &$transactionDate)
+            use($activities, &$previousDate, &$transactionDate, &$index)
             {
                 if ($previousDate != $activity->transaction_date) {
-                    $transactionDate[$key] = $activity->transaction_date;
+                    $transactionDate[$index] = $activity->transaction_date;
+                    $index++;
                 }
                 $previousDate = $activity->transaction_date;
             });
         $resultActivities = [];
         for ($i = 0; $i < count($transactionDate); $i++) {
             $activities->map(function(SellingModel $activity, int $key)
-                use($transactionDate, $i, &$resultActivities)
+                use($transactionDate, &$i, &$resultActivities)
                 {
                     if ($transactionDate[$i] == $activity->transaction_date) {
                         return $resultActivities[$transactionDate[$i]][$key] = $activity->toArray();
