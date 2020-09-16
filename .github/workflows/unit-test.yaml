@@ -50,5 +50,4 @@ jobs:
           DB_USER: ${{ secrets.DB_USERNAME }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
         run: |
-          php artisan migrate
           vendor/phpunit/phpunit/phpunit
