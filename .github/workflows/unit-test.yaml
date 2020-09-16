@@ -19,7 +19,7 @@ jobs:
       mysql:
         image: mysql:5.7
         ports:
-          - 33306:3306
+          - 3306:3306
         env:
           MYSQL_DATABASE: ${{ secrets.DB_DATABASE }}
           MYSQL_ROOT_PASSWORD: ${{ secrets.DB_PASSWORD }}
@@ -42,12 +42,12 @@ jobs:
           php -r "file_exists('.env') || copy('.env.ci', '.env');"
           php artisan key:generate
 
-      - name: Setup database and Run Unit Test
-        env:
-          DB_CONNECTION: mysql
-          DB_DATABASE: ${{ secrets.DB_DATABASE }}
-          DB_PORT: 33306
-          DB_USER: ${{ secrets.DB_USERNAME }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-        run: |
-          vendor/phpunit/phpunit/phpunit
+#       - name: Setup database and Run Unit Test
+#         env:
+#           DB_CONNECTION: mysql
+#           DB_DATABASE: ${{ secrets.DB_DATABASE }}
+#           DB_PORT: 3306
+#           DB_USER: ${{ secrets.DB_USERNAME }}
+#           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+#         run: |
+#           vendor/phpunit/phpunit/phpunit
