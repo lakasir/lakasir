@@ -1,9 +1,13 @@
 {
-    "name": "laravel/laravel",
+    "name": "lakasir/lakasir",
     "type": "project",
-    "description": "The Laravel Framework.",
+    "description": "POS open source.",
     "keywords": [
         "framework",
+        "point-of-sale",
+        "open-source",
+        "php7.4",
+        "free",
         "laravel"
     ],
     "license": "MIT",

@@ -14,7 +14,7 @@
         "axios": "^0.19",
         "cross-env": "^7.0",
         "laravel-mix": "^5.0.1",
-        "lodash": "^4.17.13",
+        "lodash": "^4.17.19",
         "resolve-url-loader": "^3.1.0",
         "sass": "^1.15.2",
         "sass-loader": "^8.0.0",
@@ -30,6 +30,9 @@
         "vue-i18n": "^8.21.0",
         "vue-router": "^3.4.3",
         "vuetify": "^2.3.9",
-        "vuex": "^3.5.1"
+        "vuex": "^3.5.1",
+        "npm": "^6.14.8",
+        "production": "0.0.2",
+        "run": "^1.4.0"
     }
 }
