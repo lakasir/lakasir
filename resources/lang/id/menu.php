@@ -23,5 +23,8 @@ return [
     'change_password' => 'Ganti Password',
     'cashier' => 'Kasir',
     'payment_method' => 'Metode Pembayaran',
-    'bill_purchasing' => 'Tagihan Pembelian'
+    'bill_purchasing' => 'Tagihan Pembelian',
+    'general' => 'Umum',
+    'default' => 'Bawaan',
+    'settings' => 'Pengaturan',
 ];

@@ -60,23 +60,20 @@ class ProfileService
         $user = auth()->user();
         $data = $user->load('profile', 'profile.media');
         $profile = [];
-        $data->each(function ($data) use (&$profile)
-        {
-            $image = config('setting.profile.image_empty');
-            if ($data->profile->media->count() > 0 && $data->profile->first()) {
-                $image = $data->profile->media->first()->get_full_name;
-            }
-            $profile = [
-                'id' => $data->id,
-                'username' => $data->username,
-                'email' => $data->email,
-                'phone' => optional($data->profile)->phone,
-                'address' => optional($data->profile)->address,
-                'bio' => optional($data->profile)->bio,
-                'lang' => optional($data->profile)->lang,
-                'image' => $image
-            ];
-        });
+        $image = config('setting.profile.image_empty');
+        if ($data->profile->media->count() > 0 && $data->profile) {
+            $image = media($data->profile->media->first());
+        }
+        $profile = [
+            'id' => $data->id,
+            'username' => $data->username,
+            'email' => $data->email,
+            'phone' => optional($data->profile)->phone,
+            'address' => optional($data->profile)->address,
+            'bio' => optional($data->profile)->bio,
+            'lang' => optional($data->profile)->lang,
+            'image' => $image
+        ];
 
         return $profile;
     }

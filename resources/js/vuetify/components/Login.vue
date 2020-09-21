@@ -81,7 +81,7 @@ export default {
         email: this.form.email,
         password: this.form.password
       }).then(res => {
-        this.$router.push({ name: 'cashier.selling' })
+        window.location = '/c'
       })
     }
   },

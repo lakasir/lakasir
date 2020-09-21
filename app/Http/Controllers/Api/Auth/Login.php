@@ -34,24 +34,42 @@ class Login extends Controller
      */
     public function login(Request $request): JsonResponse
     {
-        $user = $this->user->getModel()::where('email', $request->email)->first();
-        if ($user) {
-            if (Hash::check($request->password, $user->password)) {
-                $token = $user->createToken('Laravel Password Grant Client')->accessToken;
-                $response['token'] = $token;
-                $response['message'] = 'Login Success';
+        $user = $this->user->query()->where('email', $request->email)->first();
+        $permission = [
+            'create-selling',
+            'browse-selling',
+            'delete-selling',
+            'update-selling',
+            'bulk-delete-selling',
+            'create-profile',
+            'browse-profile'
+        ];
+        $check = $user->hasAllPermissions($permission);
+        if ($check) {
+            if ($user) {
+                if (Hash::check($request->password, $user->password)) {
+                    $token = $user->createToken('Laravel Password Grant Client')->accessToken;
+                    $response['token'] = $token;
+                    $response['message'] = 'Login Success';
 
-                return Response::success($response);
+                    return Response::success($response);
+                } else {
+                    $errors = ['errors' => [
+                        'password' => [ __('app.auth.password.missmatch') ]
+                    ]];
+
+                    return Response::clientError($errors, JsonResponse::HTTP_UNPROCESSABLE_ENTITY);
+                }
             } else {
                 $errors = ['errors' => [
-                    'password' => [ __('app.auth.password.missmatch') ]
+                    'email' => [__('app.auth.user.doesnotexist')]
                 ]];
 
                 return Response::clientError($errors, JsonResponse::HTTP_UNPROCESSABLE_ENTITY);
             }
         } else {
             $errors = ['errors' => [
-                'email' => [__('app.auth.user.doesnotexist')]
+                'email' => [__('app.auth.user.is_not_cashier')]
             ]];
 
             return Response::clientError($errors, JsonResponse::HTTP_UNPROCESSABLE_ENTITY);

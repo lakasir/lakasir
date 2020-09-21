@@ -34,6 +34,9 @@
   <div class="form-group">
     <label for="exampleFormControlFile1" class="text-muted"> {{ __('app.items.column.images') }}</label>
     <input type="file" name="image" class="form-control-file @error('image') 'is-invalid' @enderror" id="exampleFormControlFile1">
+    <div>
+      <img width="200" class="border p-3 my-3" src="{{ isset($data) ? media($data->media->first()) : ''}}" alt=""/>
+    </div>
     @error('image')
     <div class="text-red">
       {{ $message }}

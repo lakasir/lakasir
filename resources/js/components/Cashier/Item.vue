@@ -2,7 +2,7 @@
   <div>
     <v-input
       :prepend="true"
-      :placeholder="__('app.sellings.item.title')"
+      :placeholder="__('app.sellings.placeholder.search_item')"
       @event="search"
       icon="fa-search"
       ></v-input>

@@ -74,6 +74,7 @@ class PurchasingService
                     $intial_price = $item->prices->last()->initial_price;
                     $selling_price = $item->prices->last()->selling_price;
                     $price = $item->prices->last();
+                    $newPrice = false;
                     if ($intial_price != $itemData['initial_price'] || $selling_price != $itemData['selling_price']) {
                         $priceData = array_merge($itemData, [
                             'date' => $date
@@ -97,11 +98,11 @@ class PurchasingService
                         'date' => $date
                     ]);
                     $stock = ( new Stock )->hasParent('itemd_id', $item)
-                                          ->if(isset($newPrice), function($repository) use ($newPrice)
+                                          ->if($newPrice, function($repository) use ($newPrice)
                                           {
                                               return $repository->hasParent('price_id', $newPrice);
                                           })
-                                          ->if(!isset($newPrice), function($repository) use ($price)
+                                          ->if(!$newPrice, function($repository) use ($price)
                                           {
                                               return $repository->hasParent('price_id', $price);
                                           })

@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Gate;
 
 class Store extends FormRequest
 {
-    use JsonValidateResponse;
+    /* use JsonValidateResponse; */
     /**
      * Determine if the user is authorized to make this request.
      *

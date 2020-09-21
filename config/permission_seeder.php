@@ -83,5 +83,7 @@ return
 
         'browse-bill_purchasing' => ['owner', 'employee'],
         'paid-bill_purchasing' => ['owner', 'employee'],
+
+        'browse-general-setting' => ['owner'],
     ]
 ];

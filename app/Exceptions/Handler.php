@@ -90,7 +90,6 @@ class Handler extends ExceptionHandler
         }
 
         $response = [];
-        dd($exception);
 
         switch ($statusCode) {
             case 401:

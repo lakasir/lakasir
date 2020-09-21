@@ -16,7 +16,7 @@
         </v-img>
       <v-card-text v-text="priceFormat(item.selling_price)"></v-card-text>
       <v-card-actions>
-        <v-card-text>Stock: {{ item.stock }}</v-card-text>
+        <v-card-text>Stock: {{ item.stock }} - {{ item.unit_name }}</v-card-text>
         <v-spacer></v-spacer>
 
         <v-btn icon @click="addToCart({

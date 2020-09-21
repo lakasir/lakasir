@@ -65,11 +65,11 @@ return [
     */
 
     'usermenu_enabled' => true,
-    'usermenu_header' => false,
+    'usermenu_header' => true,
     'usermenu_header_class' => 'bg-primary',
-    'usermenu_image' => false,
-    'usermenu_desc' => false,
-    'usermenu_profile_url' => false,
+    'usermenu_image' => true,
+    'usermenu_desc' => true,
+    'usermenu_profile_url' => true,
 
     /*
     |--------------------------------------------------------------------------
@@ -86,8 +86,8 @@ return [
     'layout_topnav' => null,
     'layout_boxed' => null,
     'layout_fixed_sidebar' => null,
-    'layout_fixed_navbar' => null,
-    'layout_fixed_footer' => null,
+    'layout_fixed_navbar' => true,
+    'layout_fixed_footer' => true,
 
     /*
     |--------------------------------------------------------------------------
@@ -200,7 +200,7 @@ return [
 
     'password_email_url' => 'password/email',
 
-    'profile_url' => false,
+    'profile_url' => 'profile.index',
 
     /*
     |--------------------------------------------------------------------------
@@ -234,26 +234,54 @@ return [
         [
             'text' => 'search',
             'search' => true,
-            'topnav' => true,
+            'topnav_right' => true,
+            'url'  => 'transaction',
+        ],
+        [
+            'text' => '',
+            'topnav_right' => true,
+            'icon' => 'fas fa-fw fa-plus',
+            'submenu' => [
+                [
+                    'text' => 'app.purchasings.title',
+                    'url'  => 'transaction/purchasing/create',
+                    'can' => 'create-purchasing',
+                    'icon' => 'fas fa-fw fa-plus',
+                ],
+                [
+                    'text' => 'app.items.title',
+                    'url'  => 'master/item/create',
+                    'can' => 'create-item',
+                    'icon' => 'fas fa-fw fa-plus',
+                ],
+                [
+                    'text' => 'app.sellings.title.name',
+                    'url'  => '/transaction/cashier',
+                    'can' => 'create-selling',
+                    'icon' => 'fas fa-fw fa-plus',
+                ],
+            ],
         ],
         [
             'text' => 'transaction',
             'url'  => 'transaction',
-            'icon' => 'far fa-fw fa-file',
+            'icon' => 'fas fa-fw fa-file',
             'can'  => 'browse-transaction',
         ],
         [
             'text'        => 'dashboard',
             'url'         => 'dashboard',
-            'icon'        => 'far fa-fw fa-tachometer-alt',
+            'icon'        => 'fas fa-fw fa-tachometer-alt',
             'label'       => 'new',
             'label_color' => 'success',
         ],
         [
             'text' => 'menu.item',
-            'icon' => 'far fa-fw fa-file',
+            'key' => 'item',
+            'icon' => 'fas fa-fw fa-file',
             'url'  => 'master/item',
-            'can' => 'browse-item'
+            'can' => 'browse-item',
+            'active' => ['master/item', 'master/item/create', 'regex:/^master\/item\/[0-9]\/edit/']
         ],
         /* ['header' => 'menu.transaction'], */
         [
@@ -264,17 +292,20 @@ return [
                 [
                     'text' => 'menu.purchasing',
                     'url'  => 'transaction/purchasing',
-                    'can' => 'browse-purchasing'
+                    'can' => 'browse-purchasing',
+                    'active' => ['transaction/purchasing', 'transaction/purchasing/create', 'regex:/^transaction\/purchasing\/[0-9]/']
                 ],
                 [
                     'text' => 'menu.bill_purchasing',
                     'url'  => 'transaction/bill_purchasing?filter[key]=is_paid&&filter[value]=0',
-                    'can' => 'browse-purchasing'
+                    'can' => 'browse-purchasing',
+                    'active' => ['regex:/^transaction\/bill_purchasing.*/']
                 ],
                 [
                     'text' => 'menu.cashier',
                     'url'  => 'transaction/cashier',
-                    'can' => 'browse-selling'
+                    'can' => 'browse-selling',
+                    'active' => ['transaction/cashier', 'transaction/cashier/create', 'regex:/^transaction\/cashier\/[0-9]/']
                 ],
             ],
         ],
@@ -287,11 +318,13 @@ return [
                 [
                     'text' => 'menu.customer_list',
                     'url'  => 'master/customer',
-                    'can' => 'browse-customer'
+                    'can' => 'browse-customer',
+                    'active' => ['master/customer', 'master/customer/create', 'regex:/^master\/customer.*/']
                 ],
                 [
                     'text' => 'menu.group',
                     'url'  => 'master/group',
+                    'active' => ['master/group', 'master/group/create', 'regex:/^master\/group\/[0-9]\/edit/'],
                     'can' => 'browse-group'
                 ],
             ],
@@ -305,21 +338,25 @@ return [
                 [
                     'text' => 'menu.unit',
                     'url'  => 'master/unit',
+                    'active' => ['master/unit', 'master/unit/create', 'regex:/^master\/unit\/[0-9]\/edit/'],
                     'can' => 'browse-unit'
                 ],
                 [
                     'text' => 'menu.category',
                     'url'  => 'master/category',
+                    'active' => ['master/category', 'master/category/create', 'regex:/^master\/category\/[0-9]\/edit/'],
                     'can' => 'browse-category'
                 ],
                 [
                     'text' => 'menu.supplier',
                     'url'  => 'master/supplier',
+                    'active' => ['master/supplier', 'master/supplier/create', 'regex:/^master\/supplier.*/'],
                     'can' => 'browse-supplier'
                 ],
                 [
                     'text' => 'menu.payment_method',
                     'url'  => 'master/payment_method',
+                    'active' => ['master/payment_method', 'master/payment_method/create', 'regex:/^master\/payment_method\/[0-9]\/edit/'],
                     'can' => 'browse-payment_method'
                 ],
             ],
@@ -333,11 +370,13 @@ return [
                 [
                     'text' => 'menu.user_list',
                     'url'  => 'user',
+                    'active' => ['user', 'user/create', 'regex:/^user\/[0-9]\/edit/'],
                     'can' => 'browse-user'
                 ],
                 [
                     'text' => 'menu.role',
                     'url'  => 'user/role',
+                    'active' => ['user/role', 'user/role/create', 'regex:/^user\/role\/[0-9]\/edit/'],
                     'can' => 'browse-role'
                 ],
             ]
@@ -354,6 +393,19 @@ return [
             'url'  => 'user/change_password',
             'icon' => 'fas fa-fw fa-lock',
         ],
+        /* ['header' => 'menu.settings', 'can' => [ 'browse-general-setting'] ], */
+        /* [ */
+        /*     'text' => 'menu.general', */
+        /*     'url'  => 's/general', */
+        /*     'icon' => 'fas fa-fw fa-cogs', */
+        /*     'can' => ['browse-general-setting'] */
+        /* ], */
+        /* [ */
+        /*     'text' => 'menu.default', */
+        /*     'url'  => 's/default', */
+        /*     'icon' => 'fas fa-fw fa-rocket', */
+        /*     'can' => ['browse-general-setting'] */
+        /* ], */
     ],
 
     /*

@@ -7,7 +7,7 @@ const state = () => ({
 })
 
 const actions = {
-  loginSubmit ({ commit }, req) {
+  loginSubmit({commit}, req) {
     return new Promise((resolve, reject) => {
       commit('authRequest')
       api.login(req)
@@ -25,6 +25,19 @@ const actions = {
           reject(err)
         })
     })
+  },
+  checkToken({commit}, req) {
+    return new Promise((resolve, reject) => {
+      commit('authRequest')
+      api.profile(req)
+        .then(res => {
+          resolve(200)
+        })
+        .catch(err => {
+          console.log(err.response);
+          reject(err.response)
+        })
+    })
   }
 }
 
@@ -39,6 +52,7 @@ const mutations = {
   },
   authSuccess: (state, token) => {
     state.status = 'success'
+    state.errors = {}
     state.token = token
   },
   authError: (state, payload) => {

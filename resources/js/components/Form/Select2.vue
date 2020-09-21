@@ -61,7 +61,6 @@ export default {
     old: null,
     prepend: false,
     getValue: false,
-
   },
 
   data() {

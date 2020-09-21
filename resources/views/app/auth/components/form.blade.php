@@ -33,6 +33,7 @@
   <div class="row">
     <div class="col-12">
       <v-button float="right" type="submit" text="{{ __('app.global.submit') }}" icon="fas fa-check" ></v-button>
+      <v-button to="{{ route('cashier') }}" color="info" class="mr-2" text="{{ __('app.global.login_cashier') }}" icon="fas fa-check" ></v-button>
     </div>
   </div>
 </form>

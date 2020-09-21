@@ -31,7 +31,8 @@ class Store extends FormRequest
     public function rules()
     {
         return [
-            'items' => ['required', 'array', new ItemSellingNotfound()],
+            'items' => ['required', 'array'],
+            /* 'items' => ['required', 'array', new ItemSellingNotfound()], */
             'money' => ['required', new PriceSelling($this->items)],
             'payment_method_id' => ['required']
         ];

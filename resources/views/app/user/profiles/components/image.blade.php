@@ -3,8 +3,8 @@
   <div class="card-body box-profile">
     <div class="text-center">
       <img class="img-thumbnail" width="200" height="200"
-           src="{{ optional( optional(optional(auth()->user()->profile ?? '')->media ?? '')->first() ?? '')->getFullName }}"
-           alt="User profile picture">
+            src="{{ media(optional(optional(auth()->user()->profile)->media)->first()) }}"
+            alt="User profile picture">
     </div>
 
     <h3 class="profile-username text-center">{{ ucwords(auth()->user()->username) }}</h3>

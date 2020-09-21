@@ -1,6 +1,6 @@
 
 export default [
-  { path: '/', redirect: { name: 'cashier.selling' }},
+  {path: '/', redirect: {name: 'cashier.selling'}},
   {
     path: '*',
     component: () => import('./../components/error/404.vue'),
@@ -18,6 +18,7 @@ export default [
   },
   {
     path: '/cashier/',
+    name: 'cashier',
     component: () => import('./../components/partials/Master.vue'),
     meta: {
       requiresAuth: true,
