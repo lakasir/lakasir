@@ -3,7 +3,7 @@
     <label class="text-muted" v-if="!prepend">{{ label }}</label>
     <div class="mb-3" :class="prepend || type == 'password' ? 'input-group' : ''">
       <input :type="type" class="form-control" :class="dataError ? 'is-invalid' : validClass" :value="value"
-                         :name="name" v-on:focus="checkValidation" v-on:blur="checkValidation" :placeholder="placeholder">
+                         :name="name" v-on:focus="checkValidation" v-on:blur="checkValidation" :placeholder="placeholder" @keyup="keyup">
       <div v-if="prepend || type == 'password'" class="input-group-append">
         <div class="input-group-text">
             <span :class="'fas ' + icon"></span>
@@ -119,6 +119,9 @@ export default {
           }
         }
       }
+    },
+    keyup(e) {
+      this.$emit('event', e)
     }
   },
   mounted() {

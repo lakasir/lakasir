@@ -178,10 +178,13 @@ return [
         ],
         'validation' => [
             'less_price' => 'The Money entered is less than :money'
-        ]
+        ],
+        'total_price' => 'Total Price',
+        'carts' => 'Cart'
     ],
     'purchasings' => [
         'title' => 'Purchasing',
+        'create_title' => 'Create Purchasing',
         'column' => [
             'date' => 'Date',
             'supplier' => 'Supplier',
@@ -420,6 +423,10 @@ return [
             'update' => 'Update',
             'delete' => 'Delete',
             'success' => 'Success',
-        ]
+        ],
+        'yes' => 'Yes',
+        'no' => 'No',
+        'login_cashier' => 'Login as Cashier',
+        'payit' => 'Pay It'
     ]
 ];

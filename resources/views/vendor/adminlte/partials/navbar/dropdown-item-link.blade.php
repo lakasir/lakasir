@@ -12,7 +12,7 @@
         @endif
 
         {{-- Text --}}
-        {{ $item['text'] }}
+        {{ __($item['text']) }}
 
         {{-- Label (optional) --}}
         @if(isset($item['label']))

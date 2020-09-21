@@ -7,14 +7,33 @@ window.Vue = require('vue');
 window.axios = require('axios');
 const _ = require('lodash');
 import route from 'ziggy';
-import { Ziggy } from './ziggy.js';
+import {Ziggy} from './ziggy.js';
+import Chart from 'chart.js';
+import store from './store';
+import Notifications from 'vue-notification'
 
 Vue.mixin({
-    methods: {
-        route: (name, params, absolute) => route(name, params, absolute, Ziggy),
-    },
+  methods: {
+    route: (name, params, absolute) => route(name, params, absolute, Ziggy),
+    priceFormat: (number) => {
+      const formatter = new Intl.NumberFormat('id-ID', {
+        style: 'currency',
+        currency: 'IDR',
+        minimumFractionDigits: 2
+      })
+      return formatter.format(number)
+    }
+  },
 });
+
 Vue.mixin(require('./trans'))
+
+/*
+or for SSR:
+import Notifications from 'vue-notification/dist/ssr.js'
+*/
+
+Vue.use(Notifications)
 
 Vue.component('v-input', require('./components/Form/Input').default)
 Vue.component('v-date-picker', require('./components/Form/DatePicker').default)
@@ -27,63 +46,25 @@ Vue.component('select2', require('./components/Form/Select2').default)
 Vue.component('v-select', require('./components/Form/Select').default)
 
 Vue.component('v-add-item', require('./components/Purchasing/AddItem').default)
+
+Vue.component('cashier-app', require('./components/App').default)
+
 Vue.component(
-    'passport-clients',
-    require('./components/passport/Clients.vue').default
+  'passport-clients',
+  require('./components/passport/Clients.vue').default
 );
 
 Vue.component(
-    'passport-authorized-clients',
-    require('./components/passport/AuthorizedClients.vue').default
+  'passport-authorized-clients',
+  require('./components/passport/AuthorizedClients.vue').default
 );
 
 Vue.component(
-    'passport-personal-access-tokens',
-    require('./components/passport/PersonalAccessTokens.vue').default
+  'passport-personal-access-tokens',
+  require('./components/passport/PersonalAccessTokens.vue').default
 );
-
-Vue.component('v-select2', {
-  props: ['options', 'value', 'url'],
-  template: '#select2-template',
-  data: function() {
-    return {
-      ajaxOptions: {
-        url: this.url,
-        dataType: 'Json',
-        delay: 250,
-        tags: true,
-        data: function(params) {
-          return {
-            term: params.term,
-            page: params.page
-          }
-        },
-        processResults: function(data, params) {
-          console.log(data);
-          return {
-            results: data
-          }
-        },
-        cache: true
-      }
-    }
-  },
-  mounted: function() {
-    let vm = this;
-    $(this.$el)
-      .select2({
-        placeholder: "Click to see Options",
-        ajax: this.ajaxOptions
-      })
-  },
-  watch: {
-    url: function(value) {
-      this.ajaxOptions.url = this.url;
-      $(this.$el).select2({ ajax: this.ajaxOptions })
-    }
-  }
-})
 
 const app = new Vue({
   el: '#app',
+  store
 });

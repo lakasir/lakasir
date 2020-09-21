@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Media;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
 if (! function_exists('action')) {
@@ -27,5 +29,17 @@ if (! function_exists('get_lang')) {
     function get_lang()
     {
         app()->setLocale(optional(auth()->user() ?? 'en')->localization);
+    }
+}
+if (! function_exists('media')) {
+    function media(Media $media = null)
+    {
+        return url($media->getFullName ?? '');
+    }
+}
+if (! function_exists('medias')) {
+    function medias(Collection $media)
+    {
+        dd($media);
     }
 }

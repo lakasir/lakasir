@@ -1,6 +1,8 @@
 <?php
 
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
+
 /**
  * Jika kamu tidak menyelesaikan ini, kamu punya hutang dengan diri kamu sendiri
  * semangat, semua tujuan yang baik pasti akan menghasilkan output yang baik.
@@ -15,7 +17,10 @@ Route::get('/', function () {
 
 Route::view('/completed', 'app.install.completed');
 
-Route::view('/c', 'app.transaction.sellings.cashier')->middleware('installed');
+Route::get('/c', function ()
+{
+    return view('app.transaction.sellings.cashier');
+})->name('cashier')->middleware('installed');
 
 Route::group(['middleware' => [ 'installed', 'auth' ]], function () {
     Route::get('dashboard', 'Dashboard')->name('dashboard');
@@ -66,10 +71,27 @@ Route::group(['middleware' => [ 'installed', 'auth' ]], function () {
         Route::get('/purchasing/{purchasing}/detail/{purchasing-detail}/edit', 'Transaction\Purchasing@editDetail')->name('purchasing.detail.edit');
         Route::resource('/purchasing', 'Transaction\Purchasing');
         Route::resource('/bill_purchasing', 'Transaction\BillPurchasing')->only('index');
+
+        Route::get('/cashier', function ()
+        {
+            get_lang();
+
+            Gate::authorize('browse-selling');
+            $token = session()->get('bearer-token');
+
+            return view('app.transaction.sellings.desktop')->with('token', "Bearer $token");
+        });
     });
 
     Route::post('/cashdrawer/open', 'Transaction\CashDrawer@open')->name('cashdrawer.open');
     Route::post('/cashdrawer/close', 'Transaction\CashDrawer@close')->name('cashdrawer.close');
+
+    Route::group(['prefix' => 's', 'as' => 's.'], function ()
+    {
+        Route::resource('/general', 'Settings\General')->only(['index', 'store']);
+        Route::resource('/default', 'Settings\DefaultSetting')->only(['index', 'store']);
+    });
+    Route::resource('/applications', 'Lakasir\App')->only('index');
 });
 
 Route::group(['middleware' => 'installed'], function () {

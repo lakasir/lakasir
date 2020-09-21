@@ -166,11 +166,19 @@ return [
         'placeholder' => [
             'search_item' => 'Cari Item'
         ],
+        'column' => [
+            'payment_method' => 'Payment Method'
+        ],
         'menu' => [
             'activity' => 'Aktifitas',
             'sell' => 'Jual',
             'profile' => 'Profil'
-        ]
+        ],
+        'validation' => [
+            'less_price' => 'Uang kurang dari :money'
+        ],
+        'total_price' => 'Total Harga',
+        'carts' => 'Keranjang'
     ],
     'purchasings' => [
         'title' => 'Pembelian',
@@ -412,6 +420,10 @@ return [
             'update' => 'Memeperbarui',
             'delete' => 'Menghapus',
             'success' => 'Sukses',
-        ]
+        ],
+        'yes' => 'Ya',
+        'no' => 'Tidak',
+        'login_cashier' => 'Login Sebagai Kasir',
+        'payit' => 'Bayar'
     ]
 ];

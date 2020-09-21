@@ -29,6 +29,15 @@ const router = new VueRouter({
 })
 router.beforeEach((to, from, next) => {
   const authenticate = store.getters["auth/isAuthenticated"];
+  // const checkToken = store.dispatch('auth/checkToken');
+  // checkToken
+  //   .then(res => {
+  //     console.log(res);
+  //   })
+  //   .catch(err => {
+  //     console.log(err);
+  //   })
+  // console.log(checkToken);
   if (to.matched.some(record => record.meta.requiresAuth)) {
     // this route requires auth, check if logged in
     // if not, redirect to login page.

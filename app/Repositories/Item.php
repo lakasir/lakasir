@@ -111,7 +111,6 @@ class Item extends RepositoryAbstract
             }
         }, $items);
 
-
         return array_sum($itemPrice);
     }
 }

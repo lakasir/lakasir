@@ -1,20 +1,22 @@
 @extends('adminlte::master')
 
-@section('classes_body', 'hold-transition register-page')
+@section('classes_body', 'hold-transition login-page')
 
 @section('body')
-<div class="register-box">
-  <div class="register-logo">
-    <p> {{ env('APP_NAME') }} </p>
+<div class="login-box">
+  <div class="login-logo">
   </div>
 
   <div class="card">
-    <div class="card-body register-card-body">
-      <p class="login-box-msg"></p>
+    <div class="card-body login-card-body">
+      <p class="login-box-msg">
+        <img src="{{ url(config('lakasir.logo-sm')) }}" alt="" width="50" height="50"/>
+      </p>
       @include('app.auth.components.form')
     </div>
     <!-- /.form-box -->
   </div><!-- /.card -->
+  <strong> {{ __('lakasir.supported') }} <a href="{{ config('app.url') }}">{{ config('app.name') }}</a>.</strong>  {{ __('lakasir.free_pos_software') }}
 </div>
-<!-- /.register-box -->
+<!-- /.login-box -->
 @endsection

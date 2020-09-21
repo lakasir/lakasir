@@ -55,4 +55,19 @@ class User extends Authenticatable
     {
         return optional($this->profile ?? 'en')->lang ?? 'en';
     }
+
+    public function adminlte_image()
+    {
+        return auth()->user()->profile ? media(auth()->user()->profile->media->first()) : config('setting.profile.image_empty');
+    }
+
+    public function adminlte_desc()
+    {
+        return auth()->user()->username;
+    }
+
+    public function adminlte_profile_url()
+    {
+        return 'profile.index';
+    }
 }

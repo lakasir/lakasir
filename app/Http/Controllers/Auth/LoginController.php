@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
 
 class LoginController extends Controller
 {
@@ -46,5 +48,30 @@ class LoginController extends Controller
     public function showLoginForm()
     {
         return view('app.auth.login');
+    }
+
+    /**
+     * The user has been authenticated.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  mixed  $user
+     * @return mixed
+     */
+    protected function authenticated(Request $request, User $user): void
+    {
+        $permission = [
+            'create-selling',
+            'browse-selling',
+            'delete-selling',
+            'update-selling',
+            'bulk-delete-selling',
+            'create-profile',
+            'browse-profile'
+        ];
+        $check = $user->hasAllPermissions($permission);
+        if ($check) {
+            $token = $user->createToken('Create token from login ui')->accessToken;
+            $request->session()->put('bearer-token', $token);
+        }
     }
 }

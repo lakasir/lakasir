@@ -20,6 +20,24 @@
                 @endif>
                 {{-- Configured sidebar links --}}
                 @each('adminlte::partials.sidebar.menu-item', $adminlte->menu('sidebar'), 'item')
+                @if (app()->environment() == 'local')
+                  <li class="nav-header">
+                    {{ __('lakasir.title') }}
+                  </li>
+                  <li id="apss-id" class="nav-item">
+
+                    <a class="nav-link {{ request()->path() == 'applications' ? 'active' : '' }}" href="/applications">
+
+                      <i class="fas fa-fw fa-th"></i>
+
+                      <p>
+                      {{ __('lakasir.apps') }}
+                      </p>
+
+                    </a>
+
+                  </li>
+                @endif
             </ul>
         </nav>
     </div>

@@ -7,7 +7,7 @@ use App\Traits\HasCrudActions;
 use App\Services\ProfileService;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\Profile\Index;
-use App\Http\Requests\User\Profile\Store;
+use App\Http\Requests\User\Api\Profile\Store;
 
 class Profile extends Controller
 {

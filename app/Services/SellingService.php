@@ -119,8 +119,8 @@ class SellingService
     public function list_item(Request $request): array
     {
         $query = $this->item->query();
-        $items = $query->select('name', 'id')
-                            ->with('media', 'prices', 'log_stocks')
+        $items = $query->select('name', 'id', 'unit_id')
+                            ->with('media', 'prices', 'log_stocks', 'unit')
                             ->when($request->search, function ($query) use ($request) {
                                 return $query->where('name', 'LIKE', $request->search.'%') ;
                             })
@@ -131,6 +131,7 @@ class SellingService
                                     'name' => $item->name,
                                     'image' => optional($item->media->first())->get_full_name ?? config('setting.image.empty'),
                                     'stock' => $item->stock,
+                                    'unit_name' => optional($item->unit)->name,
                                     'selling_price' => optional($item->last_price)->selling_price,
                                     'selling_price_format' => price_format(optional($item->last_price)->selling_price)
                                 ];

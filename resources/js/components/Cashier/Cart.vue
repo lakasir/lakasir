@@ -6,7 +6,7 @@
       </div>
       <div class="card-body">
         <table-cart></table-cart>
-        <button class="btn btn-block btn-primary" @click="() => open = true">{{ __('app.global.payit') }}</button>
+        <button class="btn btn-block btn-primary" v-if="cartCount > 0" @click="() => open = true">{{ __('app.global.payit') }}</button>
       </div>
       <modal :title="__('app.sellings.submit_order')" @closed="closed" @submit="save" :open="open">
         <submit :reset="open" :save="submitItem" @closed="closed"></submit>
@@ -19,6 +19,7 @@
 import TableCart from './Cart/Table';
 import Modal from './../Modal/Modal';
 import Submit from './Submit';
+import { mapState } from 'vuex';
 
 export default {
   name: 'Cart',
@@ -29,6 +30,12 @@ export default {
   },
 
   props: {
+  },
+
+  computed: {
+    ...mapState('cart', {
+      cartCount: state => state.cartCount,
+    }),
   },
 
   data() {

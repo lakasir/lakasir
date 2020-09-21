@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\DataTables\ItemTable;
 use App\Traits\Media;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\HasLaTable;
@@ -11,6 +12,8 @@ class Item extends Model
 {
     use Media;
     use HasLaTable;
+
+    protected $latable = ItemTable::class;
 
     protected $fillable = [
         'name',
@@ -56,4 +59,5 @@ class Item extends Model
         }
         return $stockPrice;
     }
+
 }

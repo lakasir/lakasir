@@ -11,7 +11,7 @@ class LoginTest extends TestCase
 {
     public function test_login_api_success()
     {
-        $response = $this->post(route('api.auth.login'), $this->data());
+        $response = $this->postJson(route('api.auth.login'), $this->data());
 
         $response->assertStatus(200)
                  ->assertJsonStructure(['success', 'payload' => ['token']]);
@@ -19,7 +19,7 @@ class LoginTest extends TestCase
 
     public function test_login_api_client_error()
     {
-        $response = $this->post(route('api.auth.login'), array_merge($this->data(), [ 'password' => '' ]));
+        $response = $this->postJson(route('api.auth.login'), array_merge($this->data(), [ 'password' => '' ]));
 
         $response->assertStatus(422)
                  ->assertJsonStructure(['success', 'errors']);
@@ -27,7 +27,7 @@ class LoginTest extends TestCase
 
     public function test_login_api_password_missmatch()
     {
-        $response = $this->post(route('api.auth.login'), array_merge($this->data(), ['password' => 'dhfids[p]']));
+        $response = $this->postJson(route('api.auth.login'), array_merge($this->data(), ['password' => 'dhfids[p]']));
 
         $response->assertStatus(422)
                  ->assertJsonStructure(['success', 'message']);
@@ -35,7 +35,7 @@ class LoginTest extends TestCase
 
     public function test_login_api_user_not_found()
     {
-        $response = $this->post(route('api.auth.login'), array_merge($this->data(), ['email' => 'fasd@mail.com']));
+        $response = $this->postJson(route('api.auth.login'), array_merge($this->data(), ['email' => 'fasd@mail.com']));
 
         $response->assertStatus(422)
                  ->assertJsonStructure(['success', 'message']);

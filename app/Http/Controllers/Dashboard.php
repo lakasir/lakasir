@@ -14,6 +14,8 @@ class Dashboard extends Controller
      */
     public function __invoke(Request $request)
     {
+        get_lang();
+
         return view('app.dashboard');
     }
 }
