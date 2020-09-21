@@ -130,7 +130,7 @@ class SellingService
                                     'id' => $item->id,
                                     'name' => $item->name,
                                     'image' => optional($item->media->first())->get_full_name ?? config('setting.image.empty'),
-                                    'stock' => optional($item->last_stock)->sum('amount') ?? __('app.items.column.stock.empty'),
+                                    'stock' => $item->stock,
                                     'selling_price' => optional($item->last_price)->selling_price,
                                     'selling_price_format' => price_format(optional($item->last_price)->selling_price)
                                 ];

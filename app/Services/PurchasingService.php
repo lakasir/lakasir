@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Builder\NumberGeneratorBuilder;
 use App\Repositories\Item;
 use App\Repositories\PaymentMethod;
+use App\Repositories\Price;
 use App\Repositories\Purchasing;
 use App\Repositories\PurchasingDetail;
 use App\Repositories\Stock;
@@ -18,10 +19,19 @@ use Illuminate\Support\Facades\Log;
  */
 class PurchasingService
 {
+    /**
+     * @param
+     */
+    public function __construct()
+    {
+        $this->price = new Price();
+    }
+
     public function create(Request $request)
     {
         try {
-            return DB::transaction(static function () use ($request) {
+            $self = $this;
+            return DB::transaction(static function () use ($request, $self) {
                 $purchasingRepository = new Purchasing();
                 $purchasingDetailRepository = new PurchasingDetail();
                 $supplier = ( new Supplier() )->find($request->supplier_id);
@@ -55,7 +65,9 @@ class PurchasingService
                     'date' => $date,
                     'invoice_number' => $invoiceNumber
                 ]);
-                $purchasing = $purchasingRepository->hasParent('user_id', auth()->user())->hasParent('payment_method_id', $paymentMethod)->hasParent('supplier_id', $supplier)->create($request);
+                $purchasing = $purchasingRepository->hasParent('user_id', auth()->user())
+                                                   ->hasParent('payment_method_id', $paymentMethod)
+                                                   ->hasParent('supplier_id', $supplier)->create($request);
 
                 foreach ($request->items as $itemData) {
                     $item = (new Item())->find($itemData['item_id']);
@@ -63,6 +75,11 @@ class PurchasingService
                     $selling_price = $item->prices->last()->selling_price;
                     $price = $item->prices->last();
                     if ($intial_price != $itemData['initial_price'] || $selling_price != $itemData['selling_price']) {
+                        $priceData = array_merge($itemData, [
+                            'date' => $date
+                        ]);
+                        $priceRequest = new Request($priceData);
+                        $newPrice = $self->price->hasParent('item_id', $item)->create($priceRequest);
                         /**
                          * TODO: create update price <sheenazien8 2020-07-25>
                          */
@@ -79,7 +96,16 @@ class PurchasingService
                         'amount' =>$itemData['qty'],
                         'date' => $date
                     ]);
-                    $stock = ( new Stock )->hasParent('itemd_id', $item)->hasParent('price_id', $price)->create($request);
+                    $stock = ( new Stock )->hasParent('itemd_id', $item)
+                                          ->if(isset($newPrice), function($repository) use ($newPrice)
+                                          {
+                                              return $repository->hasParent('price_id', $newPrice);
+                                          })
+                                          ->if(!isset($newPrice), function($repository) use ($price)
+                                          {
+                                              return $repository->hasParent('price_id', $price);
+                                          })
+                                          ->create($request);
 
                     /**
                      * TODO: create jurnal accounting <sheenazien8 2020-07-26>

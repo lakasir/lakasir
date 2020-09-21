@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Traits\Media;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\HasLaTable;
+use Illuminate\Support\Facades\DB;
 
 class Item extends Model
 {
@@ -36,9 +37,15 @@ class Item extends Model
         return $this->hasMany(Stock::class, 'item_id')->orderBy('date', 'asc');
     }
 
+    public function getStockAttribute()
+    {
+        return $this->log_stocks()->sum('amount');
+    }
+
+
     public function getLastStockAttribute()
     {
-        return Stock::where('item_id', $this->id)->orderBy('date', 'asc')->first();
+        return Stock::where('amount', '>', 0)->where('item_id', $this->id)->orderBy('date', 'asc')->first();
     }
 
     public function getLastPriceAttribute()

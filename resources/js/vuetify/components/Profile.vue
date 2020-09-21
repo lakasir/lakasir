@@ -67,16 +67,6 @@ import { mapState, mapActions } from 'vuex';
 export default {
   name: 'Profile',
 
-  props: {
-
-  },
-
-  data() {
-    return {
-
-    }
-  },
-
   computed: mapState('profiles', {
     profile: state => state.profile
   }),

@@ -1,0 +1,63 @@
+name: unit-test
+on:
+  push:
+    branches:
+      - master
+      - features/**
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    name: Install Dependencies
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php-version: [7.4.x]
+    services:
+      mysql-service:
+        image: mysql:5.7
+        ports:
+          - 33306:3306
+        env:
+          MYSQL_DATABASE: ${{ secrets.DB_DATABASE }}
+          MYSQL_USER: ${{ secrets.DB_USERNAME }}
+          MYSQL_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          MYSQL_ROOT_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+          SERVICE_NAME: mysql
+        options: >-
+          --health-cmd="mysqladmin ping" --health-interval=4s
+          --health-timeout=5s --health-retries=2
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup php ${{ matrix.php-version }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          tools: php-cs-fixer, composer, phpunit
+
+      - name: Installing dependecies
+        run: composer install -q --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist
+
+      - name: Setup laravel
+        run: >
+          cp .env.ci .env
+          php artisan key:generate
+          chmod -R 777 storage bootstrap/cache
+
+      - name: Setup database
+        env:
+          DB_CONNECTION: mysql
+          DB_HOST: mysql-service
+          DB_DATABASE: ${{ secrets.DB_DATABASE }}
+          DB_PORT: 33306
+          DB_USER: ${{ secrets.DB_USERNAME }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+        run: php artisan migrate
+
+      - name: Unit testing
+        run: vendor/phpunit/phpunit/phpunit
