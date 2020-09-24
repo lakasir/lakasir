@@ -13,10 +13,10 @@ class InstallTest extends TestCase
     public function test_install_database()
     {
         $response = $this->post(route('install.databaseStore'), [
-            'host' => 'localhost',
-            'name' => 'laravel_lakasir',
-            'username' => 'root',
-            'password' => '`'
+            'host' => getenv('DB_HOST', 'localhost'),
+            'name' => getenv('DB_DATABASE', 'lakasir'),
+            'username' => getenv('DB_USERNAME', 'root'),
+            'password' => getenv('DB_PASSWORD', '')
         ]);
         $redirect = '/install?tab=user';
         if (getenv('INSTALL') != "false") {
