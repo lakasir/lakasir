@@ -116,8 +116,10 @@ class Handler extends ExceptionHandler
         /* if (config('app.debug')) { */
         /*     if ($exception instanceof JsonResponse) { */
         /*         $response['trace'] = $exception->getData(); */
+        /*         $response['message'] = $exception->getMessage(); */
         /*     } else { */
         /*         $response['trace'] = $exception->getTrace(); */
+        /*         $response['message'] = $exception->getMessage(); */
         /*     } */
         /*     $response['code'] = $exception->getCode(); */
         /* } */

@@ -159,7 +159,7 @@ return [
     'sellings' => [
         'title' => [
             'cashier' => 'Kasir',
-            'index' => 'Index',
+            'index' => 'Daftar Penjualan',
             'name' => 'Penjualan',
             'submit' => 'Submit Pesanan'
         ],
@@ -167,7 +167,16 @@ return [
             'search_item' => 'Cari Item'
         ],
         'column' => [
-            'payment_method' => 'Payment Method'
+            'payment_method' => 'Metode Pembayaran',
+            'transaction_number' => 'Nomor Transaksi',
+            'date' => 'Tanggal',
+            'user' => 'Kasir',
+            'customer' => 'Pelanggan',
+            'money' => 'Uang',
+            'total_price' => 'Total Harga',
+            'total_qty' => 'Total Jumlah',
+            'total_profit' => 'Total Profit',
+            'refund' => 'Kembalian',
         ],
         'menu' => [
             'activity' => 'Aktifitas',
@@ -201,6 +210,9 @@ return [
                 'selling_price' => 'Harga Jual',
                 'price' => 'Harga',
                 'total' => 'Total'
+            ],
+            'validation' => [
+                'item_doesnot_have_price' => 'the :item is didnot has price, you must assign the price'
             ]
         ],
         'placeholder' => [

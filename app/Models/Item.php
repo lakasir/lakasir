@@ -25,6 +25,11 @@ class Item extends Model
         return $this->belongsTo(Category::class, 'category_id');
     }
 
+    public function sellingDetails()
+    {
+        return $this->hasMany(SellingDetail::class);
+    }
+
     public function unit()
     {
         return $this->belongsTo(Unit::class, 'unit_id');
@@ -55,8 +60,16 @@ class Item extends Model
     {
         $stockPrice = optional($this->last_stock)->price;
         if (!$stockPrice) {
-           return $this->prices->last();
+            if ($this->prices->last()) {
+                return $this->prices->last();
+            } else {
+                return (object) [
+                    'initial_price' => 0,
+                    'selling_price' => 0
+                ];
+            }
         }
+
         return $stockPrice;
     }
 

@@ -43,3 +43,21 @@ if (! function_exists('medias')) {
         dd($media);
     }
 }
+if (! function_exists('checkValueArray')) {
+    function array_must_same(array $array, array $key, $expectedValue): bool
+    {
+        for ($i = 0; $i < count($key); $i++) {
+            if (isset($array[$key[$i]])) {
+                $val = $array[$key[$i]];
+                if ($val != $expectedValue) {
+                    return false;
+                }
+
+            } else {
+                return false;
+            }
+        }
+
+        return true;
+    }
+}

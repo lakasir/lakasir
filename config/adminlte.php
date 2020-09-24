@@ -169,7 +169,7 @@ return [
     'right_sidebar' => false,
     'right_sidebar_icon' => 'fas fa-cogs',
     'right_sidebar_theme' => 'dark',
-    'right_sidebar_slide' => true,
+    'right_sidebar_slide' => false,
     'right_sidebar_push' => true,
     'right_sidebar_scrollbar_theme' => 'os-theme-light',
     'right_sidebar_scrollbar_auto_hide' => 'l',
@@ -306,6 +306,12 @@ return [
                     'url'  => 'transaction/cashier',
                     'can' => 'browse-selling',
                     'active' => ['transaction/cashier', 'transaction/cashier/create', 'regex:/^transaction\/cashier\/[0-9]/']
+                ],
+                [
+                    'text' => 'app.sellings.title.index',
+                    'url'  => '/transaction/selling',
+                    'active' => ['transaction/selling', 'transaction/selling/create', 'regex:/^transaction\/selling\/[0-9]/'],
+                    'can' => 'browse-selling',
                 ],
             ],
         ],
@@ -532,6 +538,22 @@ return [
                     'type' => 'js',
                     'asset' => true,
                     'location' => '//unpkg.com/gijgo@1.9.13/js/gijgo.min.js',
+                ],
+            ],
+        ],
+        [
+            'name' => 'ionicons',
+            'active' => true,
+            'files' => [
+                [
+                    'type' => 'css',
+                    'asset' => false,
+                    'location' => '//unpkg.com/gijgo@1.9.13/css/gijgo.min.css',
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => '//unpkg.com/ionicons@5.0.0/dist/ionicons.js',
                 ],
             ],
         ]

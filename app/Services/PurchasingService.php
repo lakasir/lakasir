@@ -40,6 +40,7 @@ class PurchasingService
                 $totalIntialPrice = 0;
                 $totalSellingPrice = 0;
                 $totalQty = 0;
+
                 array_map(function ($item) use (
                     &$totalIntialPrice,
                     &$totalSellingPrice,
@@ -49,15 +50,18 @@ class PurchasingService
                     $totalSellingPrice += $item['selling_price'];
                     $totalQty += $item['qty'];
                 }, $request->items);
+
                 $numberGenerator = ( new NumberGeneratorBuilder() )
                     ->model($purchasingRepository->getModel())
                     ->prefix('INV')
                     ->build();
+
                 $invoiceNumber = $numberGenerator->create();
                 $date = today()->format('Y-m-d');
                 if ($request->date) {
                     $date = date('Y-m-d', strtotime($request->date));
                 }
+
                 $request->merge([
                     'total_initial_price' => $totalIntialPrice,
                     'total_selling_price' => $totalSellingPrice,
@@ -65,14 +69,15 @@ class PurchasingService
                     'date' => $date,
                     'invoice_number' => $invoiceNumber
                 ]);
+
                 $purchasing = $purchasingRepository->hasParent('user_id', auth()->user())
                                                    ->hasParent('payment_method_id', $paymentMethod)
                                                    ->hasParent('supplier_id', $supplier)->create($request);
 
                 foreach ($request->items as $itemData) {
                     $item = (new Item())->find($itemData['item_id']);
-                    $intial_price = $item->prices->last()->initial_price;
-                    $selling_price = $item->prices->last()->selling_price;
+                    $intial_price = $item->last_price->initial_price;
+                    $selling_price = $item->last_price->selling_price;
                     $price = $item->prices->last();
                     $newPrice = false;
                     if ($intial_price != $itemData['initial_price'] || $selling_price != $itemData['selling_price']) {

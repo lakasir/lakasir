@@ -24,6 +24,7 @@ Route::get('/c', function ()
 
 Route::group(['middleware' => [ 'installed', 'auth' ]], function () {
     Route::get('dashboard', 'Dashboard')->name('dashboard');
+    Route::get('dashboard/data-selling', 'Dashboard')->name('data-selling');
 
     Route::group(['prefix' => 'master'], function () {
         Route::delete('/payment_method/bulk-destroy', 'Master\PaymentMethod@bulkDestroy');
@@ -81,6 +82,8 @@ Route::group(['middleware' => [ 'installed', 'auth' ]], function () {
 
             return view('app.transaction.sellings.desktop')->with('token', "Bearer $token");
         });
+
+        Route::resource('/selling', 'Transaction\Selling')->only(['index', 'show']);
     });
 
     Route::post('/cashdrawer/open', 'Transaction\CashDrawer@open')->name('cashdrawer.open');

@@ -161,7 +161,7 @@ return [
     'sellings' => [
         'title' => [
             'cashier' => 'Cashier',
-            'index' => 'Index',
+            'index' => 'List Selling',
             'name' => 'Selling',
             'submit' => 'Submit Order'
         ],
@@ -169,7 +169,16 @@ return [
             'search_item' => 'Search Item'
         ],
         'column' => [
-            'payment_method' => 'Payment Method'
+            'payment_method' => 'Payment Method',
+            'transaction_number' => 'Transaction Number',
+            'date' => 'Date',
+            'user' => 'User',
+            'customer' => 'Customer',
+            'money' => 'Money',
+            'total_price' => 'Total Price',
+            'total_qty' => 'Total Qty',
+            'total_profit' => 'Total Profit',
+            'refund' => 'Refund',
         ],
         'menu' => [
             'activity' => 'Activity',
@@ -204,6 +213,10 @@ return [
                 'initial_price' => 'Initial Price',
                 'selling_price' => 'Selling Price',
                 'total' => 'Total'
+            ],
+            'validation' => [
+                'item_doesnot_have_price' => 'the :item is didnot has price, you must assign the price'
+
             ]
         ],
         'placeholder' => [
