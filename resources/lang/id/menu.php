@@ -27,4 +27,5 @@ return [
     'general' => 'Umum',
     'default' => 'Bawaan',
     'settings' => 'Pengaturan',
+    'customer_type' => 'Tipe Pelanggan'
 ];

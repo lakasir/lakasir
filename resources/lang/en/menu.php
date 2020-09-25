@@ -27,4 +27,5 @@ return [
     'general' => 'General',
     'default' => 'Default',
     'settings' => 'Settings',
+    'customer_type' => 'Customer Type'
 ];

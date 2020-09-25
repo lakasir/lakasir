@@ -258,6 +258,23 @@ return [
             'title' => 'Create Purchasing'
         ],
     ],
+    'customer_types' => [
+        'title' => 'Customer Type',
+        'column' => [
+            'name' => 'Name',
+            'default_point' => 'Default Point'
+        ],
+        'placeholder' => [
+            'name' => 'Name',
+            'default_point' => 'Default Point'
+        ],
+        'edit' => [
+            'title' => 'Edit Customer Type'
+        ],
+        'create' => [
+            'title' => 'Create Customer Type'
+        ],
+    ],
     'customers' => [
         'title' => 'Title',
         'column' => [

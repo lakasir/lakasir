@@ -254,6 +254,23 @@ return [
             'title' => 'Tambah Pembelian'
         ],
     ],
+    'customer_types' => [
+        'title' => 'Tipe Pelanggan',
+        'column' => [
+            'name' => 'Nama',
+            'default_point' => 'Poin Bawaan'
+        ],
+        'placeholder' => [
+            'name' => 'Nama',
+            'default_point' => 'Poin Bawaan'
+        ],
+        'edit' => [
+            'title' => 'Ubah Tipe Pelanggan'
+        ],
+        'create' => [
+            'title' => 'Tambah Tipe Pelanggan'
+        ],
+    ],
     'customers' => [
         'title' => 'Pelanggan',
         'column' => [

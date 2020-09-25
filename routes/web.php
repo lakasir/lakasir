@@ -50,6 +50,9 @@ Route::group(['middleware' => [ 'installed', 'auth' ]], function () {
         Route::delete('/group/bulk-destroy', 'Master\Group@bulkDestroy');
         Route::resource('/group', 'Master\Group');
 
+        Route::delete('/customer_type/bulk-destroy', 'Master\CustomerType@bulkDestroy');
+        Route::resource('/customer_type', 'Master\CustomerType');
+
         Route::delete('/customer/bulk-destroy', 'Master\Customer@bulkDestroy');
         Route::resource('/customer', 'Master\Customer');
 
