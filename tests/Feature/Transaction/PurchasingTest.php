@@ -37,6 +37,18 @@ class PurchasingTest extends TestCase
         ]);
     }
 
+    public function test_error_price_items(): void
+    {
+        $user = User::find(1);
+        $data = $this->data();
+        $this->actingAs($user)->get(route('purchasing.create'));
+
+        $response = $this->actingAs($user)->post(route('purchasing.store'), $data);
+
+        $response->assertRedirect(route('purchasing.create'));
+    }
+
+
     private function data(array $mergeItem = [])
     {
         $items = $this->items();
@@ -55,9 +67,10 @@ class PurchasingTest extends TestCase
         ];
     }
 
-    private function items(): array
+    private function items(string $key = null, string $cond = null): array
     {
-        $items = Item::inRandomOrder()->take(3)->get();
+        $items = Item::inRandomOrder()->doesnthave('log_stocks')->take(3)->get();
+
         $result = $items->map(function ($item)
         {
             return [

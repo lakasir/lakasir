@@ -179,26 +179,31 @@ trait HasCrudActions
 
         $this->authorize("browse-{$this->permission}");
 
+        $data = $this->repository->find($model);
+
         if (request()->ajax() || isset($this->return) && $this->return == 'api') {
             if (isset($this->showService)) {
+
                 if (count($this->showService) > 2) {
                     throw new ServiceActionsException('Index Service property is cant to more 2 show');
                 }
                 if (!is_array($this->showService)) {
                     throw new ServiceActionsException('Index Service property must be array');
                 }
-                $resources = ( new $this->showService[0] )->{$this->showService[1]}($request);
+                $resources = ( new $this->showService[0] )->{$this->showService[1]}($data);
 
                 if (isset($this->return) && $this->return == 'api') {
                     return Response::success($resources);
                 }
+
+                return Response::success($resources);
             }
-            $data = $this->repository->find($model);
+            /* $data = $this->repository->find($model); */
 
             return Response::success($data->toArray());
         }
 
-        $data = $this->repository->find($model);
+        /* $data = $this->repository->find($model); */
 
         return view("{$this->viewPath}.show", compact('data'));
     }

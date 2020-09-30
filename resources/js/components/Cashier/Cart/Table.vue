@@ -2,7 +2,7 @@
   <div class="table-responsive">
     <table class="table no-border">
       <tr>
-        <th colspan="1">{{ __('app.sellings.total_price') }}:</th>
+        <th colspan="1" v-text=""></th>
         <th v-text="priceFormat(totalPrice)"></th>
       </tr>
       <tr v-for="( cart, i ) in cartItems">

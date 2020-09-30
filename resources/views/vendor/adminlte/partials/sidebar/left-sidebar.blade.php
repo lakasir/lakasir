@@ -28,7 +28,7 @@
 
                     <a class="nav-link {{ request()->path() == 'applications' ? 'active' : '' }}" href="/applications">
 
-                      <i class="fas fa-fw fa-th"></i>
+                      <i class="fas fa-fw fa-rocket"></i>
 
                       <p>
                       {{ __('lakasir.apps') }}

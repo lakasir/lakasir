@@ -5,7 +5,7 @@
     <v-button float="right" text="{{ __('app.global.create') }}" to="{{ route($resources.'.create') }}" icon="fas fa-plus"></v-button>
   </div>
   <br>
-  <x-index-table :title="__('app.customer_types.title')" resources="customer_type">
+  <x-index-table :title="__('app.customer_types.title')" :resources="$resources">
     @slot('thead')
       <th> {{ __('app.customer_types.column.name') }} </th>
       <th> {{ __('app.customer_types.column.default_point') }} </th>
@@ -16,10 +16,10 @@
 @push('js')
   <script>
     $(function() {
-      $('#customer_type-table').DataTable({
+      $('#{{ $resources }}-table').DataTable({
         processing: true,
         serverSide: true,
-        ajax: '{!! route('customer_type.index') !!}',
+        ajax: '{!! route($resources.'.index') !!}',
         columns: [
           { data: 'checkbox', name: '#', orderable: false, searchable: false, width: '3%' },
           { data: 'name', name: 'name', render: function ( data, type, row ) {

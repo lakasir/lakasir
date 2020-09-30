@@ -89,6 +89,7 @@ return [
     ],
     'items' => [
         'title' => 'Data Item',
+        'title_dashboard' => 'Produk',
         'placeholder' => [
             'name' => 'Nama',
             'images' => 'Gambar',
@@ -112,6 +113,7 @@ return [
         'column' => [
             'name' => 'Nama',
             'images' => 'Gambar',
+            'sales' => 'Terjual',
             'internal_production' => 'Produksi Sendiri',
             'category' => [
                 'name' => 'Nama Kategori',
@@ -161,7 +163,8 @@ return [
             'cashier' => 'Kasir',
             'index' => 'Daftar Penjualan',
             'name' => 'Penjualan',
-            'submit' => 'Submit Pesanan'
+            'submit' => 'Submit Pesanan',
+            'detail' => 'Detil Penjualan'
         ],
         'placeholder' => [
             'search_item' => 'Cari Item'
@@ -177,6 +180,12 @@ return [
             'total_qty' => 'Total Jumlah',
             'total_profit' => 'Total Profit',
             'refund' => 'Kembalian',
+            'detail' => [
+                'item_name' => 'Nama Item',
+                'qty' => 'Qty',
+                'price' => 'Harga',
+                'profit' => 'Keuntungan'
+            ]
         ],
         'menu' => [
             'activity' => 'Aktifitas',
@@ -187,7 +196,8 @@ return [
             'less_price' => 'Uang kurang dari :money'
         ],
         'total_price' => 'Total Harga',
-        'carts' => 'Keranjang'
+        'carts' => 'Keranjang',
+        'submit_order' => 'Simpan Pesanan'
     ],
     'purchasings' => [
         'title' => 'Pembelian',
@@ -253,14 +263,17 @@ return [
         'create' => [
             'title' => 'Tambah Pembelian'
         ],
+        'question_paid' => 'Yakin sudah di lunasi?'
     ],
     'customer_types' => [
         'title' => 'Tipe Pelanggan',
         'column' => [
+            'customer_types_name' => 'Nama',
             'name' => 'Nama',
             'default_point' => 'Poin Bawaan'
         ],
         'placeholder' => [
+            'customer_types_name' => 'Nama Tipe Pelanggan',
             'name' => 'Nama',
             'default_point' => 'Poin Bawaan'
         ],
@@ -453,6 +466,17 @@ return [
         'yes' => 'Ya',
         'no' => 'Tidak',
         'login_cashier' => 'Login Sebagai Kasir',
-        'payit' => 'Bayar'
+        'payit' => 'Bayar',
+        'more_info' => 'Info Selanjutnya'
+    ],
+    'dashboard' => [
+        'total_profit' => 'Total Keuntungan',
+        'total_income' => 'Total Pendapatan',
+        'total_spending' => 'Total Pengeluaran',
+        'new_orders' => 'Pesanan Baru',
+        'sales_overview' => 'Statistik Penjualan',
+        'since_last_month' => 'Sejak Bulan Terakhir',
+        'this_year' => 'Tahun ini',
+        'last_year' => 'Tahun Terakhir'
     ]
 ];

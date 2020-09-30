@@ -123,9 +123,13 @@ abstract class Repository implements RepositoryInterface
         return $this->model;
     }
 
-    public function getObjectModel(): Object
+    public function getObjectModel(array $data = null): Object
     {
-        return new $this->model;
+        if ($data) {
+            return new $this->model($data);
+        } else {
+            return new $this->model();
+        }
     }
 
     public function query(): Object

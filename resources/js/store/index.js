@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import items from './modules/items';
 import cart from './modules/cart';
 import paymentMethods from './modules/paymentMethods';
+import customers from './modules/customers';
 
 Vue.use(Vuex)
 
@@ -26,7 +27,8 @@ export default new Vuex.Store({
   modules: {
     items,
     cart,
-    paymentMethods
+    paymentMethods,
+    customers
   },
   state,
   mutations

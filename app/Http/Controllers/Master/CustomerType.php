@@ -19,6 +19,8 @@ class CustomerType extends Controller
 
     protected $permission = 'customer_type';
 
+    protected $resources = 'type_customer';
+
     protected $indexRequest = Index::class;
 
     protected $storeRequest = Store::class;
@@ -27,7 +29,7 @@ class CustomerType extends Controller
 
     protected $bulkDestroyRequest = BulkDelete::class;
 
-    protected $redirect = '/master/customer_type';
+    protected $redirect = '/master/type_customer';
 
     protected $repositoryClass = CustomerTypeRepository::class;
 }

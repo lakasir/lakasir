@@ -231,12 +231,12 @@ return [
     */
 
     'menu' => [
-        [
-            'text' => 'search',
-            'search' => true,
-            'topnav_right' => true,
-            'url'  => 'transaction',
-        ],
+        /* [ */
+        /*     'text' => 'search', */
+        /*     'search' => true, */
+        /*     'topnav_right' => true, */
+        /*     'url'  => 'transaction', */
+        /* ], */
         [
             'text' => '',
             'topnav_right' => true,
@@ -319,7 +319,7 @@ return [
         [
             'text'    => 'menu.customer',
             'icon'    => 'fas fa-fw fa-users',
-            'can' => ['browse-customer', 'browse-group'],
+            'can' => ['browse-customer', 'browse-group', 'browse-customer_type'],
             'submenu' => [
                 [
                     'text' => 'menu.customer_list',
@@ -332,6 +332,12 @@ return [
                     'url'  => 'master/group',
                     'active' => ['master/group', 'master/group/create', 'regex:/^master\/group\/[0-9]\/edit/'],
                     'can' => 'browse-group'
+                ],
+                [
+                    'text' => 'menu.customer_type',
+                    'url'  => 'master/type_customer',
+                    'active' => ['master/type_customer', 'master/type_customer/create', 'regex:/^master\/type_customer\/[0-9]\/edit/'],
+                    'can' => 'browse-customer_type'
                 ],
             ],
         ],
@@ -409,7 +415,7 @@ return [
         /* [ */
         /*     'text' => 'menu.default', */
         /*     'url'  => 's/default', */
-        /*     'icon' => 'fas fa-fw fa-rocket', */
+        /*     'icon' => 'fas fa-fw fa-th', */
         /*     'can' => ['browse-general-setting'] */
         /* ], */
     ],

@@ -39,7 +39,7 @@ class CheckPrice implements Rule
     {
         for ($i = 0; $i < count($value); $i++) {
             $item = $this->items->find($value[$i]['item_id']);
-            if (!$item->last_price) {
+            if (!$item->last_price->initial_price && !$item->last_price->selling_price) {
                 $hasInitialPrice = Arr::exists($value[$i], 'initial_price');
                 $hasSellingPrice = Arr::exists($value[$i], 'selling_price');
                 if (!$hasInitialPrice && !$hasSellingPrice) {

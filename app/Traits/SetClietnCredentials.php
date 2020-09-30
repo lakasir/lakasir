@@ -14,6 +14,8 @@ trait SetClietnCredentials
 {
     protected $oauth_headers = [];
 
+    protected $user;
+
     protected function setClientCredentialsToken()
     {
         // Create a Client Repo.
@@ -39,7 +41,9 @@ trait SetClietnCredentials
             ],
         ]);
 
-        $token = User::inRandomOrder()->take(1)->first()->createToken('Laravel Password Grant Client')->accessToken;
+        $user = User::inRandomOrder()->role('owner')->take(1)->first();
+        $token = $user->createToken('Laravel Password Grant Client')->accessToken;
+        $this->user = $user;
 
         // Set the Access Token.
         $this->oauth_headers = [

@@ -24,7 +24,7 @@ class PurchasingTable extends LaTable
                 return price_format($model->total_selling_price);
             })
             ->addColumn('paid', function ($model) {
-                return view('app.transaction.purchasings.components.partials.paid', ['paid' => $model->is_paid]);
+                return view('app.transaction.purchasings.components.partials.paid', ['paid' => $model->is_paid, 'model' => $model]);
             })
             ->setRowId(function ($model) {
                 return $model->id;

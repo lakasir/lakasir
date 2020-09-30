@@ -1,6 +1,7 @@
 @extends('adminlte::page')
 
 @section('content')
+  @include('app.transaction.purchasings.components.card')
   <div class="row col">
     <v-button float="right" text="{{ __('app.global.create') }}" to="{{ route($resources.'.create') }}" icon="fas fa-plus"></v-button>
   </div>

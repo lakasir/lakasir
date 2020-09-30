@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Route;
  *
  * yang terakhir semoga kita diberikan kemudahan rizki dan hati
  */
+
 Route::get('/', function () {
     return redirect()->to('/dashboard');
 })->middleware([ 'installed', 'auth' ]);
@@ -50,8 +51,8 @@ Route::group(['middleware' => [ 'installed', 'auth' ]], function () {
         Route::delete('/group/bulk-destroy', 'Master\Group@bulkDestroy');
         Route::resource('/group', 'Master\Group');
 
-        Route::delete('/customer_type/bulk-destroy', 'Master\CustomerType@bulkDestroy');
-        Route::resource('/customer_type', 'Master\CustomerType');
+        Route::delete('/type_customer/bulk-destroy', 'Master\CustomerType@bulkDestroy');
+        Route::resource('/type_customer', 'Master\CustomerType');
 
         Route::delete('/customer/bulk-destroy', 'Master\Customer@bulkDestroy');
         Route::resource('/customer', 'Master\Customer');
@@ -74,13 +75,19 @@ Route::group(['middleware' => [ 'installed', 'auth' ]], function () {
     Route::group(['prefix' => 'transaction'], function () {
         Route::get('/purchasing/{purchasing}/detail/{purchasing-detail}/edit', 'Transaction\Purchasing@editDetail')->name('purchasing.detail.edit');
         Route::resource('/purchasing', 'Transaction\Purchasing');
+        Route::post('/purchasing/{purchasing}/paid/', 'Transaction\Purchasing@updatePaid')->name('update-paid-purchasing');
         Route::resource('/bill_purchasing', 'Transaction\BillPurchasing')->only('index');
 
         Route::get('/cashier', function ()
         {
             get_lang();
 
+            /* $token = $user->createToken('Create token from login ui')->accessToken; */
+            /* dd($token); */
+            /* $request->session()->put('bearer-token', $token); */
+
             Gate::authorize('browse-selling');
+
             $token = session()->get('bearer-token');
 
             return view('app.transaction.sellings.desktop')->with('token', "Bearer $token");

@@ -6,6 +6,7 @@ use App\Abstracts\Repository as RepositoryAbstract;
 use App\Builder\NumberGeneratorBuilder;
 use App\Traits\HasParent;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class Purchasing extends RepositoryAbstract
 {
@@ -27,5 +28,12 @@ class Purchasing extends RepositoryAbstract
         ])->latest()->get();
 
         return $this->getObjectModel()->table($purchasing);
+    }
+
+    public function card()
+    {
+        return $this->query()
+                    ->select(DB::raw('SUM(total_initial_price) as total_initial_price'))
+                    ->whereIsPaid(true)->first();
     }
 }
