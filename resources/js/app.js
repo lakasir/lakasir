@@ -6,6 +6,7 @@ require('bootstrap4-toggle')
 window.Vue = require('vue');
 window.axios = require('axios');
 const _ = require('lodash');
+import helpers from './helpers';
 import route from 'ziggy';
 import {Ziggy} from './ziggy.js';
 import Chart from 'chart.js';
@@ -25,6 +26,7 @@ Vue.mixin({
     }
   },
 });
+window.helpers = helpers
 
 Vue.mixin(require('./trans'))
 

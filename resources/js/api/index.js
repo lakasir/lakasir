@@ -8,6 +8,7 @@ axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 const api = {
   list_item: (request) => axios.get(route.route('api.selling.index', request)),
   payment_method_list: (request) => axios.get(route.route('payment_method.index', request)),
+  customer_list: (request) => axios.get(route.route('customer.index', request)),
   submit_item: (request) => axios.post(route.route('api.selling.store'), request),
 }
 

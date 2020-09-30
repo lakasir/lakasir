@@ -1,9 +1,17 @@
 <template>
   <div>
     <div class="form-group">
+      <select class="form-control" v-model="form.customer_id"
+             :class="errors.customer_id ? 'is-invalid' : ''">
+        <option value="null">{{ __('app.sellings.column.customer') }}</option>
+        <option v-for="customer in customers" :value="customer.value" v-text="customer.text"
+        ></option>
+      </select>
+    </div>
+    <div class="form-group">
       <select class="form-control" v-model="form.payment_method_id"
              :class="errors.payment_method_id ? 'is-invalid' : ''">
-        <option value="null">{{ __('app.sellings.payment_method_id') }}</option>
+        <option value="null">{{ __('app.sellings.column.payment_method') }}</option>
         <option v-for="paymentMethod in paymentMethods" :value="paymentMethod.value" v-text="paymentMethod.text"
         ></option>
       </select>
@@ -15,7 +23,7 @@
              @focus="onFocus"
              @blur="onBlur"
              @keyup="getCalculatedRefund"
-             v-model="money" :placeholder="__('app.sellings.money')">
+             v-model="money" :placeholder="__('app.sellings.placeholder.money')">
     </div>
     <div class="form-group">
       <input class="form-control" type="text" :value="priceFormat(totalPrice)" readonly :placeholder="__('app.sellings.total_price')">
@@ -44,13 +52,17 @@ export default {
       realMoney: 0,
       dialog: false,
       form: {
-        payment_method_id: null
+        payment_method_id: null,
+        customer_id: null
       }
     }
   },
   computed: {
     ...mapState('paymentMethods', {
       paymentMethods: state => state.paymentMethods
+    }),
+    ...mapState('customers', {
+      customers: state => state.customers
     }),
     ...mapState('cart', {
       cartItems: state => state.cartItems,
@@ -67,6 +79,9 @@ export default {
   methods: {
     ...mapActions('paymentMethods', [
       'getPaymentMethods'
+    ]),
+    ...mapActions('customers', [
+      'getCustomers'
     ]),
     ...mapActions('cart', {
       resetCart: 'reset',
@@ -124,6 +139,11 @@ export default {
   },
 
   mounted() {
+    this.getCustomers({
+      type: 'select2',
+      term: '',
+      key: 'name',
+    })
     this.getPaymentMethods({
       type: 'select2',
       term: '',

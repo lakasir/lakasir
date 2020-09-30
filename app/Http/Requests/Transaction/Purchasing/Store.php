@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Transaction\Purchasing;
 
+use App\Rules\CheckPrice;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rule;
@@ -30,7 +31,7 @@ class Store extends FormRequest
             'payment_method' => [
                 'required',
             ],
-            'items' => ['array', 'required']
+            'items' => ['array', 'required', new CheckPrice()]
         ];
     }
 }

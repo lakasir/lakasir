@@ -4,8 +4,8 @@
 <style>
 .scrollable {
   overflow-y: scroll;
-  min-width: 400px;
-  height: 400px;
+  min-width: 600px;
+  height: 600px;
 }
 </style>
 @endsection

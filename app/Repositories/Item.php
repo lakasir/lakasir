@@ -11,6 +11,7 @@ use App\Models\Unit;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\DataTables;
 
@@ -51,18 +52,33 @@ class Item extends RepositoryAbstract
             $item->save();
             $item->createMediaFromFile($request->image);
 
-            // create price
-            $price = new Price();
-            $price->fill($request->only('initial_price', 'selling_price', 'date'));
-            $price->item()->associate($item);
-            $price->save();
+            $checkPrice = array_must_same(
+                $request->only('initial_price', 'selling_price'), [
+                'initial_price',
+                'selling_price'
+            ], 0);
 
-            // create stock
-            $stock = new Stock();
-            $stock->fill($request->only('amount', 'date'));
-            $stock->item()->associate($item);
-            $stock->price()->associate($item);
-            $stock->save();
+            if (!$checkPrice) {
+                // create price
+                $price = new Price();
+                $price->fill($request->only('initial_price', 'selling_price', 'date'));
+                $price->item()->associate($item);
+                $price->save();
+            }
+
+            $checkStock = array_must_same(
+                $request->only('amount'), [
+                'amount',
+            ], 0);
+
+            if (!$checkStock) {
+                // create stock
+                $stock = new Stock();
+                $stock->fill($request->only('amount', 'date'));
+                $stock->item()->associate($item);
+                $stock->price()->associate($item);
+                $stock->save();
+            }
 
             return $item;
         });
@@ -113,4 +129,20 @@ class Item extends RepositoryAbstract
 
         return array_sum($itemPrice);
     }
+
+    public function getNewestOrder(): Collection
+    {
+        return $this->query()
+             ->whereHas('sellingDetails.selling', function ($query)
+             {
+                 return $query->whereTransactionDate(now()->format('Y-m-d'));
+             })->with(['sellingDetails' => function ($sellingDetails)
+             {
+                 return $sellingDetails->whereHas('selling', function ($query)
+                 {
+                     return $query->whereTransactionDate(now()->format('Y-m-d'));
+                 });
+             }])->limit(5)->get();
+    }
+
 }

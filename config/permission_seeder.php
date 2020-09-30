@@ -4,6 +4,12 @@ return
 [
     'role' => ['owner', 'employee'],
     'permissions' => [
+        'create-customer_type' => ['owner', 'employee'],
+        'browse-customer_type' => ['owner', 'employee'],
+        'delete-customer_type' => ['owner', 'employee'],
+        'update-customer_type' => ['owner', 'employee'],
+        'bulk-delete-customer_type' => ['owner', 'employee'],
+
         'create-unit' => ['owner', 'employee'],
         'browse-unit' => ['owner', 'employee'],
         'delete-unit' => ['owner', 'employee'],
@@ -52,6 +58,7 @@ return
         'browse-purchasing' => ['owner', 'employee'],
         'delete-purchasing' => ['owner', 'employee'],
         'update-purchasing' => ['owner', 'employee'],
+        'update-paid-purchasing' => ['owner', 'employee'],
         'bulk-delete-purchasing' => ['owner', 'employee'],
 
         'create-selling' => ['owner', 'employee'],

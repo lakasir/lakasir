@@ -20,4 +20,10 @@ class Customer extends Model
     {
         return $this->hasMany(CustomerPoint::class, 'customer_id');
     }
+
+    public function customerType()
+    {
+        return $this->belongsTo(CustomerType::class, 'customer_type_id');
+    }
+
 }

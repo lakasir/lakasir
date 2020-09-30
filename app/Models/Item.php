@@ -25,6 +25,11 @@ class Item extends Model
         return $this->belongsTo(Category::class, 'category_id');
     }
 
+    public function sellingDetails()
+    {
+        return $this->hasMany(SellingDetail::class);
+    }
+
     public function unit()
     {
         return $this->belongsTo(Unit::class, 'unit_id');
@@ -55,9 +60,44 @@ class Item extends Model
     {
         $stockPrice = optional($this->last_stock)->price;
         if (!$stockPrice) {
-           return $this->prices->last();
+            if ($this->prices->last()) {
+                return $this->prices->last();
+            } else {
+                return (object) [
+                    'initial_price' => 0,
+                    'selling_price' => 0
+                ];
+            }
         }
+
         return $stockPrice;
     }
+
+    public function getPriceXQtyAttribute()
+    {
+        return  $this->sellingDetails->sum('price') * $this->sellingDetails->sum('qty');
+    }
+
+    public function getProfitLastDayPercentageAttribute()
+    {
+        /* $currentQty = $this->sellingDetails->sum('qty'); */
+        /* $lastQty = SellingDetail::query()->select(DB::raw('SUM(qty) as last_qty')) */
+        /*                                  ->whereHas('selling', function ($query) */
+        /*                                  { */
+        /*                                      return $query->whereTransactionDate(today()->subDay()->format('Y-m-d')); */
+        /*                                  }) */
+        /*                                  ->where('item_id', $this->id) */
+        /*                                  ->first()->last_qty; */
+        /* if ($lastQty) { */
+        /*     $percentage = ($lastQty - $currentQty) / $lastQty * 100; */
+        /*     dump($percentage, $lastQty, $currentQty); */
+
+        /*     return round($percentage); */
+        /* } else { */
+        /*     return 100; */
+        /* } */
+    }
+
+
 
 }

@@ -89,6 +89,7 @@ return [
     ],
     'items' => [
         'title' => 'Data Item',
+        'title_dashboard' => 'Produk',
         'placeholder' => [
             'name' => 'Nama',
             'images' => 'Gambar',
@@ -112,6 +113,7 @@ return [
         'column' => [
             'name' => 'Nama',
             'images' => 'Gambar',
+            'sales' => 'Terjual',
             'internal_production' => 'Produksi Sendiri',
             'category' => [
                 'name' => 'Nama Kategori',
@@ -159,15 +161,31 @@ return [
     'sellings' => [
         'title' => [
             'cashier' => 'Kasir',
-            'index' => 'Index',
+            'index' => 'Daftar Penjualan',
             'name' => 'Penjualan',
-            'submit' => 'Submit Pesanan'
+            'submit' => 'Submit Pesanan',
+            'detail' => 'Detil Penjualan'
         ],
         'placeholder' => [
             'search_item' => 'Cari Item'
         ],
         'column' => [
-            'payment_method' => 'Payment Method'
+            'payment_method' => 'Metode Pembayaran',
+            'transaction_number' => 'Nomor Transaksi',
+            'date' => 'Tanggal',
+            'user' => 'Kasir',
+            'customer' => 'Pelanggan',
+            'money' => 'Uang',
+            'total_price' => 'Total Harga',
+            'total_qty' => 'Total Jumlah',
+            'total_profit' => 'Total Profit',
+            'refund' => 'Kembalian',
+            'detail' => [
+                'item_name' => 'Nama Item',
+                'qty' => 'Qty',
+                'price' => 'Harga',
+                'profit' => 'Keuntungan'
+            ]
         ],
         'menu' => [
             'activity' => 'Aktifitas',
@@ -178,7 +196,8 @@ return [
             'less_price' => 'Uang kurang dari :money'
         ],
         'total_price' => 'Total Harga',
-        'carts' => 'Keranjang'
+        'carts' => 'Keranjang',
+        'submit_order' => 'Simpan Pesanan'
     ],
     'purchasings' => [
         'title' => 'Pembelian',
@@ -201,6 +220,9 @@ return [
                 'selling_price' => 'Harga Jual',
                 'price' => 'Harga',
                 'total' => 'Total'
+            ],
+            'validation' => [
+                'item_doesnot_have_price' => 'the :item is didnot has price, you must assign the price'
             ]
         ],
         'placeholder' => [
@@ -240,6 +262,26 @@ return [
         ],
         'create' => [
             'title' => 'Tambah Pembelian'
+        ],
+        'question_paid' => 'Yakin sudah di lunasi?'
+    ],
+    'customer_types' => [
+        'title' => 'Tipe Pelanggan',
+        'column' => [
+            'customer_types_name' => 'Nama',
+            'name' => 'Nama',
+            'default_point' => 'Poin Bawaan'
+        ],
+        'placeholder' => [
+            'customer_types_name' => 'Nama Tipe Pelanggan',
+            'name' => 'Nama',
+            'default_point' => 'Poin Bawaan'
+        ],
+        'edit' => [
+            'title' => 'Ubah Tipe Pelanggan'
+        ],
+        'create' => [
+            'title' => 'Tambah Tipe Pelanggan'
         ],
     ],
     'customers' => [
@@ -424,6 +466,17 @@ return [
         'yes' => 'Ya',
         'no' => 'Tidak',
         'login_cashier' => 'Login Sebagai Kasir',
-        'payit' => 'Bayar'
+        'payit' => 'Bayar',
+        'more_info' => 'Info Selanjutnya'
+    ],
+    'dashboard' => [
+        'total_profit' => 'Total Keuntungan',
+        'total_income' => 'Total Pendapatan',
+        'total_spending' => 'Total Pengeluaran',
+        'new_orders' => 'Pesanan Baru',
+        'sales_overview' => 'Statistik Penjualan',
+        'since_last_month' => 'Sejak Bulan Terakhir',
+        'this_year' => 'Tahun ini',
+        'last_year' => 'Tahun Terakhir'
     ]
 ];

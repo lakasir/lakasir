@@ -113,14 +113,18 @@ class Handler extends ExceptionHandler
                 break;
         }
 
-        /* if (config('app.debug')) { */
-        /*     if ($exception instanceof JsonResponse) { */
-        /*         $response['trace'] = $exception->getData(); */
-        /*     } else { */
-        /*         $response['trace'] = $exception->getTrace(); */
-        /*     } */
-        /*     $response['code'] = $exception->getCode(); */
-        /* } */
+        if (config('app.debug')) {
+            if ($exception instanceof JsonResponse) {
+                if ($statusCode != 401) {
+                    $response['trace'] = $exception->getData();
+                    $response['message'] = $exception->getMessage();
+                    $response['code'] = $exception->getCode();
+                }
+            } else {
+                $response['trace'] = $exception->getTrace();
+                $response['message'] = $exception->getMessage();
+            }
+        }
 
         return Response::serverError($response, $statusCode);
     }

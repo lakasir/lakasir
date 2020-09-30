@@ -21,14 +21,46 @@ class IndexTable extends Component
     public $resources;
 
     /**
+     * @var bool
+     */
+    public $withoutaction;
+
+    /**
+     * @var bool
+     */
+    public $withoutcheckbox;
+
+    /**
+     * @var bool
+     */
+    public $withoutcard;
+
+    /**
+     * @var bool
+     */
+    public $withoutTime;
+
+    /**
      * Create a new component instance.
      *
      * @return void
      */
-    public function __construct(string $title, array $thead = [], string $resources)
+    public function __construct(
+        string $title,
+        array $thead = [],
+        string $resources,
+        bool $withoutaction = false,
+        bool $withoutcheckbox = false,
+        bool $withoutcard = false,
+        bool $withoutTime = false
+    )
     {
         $this->title = $title;
         $this->resources = $resources;
+        $this->withoutaction = $withoutaction;
+        $this->withoutcheckbox = $withoutcheckbox;
+        $this->withoutcard = $withoutcard;
+        $this->withoutTime = $withoutTime;
     }
 
     /**

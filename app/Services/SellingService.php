@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Builder\NumberGeneratorBuilder;
 use App\Models\Selling as SellingModel;
 use App\Repositories\Customer;
+use App\Repositories\CustomerPoint;
 use App\Repositories\Item;
 use App\Repositories\PaymentMethod;
 use App\Repositories\Selling;
@@ -12,8 +13,6 @@ use App\Repositories\SellingDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Lakasir\UserLoggingActivity\Facades\Activity;
-
-
 
 /**
  * Service For Complect Logic which related with Selling
@@ -77,10 +76,16 @@ class SellingService
                 'total_price' => $totalSellingPrice,
                 'total_qty' => $totalQty,
                 'total_profit' => $totalSellingPrice - $totalInitialPrice,
-                'refund' => $request->money - $totalInitialPrice,
+                'refund' => $request->money - $totalSellingPrice,
             ]);
             $selling = $self->selling->if($customer, function ($repository) use ($customer)
             {
+                $points = (new CustomerPoint())->getObjectModel([
+                    'date' => today()->format('Y-m-d'),
+                    'point' => optional($customer->customerType)->default_point ?? 0
+                ]);
+                $customer->points()->save($points);
+
                 return $repository->hasParent('customer_id', $customer);
             })->if($paymentMethod, function ($repository) use ($paymentMethod)
             {
@@ -89,7 +94,7 @@ class SellingService
               ->create($request);
 
             foreach ($request->items as $itemRequest) {
-               $item = $self->item->find($item['id']);
+               $item = $self->item->find($itemRequest['id']);
                // get stock paling awal dibeli
                $lastStock = $item->last_stock;
                $lastStock->amount = $lastStock->amount - $itemRequest['qty'];
@@ -110,6 +115,7 @@ class SellingService
             return $selling->toArray();
         });
     }
+
     /**
      * get List Item for cashier list Item
      *
@@ -175,4 +181,15 @@ class SellingService
         return $resultActivities;
     }
 
+    public function detail(SellingModel $selling): array
+    {
+        $sellingDetail = $selling->sellingDetail->map(fn($sD) => [
+            'item_name' => $sD->item->name,
+            'qty' => $sD->qty,
+            'price' => $sD->price,
+            'profit' => $sD->profit
+        ])->toArray();
+
+        return $sellingDetail;
+    }
 }

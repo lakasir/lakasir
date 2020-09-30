@@ -36,8 +36,8 @@ class ProfileService
                           ->update($request, $user->profile);
                     if ($request->photo_profile) {
                         $profile->deleteMedia($user->profile->media->first());
+                        $profile->createMediaFromFile($request->photo_profile);
                     }
-                    $profile->createMediaFromFile($request->photo_profile);
                 }
                 if (!$user->profile) {
                     $self->profile->hasParent('user_id', $user)->create($request)->createMediaFromFile($request->photo_profile);

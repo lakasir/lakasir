@@ -91,6 +91,7 @@ return [
     ],
     'items' => [
         'title' => 'Item Data',
+        'title_dashboard' => 'Product',
         'placeholder' => [
             'name' => 'Name',
             'images' => 'Images',
@@ -115,6 +116,7 @@ return [
             'name' => 'Name',
             'images' => 'Images',
             'internal_production' => 'Internal Production',
+            'sales' => 'Sales',
             'category' => [
                 'name' => 'Category Name',
             ],
@@ -161,15 +163,31 @@ return [
     'sellings' => [
         'title' => [
             'cashier' => 'Cashier',
-            'index' => 'Index',
+            'index' => 'List Selling',
             'name' => 'Selling',
-            'submit' => 'Submit Order'
+            'submit' => 'Submit Order',
+            'detail' => 'Selling Detail'
         ],
         'placeholder' => [
             'search_item' => 'Search Item'
         ],
         'column' => [
-            'payment_method' => 'Payment Method'
+            'payment_method' => 'Payment Method',
+            'transaction_number' => 'Transaction Number',
+            'date' => 'Date',
+            'user' => 'User',
+            'customer' => 'Customer',
+            'money' => 'Money',
+            'total_price' => 'Total Price',
+            'total_qty' => 'Total Qty',
+            'total_profit' => 'Total Profit',
+            'refund' => 'Refund',
+            'detail' => [
+                'item_name' => 'Item Name',
+                'qty' => 'Qty',
+                'price' => 'Price',
+                'profit' => 'Profit'
+            ]
         ],
         'menu' => [
             'activity' => 'Activity',
@@ -180,7 +198,8 @@ return [
             'less_price' => 'The Money entered is less than :money'
         ],
         'total_price' => 'Total Price',
-        'carts' => 'Cart'
+        'carts' => 'Cart',
+        'submit_order' => 'Submit Order'
     ],
     'purchasings' => [
         'title' => 'Purchasing',
@@ -204,6 +223,10 @@ return [
                 'initial_price' => 'Initial Price',
                 'selling_price' => 'Selling Price',
                 'total' => 'Total'
+            ],
+            'validation' => [
+                'item_doesnot_have_price' => 'the :item is didnot has price, you must assign the price'
+
             ]
         ],
         'placeholder' => [
@@ -243,6 +266,26 @@ return [
         ],
         'create' => [
             'title' => 'Create Purchasing'
+        ],
+        'question_paid' => 'Are you yet paid?'
+    ],
+    'customer_types' => [
+        'title' => 'Customer Type',
+        'column' => [
+            'customer_types_name' => 'Name',
+            'name' => 'Name',
+            'default_point' => 'Default Point'
+        ],
+        'placeholder' => [
+            'customer_types_name' => 'Customer Type Name',
+            'name' => 'Name',
+            'default_point' => 'Default Point'
+        ],
+        'edit' => [
+            'title' => 'Edit Customer Type'
+        ],
+        'create' => [
+            'title' => 'Create Customer Type'
         ],
     ],
     'customers' => [
@@ -427,6 +470,17 @@ return [
         'yes' => 'Yes',
         'no' => 'No',
         'login_cashier' => 'Login as Cashier',
-        'payit' => 'Pay It'
+        'payit' => 'Pay It',
+        'more_info' => 'More Info'
+    ],
+    'dashboard' => [
+        'total_profit' => 'Total Profit',
+        'total_income' => 'Total Income',
+        'total_spending' => 'Total Spending',
+        'new_orders' => 'New Orders',
+        'sales_overview' => 'Sales Overview',
+        'since_last_month' => 'Since Last Month',
+        'this_year' => 'This Year',
+        'last_year' => 'Last Year'
     ]
 ];

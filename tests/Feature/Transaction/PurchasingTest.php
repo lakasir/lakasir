@@ -9,6 +9,7 @@ use App\Models\Supplier;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Arr;
 use Tests\TestCase;
 
 class PurchasingTest extends TestCase
@@ -16,40 +17,69 @@ class PurchasingTest extends TestCase
     public function test_success_create_purchasing(): void
     {
         $user = User::find(1);
-        $response = $this->actingAs($user)->post('/transaction/purchasing', $this->data());
-        /* dump($item->log_stocks->last(), $item2->log_stocks->last()); */
+        $data = $this->data([
+            'initial_price' => rand(7000, 10000),
+            'selling_price' => rand(9000, 10000)
+        ]);
+        $response = $this->actingAs($user)->post(route('purchasing.store'), $data);
+
+        $paymentMethodId = Arr::get($data, 'payment_method');
+        $items = Arr::get($data, 'items');
+        $totalQty = array_sum(Arr::pluck($items, 'qty'));
 
         $response->assertStatus(302);
-        $response->assertRedirect('/transaction/purchasing');
+        $response->assertRedirect(route('purchasing.index'));
+
+        $this->assertDatabaseHas('purchasings', [
+            'payment_method_id' => $paymentMethodId,
+            'user_id' => $user->id,
+            'total_qty' => $totalQty
+        ]);
     }
 
-    protected function data()
+    public function test_error_price_items(): void
     {
-        factory(Supplier::class, 5)->create();
-        factory(Price::class, 10)->create();
+        $user = User::find(1);
+        $data = $this->data();
+        $this->actingAs($user)->get(route('purchasing.create'));
+
+        $response = $this->actingAs($user)->post(route('purchasing.store'), $data);
+
+        $response->assertRedirect(route('purchasing.create'));
+    }
+
+
+    private function data(array $mergeItem = [])
+    {
+        $items = $this->items();
+        if (count($mergeItem) > 0) {
+            for ($i = 0; $i < count($items); $i++) {
+                $items[$i] = array_merge($items[$i], $mergeItem);
+            }
+        }
+
         $paymentMethod = PaymentMethod::inRandomOrder()->where('visible_in->purchasing', true)->first();
-        $items = Item::where('internal_production', false)->inRandomOrder()->limit(2)->get();
-        $item2 = $items->last();
-        $item = $items->first();
-        /* dump($item->log_stocks->last(), $item2->log_stocks->last()); */
         $supplier = Supplier::inRandomOrder()->limit(1)->first();
         return [
             'supplier_id' => $supplier->id,
             'payment_method' => $paymentMethod->id,
-            'items' => [
-                [
-                    'item_id' => $item->id,
-                    'initial_price' => $item->prices->last()->initial_price,
-                    'selling_price' => $item->prices->last()->selling_price,
-                    'qty' => 20
-                ],
-                [
-                    'item_id' => $item2->id,
-                    'initial_price' => $item2->prices->last()->initial_price,
-                    'selling_price' => $item2->prices->last()->selling_price,
-                    'qty' => 20
-                ]
-            ]
+            'items' => $items
         ];
     }
+
+    private function items(string $key = null, string $cond = null): array
+    {
+        $items = Item::inRandomOrder()->doesnthave('log_stocks')->take(3)->get();
+
+        $result = $items->map(function ($item)
+        {
+            return [
+                'item_id' => $item->id,
+                'qty' => 20,
+            ];
+        })->toArray();
+
+        return $result;
+    }
+
 }

@@ -12,6 +12,21 @@ class Customer extends RepositoryAbstract
 {
     protected string $model = 'App\Models\Customer';
 
+    /**
+     * @var CustomerType
+     */
+    private $customerType;
+
+
+    /**
+     * @param CustomerType $customerType
+     */
+    public function __construct()
+    {
+        $this->customerType = new CustomerType();
+    }
+
+
     public function datatable(Request $request)
     {
         $items = $this->model::toBase()
@@ -34,6 +49,9 @@ class Customer extends RepositoryAbstract
         ]);
         $customer = new $this->model();
         $customer->fill($request->all());
+        if ($request->customer_type_id) {
+           $customer->customerType()->associate($this->customerType->find($request->customer_type_id));
+        }
         $customer->save();
         $points = new CustomerPoint([
             'date' => today()->format('Y-m-d'),
@@ -53,6 +71,9 @@ class Customer extends RepositoryAbstract
             ]);
         }
         $customer->fill($request->all());
+        if ($request->customer_type_id) {
+           $customer->customerType()->associate($this->customerType->find($request->customer_type_id));
+        }
         $customer->save();
 
         return $customer;

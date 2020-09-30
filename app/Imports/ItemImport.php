@@ -38,7 +38,7 @@ class ItemImport implements ToCollection
                     $array['name'] =  $row[$i];
                     break;
                 case 1:
-                    $array['stock'] =  $row[$i];
+                    $array['stock'] =  $row[$i] ?? 0;
                     break;
                 case 2:
                     $string = Str::lower($row[$i]);
@@ -56,6 +56,7 @@ class ItemImport implements ToCollection
                             $bool = false;
                             break;
                         default:
+                            $bool = false;
                             break;
                     }
                     $array['internal_production'] =  $bool;
@@ -84,11 +85,11 @@ class ItemImport implements ToCollection
                     break;
                 case 5:
                     // initial_price
-                    $array['initial_price'] =  $row[$i];
+                    $array['initial_price'] =  $row[$i] ?? 0;
                     break;
                 case 6:
                     // selling_price
-                    $array['selling_price'] =  $row[$i];
+                    $array['selling_price'] =  $row[$i] ?? 0;
                     break;
 
                 default:

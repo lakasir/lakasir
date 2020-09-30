@@ -169,7 +169,7 @@ return [
     'right_sidebar' => false,
     'right_sidebar_icon' => 'fas fa-cogs',
     'right_sidebar_theme' => 'dark',
-    'right_sidebar_slide' => true,
+    'right_sidebar_slide' => false,
     'right_sidebar_push' => true,
     'right_sidebar_scrollbar_theme' => 'os-theme-light',
     'right_sidebar_scrollbar_auto_hide' => 'l',
@@ -231,12 +231,12 @@ return [
     */
 
     'menu' => [
-        [
-            'text' => 'search',
-            'search' => true,
-            'topnav_right' => true,
-            'url'  => 'transaction',
-        ],
+        /* [ */
+        /*     'text' => 'search', */
+        /*     'search' => true, */
+        /*     'topnav_right' => true, */
+        /*     'url'  => 'transaction', */
+        /* ], */
         [
             'text' => '',
             'topnav_right' => true,
@@ -307,13 +307,19 @@ return [
                     'can' => 'browse-selling',
                     'active' => ['transaction/cashier', 'transaction/cashier/create', 'regex:/^transaction\/cashier\/[0-9]/']
                 ],
+                [
+                    'text' => 'app.sellings.title.index',
+                    'url'  => '/transaction/selling',
+                    'active' => ['transaction/selling', 'transaction/selling/create', 'regex:/^transaction\/selling\/[0-9]/'],
+                    'can' => 'browse-selling',
+                ],
             ],
         ],
         /* ['header' => 'menu.customer_data'], */
         [
             'text'    => 'menu.customer',
             'icon'    => 'fas fa-fw fa-users',
-            'can' => ['browse-customer', 'browse-group'],
+            'can' => ['browse-customer', 'browse-group', 'browse-customer_type'],
             'submenu' => [
                 [
                     'text' => 'menu.customer_list',
@@ -326,6 +332,12 @@ return [
                     'url'  => 'master/group',
                     'active' => ['master/group', 'master/group/create', 'regex:/^master\/group\/[0-9]\/edit/'],
                     'can' => 'browse-group'
+                ],
+                [
+                    'text' => 'menu.customer_type',
+                    'url'  => 'master/type_customer',
+                    'active' => ['master/type_customer', 'master/type_customer/create', 'regex:/^master\/type_customer\/[0-9]\/edit/'],
+                    'can' => 'browse-customer_type'
                 ],
             ],
         ],
@@ -403,7 +415,7 @@ return [
         /* [ */
         /*     'text' => 'menu.default', */
         /*     'url'  => 's/default', */
-        /*     'icon' => 'fas fa-fw fa-rocket', */
+        /*     'icon' => 'fas fa-fw fa-th', */
         /*     'can' => ['browse-general-setting'] */
         /* ], */
     ],
@@ -532,6 +544,22 @@ return [
                     'type' => 'js',
                     'asset' => true,
                     'location' => '//unpkg.com/gijgo@1.9.13/js/gijgo.min.js',
+                ],
+            ],
+        ],
+        [
+            'name' => 'ionicons',
+            'active' => true,
+            'files' => [
+                [
+                    'type' => 'css',
+                    'asset' => false,
+                    'location' => '//unpkg.com/gijgo@1.9.13/css/gijgo.min.css',
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => '//unpkg.com/ionicons@5.0.0/dist/ionicons.js',
                 ],
             ],
         ]
