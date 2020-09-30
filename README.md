@@ -36,6 +36,7 @@ if you want to contribute and add some ideas, please check this link [ideas](htt
 
 * [Sheena Muhammad Ali Zien](https://github.com/sheenazien8)
 * [Nasrul Fuad](https://github.com/nasrulfuad) 
+* [Toriq Ahmads](https://github.com/toriqahmads)
 
 ## Sponsors
 
