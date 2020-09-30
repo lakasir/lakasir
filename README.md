@@ -21,7 +21,11 @@ Lakasir uses [Laravel](http://laravel.com), the best existing PHP framework, as 
 * Install [Composer](https://getcomposer.org/download) and [Npm](https://nodejs.org/en/download)
 * Clone the repository: `git clone https://github.com/lakasir/lakasir.git`
 * Or use `composer create-project lakasir/lakasir your-project-name` 
-* Install dependencies: `composer install ; npm install ; npm run dev`
+* access the local domain `localhost/install`
+* fill in several needs such as database and account
+* go to terminal and run `php artisan migrate; php artisan passport:install;`
+* Install dependencies: `npm install ; npm run dev`
+* checkout the login url
 
 ## Contributing
 
