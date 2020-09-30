@@ -1,4 +1,5 @@
 ﻿# Lakasir™
+ ![Lakasir](/lakasir-transparent-2.png)
 ## About Lakasir
 
 Lakasir is a free, open source and online Point Of Sale Software designed for small shop or retail. It is built with modern technologies such as Laravel, VueJS, Bootstrap 4, RESTful API etc.
