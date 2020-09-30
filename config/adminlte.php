@@ -87,7 +87,7 @@ return [
     'layout_boxed' => null,
     'layout_fixed_sidebar' => null,
     'layout_fixed_navbar' => true,
-    'layout_fixed_footer' => true,
+    'layout_fixed_footer' => false,
 
     /*
     |--------------------------------------------------------------------------
@@ -272,8 +272,8 @@ return [
             'text'        => 'dashboard',
             'url'         => 'dashboard',
             'icon'        => 'fas fa-fw fa-tachometer-alt',
-            'label'       => 'new',
-            'label_color' => 'success',
+            /* 'label'       => 'new', */
+            /* 'label_color' => 'success', */
         ],
         [
             'text' => 'menu.item',

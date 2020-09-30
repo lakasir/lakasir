@@ -55,5 +55,9 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind('ResponseHelper', function () {
             return new Response();
         });
+
+        if (app()->environment() == 'local') {
+            app('debugbar')->disable();
+        }
     }
 }
