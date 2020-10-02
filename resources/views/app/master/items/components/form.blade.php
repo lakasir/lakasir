@@ -67,7 +67,7 @@
            :error="true"
            @enderror
            name="stock"
-           :validation="['required']"
+           :validation="['required', 'numeric', 'min:1']"
            default-value="{{ optional( $data ?? '' )->stock }}"
            ></v-input>
     <hr>
@@ -81,7 +81,7 @@
              :error="true"
            @enderror
              name="initial_price"
-             :validation="['required']"
+             :validation="['required', 'numeric', 'min:1']"
              default-value="{{ optional( $data ?? '' )->initial_price }}"
              ></v-input>
     <v-input icon="fa-signature"
@@ -94,7 +94,7 @@
              :error="true"
            @enderror
              name="selling_price"
-             :validation="['required']"
+             :validation="['required', 'numeric', 'min:1']"
              default-value="{{ optional( $data ?? '' )->selling_price }}"
              ></v-input>
     <hr>
