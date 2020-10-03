@@ -24,7 +24,7 @@ class Database extends FormRequest
     public function rules()
     {
         return [
-            'host' => ['required', 'alpha_dash'],
+            'host' => ['required', 'ip'],
             'name' => ['required', 'alpha_dash'],
             'username' => ['required', 'alpha_dash'],
             'password' => ['required'],
