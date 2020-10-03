@@ -14,7 +14,7 @@
            @error('host') :error="true"
            error-message="{{ $message }}"
            @enderror
-           :prepend="true" name="host" :validation="['ip']"
+           :prepend="true" name="host" :validation="['required', 'ip']"
   ></v-input>
   <v-input icon="fa-database"
            placeholder="{{ __('app.install.placeholder.database.name') }}"
