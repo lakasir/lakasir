@@ -108,7 +108,13 @@ class LoginController extends Controller
         ];
 
         $request->validate([
-            'identity' => 'required|string',
+            'identity' => ['required', 'string', function ($attr, $val, $fail)
+            {
+                $user = User::where($this->username(), $val)->first();
+                if (!$user) {
+                    $fail(trans('auth.failed'));
+                }
+            }],
             'password' => 'required|string',
             'email' => 'string|exists:users',
             'username' => 'string|exists:users',
