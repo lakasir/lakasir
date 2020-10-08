@@ -1,15 +1,15 @@
 <form action="{{ route('login') }}" method="post">
   @csrf
   <v-input icon="fa-envelope"
-           placeholder="{{ __('app.auth.placeholder.email') }}"
+           placeholder="{{ __('app.auth.placeholder.identity') }}"
            :prepend="true"
-           old="{{ old('email') }}"
-           @error('email')
+           old="{{ old('identity') }}"
+           @error('identity')
            error-message="{{ $message }}"
            :error="true"
            @enderror
-           name="email"
-           :validation="['required', 'email']"
+           name="identity"
+           :validation="['required']"
     ></v-input>
   <v-input icon="fa-lock"
            placeholder="{{ __('app.auth.placeholder.password') }}"
