@@ -81,7 +81,9 @@ return [
     'auth' => [
         'placeholder' => [
             'email' => 'Masukkan Email Akun Anda',
+            'identity' => 'Masukkan email atau username anda',
             'username' => 'Masukkan Username Akun Anda',
+            'password' => 'Masukkan passwords anda'
         ],
         'label' => [
             'remember' => 'Ingat Aku'

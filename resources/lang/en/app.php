@@ -81,6 +81,7 @@ return [
     'auth' => [
         'placeholder' => [
             'email' => 'Type your email',
+            'identity' => 'Type your email or username',
             'password' => 'Type your passwords'
         ],
         'label' => [
