@@ -38,7 +38,7 @@ class AppServiceProvider extends ServiceProvider
         \Spatie\Flash\Flash::levels([
             'success' => 'alert-success',
             'warning' => 'alert-warning',
-            'error' => 'alert-error',
+            'error' => 'alert-danger',
         ]);
 
         /**

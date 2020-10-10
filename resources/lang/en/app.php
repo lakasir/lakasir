@@ -447,6 +447,11 @@ return [
         ],
         'edit' => [
             'title' => 'Edit Role',
+        ],
+        'message' => [
+            'error' => [
+                'delete_owner' => 'You cant delete owner'
+            ]
         ]
     ],
     'global' => [
@@ -467,12 +472,14 @@ return [
             'update' => 'Update',
             'delete' => 'Delete',
             'success' => 'Success',
+            'error' => 'Error',
         ],
         'yes' => 'Yes',
         'no' => 'No',
         'login_cashier' => 'Login as Cashier',
         'payit' => 'Pay It',
-        'more_info' => 'More Info'
+        'more_info' => 'More Info',
+        'checkAll' => 'Check All'
     ],
     'dashboard' => [
         'total_profit' => 'Total Profit',
