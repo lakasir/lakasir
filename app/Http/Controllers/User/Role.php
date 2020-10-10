@@ -10,6 +10,7 @@ use App\Http\Requests\User\Role\Update;
 use App\Repositories\Role as RoleRepository;
 use App\Services\RoleService;
 use App\Traits\HasCrudActions;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
 use Spatie\Permission\Models\Permission;
@@ -88,4 +89,37 @@ class Role extends Controller
 
         return view("{$this->viewPath}.edit", compact('permissions', 'data'));
     }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int $model
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(int $model): RedirectResponse
+    {
+        get_lang();
+
+        $this->authorize("delete-{$this->permission}");
+
+        $data = $this->repository->find($model);
+
+        if ($data->id == 1) {
+            $message = __('app.role.message.error.delete_owner');
+
+            flash()->error(dash_to_space($message));
+
+            return redirect()->to($this->redirect);
+        }
+
+        $data->delete();
+
+        $message = __('app.global.message.delete').' '. ucfirst($this->permission);
+
+        flash()->success(dash_to_space($message));
+
+        return redirect()->to($this->redirect);
+    }
+
+
 }

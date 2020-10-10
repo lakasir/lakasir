@@ -444,6 +444,11 @@ return [
         ],
         'edit' => [
             'title' => 'Ubah Jabatan',
+        ],
+        'message' => [
+            'error' => [
+                'delete_owner' => 'Kamu tidak dapat menghapus Owner'
+            ]
         ]
     ],
     'global' => [
@@ -464,12 +469,14 @@ return [
             'update' => 'Memeperbarui',
             'delete' => 'Menghapus',
             'success' => 'Sukses',
+            'error' => 'Gagal',
         ],
         'yes' => 'Ya',
         'no' => 'Tidak',
         'login_cashier' => 'Login Sebagai Kasir',
         'payit' => 'Bayar',
-        'more_info' => 'Info Selanjutnya'
+        'more_info' => 'Info Selanjutnya',
+        'checkAll' => 'Pilih Semua'
     ],
     'dashboard' => [
         'total_profit' => 'Total Keuntungan',
