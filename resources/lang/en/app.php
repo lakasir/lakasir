@@ -426,6 +426,14 @@ return [
         ],
         'edit' => [
             'title' => 'Edit User',
+        ],
+        'message' => [
+            'error' => [
+                'delete_user' => [
+                    'owner' => 'You cant to delete owner User',
+                    'has_purchasing' => 'You cant to delete user has purchasing'
+                ]
+            ]
         ]
     ],
     'role' => [
