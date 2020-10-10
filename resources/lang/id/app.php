@@ -423,6 +423,14 @@ return [
         ],
         'edit' => [
             'title' => 'Ubah Pengguna',
+        ],
+        'message' => [
+            'error' => [
+                'delete_user' => [
+                    'owner' => 'Kamu tidak dapat menghapus owner user',
+                    'has_purchasing' => 'Kamu tidak dapat menghapus user yang mempunyai transaksi Pembelian'
+                ]
+            ]
         ]
     ],
     'role' => [

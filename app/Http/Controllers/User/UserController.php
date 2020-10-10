@@ -10,6 +10,8 @@ use App\Http\Requests\User\Update;
 use App\Repositories\User as UserRepository;
 use App\Services\UserService;
 use App\Traits\HasCrudActions;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 use Spatie\Permission\Models\Role;
 
@@ -71,5 +73,38 @@ class UserController extends Controller
         });
 
         return view("{$this->viewPath}.edit", compact('roles', 'data'));
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int $model
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(int $model): RedirectResponse
+    {
+        get_lang();
+
+        $this->authorize("delete-{$this->permission}");
+
+        $data = $this->repository->find($model);
+
+        $response = Gate::inspect("can-delete-{$this->permission}", $data);
+
+        if ($response->allowed()) {
+            if (method_exists($data, 'logs')) {
+                Activity::sync()->modelable($data)->auth()->deleting();
+            }
+
+            $data->delete();
+
+            $message = __('app.global.message.delete').' '. ucfirst($this->permission);
+
+            flash()->success(dash_to_space($message));
+
+            return redirect()->to($this->redirect);
+        } else {
+            return redirect()->to($this->redirect);
+        }
     }
 }

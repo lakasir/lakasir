@@ -51,6 +51,11 @@ class User extends Authenticatable
         return $this->hasOne(Profile::class);
     }
 
+    public function purchasings()
+    {
+        return $this->hasMany(Purchasing::class);
+    }
+
     public function getLocalizationAttribute()
     {
         return optional($this->profile ?? 'en')->lang ?? 'en';
@@ -70,4 +75,15 @@ class User extends Authenticatable
     {
         return 'profile.index';
     }
+
+    /**
+     * check is Owner
+     *
+     * @return bool
+     */
+    public function getIsOwnerAttribute(): bool
+    {
+        return $this->getRoleNames()->first() == 'owner';
+    }
+
 }
