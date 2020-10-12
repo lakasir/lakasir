@@ -128,7 +128,11 @@ export default {
     if (this.url) {
       property.ajax = this.ajaxOptions()
       if (this.old !== "null") {
-        let { data } = await axios.get(`${this.url}?type=select2&oldValue=${JSON.parse(this.old)}&key=${this.text}`)
+        let querySparate = '?'
+        if (this.url.includes('?')) {
+          querySparate = '&'
+        }
+        let { data } = await axios.get(`${this.url}${querySparate}type=select2&oldValue=${JSON.parse(this.old)}&key=${this.text}`)
         option = this.getOptions(data)
       }
       if (this.defaultValue) {
