@@ -50,7 +50,7 @@
           </tr>
           <tr>
             <td colspan="6">
-              <button type="button" @click="addItem" class="btn btn-outline-success"><i class="fas fa-plus"></i></button>
+              <button type="button" @click="addItem" class="btn btn-outline-success sub-total"><i class="fas fa-plus"></i></button>
             </td>
           </tr>
           <tr>
@@ -68,6 +68,7 @@
 
 <script>
 import axios from 'axios';
+import helpers from './../../helpers.js';
 
 export default {
   name: 'AddItem',
@@ -82,7 +83,8 @@ export default {
   data() {
     return {
       items: [],
-      options: []
+      options: [],
+      subPrice: []
     }
   },
 
@@ -95,7 +97,16 @@ export default {
       let initial_price = $(`input[name="items[${index}][initial_price]"]`).val();
       let qty = $(`input[name="items[${index}][qty]"]`).val();
       let selling_price = $(`input[name="items[${index}][selling_price]"]`).val();
-      let totalPrice = $(`#sub-total-${index}`).val(qty * initial_price)
+      let subTotal = $(`#sub-total-${index}`).val(qty * initial_price).val()
+      this.getTotalPrice()
+    },
+    getTotalPrice() {
+      let subTotal = $('input.sub-total');
+      let totalPrice = 0;
+      for (let i = 0, len = subTotal.length; i < len; i++) {
+        totalPrice += parseInt($(subTotal[i]).val());
+      }
+      $('.total').val(helpers.priceFormat(totalPrice))
     },
     removeArray(i) {
       document.getElementById(i).remove();
@@ -115,7 +126,7 @@ export default {
   },
 
   mounted() {
-    this.options = JSON.parse(this.itemsOptions)
+    // this.options = JSON.parse(this.itemsOptions)
   }
 }
 
