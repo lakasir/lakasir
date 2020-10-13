@@ -37,19 +37,19 @@ import Notifications from 'vue-notification/dist/ssr.js'
 
 Vue.use(Notifications)
 
-Vue.component('v-input', require('./components/Form/Input').default)
-Vue.component('v-date-picker', require('./components/Form/DatePicker').default)
-Vue.component('v-text-area', require('./components/Form/TextArea').default)
-Vue.component('v-checkbox', require('./components/Form/Checkbox').default)
-Vue.component('v-button', require('./components/Button/Button').default)
-Vue.component('v-button-upload', require('./components/Button/UploadFile').default)
-Vue.component('v-dropdown', require('./components/Form/Dropdown').default)
-Vue.component('select2', require('./components/Form/Select2').default)
-Vue.component('v-select', require('./components/Form/Select').default)
+Vue.component('v-input', require('./components/Form/Input.vue').default)
+Vue.component('v-date-picker', require('./components/Form/DatePicker.vue').default)
+Vue.component('v-text-area', require('./components/Form/TextArea.vue').default)
+Vue.component('v-checkbox', require('./components/Form/Checkbox.vue').default)
+Vue.component('v-button', require('./components/Button/Button.vue').default)
+Vue.component('v-button-upload', require('./components/Button/UploadFile.vue').default)
+Vue.component('v-dropdown', require('./components/Form/Dropdown.vue').default)
+Vue.component('select2', require('./components/Form/Select2.vue').default)
+Vue.component('v-select', require('./components/Form/Select.vue').default)
 
-Vue.component('v-add-item', require('./components/Purchasing/AddItem').default)
+Vue.component('v-add-item', require('./components/Purchasing/AddItem.vue').default)
 
-Vue.component('cashier-app', require('./components/App').default)
+Vue.component('cashier-app', require('./components/App.vue').default)
 
 Vue.component(
   'passport-clients',
