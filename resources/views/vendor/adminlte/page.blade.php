@@ -55,7 +55,10 @@
                       </div>
                     </div>
                   @endif
-                    @yield('content')
+                  @if (setting('breadcrumb'))
+                    @yield('breadcrumb')
+                  @endif
+                  @yield('content')
                 </div>
             </div>
 
@@ -66,14 +69,14 @@
 
         {{-- Right Control Sidebar --}}
         @if(config('adminlte.right_sidebar'))
-            @include('adminlte::partials.sidebar.right-sidebar')
+          @include('adminlte::partials.sidebar.right-sidebar')
         @endif
 
     </div>
-@stop
+  @stop
 
-@section('adminlte_js')
-  <script src="{{ asset('vendor/adminlte/dist/js/adminlte.min.js') }}"></script>
-  @stack('js')
-  @yield('js')
-@stop
+  @section('adminlte_js')
+    <script src="{{ asset('vendor/adminlte/dist/js/adminlte.min.js') }}"></script>
+    @stack('js')
+    @yield('js')
+  @stop

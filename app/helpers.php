@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Media;
+use App\Models\Setting;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
@@ -103,7 +104,6 @@ if (! function_exists('get_month')) {
     }
 }
 
-
 if (! function_exists('get_wrapper_month')) {
     function get_wrapper_month(): array
     {
@@ -116,3 +116,9 @@ if (! function_exists('get_wrapper_month')) {
     }
 }
 
+if (! function_exists('setting')) {
+    function setting(string $key)
+    {
+        return optional(Setting::where('key', $key)->first())->value;
+    }
+}

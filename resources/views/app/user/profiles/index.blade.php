@@ -1,4 +1,11 @@
 @extends('adminlte::page')
+@section('css')
+  <style type="text/css" media="screen">
+    .borderless td, .borderless th {
+      border: none;
+    }
+  </style>
+@endsection
 
 @section('content')
   <div class="row">
@@ -15,6 +22,9 @@
             @if (app()->environment('local', 'stagging'))
               <li class="nav-item"><a class="nav-link" href="#activity" data-toggle="tab"> {{ __('app.profiles.activity') }}</a></li>
             @endif
+            @if (app()->environment('local', 'stagging'))
+              <li class="nav-item"><a class="nav-link" href="#company" data-toggle="tab"> {{ __('app.profiles.company') }}</a></li>
+            @endif
           </ul>
         </div><!-- /.card-header -->
         <div class="card-body">
@@ -26,6 +36,13 @@
             @if (app()->environment('local', 'stagging'))
               <div class="tab-pane" id="activity">
                 @include('app.user.profiles.components.tab.activity')
+              </div>
+            @endif
+
+            <!-- /.tab-pane -->
+            @if (app()->environment('local', 'stagging'))
+              <div class="tab-pane" id="company">
+                @include('app.user.profiles.components.tab.company')
               </div>
             @endif
             <!-- /.tab-pane -->

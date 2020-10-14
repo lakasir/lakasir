@@ -405,13 +405,14 @@ return [
             'url'  => 'user/change_password',
             'icon' => 'fas fa-fw fa-lock',
         ],
-        /* ['header' => 'menu.settings', 'can' => [ 'browse-general-setting'] ], */
-        /* [ */
-        /*     'text' => 'menu.general', */
-        /*     'url'  => 's/general', */
-        /*     'icon' => 'fas fa-fw fa-cogs', */
-        /*     'can' => ['browse-general-setting'] */
-        /* ], */
+        ['header' => 'menu.settings', 'can' => [ 'browse-general-setting'] ],
+        [
+            'text' => 'menu.settings',
+            'url'  => 's/general',
+            'icon' => 'fas fa-fw fa-cogs',
+            'active' => ['s/general', 'regex:/^s\/general\/[aA-zZ]/'],
+            'can' => ['browse-general-setting']
+        ],
         /* [ */
         /*     'text' => 'menu.default', */
         /*     'url'  => 's/default', */

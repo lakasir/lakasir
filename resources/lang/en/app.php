@@ -76,7 +76,16 @@ return [
         'about_me' => 'About Me',
         'settings' => 'Settings',
         'timeline' => 'Timeline',
-        'activity' => 'Activity'
+        'activity' => 'Activity',
+        'company' => 'Company'
+    ],
+    'settings' => [
+        'general' => [
+            'company' => [
+                'title' => 'Company',
+                'description' => 'Update company name, email, address, NPWP and etc.'
+            ]
+        ],
     ],
     'auth' => [
         'placeholder' => [
@@ -460,6 +469,30 @@ return [
             'error' => [
                 'delete_owner' => 'You cant delete owner'
             ]
+        ]
+    ],
+    'companies' => [
+        'title' => 'Company',
+        'column' => [
+            'name' => 'Name',
+            'description' => 'Description',
+            'business_type' => 'Business Type',
+            'address' => 'Address',
+            'default_currency' => 'Default Currency',
+            'expected_employee' => 'Expected Employee',
+            'reg_number' => 'Registration Number'
+        ],
+        'placeholder' => [
+            'name' => 'Input your Company Name',
+            'description' => 'Input your Business Description',
+            'business_type' => 'Business Type',
+            'address' => 'Input your Company Address',
+            'default_currency' => 'Default Currency',
+            'expected_employee' => 'Expected Employee',
+            'reg_number' => 'Registration Number'
+        ],
+        'info' => [
+            'reg_number' => 'Leave it Empty for use default generate registration Number'
         ]
     ],
     'global' => [
