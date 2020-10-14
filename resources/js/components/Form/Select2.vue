@@ -139,6 +139,11 @@ export default {
         let { data } = await axios.get(`${this.url}?type=select2&oldValue=${this.defaultValue}&key=${this.text}`)
         option = this.getOptions(data)
       }
+      property.data = this.options
+      if (this.error) {
+        this.dataErrorMessage = this.errorMessage
+        this.dataError = this.error
+      }
     } else {
       property.data = this.options
       if (this.error) {

@@ -10,5 +10,15 @@ return [
         'cash_dp',
         'transfer_full',
         'transfer_dp'
+    ],
+    'default_currency' => [
+        [
+            'id' => 'USD',
+            'text' => 'US Dollars'
+        ],
+        [
+            'id' => 'IDR',
+            'text' => 'Indonesian Rupiah'
+        ]
     ]
 ];

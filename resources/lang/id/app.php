@@ -76,7 +76,16 @@ return [
         'about_me' => 'Tentang',
         'settings' => 'Pengaturan',
         'timeline' => 'Beranda',
-        'activity' => 'Kegiatan'
+        'activity' => 'Kegiatan',
+        'company' => 'Perusahaan'
+    ],
+    'settings' => [
+        'general' => [
+            'company' => [
+                'title' => 'Perusahaan',
+                'description' => 'Ubah nama, email, alamat dan NPWP perusahaan.'
+            ]
+        ],
     ],
     'auth' => [
         'placeholder' => [
@@ -457,6 +466,30 @@ return [
             'error' => [
                 'delete_owner' => 'Kamu tidak dapat menghapus Owner'
             ]
+        ]
+    ],
+    'companies' => [
+        'title' => 'Perusahaan',
+        'column' => [
+            'name' => 'Nama',
+            'description' => 'Deskripsi',
+            'business_type' => 'Jenis Usaha',
+            'address' => 'Alamat',
+            'default_currency' => 'Mata Uang Bawaan',
+            'expected_employee' => 'Eskpektasi Karyawan',
+            'reg_number' => 'Nomor Registrasi'
+        ],
+        'placeholder' => [
+            'name' => 'Masukkan Nama Perusahaan Anda',
+            'description' => 'Masukkan Deskripsi Perusahaan Anda',
+            'business_type' => 'Jenis Usaha',
+            'address' => 'Input your Company Address',
+            'default_currency' => 'Mata Uang Bawaan',
+            'expected_employee' => 'Eskpektasi Karyawan',
+            'reg_number' => 'Nomor Registrasi'
+        ],
+        'info' => [
+            'reg_number' => 'Leave it Empty for use default generate registration Number'
         ]
     ],
     'global' => [

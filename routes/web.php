@@ -101,7 +101,11 @@ Route::group(['middleware' => [ 'installed', 'auth' ]], function () {
 
     Route::group(['prefix' => 's', 'as' => 's.'], function ()
     {
-        Route::resource('/general', 'Settings\General')->only(['index', 'store']);
+        Route::resource('/general', 'Settings\General')->only(['index']);
+        Route::group(['prefix' => '/general', 'as' => 'general.'], function ()
+        {
+            Route::resource('/company', 'Settings\General\Company')->only(['index', 'store']);
+        });
         Route::resource('/default', 'Settings\DefaultSetting')->only(['index', 'store']);
     });
     Route::resource('/applications', 'Lakasir\App')->only('index');

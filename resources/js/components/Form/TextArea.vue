@@ -1,6 +1,5 @@
 <template>
-  <div>
-    <div class="mb-3" :class="prepend ? 'input-group' : ''">
+    <div class="mb-3" :class="prepend ? 'input-group col-md-' + size : 'col-md-' + size">
       <label v-if="!prepend" class="text-muted">{{ label }}</label>
       <textarea
         :type="type"
@@ -15,7 +14,6 @@
       ></textarea>
       <div v-if="dataError" class="invalid-feedback">{{ dataErrorMessage }}</div>
     </div>
-  </div>
 </template>
 
 <script>
@@ -70,6 +68,10 @@ export default {
     old: {
       type: String,
       value: null,
+    },
+    size: {
+      type: String,
+      value: '12'
     },
   },
 

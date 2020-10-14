@@ -16,7 +16,7 @@
     </div>
     <!-- /.form-box -->
   </div><!-- /.card -->
-  <strong> {{ __('lakasir.supported') }} <a href="{{ config('app.url') }}">{{ config('app.name') }}</a>.</strong>  {{ __('lakasir.free_pos_software') }}
+  <strong> {{ __('lakasir.supported') }} <a href="{{ config('app.url') }}">{{ config('lakasir.appname') }}</a>.</strong>  {{ __('lakasir.free_pos_software') }}
 </div>
 <!-- /.login-box -->
 @endsection
