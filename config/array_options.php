@@ -13,10 +13,6 @@ return [
     ],
     'default_currency' => [
         [
-            'id' => 'USD',
-            'text' => 'US Dollars'
-        ],
-        [
             'id' => 'IDR',
             'text' => 'Indonesian Rupiah'
         ]

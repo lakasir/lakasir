@@ -2,6 +2,7 @@
 
 use App\Models\Media;
 use App\Models\Setting;
+use App\Models\User;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
@@ -120,5 +121,12 @@ if (! function_exists('setting')) {
     function setting(string $key)
     {
         return optional(Setting::where('key', $key)->first())->value;
+    }
+}
+
+if (! function_exists('getProfileImage')) {
+    function getProfileImage()
+    {
+        return (new User)->adminlte_image();
     }
 }

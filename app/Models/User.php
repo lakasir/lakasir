@@ -63,7 +63,7 @@ class User extends Authenticatable
 
     public function adminlte_image()
     {
-        return auth()->user()->profile ? media(auth()->user()->profile->media->first()) : config('setting.profile.image_empty');
+        return auth()->user()->profile->media->first() ? media(auth()->user()->profile->media->first()) : config('setting.profile.image_empty');
     }
 
     public function adminlte_desc()

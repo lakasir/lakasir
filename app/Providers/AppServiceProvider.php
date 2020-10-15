@@ -57,7 +57,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         if (app()->environment() == 'local') {
-            app('debugbar')->disable();
+            /* app('debugbar')->disable(); */
         }
     }
 }
