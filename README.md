@@ -27,6 +27,12 @@ Lakasir uses [Laravel](http://laravel.com), the best existing PHP framework, as 
 * Install dependencies: `npm install ; npm run dev`
 * checkout the login url
 
+## Installation with docker
+* copy .env.example to .env
+* change DB_HOST to mysql like this ```DB_HOST=mysql```
+* run ```docker-compose up -d```
+
+
 ## Contributing
 
 Please, be very clear on your commit messages and pull requests, empty pull request messages may be rejected without reason.
