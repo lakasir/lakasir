@@ -17,7 +17,7 @@ const mixin = {
 Vue.mixin(mixin)
 
 import vuetify from './config';
-import App from './App';
+import App from './App.vue';
 import VueRouter from 'vue-router';
 import 'es6-promise/auto'
 import store from './store';
