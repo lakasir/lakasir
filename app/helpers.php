@@ -73,7 +73,7 @@ if (! function_exists('get_month')) {
 
         for($m=1; $m<=12; ++$m){
             $date = date('F', mktime(0, 0, 0, $m, 1));
-            $name = $length ? substr($date), 0, $length) : $date;
+            $name = $length ? substr($date, 0, $length) : $date;
 
             $month[] = $withKey
                 ? [
