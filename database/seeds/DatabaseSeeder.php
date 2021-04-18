@@ -35,6 +35,7 @@ class DatabaseSeeder extends Seeder
             PaymentMethod::class,
             UnitSeeder::class,
             CategorySeeder::class,
+            UserSeeder::class,
         ]);
     }
 }
