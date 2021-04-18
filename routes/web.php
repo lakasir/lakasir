@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Master\PaymentMethod;
 
 /**
  * Jika kamu tidak menyelesaikan ini, kamu punya hutang dengan diri kamu sendiri
