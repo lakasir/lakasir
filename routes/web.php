@@ -76,7 +76,7 @@ Route::group(['middleware' => ['installed', 'auth']], function () {
         Route::delete('/unit/bulk-destroy', [Unit::class, 'bulkDestroy'])->name('unit.bulkDestroy');
         Route::resource('/unit', Unit::class);
 
-        Route::delete('/category/bulk-destroy', [Category::class, 'bulkDestroy']);
+        Route::delete('/category/bulk-destroy', [Category::class, 'bulkDestroy'])->name('category.bulkDestroy');
         Route::resource('/category', Category::class);
 
         Route::get('/item/download-template', [Item::class, 'downloadTemplate'])->name('item.download-template');

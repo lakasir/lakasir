@@ -357,7 +357,7 @@ return [
         ],
     ],
     'categories' => [
-        'title' => 'Unit',
+        'title' => 'Categories',
         'column' => [
             'name' => 'Name',
         ],
