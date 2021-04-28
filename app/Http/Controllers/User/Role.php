@@ -9,15 +9,15 @@ use App\Http\Requests\User\Role\Store;
 use App\Http\Requests\User\Role\Update;
 use App\Repositories\Role as RoleRepository;
 use App\Services\RoleService;
-use App\Traits\HasCrudActions;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
+use Sheenazien8\Hascrudactions\Traits\HasCrudAction;
 use Spatie\Permission\Models\Permission;
 
 class Role extends Controller
 {
-    use HasCrudActions;
+    use HasCrudAction;
 
     protected $viewPath = 'app.user.role';
 
