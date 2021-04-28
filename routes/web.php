@@ -21,6 +21,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Master\PaymentMethod;
+use App\Http\Controllers\Settings\DefaultSetting;
+use App\Http\Controllers\Settings\General\Company;
+use App\Http\Controllers\Transaction\Selling;
 
 /**
  * Jika kamu tidak menyelesaikan ini, kamu punya hutang dengan diri kamu sendiri
@@ -96,7 +99,7 @@ Route::group(['middleware' => ['installed', 'auth']], function () {
         Route::delete('/customer/bulk-destroy', [Customer::class, 'bulkDestroy']);
         Route::resource('/customer', Customer::class);
 
-        Route::post('/customer-point', 'Master\CustomerPoint@store')->name('customer-point.store');
+        /* Route::post('/customer-point', 'Master\CustomerPoint@store')->name('customer-point.store'); */
     });
 
     Route::group(['prefix' => 'user'], function () {
