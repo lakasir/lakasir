@@ -4,7 +4,6 @@ namespace App\Models;
 
 use App\DataTables\UserTable;
 use App\Traits\HasLaTable;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
@@ -63,7 +62,10 @@ class User extends Authenticatable
 
     public function adminlte_image()
     {
-        return auth()->user()->profile ? media(auth()->user()->profile->media->first()) : config('setting.profile.image_empty');
+        if (!auth()->user()->profile) {
+            return config('setting.profile.image_empty');
+        }
+        return auth()->user()->profile->media->first() ? media(auth()->user()->profile->media->first()) : config('setting.profile.image_empty');
     }
 
     public function adminlte_desc()

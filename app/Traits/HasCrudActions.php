@@ -40,7 +40,7 @@ trait HasCrudActions
 
         $request = resolve($this->indexRequest);
 
-        if ($this->permission) {
+        if ($this->permission && $request->type != 'select2') {
             $this->authorize("browse-$this->permission");
         }
 
@@ -162,7 +162,6 @@ trait HasCrudActions
         }
 
         flash()->success(dash_to_space($message));
-
 
         return redirect()->to($this->redirect);
     }

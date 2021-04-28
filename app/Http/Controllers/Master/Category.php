@@ -8,11 +8,11 @@ use App\Http\Requests\Master\Category\Index;
 use App\Http\Requests\Master\Category\Store;
 use App\Http\Requests\Master\Category\Update;
 use App\Repositories\Category as CategoryRepository;
-use App\Traits\HasCrudActions;
+use Sheenazien8\Hascrudactions\Traits\HasCrudAction;
 
 class Category extends Controller
 {
-    use HasCrudActions;
+    use HasCrudAction;
 
     protected $viewPath = 'app.master.categories';
 
@@ -26,7 +26,7 @@ class Category extends Controller
 
     protected $bulkDestroyRequest = BulkDelete::class;
 
-    protected $redirect = '/master/category';
+    protected $resources = 'category';
 
     protected $repositoryClass = CategoryRepository::class;
 }

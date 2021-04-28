@@ -5,10 +5,8 @@ namespace App\Providers;
 use App\Helpers\Response;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
-use JeroenNoten\LaravelAdminLte\Events\BuildingMenu;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -57,7 +55,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         if (app()->environment() == 'local') {
-            app('debugbar')->disable();
+            /* app('debugbar')->disable(); */
         }
     }
 }

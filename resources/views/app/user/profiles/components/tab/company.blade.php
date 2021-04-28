@@ -19,7 +19,7 @@
   </tr>
   <tr>
     <td>
-      <span class="text-muted small d-block">{{ __('app.companies.column.type') }}</span>
+      <span class="text-muted small d-block">{{ __('app.companies.column.business_type') }}</span>
       {{ optional($data->get('companies'))->business_type }}
     </td>
   </tr>
