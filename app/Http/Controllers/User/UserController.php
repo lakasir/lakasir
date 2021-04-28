@@ -9,15 +9,15 @@ use App\Http\Requests\User\Store;
 use App\Http\Requests\User\Update;
 use App\Repositories\User as UserRepository;
 use App\Services\UserService;
-use App\Traits\HasCrudActions;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
+use Sheenazien8\Hascrudactions\Traits\HasCrudAction;
 use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
-    use HasCrudActions;
+    use HasCrudAction;
 
     protected $viewPath = 'app.user';
 
@@ -31,7 +31,7 @@ class UserController extends Controller
 
     protected $bulkDestroyRequest = BulkDelete::class;
 
-    protected $redirect = '/user';
+    protected $resources = 'user';
 
     protected $repositoryClass = UserRepository::class;
 
@@ -91,20 +91,22 @@ class UserController extends Controller
 
         $response = Gate::inspect("can-delete-{$this->permission}", $data);
 
-        if ($response->allowed()) {
-            if (method_exists($data, 'logs')) {
-                Activity::sync()->modelable($data)->auth()->deleting();
-            }
+        if (!$response->allowed()) {
+            flash()->error(trans('app.user.message.delete.error'));
 
-            $data->delete();
-
-            $message = __('app.global.message.delete').' '. ucfirst($this->permission);
-
-            flash()->success(dash_to_space($message));
-
-            return redirect()->to($this->redirect);
-        } else {
-            return redirect()->to($this->redirect);
+            return redirect()->to(route($this->resources . '.index'));
         }
+
+        if (method_exists($data, 'logs')) {
+            Activity::sync()->modelable($data)->auth()->deleting();
+        }
+
+        $data->delete();
+
+        $message = __('app.global.message.delete').' '. ucfirst($this->permission);
+
+        flash()->success(dash_to_space($message));
+
+        return redirect()->to(route($this->resources . '.index'));
     }
 }

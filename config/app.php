@@ -178,6 +178,7 @@ return [
         Yajra\DataTables\ButtonsServiceProvider::class,
         App\Providers\TranslationServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
+        App\Providers\FormServiceProvider::class
 
     ],
 
@@ -232,6 +233,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'ResponseHelper' => App\Facades\Response::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+        'Builder' => Sheenazien8\LivewireComponents\Facades\Builder::class
     ],
 
 ];

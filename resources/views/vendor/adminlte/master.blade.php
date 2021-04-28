@@ -100,6 +100,7 @@
       window._locale = '{{ app()->getLocale() }}';
       window._translations = {!! cache('translations') !!};
     </script>
+    @livewireStyles
 
 </head>
 
@@ -112,6 +113,7 @@
 
     {{-- Base Scripts --}}
     @if(!config('adminlte.enabled_laravel_mix'))
+      @livewireScripts
       <script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
       <script src="{{ asset('vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
       <script src="{{ asset('vendor/overlayScrollbars/js/jquery.overlayScrollbars.min.js') }}"></script>

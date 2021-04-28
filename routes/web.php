@@ -30,6 +30,27 @@ use App\Http\Controllers\Master\PaymentMethod;
  *
  * yang terakhir semoga kita diberikan kemudahan rizki dan hati
  */
+Route::get('/update', function (\Codedge\Updater\UpdaterManager $updater) {
+    dd($updater->source());
+
+    // Check if new version is available
+    if($updater->source()->isNewVersionAvailable()) {
+        // Get the current installed version
+        echo $updater->source()->getVersionInstalled();
+
+        // Get the new version available
+        $versionAvailable = $updater->source()->getVersionAvailable();
+
+        // Create a release
+        $release = $updater->source()->fetch($versionAvailable);
+
+        // Run the update process
+        $updater->source()->update($release);
+
+    } else {
+        echo "No new version available.";
+    }
+});
 
 Route::get('/', function () {
     return redirect()->to('/dashboard');
@@ -88,6 +109,7 @@ Route::group(['middleware' => ['installed', 'auth']], function () {
         Route::delete('/bulk-destroy', [UserController::class, 'bulkDestroy']);
         Route::resource('/role', Role::class);
     });
+    Route::delete('/user/bulk-destroy', [UserController::class, 'bulkDestroy'])->name('user.bulkDestroy');
     Route::resource('/user', UserController::class);
 
     Route::group(['prefix' => 'transaction'], function () {
