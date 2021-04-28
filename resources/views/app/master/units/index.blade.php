@@ -1,5 +1,5 @@
 @extends(config('hascrudactions.wrapper.layouts'))
 
 @section(config('hascrudactions.wrapper.section'))
-  @include('app.units.components.table')
+  @include('app.master.units.components.table')
 @endsection
