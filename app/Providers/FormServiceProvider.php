@@ -15,7 +15,7 @@ class FormServiceProvider extends ServiceProvider
     public function register()
     {
         Builder::register([
-            'user-form' => \App\Forms\UserForm::class
+            'user-form' => \App\Forms\UserForm::class,
         ]);
     }
 

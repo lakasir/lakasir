@@ -73,7 +73,7 @@ Route::group(['middleware' => ['installed', 'auth']], function () {
         Route::delete('/payment_method/bulk-destroy', [PaymentMethod::class, 'bulkDestroy']);
         Route::resource('/payment_method', PaymentMethod::class);
 
-        Route::delete('/unit/bulk-destroy', [Unit::class, 'bulkDestroy']);
+        Route::delete('/unit/bulk-destroy', [Unit::class, 'bulkDestroy'])->name('unit.bulkDestroy');
         Route::resource('/unit', Unit::class);
 
         Route::delete('/category/bulk-destroy', [Category::class, 'bulkDestroy']);
