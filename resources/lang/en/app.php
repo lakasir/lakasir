@@ -94,7 +94,9 @@ return [
             'password' => 'Type your passwords'
         ],
         'label' => [
-            'remember' => 'Remeber Me'
+            'remember' => 'Remeber Me',
+            'identity' => 'Identity',
+            'password' => 'Passwords'
         ],
         'login' => 'Login',
         'forgot_password' => 'Forgot Password'
