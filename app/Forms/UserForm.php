@@ -30,13 +30,11 @@ class UserForm extends ComponentAbstracts
                 'type' => 'password',
                 'label' =>  __('app.user.column.password'),
                 'placeholder' =>  __('app.user.placeholder.password'),
-                'value' => optional($this->value->data)->password
             ],
             'password_confirmation' => [
                 'type' => 'password',
                 'label' => trans('app.user.column.password_confirmation'),
                 'placeholder' => trans('app.user.placeholder.password_confirmation'),
-                'value' => ''
             ],
             'role' => view('app.user.components.role_select2', $this->data())
         ];

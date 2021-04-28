@@ -106,10 +106,10 @@ Route::group(['middleware' => ['installed', 'auth']], function () {
         Route::get('change_password', [ChangePassword::class, 'index'])->name('change_password.index');
         Route::post('change_password', [ChangePassword::class, 'store'])->name('change_password.store');
 
-        Route::delete('/bulk-destroy', [UserController::class, 'bulkDestroy']);
+        Route::delete('/bulk-destroy', [UserController::class, 'bulkDestroy'])->name('user.bulkDestroy');
+        Route::delete('/role/bulk-destroy', [Role::class, 'bulkDestroy'])->name('role.bulkDestroy');
         Route::resource('/role', Role::class);
     });
-    Route::delete('/user/bulk-destroy', [UserController::class, 'bulkDestroy'])->name('user.bulkDestroy');
     Route::resource('/user', UserController::class);
 
     Route::group(['prefix' => 'transaction'], function () {
