@@ -1,4 +1,4 @@
-<x-components-index-table :title="__('app.user.title')" :resources="$resources">
+<x-components-index-table :title="__('app.role.title')" :resources="$resources">
   @slot('thead')
     <th> {{ __('app.role.column.name') }} </th>
     <th> {{ __('app.role.column.guard_name') }} </th>

@@ -31,7 +31,7 @@ class Role extends Controller
 
     protected $bulkDestroyRequest = BulkDelete::class;
 
-    protected $redirect = 'user/role';
+    protected $resources = 'role';
 
     protected $repositoryClass = RoleRepository::class;
 
@@ -76,7 +76,7 @@ class Role extends Controller
 
         $this->authorize("update-$this->permission");
 
-        $permissions = Permission::toBase()->get()->map(function ($c, $i) {
+        $permissions = Permission::toBase()->get()->map(function ($c) {
             $name = str_replace('-', ' ', Str::title($c->name));
             $explode = Str::of($name)->explode(' ')->last();
             return [
@@ -118,8 +118,6 @@ class Role extends Controller
 
         flash()->success(dash_to_space($message));
 
-        return redirect()->to($this->redirect);
+        return redirect()->to(route($this->resources . '.index'));
     }
-
-
 }
