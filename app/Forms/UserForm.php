@@ -47,6 +47,11 @@ class UserForm extends ComponentAbstracts
                 'label' => trans('app.global.submit'),
                 'color' => 'primary'
             ],
+            [
+                'label' => trans('app.global.cancel'),
+                'coloer' => 'default',
+                'link' => route('user.index')
+            ]
         ];
     }
 

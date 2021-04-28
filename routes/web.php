@@ -87,7 +87,7 @@ Route::group(['middleware' => ['installed', 'auth']], function () {
 
         Route::get('/supplier/download-template', [Supplier::class, 'downloadTemplate'])->name('supplier.download-template');
         Route::post('/supplier/import', [Supplier::class, 'importTemplate'])->name('supplier.import');
-        Route::delete('/supplier/bulk-destroy', [Supplier::class, 'bulkDestroy']);
+        Route::delete('/supplier/bulk-destroy', [Supplier::class, 'bulkDestroy'])->name('supplier.bulkDestroy');
         Route::resource('/supplier', Supplier::class);
 
         Route::delete('/group/bulk-destroy', [Group::class, 'bulkDestroy']);
