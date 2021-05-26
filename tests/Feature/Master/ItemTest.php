@@ -2,162 +2,62 @@
 
 namespace Tests\Feature\Master;
 
-use App\Models\Category;
 use App\Models\Item;
-use App\Models\Media;
-use App\Models\Price;
-use App\Models\Unit;
-use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
-use Tests\TestCase;
+use Tests\Feature\FeatureTestCase;
 
-class ItemTest extends TestCase
+class ItemTest extends FeatureTestCase
 {
-    public function test_error_item_create(): void
+    use RefreshDatabase;
+
+    /** @test */
+    public function it_response_unauthorized_for_see_list_items()
     {
-        factory(Unit::class, 20)->create();
-        factory(Category::class, 20)->create();
-        $user = User::find(1);
-        $response = $this->actingAs($user)->post(route('item.store'), [
+        $response = $this->loginAs()->get(route('item.index'), $this->data())->assertStatus(403);
+        $response->assertSee('This action is unauthorized.');
+    }
+
+    /** @test */
+    public function it_see_item_list_in_view()
+    {
+        $this->assignPermission('browse-item');
+        $response = $this->loginAs()->get(route('item.index'))->assertStatus(200);
+        $response->assertViewIs('app.master.items.index');
+    }
+
+    /** @test */
+    public function it_see_items_via_ajax_datatables()
+    {
+        $this->assignPermission('browse-item');
+        /** @var \App\Models\Item $item */
+        $item = factory(Item::class)->create();
+        $response = $this->loginAs()->getJson(route('item.index'), $this->ajaxHeader())->assertStatus(200);
+        $response->assertJsonFragment(['category_name' => $item->category->name])
+            ->assertSeeText($item->name);
+    }
+
+    /** @test */
+    public function it_response_unauthorized_for_create_items()
+    {
+        $response = $this->loginAs()->post(route('item.create'), $this->data())->assertStatus(405);
+        $response->assertSee('This action is unauthorized.');
+    }
+
+    /** @test */
+    public function it_response_back_with_validation_error_after_create_item()
+    {
+        $this->assignPermission('create-item');
+        $response = $this->loginAs()->post(route('item.store'), $this->data())->assertStatus(302);
+        $response->assertSessionHasErrors(['initial_price', 'selling_price', 'category_id']);
+    }
+
+    private function data(): array
+    {
+        return [
             'name' => 'product abal abal',
             'stock' => 30,
-            'unit_id' => '',
             'image' => UploadedFile::fake()->image('avatar.jpg', 500, 200)->size(10)
-        ]);
-        $media = Media::latest()->first();
-
-        $response->assertStatus(302);
-        Storage::disk('local')->assertExists($media->fullFileName);
-        $response->assertRedirect('');
-    }
-
-    /**
-     * A basic feature create test.
-     *
-     * @return void
-     */
-    public function test_item_create()
-    {
-        factory(Unit::class, 20)->create();
-        factory(Category::class, 20)->create();
-        $user = User::find(1);
-        $response = $this->actingAs($user)->post(route('item.store'), [
-            'name' => 'product abal abal',
-            'stock' => 30,
-            'unit_id' => Unit::inRandomOrder()->first()->id,
-            'category_id' => Category::inRandomOrder()->first()->id,
-            'initial_price' => 20000,
-            'selling_price' => 25000,
-            'image' => UploadedFile::fake()->image('avatar.jpg', 500, 200)->size(10)
-        ]);
-        $media = Media::latest()->first();
-
-
-        $response->assertStatus(302);
-        Storage::disk('local')->assertExists($media->fullFileName);
-        $response->assertRedirect('/master/item');
-    }
-
-    /**
-     * A basic feature browse test.
-     *
-     * @return void
-     */
-    public function test_item_browse()
-    {
-        $user = User::find(1);
-        $response = $this->actingAs($user)->get(route('item.index'));
-
-        $response->assertStatus(200);
-    }
-
-    /**
-     * A basic feature browse test.
-     *
-     * @return void
-     */
-    public function test_item_show()
-    {
-        $user = User::find(1);
-        factory(Item::class, 10)->create();
-        $response = $this->actingAs($user)->get(route('item.show', Item::inRandomOrder()->first()));
-
-        $response->assertStatus(200);
-    }
-
-    /**
-     * A basic feature browse test.
-     *
-     * @return void
-     */
-    public function test_error_item_update()
-    {
-        $item = Item::inRandomOrder()->first();
-        $item->createMediaFromFile(UploadedFile::fake()->image('avatar.jpg', 500, 200)->size(10));
-        $user = User::find(1);
-        $response = $this->actingAs($user)->put(route('item.update', $item), [
-        ]);
-
-
-        $response->assertStatus(302);
-        $response->assertRedirect('');
-    }
-    /**
-     * A basic feature browse test.
-     *
-     * @return void
-     */
-    public function test_item_update()
-    {
-        $item = Item::inRandomOrder()->first();
-        $item->createMediaFromFile(UploadedFile::fake()->image('avatar.jpg', 500, 200)->size(10));
-        $user = User::find(1);
-        $response = $this->actingAs($user)->put(route('item.update', $item), [
-            'name' => 'product sangat abal abal',
-            'stock' => 30,
-            'unit_id' => Unit::inRandomOrder()->first()->id,
-            'category_id' => Category::inRandomOrder()->first()->id,
-            'image' => UploadedFile::fake()->image('avatar.jpg', 500, 200)->size(10)
-        ]);
-        $media = Media::latest()->first();
-
-        Storage::disk('local')->assertExists($media->fullFileName);
-
-        $response->assertStatus(302);
-        $response->assertRedirect('/master/item');
-    }
-
-    /**
-     * A basic feature browse test.
-     *
-     * @return void
-     */
-    public function test_item_delete()
-    {
-        $user = User::find(1);
-        factory(Item::class, 10)->create();
-        $response = $this->actingAs($user)->delete(route('item.destroy', Item::inRandomOrder()->first()));
-
-        $response->assertStatus(302);
-    }
-
-
-    /**
-     * A basic feature browse test.
-     *
-     * @return void
-     */
-    public function test_item_bulk_delete()
-    {
-        $user = User::find(1);
-        factory(Item::class, 10)->create();
-        $response = $this->actingAs($user)->delete('/master/item/bulk-destroy', [
-            'ids' => Item::inRandomOrder()->get()->pluck('id')
-        ]);
-
-        $response->assertStatus(302);
+        ];
     }
 }
