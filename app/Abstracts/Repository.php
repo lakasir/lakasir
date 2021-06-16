@@ -14,7 +14,7 @@ abstract class Repository implements RepositoryInterface
 
     public function datatable(Request $request)
     {
-        $items = $this->model::toBase()->latest()->get();
+        $items = $this->model::latest()->get();
 
         return $this->getObjectModel()->table($items);
     }
@@ -38,37 +38,37 @@ abstract class Repository implements RepositoryInterface
     {
         $self = $this;
         return $this->model::select($columns)
-                ->when(isset($this->parent) && ! is_null($this->parent), function ($query) use ($self) {
-                    return $query->where($self->column, $self->parent->id);
-                })
-                ->when(! is_null($request->s), function ($query) use ($request, $search) {
-                    return $query->where($search, 'LIKE', $request->s.'%%');
-                })
-                    ->orderBy('id', 'desc')
-                    ->paginate($request->per_page);
+            ->when(isset($this->parent) && !is_null($this->parent), function ($query) use ($self) {
+                return $query->where($self->column, $self->parent->id);
+            })
+            ->when(!is_null($request->s), function ($query) use ($request, $search) {
+                return $query->where($search, 'LIKE', $request->s . '%%');
+            })
+            ->orderBy('id', 'desc')
+            ->paginate($request->per_page);
     }
 
     public function all(Request $request, array $columns = ['*'], string $search)
     {
         $self = $this;
         return $this->model::select($columns)
-                ->when(isset($this->parent) && ! is_null($this->parent), function ($query) use ($self) {
-                    return $query->where($self->column, $self->parent->id);
-                })
-                ->when(! is_null($request->s), function ($query) use ($request, $search) {
-                    return $query->where($search, 'LIKE', $request->s.'%%');
-                })
-                ->orderBy('id', 'desc')
-                ->get();
+            ->when(isset($this->parent) && !is_null($this->parent), function ($query) use ($self) {
+                return $query->where($self->column, $self->parent->id);
+            })
+            ->when(!is_null($request->s), function ($query) use ($request, $search) {
+                return $query->where($search, 'LIKE', $request->s . '%%');
+            })
+            ->orderBy('id', 'desc')
+            ->get();
     }
 
     public function get($request, $columns, $search)
     {
-        return $this->model::select($columns)->when(! is_null($request->s), function ($query) use ($request, $search) {
-            return $query->where($search, 'LIKE', $request->s.'%%');
+        return $this->model::select($columns)->when(!is_null($request->s), function ($query) use ($request, $search) {
+            return $query->where($search, 'LIKE', $request->s . '%%');
         })
-        ->orderBy('id', 'desc')
-        ->get();
+            ->orderBy('id', 'desc')
+            ->get();
     }
 
     public function create(Request $request)
@@ -113,7 +113,7 @@ abstract class Repository implements RepositoryInterface
             collect($request->ids)
                 ->chunk(1000)
                 ->each(static function ($bulkChunk) use ($self, $column) {
-                    $self->model::whereIn($column, $bulkChunk)->delete();
+                    $self->model::whereIn($column, $bulkChunk->toArray())->delete();
                 });
         });
     }

@@ -7,8 +7,6 @@ use App\Repositories\Purchasing;
 use App\Repositories\Selling;
 use App\Repositories\SellingDetail;
 use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\DB;
 
 class Dashboard extends Controller
 {
@@ -39,7 +37,7 @@ class Dashboard extends Controller
         $currentProfit = $selling->current_month_selling;
         $profitMargin = 100;
         if ($lastProfit) {
-            $profitMargin = ($lastProfit - $currentProfit) / $lastProfit * 100/100;
+            $profitMargin = ($lastProfit - $currentProfit) / $lastProfit * 100 / 100;
         }
 
         $spending = $purchasing->card();

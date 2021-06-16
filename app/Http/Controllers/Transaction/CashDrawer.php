@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Transaction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Transaction\CashDrawer\Store;
 use App\Repositories\CashDrawer as CashDrawerRepository;
-use Illuminate\View\View;
 
 class CashDrawer extends Controller
 {
@@ -48,7 +47,7 @@ class CashDrawer extends Controller
 
         $this->repository->hasParent('user_id', $user)->create($request);
 
-        flash()->success(__('app.global.message.success'). __('app.cashdrawers.message.open'));
+        flash()->success(__('app.global.message.success') . __('app.cashdrawers.message.open'));
 
         return redirect()->to($this->redirect);
     }
@@ -72,7 +71,7 @@ class CashDrawer extends Controller
 
         $this->repository->hasParent('user_id', $user)->create($request);
 
-        flash()->success(__('app.global.message.success'). __('app.cashdrawers.message.close'));
+        flash()->success(__('app.global.message.success') . __('app.cashdrawers.message.close'));
 
         return redirect()->to($this->redirect);
     }

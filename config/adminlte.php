@@ -345,14 +345,8 @@ return [
         [
             'text'    => 'menu.master_data',
             'icon'    => 'fas fa-fw fa-database',
-            'can' => ['browse-unit', 'browse-category', 'browse-supplier'],
+            'can' => ['browse-category', 'browse-supplier'],
             'submenu' => [
-                [
-                    'text' => 'menu.unit',
-                    'url'  => 'master/unit',
-                    'active' => ['master/unit', 'master/unit/create', 'regex:/^master\/unit\/[0-9]\/edit/'],
-                    'can' => 'browse-unit'
-                ],
                 [
                     'text' => 'menu.category',
                     'url'  => 'master/category',
@@ -364,12 +358,6 @@ return [
                     'url'  => 'master/supplier',
                     'active' => ['master/supplier', 'master/supplier/create', 'regex:/^master\/supplier.*/'],
                     'can' => 'browse-supplier'
-                ],
-                [
-                    'text' => 'menu.payment_method',
-                    'url'  => 'master/payment_method',
-                    'active' => ['master/payment_method', 'master/payment_method/create', 'regex:/^master\/payment_method\/[0-9]\/edit/'],
-                    'can' => 'browse-payment_method'
                 ],
             ],
         ],
@@ -405,7 +393,7 @@ return [
             'url'  => 'user/change_password',
             'icon' => 'fas fa-fw fa-lock',
         ],
-        ['header' => 'menu.settings', 'can' => [ 'browse-general-setting'] ],
+        ['header' => 'menu.settings', 'can' => ['browse-general-setting']],
         [
             'text' => 'menu.settings',
             'url'  => 's/general',

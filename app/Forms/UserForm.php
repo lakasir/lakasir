@@ -58,6 +58,7 @@ class UserForm extends ComponentAbstracts
     public function validations(): array
     {
         return [
+            'username' => ['required', 'min:3'],
             'email' => ['required', 'email:rfc,dns'],
             'password' => ['min:3']
         ];
@@ -73,5 +74,4 @@ class UserForm extends ComponentAbstracts
 
         return compact('data', 'roles');
     }
-
 }

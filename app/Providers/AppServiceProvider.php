@@ -33,6 +33,7 @@ class AppServiceProvider extends ServiceProvider
         if (!env('APP_KEY')) {
             Artisan::call('key:generate');
         }
+
         \Spatie\Flash\Flash::levels([
             'success' => 'alert-success',
             'warning' => 'alert-warning',
@@ -47,15 +48,15 @@ class AppServiceProvider extends ServiceProvider
         Validator::extend('confirmation', function ($attribute, $value, $parameters, $validator) {
             $keyConfirmed = explode('_', request()->key)[0];
 
-            return $value == request()->{ $keyConfirmed };
+            return $value == request()->{$keyConfirmed};
         });
 
         $this->app->bind('ResponseHelper', function () {
             return new Response();
         });
 
-        if (app()->environment() == 'local') {
-            /* app('debugbar')->disable(); */
+        if (app()->environment() == 'testing') {
+            app('debugbar')->disable();
         }
     }
 }

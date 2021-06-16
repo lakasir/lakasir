@@ -30,11 +30,6 @@ class LoginForm extends ComponentAbstracts
     {
         return [
             [
-                'label' => trans('app.global.login_cashier'),
-                'color' => 'info',
-                'link' => route('cashier')
-            ],
-            [
                 'label' => trans('app.auth.login'),
                 'color' => 'primary'
             ],

@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests\Master\Item;
+namespace App\Http\Requests\Master\Customer;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 
-class Store extends FormRequest
+class Browse extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,13 +25,12 @@ class Store extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required',
-            'stock' => ['required', 'integer'],
-            'unit_id' => 'required',
-            'category_id' => 'required',
-            'initial_price' => ['required', 'min:1'],
-            'selling_price' => ['required', 'min:1'],
-            'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+            'orderBy' => 'in:id,name,url_customize,website,status,sort|nullable',
+            'orderDirection' => 'in:asc,desc|nullable',
+            's' => 'string|nullable',
+            'page' => 'integer|nullable',
+            'per_page' => 'integer|nullable',
+            'limit' => 'integer|nullable',
         ];
     }
 }

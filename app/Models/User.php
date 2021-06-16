@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\DataTables\UserTable;
 use App\Traits\HasLaTable;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
@@ -88,4 +89,16 @@ class User extends Authenticatable
         return $this->getRoleNames()->first() == 'owner';
     }
 
+    /**
+     * @return array
+     * @throws BindingResolutionException
+     */
+    public function showColumns(): array
+    {
+        return [
+            'email' => [
+                'label' => trans('app.user.column.email'),
+            ],
+        ];
+    }
 }

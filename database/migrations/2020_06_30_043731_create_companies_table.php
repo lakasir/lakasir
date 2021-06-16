@@ -16,9 +16,8 @@ class CreateCompaniesTable extends Migration
         Schema::create('companies', function (Blueprint $table) {
             $table->id();
             $table->string('reg_number');
-            $table->foreignId('user_id')->references('id')->on('users');
             $table->enum('business_type', ['retail', 'butik / distro']);
-            $table->text('business_description');
+            $table->text('business_description')->nullable();
             $table->timestamps();
         });
     }

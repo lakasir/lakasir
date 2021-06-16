@@ -2,11 +2,13 @@
 
 namespace App\Http\Requests\Master\Category;
 
+use App\Traits\Category\CategoryTrait;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 
-class Index extends FormRequest
+class Create extends FormRequest
 {
+    use CategoryTrait;
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -14,7 +16,7 @@ class Index extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return Gate::authorize("create-{$this->prefixPermission()}");
     }
 
     /**
@@ -24,13 +26,11 @@ class Index extends FormRequest
      */
     public function rules()
     {
+        if ($this->method() != 'POST') {
+            return [];
+        }
         return [
-            'orderBy' => 'in:id,name,url_customize,website,status,sort|nullable',
-            'orderDirection' => 'in:asc,desc|nullable',
-            's' => 'string|nullable',
-            'page' => 'integer|nullable',
-            'per_page' => 'integer|nullable',
-            'limit' => 'integer|nullable',
+            'name' => 'required'
         ];
     }
 }

@@ -7,5 +7,6 @@ return [
     'logo-github' => '/assets/lakasir-github.png',
     'logo-transparent' => '/assets/lakasir-transparent.png',
     'appname' => 'Lakasir',
+    'index-style' => 'table',
     'version' => '1.0-beta'
 ];

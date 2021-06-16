@@ -2,8 +2,8 @@
 
 namespace App\DataTables;
 
-use App\Abstracts\LaTable;
 use Carbon\Carbon;
+use Sheenazien8\Hascrudactions\Abstracts\LaTable;
 
 class ItemTable extends LaTable
 {
@@ -17,24 +17,19 @@ class ItemTable extends LaTable
                 $date = (new Carbon($model->created_at))->diffForHumans();
                 return view('partials.table.date')->with('date', $date);
             })
-            ->addColumn('last_stock', function ($model)
-            {
+            ->addColumn('last_stock', function ($model) {
                 return $model->last_stock . ' - ' . $model->unit_name;
             })
-            ->addColumn('internal_production', function ($model)
-            {
+            ->addColumn('internal_production', function ($model) {
                 return $model->internal_production ? __('app.global.yes') : __('app.global.no');
             })
-            ->addColumn('category_name', function ($model)
-            {
+            ->addColumn('category_name', function ($model) {
                 return $model->category_name;
             })
-            ->addColumn('initial_price', function ($model)
-            {
+            ->addColumn('initial_price', function ($model) {
                 return price_format($model->initial_price);
             })
-            ->addColumn('selling_price', function ($model)
-            {
+            ->addColumn('selling_price', function ($model) {
                 return price_format($model->selling_price);
             })
             ->setRowId(function ($model) {

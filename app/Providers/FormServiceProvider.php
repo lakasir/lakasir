@@ -17,7 +17,9 @@ class FormServiceProvider extends ServiceProvider
         Builder::register([
             'user-form' => \App\Forms\UserForm::class,
             'supplier-form' => \App\Forms\SupplierForm::class,
-            'login-form' => \App\Forms\LoginForm::class
+            'login-form' => \App\Forms\LoginForm::class,
+            'profile-form' => \App\Forms\ProfileForm::class,
+            'customer-form' => \App\Forms\CustomerForm::class
         ]);
     }
 

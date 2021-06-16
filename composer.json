@@ -14,6 +14,7 @@
     "require": {
         "php": "^7.2.5",
         "codedge/laravel-selfupdater": "^3.2",
+        "doctrine/dbal": "^3.1",
         "fideloper/proxy": "^4.2",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^6.3",
@@ -28,7 +29,7 @@
         "maatwebsite/excel": "^3.1",
         "pusher/pusher-php-server": "~4.0",
         "sheenazien8/hascrudactions": "^1.0",
-        "sheenazien8/livewire-components": "^1.0",
+        "sheenazien8/livewire-components": "dev-develop",
         "spatie/laravel-flash": "^1.6",
         "spatie/laravel-permission": "^3.13",
         "tightenco/ziggy": "^0.9.4",
@@ -41,9 +42,9 @@
         "cybercog/laravel-paket": "^1.6",
         "facade/ignition": "^2.0",
         "fzaninotto/faker": "^1.9.1",
-        "laravel/dusk": "^6.3",
         "mockery/mockery": "^1.3.1",
         "phpunit/phpunit": "^9.3",
+        "spatie/laravel-ray": "^1.17",
         "wnx/laravel-stats": "^2.3"
     },
     "config": {
@@ -88,5 +89,10 @@
             "@php artisan vendor:publish --force --tag=livewire:assets --ansi"
         ]
     },
-    "repositories": {}
+    "repositories": {
+        "local": {
+            "type": "path",
+            "url": "../packages/livewire-components"
+        }
+    }
 }

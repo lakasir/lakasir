@@ -39,16 +39,16 @@ class Profile extends Controller
 
         $company = new Company();
 
-        $request = resolve($this->indexRequest);
-
         $this->authorize("browse-$this->permission");
 
         $data = collect();
         $data->put('activity', Activity::where('user_id', auth()->user()->id)->latest()->cursor()->groupBy(
             function ($activity) {
-            return $activity->created_at->format('Y-m-d');
-        }));
+                return $activity->created_at->format('Y-m-d');
+            }
+        ));
         $data->put('companies', $company->query()->first());
+        $data->put('user', auth()->user());
 
         $resources = $this->permission;
 

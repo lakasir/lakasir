@@ -7,7 +7,12 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Faker\Factory as Faker;
 use Faker\Generator;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Facades\Artisan;
+use Spatie\Permission\Exceptions\RoleAlreadyExists;
+use InvalidArgumentException;
+use SebastianBergmann\RecursionContext\InvalidArgumentException as RecursionContextInvalidArgumentException;
+use PHPUnit\Framework\ExpectationFailedException;
 use Spatie\Permission\Models\Permission;
 use Tests\CreatesApplication;
 
@@ -24,6 +29,12 @@ abstract class FeatureTestCase extends BaseTestCase
 
     protected $user;
 
+    /**
+     * @return void
+     * @throws BindingResolutionException
+     * @throws RoleAlreadyExists
+     * @throws InvalidArgumentException
+     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -68,6 +79,7 @@ abstract class FeatureTestCase extends BaseTestCase
         $this->user->roles->first()->givePermissionTo($permission);
     }
 
+    /** @return array  */
     protected function ajaxHeader(): array
     {
         return [
@@ -76,6 +88,14 @@ abstract class FeatureTestCase extends BaseTestCase
         ];
     }
 
+    /**
+     * @param string $level
+     * @param string $message
+     * @return void
+     * @throws BindingResolutionException
+     * @throws RecursionContextInvalidArgumentException
+     * @throws ExpectationFailedException
+     */
     protected function assertFlashLevel(string $level, string $message = '')
     {
         $flash['level'] = null;

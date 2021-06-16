@@ -20,3 +20,9 @@
 </div>
 <!-- /.login-box -->
 @endsection
+
+@push('js')
+  <script charset="utf-8">
+    console.log($)
+  </script>
+@endpush

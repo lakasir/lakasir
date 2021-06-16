@@ -1,12 +1,14 @@
 <?php
 
-namespace App\Http\Requests\Master\Customer;
+namespace App\Http\Requests\Master\Item;
 
+use App\Traits\Item\ItemTrait;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 
-class Index extends FormRequest
+class Browse extends FormRequest
 {
+    use ItemTrait;
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -14,6 +16,9 @@ class Index extends FormRequest
      */
     public function authorize()
     {
+        if ($this->request->get('type') != 'select2') {
+            return Gate::authorize("browse-{$this->prefixPermission()}");
+        }
         return true;
     }
 

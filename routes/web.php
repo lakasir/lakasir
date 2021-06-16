@@ -14,7 +14,6 @@ use App\Http\Controllers\Master\Group;
 use App\Http\Controllers\Master\Supplier;
 use App\Http\Controllers\Master\Item;
 use App\Http\Controllers\Master\Category;
-use App\Http\Controllers\Master\Unit;
 use App\Http\Controllers\Dashboard;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
@@ -35,10 +34,9 @@ use App\Http\Controllers\Transaction\Selling;
  * yang terakhir semoga kita diberikan kemudahan rizki dan hati
  */
 Route::get('/update', function (\Codedge\Updater\UpdaterManager $updater) {
-    dd($updater->source());
 
     // Check if new version is available
-    if($updater->source()->isNewVersionAvailable()) {
+    if ($updater->source()->isNewVersionAvailable()) {
         // Get the current installed version
         echo $updater->source()->getVersionInstalled();
 
@@ -50,7 +48,6 @@ Route::get('/update', function (\Codedge\Updater\UpdaterManager $updater) {
 
         // Run the update process
         $updater->source()->update($release);
-
     } else {
         echo "No new version available.";
     }
@@ -74,15 +71,12 @@ Route::group(['middleware' => ['installed', 'auth']], function () {
         Route::delete('/payment_method/bulk-destroy', [PaymentMethod::class, 'bulkDestroy']);
         Route::resource('/payment_method', PaymentMethod::class);
 
-        Route::delete('/unit/bulk-destroy', [Unit::class, 'bulkDestroy'])->name('unit.bulkDestroy');
-        Route::resource('/unit', Unit::class);
-
         Route::delete('/category/bulk-destroy', [Category::class, 'bulkDestroy'])->name('category.bulkDestroy');
         Route::resource('/category', Category::class);
 
         Route::get('/item/download-template', [Item::class, 'downloadTemplate'])->name('item.download-template');
         Route::post('/item/import', [Item::class, 'importTemplate'])->name('item.import');
-        Route::delete('/item/bulk-destroy', [Item::class, 'bulkDestroy']);
+        Route::delete('/item/bulk-destroy', [Item::class, 'bulkDestroy'])->name('item.bulkDestroy');
         Route::resource('/item', Item::class);
 
 
@@ -97,7 +91,7 @@ Route::group(['middleware' => ['installed', 'auth']], function () {
         Route::delete('/type_customer/bulk-destroy', [CustomerType::class, 'bulkDestroy']);
         Route::resource('/type_customer', CustomerType::class);
 
-        Route::delete('/customer/bulk-destroy', [Customer::class, 'bulkDestroy']);
+        Route::delete('/customer/bulk-destroy', [Customer::class, 'bulkDestroy'])->name('customer.bulkDestroy');
         Route::resource('/customer', Customer::class);
 
         Route::post('/customer-point', [CustomerPoint::class, 'store'])->name('customer-point.store');

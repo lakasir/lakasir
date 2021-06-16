@@ -15,12 +15,12 @@ class CreateItemsTable extends Migration
     {
         Schema::create('items', function (Blueprint $table) {
             $table->id();
-            $table->boolean('internal_production')->default(0);
-            $table->foreignId('unit_id')->references('id')->on('units')->onDelete('cascade');
             $table->foreignId('category_id')->references('id')->on('categories')->onDelete('cascade');
+            $table->string('unit')->nullable();
+            $table->enum('item_type', [0, 1, 2, 3, 4, 5])->default(0);
+            $table->string('sku')->nullable()->unique();
+            $table->boolean('internal_production')->default(0);
             $table->string('name');
-            $table->text('image')->nullable();
-            $table->double('stock');
             $table->timestamps();
         });
     }

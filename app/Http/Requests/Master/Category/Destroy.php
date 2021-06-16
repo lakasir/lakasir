@@ -2,11 +2,13 @@
 
 namespace App\Http\Requests\Master\Category;
 
+use App\Traits\Category\CategoryTrait;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 
-class Store extends FormRequest
+class Destroy extends FormRequest
 {
+    use CategoryTrait;
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -14,7 +16,7 @@ class Store extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return Gate::authorize("delete-{$this->prefixPermission()}");
     }
 
     /**
@@ -24,8 +26,6 @@ class Store extends FormRequest
      */
     public function rules()
     {
-        return [
-            'name' => 'required'
-        ];
+        return [];
     }
 }

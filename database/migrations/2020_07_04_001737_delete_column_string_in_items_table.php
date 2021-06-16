@@ -14,7 +14,6 @@ class DeleteColumnStringInItemsTable extends Migration
     public function up()
     {
         Schema::table('items', function (Blueprint $table) {
-            $table->dropColumn('stock');
         });
     }
 
@@ -26,7 +25,6 @@ class DeleteColumnStringInItemsTable extends Migration
     public function down()
     {
         Schema::table('items', function (Blueprint $table) {
-            $table->double('stock')->after('image');
         });
     }
 }

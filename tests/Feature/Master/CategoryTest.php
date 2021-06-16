@@ -36,8 +36,11 @@ class CategoryTest extends TestCase
         $category = factory(Category::class)->create();
         $this->loginAs()
             ->getJson(route('category.index'), $this->ajaxHeader())
-            ->assertJsonFragment(['name' => $category->name])
-            ->assertSeeText($category->name);
+            ->assertJsonFragment([
+                'name' => $category->name,
+            ])
+            ->assertSeeText($category->name)
+            ->assertSeeText($category->id);
     }
 
     /** @test */
@@ -67,7 +70,7 @@ class CategoryTest extends TestCase
         $this->loginAs()
             ->post(route('category.store'), $request)
             ->assertStatus(302)
-            ->assertSessionHasErrors('name');
+            ->assertSessionHasErrors(['name' => trans('validation.required', ['attribute' => 'name'])]);
     }
 
     /** @test */
@@ -78,9 +81,8 @@ class CategoryTest extends TestCase
         $this->loginAs()
             ->post(route('category.store'), $request)
             ->assertStatus(302);
-        $this->assertDatabaseHas('categories', [
-            'name' => $request['name']
-        ]);
+        $category_created = Category::where('name', $request['name'])->first();
+        $this->assertTrue(!is_null($category_created));
         $this->assertFlashLevel('success', __('app.global.message.success.create', [
             'item' => ucfirst('category')
         ]));
@@ -116,7 +118,7 @@ class CategoryTest extends TestCase
         $this->loginAs()
             ->patch(route('category.update', $category), $request)
             ->assertStatus(302)
-            ->assertSessionHasErrors('name');
+            ->assertSessionHasErrors(['name' => trans('validation.required', ['attribute' => 'name'])]);
     }
 
     /** @test */
@@ -124,13 +126,15 @@ class CategoryTest extends TestCase
     {
         $this->assignPermission('update-category');
         $category = factory(Category::class)->create();
-        $request = array_merge($this->data(), ['name' => 'siap']);
+        $data = $this->data();
+        $request = array_merge($data, ['name' => 'siap']);
         $this->loginAs()
             ->patch(route('category.update', $category), $request)
             ->assertStatus(302);
-        $this->assertDatabaseHas('categories', [
-            'name' => $request['name']
-        ]);
+        $category_original = Category::where('name', $data['name'])->first();
+        $category_updated = Category::where('name', $request['name'])->first();
+        $this->assertTrue(is_null($category_original));
+        $this->assertTrue(!is_null($category_updated));
         $this->assertFlashLevel('success', __('app.global.message.success.update', [
             'item' => ucfirst('category')
         ]));
@@ -154,9 +158,8 @@ class CategoryTest extends TestCase
         $this->loginAs()
             ->delete(route('category.destroy', $category))
             ->assertStatus(302);
-        $this->assertDatabaseMissing('categories', [
-            'name' => $category->name
-        ]);
+        $category_deleted = Category::find($category->id);
+        $this->assertTrue(is_null($category_deleted));
         $this->assertFlashLevel('success', __('app.global.message.success.delete', [
             'item' => ucfirst('category')
         ]));
@@ -192,19 +195,15 @@ class CategoryTest extends TestCase
     {
         $this->assignPermission('bulk-delete-category');
         $categories = factory(Category::class, 2)->create();
+        $id = $categories->pluck('id');
         $ids = [
-            'ids' => $categories->pluck('id')->toArray()
+            'ids' => $id->toArray()
         ];
-        $missing_record = [];
-        foreach ($categories as $category) {
-            $missing_record[] = [
-                'name' => $category->name
-            ];
-        }
         $this->loginAs()
             ->delete(route('category.bulkDestroy'), $ids)
             ->assertStatus(302);
-        $this->assertDatabaseMissing('categories', $missing_record);
+        $category_deleted = Category::find($id);
+        $this->assertTrue($category_deleted->isEmpty());
         $this->assertFlashLevel('success', __('app.global.message.success.bulk-delete', [
             'item' => ucfirst('category')
         ]));
