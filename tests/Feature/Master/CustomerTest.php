@@ -131,14 +131,28 @@ class CustomerTest extends TestCase
     /** @test */
     public function code_should_equals_with_format(): void
     {
-        // expected_format = CUSYYYYMMDD001
+        // expected_format = CUSYYYYMMDD001 -> increment
         $this->assignPermission('create-customer');
         $request = $this->data();
+
         $this->loginAs()
             ->post(route('customer.store'), $request)
             ->assertStatus(302);
         $customer_created = Customer::where('email', $request['email'])->first();
         $this->assertTrue($customer_created->code == 'CUSYYYYMMDD001');
+
+        $this->loginAs()
+            ->post(route('customer.store'), $request)
+            ->assertStatus(302);
+        $customer_created = Customer::where('email', $request['email'])->first();
+        $this->assertTrue($customer_created->code == 'CUSYYYYMMDD002');
+
+        $request = $this->data();
+        $this->loginAs()
+            ->post(route('customer.store'), $request)
+            ->assertStatus(302);
+        $this->assertTrue($customer_created->code == 'CUSYYYYMMDD003');
+
         $this->assertFlashLevel('success', __('app.global.message.success.create', [
             'item' => ucfirst('customer')
         ]));
