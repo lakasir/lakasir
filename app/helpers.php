@@ -15,8 +15,7 @@ if (!function_exists('action')) {
 if (!function_exists('dash_to_space')) {
     function dash_to_space(string $string, bool $capital = false)
     {
-        $name = str_replace('-', ' ', $string);
-        $name = str_replace('_', ' ', $name);
+        $name = str_replace(['-', '_'], [' ', ' '], $string);
 
         return $capital ? Str::upper($name) : $name;
     }
@@ -49,13 +48,10 @@ if (!function_exists('medias')) {
 if (!function_exists('checkValueArray')) {
     function array_must_same(array $array, array $key, $expectedValue): bool
     {
-        for ($i = 0; $i < count($key); $i++) {
-            if (isset($array[$key[$i]])) {
-                $val = $array[$key[$i]];
-                if ($val != $expectedValue) {
-                    return false;
-                }
-            } else {
+        $count = count($key);
+
+        for ($i = 0; $i < $count; $i++) {
+            if (!isset($array[$key[$i]]) || $array[$key[$i]] != $expectedValue) {
                 return false;
             }
         }
@@ -75,29 +71,17 @@ if (!function_exists('get_month')) {
     function get_month($length = null, $withKey = false): array
     {
         $month = [];
-        $i = 1;
-        for ($m = 1; $m <= 12; ++$m) {
-            $i;
-            if ($length) {
-                if ($withKey) {
-                    $month[] = [
-                        'month_name' => substr(date('F', mktime(0, 0, 0, $m, 1)), 0, $length),
-                        'month_key' => $i++,
-                        'value' => null
-                    ];
-                } else {
-                    $month[] = substr(date('F', mktime(0, 0, 0, $m, 1)), 0, $length);
-                }
-            } else {
-                if ($withKey) {
-                    $month[] = [
-                        'month_name' => date('F', mktime(0, 0, 0, $m, 1)),
-                        'month_key' => $i++,
-                    ];
-                } else {
-                    $month[] = date('F', mktime(0, 0, 0, $m, 1));
-                }
-            }
+
+        for($m=1; $m<=12; ++$m){
+            $date = date('F', mktime(0, 0, 0, $m, 1));
+            $name = $length ? substr($date, 0, $length) : $date;
+
+            $month[] = $withKey
+                ? [
+                    'month_name' => $name,
+                    'month_key' => $m,
+                ]
+                : $name;
         }
 
         return $month;
