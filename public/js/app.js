@@ -2372,6 +2372,14 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'Submit',
@@ -2390,13 +2398,18 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       realMoney: 0,
       dialog: false,
       form: {
-        payment_method_id: null
+        payment_method_id: null,
+        customer_id: null
       }
     };
   },
-  computed: _objectSpread(_objectSpread(_objectSpread(_objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])('paymentMethods', {
+  computed: _objectSpread(_objectSpread(_objectSpread(_objectSpread(_objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])('paymentMethods', {
     paymentMethods: function paymentMethods(state) {
       return state.paymentMethods;
+    }
+  })), Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])('customers', {
+    customers: function customers(state) {
+      return state.customers;
     }
   })), Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])('cart', {
     cartItems: function cartItems(state) {
@@ -2410,7 +2423,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     totalPrice: 'getTotalPrice',
     refund: 'getRefund'
   })),
-  methods: _objectSpread(_objectSpread(_objectSpread(_objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])('paymentMethods', ['getPaymentMethods'])), Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])('cart', {
+  methods: _objectSpread(_objectSpread(_objectSpread(_objectSpread(_objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])('paymentMethods', ['getPaymentMethods'])), Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])('customers', ['getCustomers'])), Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])('cart', {
     resetCart: 'reset',
     calculateRefund: 'calculateRefund'
   })), Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])('items', ['getItem', 'submit'])), {}, {
@@ -2465,6 +2478,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     }
   },
   mounted: function mounted() {
+    this.getCustomers({
+      type: 'select2',
+      term: '',
+      key: 'name'
+    });
     this.getPaymentMethods({
       type: 'select2',
       term: '',
@@ -3521,7 +3539,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     var _this = this;
 
     return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
-      var vm, selectElement, option, property, _yield$axios$get, data, _yield$axios$get2, _data, defaultValue;
+      var vm, selectElement, option, property, querySparate, _yield$axios$get, data, _yield$axios$get2, _data, defaultValue;
 
       return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
         while (1) {
@@ -3535,44 +3553,57 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               };
 
               if (!_this.url) {
-                _context.next = 19;
+                _context.next = 23;
                 break;
               }
 
               property.ajax = _this.ajaxOptions();
 
               if (!(_this.old !== "null")) {
-                _context.next = 11;
+                _context.next = 13;
                 break;
               }
 
-              _context.next = 8;
-              return axios.get("".concat(_this.url, "?type=select2&oldValue=").concat(JSON.parse(_this.old), "&key=").concat(_this.text));
+              querySparate = '?';
 
-            case 8:
+              if (_this.url.includes('?')) {
+                querySparate = '&';
+              }
+
+              _context.next = 10;
+              return axios.get("".concat(_this.url).concat(querySparate, "type=select2&oldValue=").concat(JSON.parse(_this.old), "&key=").concat(_this.text));
+
+            case 10:
               _yield$axios$get = _context.sent;
               data = _yield$axios$get.data;
               option = _this.getOptions(data);
 
-            case 11:
+            case 13:
               if (!_this.defaultValue) {
-                _context.next = 17;
+                _context.next = 19;
                 break;
               }
 
-              _context.next = 14;
+              _context.next = 16;
               return axios.get("".concat(_this.url, "?type=select2&oldValue=").concat(_this.defaultValue, "&key=").concat(_this.text));
 
-            case 14:
+            case 16:
               _yield$axios$get2 = _context.sent;
               _data = _yield$axios$get2.data;
               option = _this.getOptions(_data);
 
-            case 17:
-              _context.next = 23;
+            case 19:
+              property.data = _this.options;
+
+              if (_this.error) {
+                _this.dataErrorMessage = _this.errorMessage;
+                _this.dataError = _this.error;
+              }
+
+              _context.next = 27;
               break;
 
-            case 19:
+            case 23:
               property.data = _this.options;
 
               if (_this.error) {
@@ -3596,7 +3627,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 _this.value = JSON.parse(_this.old);
               }
 
-            case 23:
+            case 27:
               $(selectElement) // init select2
               .select2(property).val(_this.value).append(option).trigger("change") // emit event on change.
               .on("change", function () {
@@ -3607,7 +3638,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 vm.$emit("input", this.value);
               });
 
-            case 24:
+            case 28:
             case "end":
               return _context.stop();
           }
@@ -3652,8 +3683,6 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
-//
-//
 //
 //
 //
@@ -3722,6 +3751,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     old: {
       type: String,
       value: null
+    },
+    size: {
+      type: String,
+      value: '12'
     }
   },
   data: function data() {
@@ -3897,6 +3930,7 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _helpers_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./../../helpers.js */ "./resources/js/helpers.js");
 //
 //
 //
@@ -3966,6 +4000,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'AddItem',
   props: {
@@ -3977,7 +4012,8 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       items: [],
-      options: []
+      options: [],
+      subPrice: []
     };
   },
   methods: {
@@ -3989,7 +4025,18 @@ __webpack_require__.r(__webpack_exports__);
       var initial_price = $("input[name=\"items[".concat(index, "][initial_price]\"]")).val();
       var qty = $("input[name=\"items[".concat(index, "][qty]\"]")).val();
       var selling_price = $("input[name=\"items[".concat(index, "][selling_price]\"]")).val();
-      var totalPrice = $("#sub-total-".concat(index)).val(qty * initial_price);
+      var subTotal = $("#sub-total-".concat(index)).val(qty * initial_price).val();
+      this.getTotalPrice();
+    },
+    getTotalPrice: function getTotalPrice() {
+      var subTotal = $('input.sub-total');
+      var totalPrice = 0;
+
+      for (var i = 0, len = subTotal.length; i < len; i++) {
+        totalPrice += parseInt($(subTotal[i]).val());
+      }
+
+      $('.total').val(_helpers_js__WEBPACK_IMPORTED_MODULE_1__["default"].priceFormat(totalPrice));
     },
     removeArray: function removeArray(i) {
       document.getElementById(i).remove();
@@ -4007,8 +4054,7 @@ __webpack_require__.r(__webpack_exports__);
       });
     }
   },
-  mounted: function mounted() {
-    this.options = JSON.parse(this.itemsOptions);
+  mounted: function mounted() {// this.options = JSON.parse(this.itemsOptions)
   }
 });
 
@@ -4879,9 +4925,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 /***/ (function(module, exports, __webpack_require__) {
 
 /*!
- * Chart.js v2.9.3
+ * Chart.js v2.9.4
  * https://www.chartjs.org
- * (c) 2019 Chart.js Contributors
+ * (c) 2020 Chart.js Contributors
  * Released under the MIT License
  */
 (function (global, factory) {
@@ -6982,6 +7028,10 @@ if (typeof window !== 'undefined') {
 
 var chartjsColor = Color;
 
+function isValidKey(key) {
+	return ['__proto__', 'prototype', 'constructor'].indexOf(key) === -1;
+}
+
 /**
  * @namespace Chart.helpers
  */
@@ -7157,7 +7207,7 @@ var helpers = {
 		}
 
 		if (helpers.isObject(source)) {
-			var target = {};
+			var target = Object.create(source);
 			var keys = Object.keys(source);
 			var klen = keys.length;
 			var k = 0;
@@ -7178,6 +7228,12 @@ var helpers = {
 	 * @private
 	 */
 	_merger: function(key, target, source, options) {
+		if (!isValidKey(key)) {
+			// We want to ensure we do not copy prototypes over
+			// as this can pollute global namespaces
+			return;
+		}
+
 		var tval = target[key];
 		var sval = source[key];
 
@@ -7193,6 +7249,12 @@ var helpers = {
 	 * @private
 	 */
 	_mergerIf: function(key, target, source) {
+		if (!isValidKey(key)) {
+			// We want to ensure we do not copy prototypes over
+			// as this can pollute global namespaces
+			return;
+		}
+
 		var tval = target[key];
 		var sval = source[key];
 
@@ -8691,7 +8753,7 @@ helpers$1.extend(DatasetController.prototype, {
 	 */
 	_configure: function() {
 		var me = this;
-		me._config = helpers$1.merge({}, [
+		me._config = helpers$1.merge(Object.create(null), [
 			me.chart.options.datasets[me._type],
 			me.getDataset(),
 		], {
@@ -11961,7 +12023,8 @@ function updateDims(chartArea, params, layout) {
 		chartArea.h = newHeight;
 
 		// return true if chart area changed in layout's direction
-		return layout.horizontal ? newWidth !== chartArea.w : newHeight !== chartArea.h;
+		var sizes = layout.horizontal ? [newWidth, chartArea.w] : [newHeight, chartArea.h];
+		return sizes[0] !== sizes[1] && (!isNaN(sizes[0]) || !isNaN(sizes[1]));
 	}
 }
 
@@ -12265,7 +12328,7 @@ var platform_basic = {
 	}
 };
 
-var platform_dom = "/*\n * DOM element rendering detection\n * https://davidwalsh.name/detect-node-insertion\n */\n@keyframes chartjs-render-animation {\n\tfrom { opacity: 0.99; }\n\tto { opacity: 1; }\n}\n\n.chartjs-render-monitor {\n\tanimation: chartjs-render-animation 0.001s;\n}\n\n/*\n * DOM element resizing detection\n * https://github.com/marcj/css-element-queries\n */\n.chartjs-size-monitor,\n.chartjs-size-monitor-expand,\n.chartjs-size-monitor-shrink {\n\tposition: absolute;\n\tdirection: ltr;\n\tleft: 0;\n\ttop: 0;\n\tright: 0;\n\tbottom: 0;\n\toverflow: hidden;\n\tpointer-events: none;\n\tvisibility: hidden;\n\tz-index: -1;\n}\n\n.chartjs-size-monitor-expand > div {\n\tposition: absolute;\n\twidth: 1000000px;\n\theight: 1000000px;\n\tleft: 0;\n\ttop: 0;\n}\n\n.chartjs-size-monitor-shrink > div {\n\tposition: absolute;\n\twidth: 200%;\n\theight: 200%;\n\tleft: 0;\n\ttop: 0;\n}\n";
+var platform_dom = "/*\r\n * DOM element rendering detection\r\n * https://davidwalsh.name/detect-node-insertion\r\n */\r\n@keyframes chartjs-render-animation {\r\n\tfrom { opacity: 0.99; }\r\n\tto { opacity: 1; }\r\n}\r\n\r\n.chartjs-render-monitor {\r\n\tanimation: chartjs-render-animation 0.001s;\r\n}\r\n\r\n/*\r\n * DOM element resizing detection\r\n * https://github.com/marcj/css-element-queries\r\n */\r\n.chartjs-size-monitor,\r\n.chartjs-size-monitor-expand,\r\n.chartjs-size-monitor-shrink {\r\n\tposition: absolute;\r\n\tdirection: ltr;\r\n\tleft: 0;\r\n\ttop: 0;\r\n\tright: 0;\r\n\tbottom: 0;\r\n\toverflow: hidden;\r\n\tpointer-events: none;\r\n\tvisibility: hidden;\r\n\tz-index: -1;\r\n}\r\n\r\n.chartjs-size-monitor-expand > div {\r\n\tposition: absolute;\r\n\twidth: 1000000px;\r\n\theight: 1000000px;\r\n\tleft: 0;\r\n\ttop: 0;\r\n}\r\n\r\n.chartjs-size-monitor-shrink > div {\r\n\tposition: absolute;\r\n\twidth: 200%;\r\n\theight: 200%;\r\n\tleft: 0;\r\n\ttop: 0;\r\n}\r\n";
 
 var platform_dom$1 = /*#__PURE__*/Object.freeze({
 __proto__: null,
@@ -12973,7 +13036,7 @@ var core_scaleService = {
 	},
 	getScaleDefaults: function(type) {
 		// Return the scale defaults merged with the global settings so that we always use the latest ones
-		return this.defaults.hasOwnProperty(type) ? helpers$1.merge({}, [core_defaults.scale, this.defaults[type]]) : {};
+		return this.defaults.hasOwnProperty(type) ? helpers$1.merge(Object.create(null), [core_defaults.scale, this.defaults[type]]) : {};
 	},
 	updateScaleDefaults: function(type, additions) {
 		var me = this;
@@ -14048,7 +14111,7 @@ core_defaults._set('global', {
  * returns a deep copy of the result, thus doesn't alter inputs.
  */
 function mergeScaleConfig(/* config objects ... */) {
-	return helpers$1.merge({}, [].slice.call(arguments), {
+	return helpers$1.merge(Object.create(null), [].slice.call(arguments), {
 		merger: function(key, target, source, options) {
 			if (key === 'xAxes' || key === 'yAxes') {
 				var slen = source[key].length;
@@ -14088,9 +14151,9 @@ function mergeScaleConfig(/* config objects ... */) {
  * a deep copy of the result, thus doesn't alter inputs.
  */
 function mergeConfig(/* config objects ... */) {
-	return helpers$1.merge({}, [].slice.call(arguments), {
+	return helpers$1.merge(Object.create(null), [].slice.call(arguments), {
 		merger: function(key, target, source, options) {
-			var tval = target[key] || {};
+			var tval = target[key] || Object.create(null);
 			var sval = source[key];
 
 			if (key === 'scales') {
@@ -14107,7 +14170,7 @@ function mergeConfig(/* config objects ... */) {
 }
 
 function initConfig(config) {
-	config = config || {};
+	config = config || Object.create(null);
 
 	// Do NOT use mergeConfig for the data object because this method merges arrays
 	// and so would change references to labels and datasets, preventing data updates.
@@ -16088,6 +16151,8 @@ function computeLabelSizes(ctx, tickFonts, ticks, caches) {
 	var widths = [];
 	var heights = [];
 	var offsets = [];
+	var widestLabelSize = 0;
+	var highestLabelSize = 0;
 	var i, j, jlen, label, tickFont, fontString, cache, lineHeight, width, height, nestedLabel, widest, highest;
 
 	for (i = 0; i < length; ++i) {
@@ -16115,11 +16180,13 @@ function computeLabelSizes(ctx, tickFonts, ticks, caches) {
 		widths.push(width);
 		heights.push(height);
 		offsets.push(lineHeight / 2);
+		widestLabelSize = Math.max(width, widestLabelSize);
+		highestLabelSize = Math.max(height, highestLabelSize);
 	}
 	garbageCollect(caches, length);
 
-	widest = widths.indexOf(Math.max.apply(null, widths));
-	highest = heights.indexOf(Math.max.apply(null, heights));
+	widest = widths.indexOf(widestLabelSize);
+	highest = heights.indexOf(highestLabelSize);
 
 	function valueAt(idx) {
 		return {
@@ -67522,6 +67589,8 @@ var map = {
 	"./bm": "./node_modules/moment/locale/bm.js",
 	"./bm.js": "./node_modules/moment/locale/bm.js",
 	"./bn": "./node_modules/moment/locale/bn.js",
+	"./bn-bd": "./node_modules/moment/locale/bn-bd.js",
+	"./bn-bd.js": "./node_modules/moment/locale/bn-bd.js",
 	"./bn.js": "./node_modules/moment/locale/bn.js",
 	"./bo": "./node_modules/moment/locale/bo.js",
 	"./bo.js": "./node_modules/moment/locale/bo.js",
@@ -67570,6 +67639,8 @@ var map = {
 	"./es": "./node_modules/moment/locale/es.js",
 	"./es-do": "./node_modules/moment/locale/es-do.js",
 	"./es-do.js": "./node_modules/moment/locale/es-do.js",
+	"./es-mx": "./node_modules/moment/locale/es-mx.js",
+	"./es-mx.js": "./node_modules/moment/locale/es-mx.js",
 	"./es-us": "./node_modules/moment/locale/es-us.js",
 	"./es-us.js": "./node_modules/moment/locale/es-us.js",
 	"./es.js": "./node_modules/moment/locale/es.js",
@@ -68147,16 +68218,16 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     //! moment.js locale configuration
 
     var symbolMap = {
-            '1': '1',
-            '2': '2',
-            '3': '3',
-            '4': '4',
-            '5': '5',
-            '6': '6',
-            '7': '7',
-            '8': '8',
-            '9': '9',
-            '0': '0',
+            1: '1',
+            2: '2',
+            3: '3',
+            4: '4',
+            5: '5',
+            6: '6',
+            7: '7',
+            8: '8',
+            9: '9',
+            0: '0',
         },
         pluralForm = function (n) {
             return n === 0
@@ -68382,8 +68453,8 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
             yy: '%d سنوات',
         },
         week: {
-            dow: 6, // Saturday is the first day of the week.
-            doy: 12, // The week that contains Jan 12th is the first week of the year.
+            dow: 1, // Monday is the first day of the week.
+            doy: 4, // The week that contains Jan 4th is the first week of the year.
         },
     });
 
@@ -68413,16 +68484,16 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     //! moment.js locale configuration
 
     var symbolMap = {
-            '1': '١',
-            '2': '٢',
-            '3': '٣',
-            '4': '٤',
-            '5': '٥',
-            '6': '٦',
-            '7': '٧',
-            '8': '٨',
-            '9': '٩',
-            '0': '٠',
+            1: '١',
+            2: '٢',
+            3: '٣',
+            4: '٤',
+            5: '٥',
+            6: '٦',
+            7: '٧',
+            8: '٨',
+            9: '٩',
+            0: '٠',
         },
         numberMap = {
             '١': '1',
@@ -68613,16 +68684,16 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     //! moment.js locale configuration
 
     var symbolMap = {
-            '1': '١',
-            '2': '٢',
-            '3': '٣',
-            '4': '٤',
-            '5': '٥',
-            '6': '٦',
-            '7': '٧',
-            '8': '٨',
-            '9': '٩',
-            '0': '٠',
+            1: '١',
+            2: '٢',
+            3: '٣',
+            4: '٤',
+            5: '٥',
+            6: '٦',
+            7: '٧',
+            8: '٨',
+            9: '٩',
+            0: '٠',
         },
         numberMap = {
             '١': '1',
@@ -69150,6 +69221,8 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
             hh: '%d часа',
             d: 'ден',
             dd: '%d дена',
+            w: 'седмица',
+            ww: '%d седмици',
             M: 'месец',
             MM: '%d месеца',
             y: 'година',
@@ -69259,6 +69332,154 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
 
 /***/ }),
 
+/***/ "./node_modules/moment/locale/bn-bd.js":
+/*!*********************************************!*\
+  !*** ./node_modules/moment/locale/bn-bd.js ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+//! moment.js locale configuration
+//! locale : Bengali (Bangladesh) [bn-bd]
+//! author : Asraf Hossain Patoary : https://github.com/ashwoolford
+
+;(function (global, factory) {
+    true ? factory(__webpack_require__(/*! ../moment */ "./node_modules/moment/moment.js")) :
+   undefined
+}(this, (function (moment) { 'use strict';
+
+    //! moment.js locale configuration
+
+    var symbolMap = {
+            1: '১',
+            2: '২',
+            3: '৩',
+            4: '৪',
+            5: '৫',
+            6: '৬',
+            7: '৭',
+            8: '৮',
+            9: '৯',
+            0: '০',
+        },
+        numberMap = {
+            '১': '1',
+            '২': '2',
+            '৩': '3',
+            '৪': '4',
+            '৫': '5',
+            '৬': '6',
+            '৭': '7',
+            '৮': '8',
+            '৯': '9',
+            '০': '0',
+        };
+
+    var bnBd = moment.defineLocale('bn-bd', {
+        months: 'জানুয়ারি_ফেব্রুয়ারি_মার্চ_এপ্রিল_মে_জুন_জুলাই_আগস্ট_সেপ্টেম্বর_অক্টোবর_নভেম্বর_ডিসেম্বর'.split(
+            '_'
+        ),
+        monthsShort: 'জানু_ফেব্রু_মার্চ_এপ্রিল_মে_জুন_জুলাই_আগস্ট_সেপ্ট_অক্টো_নভে_ডিসে'.split(
+            '_'
+        ),
+        weekdays: 'রবিবার_সোমবার_মঙ্গলবার_বুধবার_বৃহস্পতিবার_শুক্রবার_শনিবার'.split(
+            '_'
+        ),
+        weekdaysShort: 'রবি_সোম_মঙ্গল_বুধ_বৃহস্পতি_শুক্র_শনি'.split('_'),
+        weekdaysMin: 'রবি_সোম_মঙ্গল_বুধ_বৃহ_শুক্র_শনি'.split('_'),
+        longDateFormat: {
+            LT: 'A h:mm সময়',
+            LTS: 'A h:mm:ss সময়',
+            L: 'DD/MM/YYYY',
+            LL: 'D MMMM YYYY',
+            LLL: 'D MMMM YYYY, A h:mm সময়',
+            LLLL: 'dddd, D MMMM YYYY, A h:mm সময়',
+        },
+        calendar: {
+            sameDay: '[আজ] LT',
+            nextDay: '[আগামীকাল] LT',
+            nextWeek: 'dddd, LT',
+            lastDay: '[গতকাল] LT',
+            lastWeek: '[গত] dddd, LT',
+            sameElse: 'L',
+        },
+        relativeTime: {
+            future: '%s পরে',
+            past: '%s আগে',
+            s: 'কয়েক সেকেন্ড',
+            ss: '%d সেকেন্ড',
+            m: 'এক মিনিট',
+            mm: '%d মিনিট',
+            h: 'এক ঘন্টা',
+            hh: '%d ঘন্টা',
+            d: 'এক দিন',
+            dd: '%d দিন',
+            M: 'এক মাস',
+            MM: '%d মাস',
+            y: 'এক বছর',
+            yy: '%d বছর',
+        },
+        preparse: function (string) {
+            return string.replace(/[১২৩৪৫৬৭৮৯০]/g, function (match) {
+                return numberMap[match];
+            });
+        },
+        postformat: function (string) {
+            return string.replace(/\d/g, function (match) {
+                return symbolMap[match];
+            });
+        },
+
+        meridiemParse: /রাত|ভোর|সকাল|দুপুর|বিকাল|সন্ধ্যা|রাত/,
+        meridiemHour: function (hour, meridiem) {
+            if (hour === 12) {
+                hour = 0;
+            }
+            if (meridiem === 'রাত') {
+                return hour < 4 ? hour : hour + 12;
+            } else if (meridiem === 'ভোর') {
+                return hour;
+            } else if (meridiem === 'সকাল') {
+                return hour;
+            } else if (meridiem === 'দুপুর') {
+                return hour >= 3 ? hour : hour + 12;
+            } else if (meridiem === 'বিকাল') {
+                return hour + 12;
+            } else if (meridiem === 'সন্ধ্যা') {
+                return hour + 12;
+            }
+        },
+
+        meridiem: function (hour, minute, isLower) {
+            if (hour < 4) {
+                return 'রাত';
+            } else if (hour < 6) {
+                return 'ভোর';
+            } else if (hour < 12) {
+                return 'সকাল';
+            } else if (hour < 15) {
+                return 'দুপুর';
+            } else if (hour < 18) {
+                return 'বিকাল';
+            } else if (hour < 20) {
+                return 'সন্ধ্যা';
+            } else {
+                return 'রাত';
+            }
+        },
+        week: {
+            dow: 0, // Sunday is the first day of the week.
+            doy: 6, // The week that contains Jan 6th is the first week of the year.
+        },
+    });
+
+    return bnBd;
+
+})));
+
+
+/***/ }),
+
 /***/ "./node_modules/moment/locale/bn.js":
 /*!******************************************!*\
   !*** ./node_modules/moment/locale/bn.js ***!
@@ -69278,16 +69499,16 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     //! moment.js locale configuration
 
     var symbolMap = {
-            '1': '১',
-            '2': '২',
-            '3': '৩',
-            '4': '৪',
-            '5': '৫',
-            '6': '৬',
-            '7': '৭',
-            '8': '৮',
-            '9': '৯',
-            '0': '০',
+            1: '১',
+            2: '২',
+            3: '৩',
+            4: '৪',
+            5: '৫',
+            6: '৬',
+            7: '৭',
+            8: '৮',
+            9: '৯',
+            0: '০',
         },
         numberMap = {
             '১': '1',
@@ -69416,16 +69637,16 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     //! moment.js locale configuration
 
     var symbolMap = {
-            '1': '༡',
-            '2': '༢',
-            '3': '༣',
-            '4': '༤',
-            '5': '༥',
-            '6': '༦',
-            '7': '༧',
-            '8': '༨',
-            '9': '༩',
-            '0': '༠',
+            1: '༡',
+            2: '༢',
+            3: '༣',
+            4: '༤',
+            5: '༥',
+            6: '༦',
+            7: '༧',
+            8: '༨',
+            9: '༩',
+            0: '༠',
         },
         numberMap = {
             '༡': '1',
@@ -71886,6 +72107,8 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
             hh: '%d horas',
             d: 'un día',
             dd: '%d días',
+            w: 'una semana',
+            ww: '%d semanas',
             M: 'un mes',
             MM: '%d meses',
             y: 'un año',
@@ -71900,6 +72123,132 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     });
 
     return esDo;
+
+})));
+
+
+/***/ }),
+
+/***/ "./node_modules/moment/locale/es-mx.js":
+/*!*********************************************!*\
+  !*** ./node_modules/moment/locale/es-mx.js ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+//! moment.js locale configuration
+//! locale : Spanish (Mexico) [es-mx]
+//! author : JC Franco : https://github.com/jcfranco
+
+;(function (global, factory) {
+    true ? factory(__webpack_require__(/*! ../moment */ "./node_modules/moment/moment.js")) :
+   undefined
+}(this, (function (moment) { 'use strict';
+
+    //! moment.js locale configuration
+
+    var monthsShortDot = 'ene._feb._mar._abr._may._jun._jul._ago._sep._oct._nov._dic.'.split(
+            '_'
+        ),
+        monthsShort = 'ene_feb_mar_abr_may_jun_jul_ago_sep_oct_nov_dic'.split('_'),
+        monthsParse = [
+            /^ene/i,
+            /^feb/i,
+            /^mar/i,
+            /^abr/i,
+            /^may/i,
+            /^jun/i,
+            /^jul/i,
+            /^ago/i,
+            /^sep/i,
+            /^oct/i,
+            /^nov/i,
+            /^dic/i,
+        ],
+        monthsRegex = /^(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre|ene\.?|feb\.?|mar\.?|abr\.?|may\.?|jun\.?|jul\.?|ago\.?|sep\.?|oct\.?|nov\.?|dic\.?)/i;
+
+    var esMx = moment.defineLocale('es-mx', {
+        months: 'enero_febrero_marzo_abril_mayo_junio_julio_agosto_septiembre_octubre_noviembre_diciembre'.split(
+            '_'
+        ),
+        monthsShort: function (m, format) {
+            if (!m) {
+                return monthsShortDot;
+            } else if (/-MMM-/.test(format)) {
+                return monthsShort[m.month()];
+            } else {
+                return monthsShortDot[m.month()];
+            }
+        },
+        monthsRegex: monthsRegex,
+        monthsShortRegex: monthsRegex,
+        monthsStrictRegex: /^(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)/i,
+        monthsShortStrictRegex: /^(ene\.?|feb\.?|mar\.?|abr\.?|may\.?|jun\.?|jul\.?|ago\.?|sep\.?|oct\.?|nov\.?|dic\.?)/i,
+        monthsParse: monthsParse,
+        longMonthsParse: monthsParse,
+        shortMonthsParse: monthsParse,
+        weekdays: 'domingo_lunes_martes_miércoles_jueves_viernes_sábado'.split('_'),
+        weekdaysShort: 'dom._lun._mar._mié._jue._vie._sáb.'.split('_'),
+        weekdaysMin: 'do_lu_ma_mi_ju_vi_sá'.split('_'),
+        weekdaysParseExact: true,
+        longDateFormat: {
+            LT: 'H:mm',
+            LTS: 'H:mm:ss',
+            L: 'DD/MM/YYYY',
+            LL: 'D [de] MMMM [de] YYYY',
+            LLL: 'D [de] MMMM [de] YYYY H:mm',
+            LLLL: 'dddd, D [de] MMMM [de] YYYY H:mm',
+        },
+        calendar: {
+            sameDay: function () {
+                return '[hoy a la' + (this.hours() !== 1 ? 's' : '') + '] LT';
+            },
+            nextDay: function () {
+                return '[mañana a la' + (this.hours() !== 1 ? 's' : '') + '] LT';
+            },
+            nextWeek: function () {
+                return 'dddd [a la' + (this.hours() !== 1 ? 's' : '') + '] LT';
+            },
+            lastDay: function () {
+                return '[ayer a la' + (this.hours() !== 1 ? 's' : '') + '] LT';
+            },
+            lastWeek: function () {
+                return (
+                    '[el] dddd [pasado a la' +
+                    (this.hours() !== 1 ? 's' : '') +
+                    '] LT'
+                );
+            },
+            sameElse: 'L',
+        },
+        relativeTime: {
+            future: 'en %s',
+            past: 'hace %s',
+            s: 'unos segundos',
+            ss: '%d segundos',
+            m: 'un minuto',
+            mm: '%d minutos',
+            h: 'una hora',
+            hh: '%d horas',
+            d: 'un día',
+            dd: '%d días',
+            w: 'una semana',
+            ww: '%d semanas',
+            M: 'un mes',
+            MM: '%d meses',
+            y: 'un año',
+            yy: '%d años',
+        },
+        dayOfMonthOrdinalParse: /\d{1,2}º/,
+        ordinal: '%dº',
+        week: {
+            dow: 0, // Sunday is the first day of the week.
+            doy: 4, // The week that contains Jan 4th is the first week of the year.
+        },
+        invalidDate: 'Fecha inválida',
+    });
+
+    return esMx;
 
 })));
 
@@ -72010,6 +72359,8 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
             hh: '%d horas',
             d: 'un día',
             dd: '%d días',
+            w: 'una semana',
+            ww: '%d semanas',
             M: 'un mes',
             MM: '%d meses',
             y: 'un año',
@@ -72133,6 +72484,8 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
             hh: '%d horas',
             d: 'un día',
             dd: '%d días',
+            w: 'una semana',
+            ww: '%d semanas',
             M: 'un mes',
             MM: '%d meses',
             y: 'un año',
@@ -72354,16 +72707,16 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     //! moment.js locale configuration
 
     var symbolMap = {
-            '1': '۱',
-            '2': '۲',
-            '3': '۳',
-            '4': '۴',
-            '5': '۵',
-            '6': '۶',
-            '7': '۷',
-            '8': '۸',
-            '9': '۹',
-            '0': '۰',
+            1: '۱',
+            2: '۲',
+            3: '۳',
+            4: '۴',
+            5: '۵',
+            6: '۶',
+            7: '۷',
+            8: '۸',
+            9: '۹',
+            0: '۰',
         },
         numberMap = {
             '۱': '1',
@@ -73023,6 +73376,8 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
             hh: '%d heures',
             d: 'un jour',
             dd: '%d jours',
+            w: 'une semaine',
+            ww: '%d semaines',
             M: 'un mois',
             MM: '%d mois',
             y: 'un an',
@@ -73792,16 +74147,16 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     //! moment.js locale configuration
 
     var symbolMap = {
-            '1': '૧',
-            '2': '૨',
-            '3': '૩',
-            '4': '૪',
-            '5': '૫',
-            '6': '૬',
-            '7': '૭',
-            '8': '૮',
-            '9': '૯',
-            '0': '૦',
+            1: '૧',
+            2: '૨',
+            3: '૩',
+            4: '૪',
+            5: '૫',
+            6: '૬',
+            7: '૭',
+            8: '૮',
+            9: '૯',
+            0: '૦',
         },
         numberMap = {
             '૧': '1',
@@ -74047,16 +74402,16 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     //! moment.js locale configuration
 
     var symbolMap = {
-            '1': '१',
-            '2': '२',
-            '3': '३',
-            '4': '४',
-            '5': '५',
-            '6': '६',
-            '7': '७',
-            '8': '८',
-            '9': '९',
-            '0': '०',
+            1: '१',
+            2: '२',
+            3: '३',
+            4: '४',
+            5: '५',
+            6: '६',
+            7: '७',
+            8: '८',
+            9: '९',
+            0: '०',
         },
         numberMap = {
             '१': '1',
@@ -74069,16 +74424,48 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
             '८': '8',
             '९': '9',
             '०': '0',
-        };
+        },
+        monthsParse = [
+            /^जन/i,
+            /^फ़र|फर/i,
+            /^मार्च/i,
+            /^अप्रै/i,
+            /^मई/i,
+            /^जून/i,
+            /^जुल/i,
+            /^अग/i,
+            /^सितं|सित/i,
+            /^अक्टू/i,
+            /^नव|नवं/i,
+            /^दिसं|दिस/i,
+        ],
+        shortMonthsParse = [
+            /^जन/i,
+            /^फ़र/i,
+            /^मार्च/i,
+            /^अप्रै/i,
+            /^मई/i,
+            /^जून/i,
+            /^जुल/i,
+            /^अग/i,
+            /^सित/i,
+            /^अक्टू/i,
+            /^नव/i,
+            /^दिस/i,
+        ];
 
     var hi = moment.defineLocale('hi', {
-        months: 'जनवरी_फ़रवरी_मार्च_अप्रैल_मई_जून_जुलाई_अगस्त_सितम्बर_अक्टूबर_नवम्बर_दिसम्बर'.split(
-            '_'
-        ),
+        months: {
+            format: 'जनवरी_फ़रवरी_मार्च_अप्रैल_मई_जून_जुलाई_अगस्त_सितम्बर_अक्टूबर_नवम्बर_दिसम्बर'.split(
+                '_'
+            ),
+            standalone: 'जनवरी_फरवरी_मार्च_अप्रैल_मई_जून_जुलाई_अगस्त_सितंबर_अक्टूबर_नवंबर_दिसंबर'.split(
+                '_'
+            ),
+        },
         monthsShort: 'जन._फ़र._मार्च_अप्रै._मई_जून_जुल._अग._सित._अक्टू._नव._दिस.'.split(
             '_'
         ),
-        monthsParseExact: true,
         weekdays: 'रविवार_सोमवार_मंगलवार_बुधवार_गुरूवार_शुक्रवार_शनिवार'.split('_'),
         weekdaysShort: 'रवि_सोम_मंगल_बुध_गुरू_शुक्र_शनि'.split('_'),
         weekdaysMin: 'र_सो_मं_बु_गु_शु_श'.split('_'),
@@ -74090,6 +74477,19 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
             LLL: 'D MMMM YYYY, A h:mm बजे',
             LLLL: 'dddd, D MMMM YYYY, A h:mm बजे',
         },
+
+        monthsParse: monthsParse,
+        longMonthsParse: monthsParse,
+        shortMonthsParse: shortMonthsParse,
+
+        monthsRegex: /^(जनवरी|जन\.?|फ़रवरी|फरवरी|फ़र\.?|मार्च?|अप्रैल|अप्रै\.?|मई?|जून?|जुलाई|जुल\.?|अगस्त|अग\.?|सितम्बर|सितंबर|सित\.?|अक्टूबर|अक्टू\.?|नवम्बर|नवंबर|नव\.?|दिसम्बर|दिसंबर|दिस\.?)/i,
+
+        monthsShortRegex: /^(जनवरी|जन\.?|फ़रवरी|फरवरी|फ़र\.?|मार्च?|अप्रैल|अप्रै\.?|मई?|जून?|जुलाई|जुल\.?|अगस्त|अग\.?|सितम्बर|सितंबर|सित\.?|अक्टूबर|अक्टू\.?|नवम्बर|नवंबर|नव\.?|दिसम्बर|दिसंबर|दिस\.?)/i,
+
+        monthsStrictRegex: /^(जनवरी?|फ़रवरी|फरवरी?|मार्च?|अप्रैल?|मई?|जून?|जुलाई?|अगस्त?|सितम्बर|सितंबर|सित?\.?|अक्टूबर|अक्टू\.?|नवम्बर|नवंबर?|दिसम्बर|दिसंबर?)/i,
+
+        monthsShortStrictRegex: /^(जन\.?|फ़र\.?|मार्च?|अप्रै\.?|मई?|जून?|जुल\.?|अग\.?|सित\.?|अक्टू\.?|नव\.?|दिस\.?)/i,
+
         calendar: {
             sameDay: '[आज] LT',
             nextDay: '[कल] LT',
@@ -74351,6 +74751,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
 //! moment.js locale configuration
 //! locale : Hungarian [hu]
 //! author : Adam Brunner : https://github.com/adambrunner
+//! author : Peter Viszt  : https://github.com/passatgt
 
 ;(function (global, factory) {
     true ? factory(__webpack_require__(/*! ../moment */ "./node_modules/moment/moment.js")) :
@@ -74409,9 +74810,10 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
         months: 'január_február_március_április_május_június_július_augusztus_szeptember_október_november_december'.split(
             '_'
         ),
-        monthsShort: 'jan_feb_márc_ápr_máj_jún_júl_aug_szept_okt_nov_dec'.split(
+        monthsShort: 'jan._feb._márc._ápr._máj._jún._júl._aug._szept._okt._nov._dec.'.split(
             '_'
         ),
+        monthsParseExact: true,
         weekdays: 'vasárnap_hétfő_kedd_szerda_csütörtök_péntek_szombat'.split('_'),
         weekdaysShort: 'vas_hét_kedd_sze_csüt_pén_szo'.split('_'),
         weekdaysMin: 'v_h_k_sze_cs_p_szo'.split('_'),
@@ -75032,6 +75434,8 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
             hh: '%d ore',
             d: 'un giorno',
             dd: '%d giorni',
+            w: 'una settimana',
+            ww: '%d settimane',
             M: 'un mese',
             MM: '%d mesi',
             y: 'un anno',
@@ -75549,16 +75953,16 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     //! moment.js locale configuration
 
     var symbolMap = {
-            '1': '១',
-            '2': '២',
-            '3': '៣',
-            '4': '៤',
-            '5': '៥',
-            '6': '៦',
-            '7': '៧',
-            '8': '៨',
-            '9': '៩',
-            '0': '០',
+            1: '១',
+            2: '២',
+            3: '៣',
+            4: '៤',
+            5: '៥',
+            6: '៦',
+            7: '៧',
+            8: '៨',
+            9: '៩',
+            0: '០',
         },
         numberMap = {
             '១': '1',
@@ -75671,16 +76075,16 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     //! moment.js locale configuration
 
     var symbolMap = {
-            '1': '೧',
-            '2': '೨',
-            '3': '೩',
-            '4': '೪',
-            '5': '೫',
-            '6': '೬',
-            '7': '೭',
-            '8': '೮',
-            '9': '೯',
-            '0': '೦',
+            1: '೧',
+            2: '೨',
+            3: '೩',
+            4: '೪',
+            5: '೫',
+            6: '೬',
+            7: '೭',
+            8: '೮',
+            9: '೯',
+            0: '೦',
         },
         numberMap = {
             '೧': '1',
@@ -75909,16 +76313,16 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     //! moment.js locale configuration
 
     var symbolMap = {
-            '1': '١',
-            '2': '٢',
-            '3': '٣',
-            '4': '٤',
-            '5': '٥',
-            '6': '٦',
-            '7': '٧',
-            '8': '٨',
-            '9': '٩',
-            '0': '٠',
+            1: '١',
+            2: '٢',
+            3: '٣',
+            4: '٤',
+            5: '٥',
+            6: '٦',
+            7: '٧',
+            8: '٨',
+            9: '٩',
+            0: '٠',
         },
         numberMap = {
             '١': '1',
@@ -77190,16 +77594,16 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     //! moment.js locale configuration
 
     var symbolMap = {
-            '1': '१',
-            '2': '२',
-            '3': '३',
-            '4': '४',
-            '5': '५',
-            '6': '६',
-            '7': '७',
-            '8': '८',
-            '9': '९',
-            '0': '०',
+            1: '१',
+            2: '२',
+            3: '३',
+            4: '४',
+            5: '५',
+            6: '६',
+            7: '७',
+            8: '८',
+            9: '९',
+            0: '०',
         },
         numberMap = {
             '१': '1',
@@ -77679,16 +78083,16 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     //! moment.js locale configuration
 
     var symbolMap = {
-            '1': '၁',
-            '2': '၂',
-            '3': '၃',
-            '4': '၄',
-            '5': '၅',
-            '6': '၆',
-            '7': '၇',
-            '8': '၈',
-            '9': '၉',
-            '0': '၀',
+            1: '၁',
+            2: '၂',
+            3: '၃',
+            4: '၄',
+            5: '၅',
+            6: '၆',
+            7: '၇',
+            8: '၈',
+            9: '၉',
+            0: '၀',
         },
         numberMap = {
             '၁': '1',
@@ -77828,6 +78232,8 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
             hh: '%d timer',
             d: 'en dag',
             dd: '%d dager',
+            w: 'en uke',
+            ww: '%d uker',
             M: 'en måned',
             MM: '%d måneder',
             y: 'ett år',
@@ -77867,16 +78273,16 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     //! moment.js locale configuration
 
     var symbolMap = {
-            '1': '१',
-            '2': '२',
-            '3': '३',
-            '4': '४',
-            '5': '५',
-            '6': '६',
-            '7': '७',
-            '8': '८',
-            '9': '९',
-            '0': '०',
+            1: '१',
+            2: '२',
+            3: '३',
+            4: '४',
+            5: '५',
+            6: '६',
+            7: '७',
+            8: '८',
+            9: '९',
+            0: '०',
         },
         numberMap = {
             '१': '1',
@@ -78207,6 +78613,8 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
             hh: '%d uur',
             d: 'één dag',
             dd: '%d dagen',
+            w: 'één week',
+            ww: '%d weken',
             M: 'één maand',
             MM: '%d maanden',
             y: 'één jaar',
@@ -78290,6 +78698,8 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
             hh: '%d timar',
             d: 'ein dag',
             dd: '%d dagar',
+            w: 'ei veke',
+            ww: '%d veker',
             M: 'ein månad',
             MM: '%d månader',
             y: 'eit år',
@@ -78432,16 +78842,16 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     //! moment.js locale configuration
 
     var symbolMap = {
-            '1': '੧',
-            '2': '੨',
-            '3': '੩',
-            '4': '੪',
-            '5': '੫',
-            '6': '੬',
-            '7': '੭',
-            '8': '੮',
-            '9': '੯',
-            '0': '੦',
+            1: '੧',
+            2: '੨',
+            3: '੩',
+            4: '੪',
+            5: '੫',
+            6: '੬',
+            7: '੭',
+            8: '੮',
+            9: '੯',
+            0: '੦',
         },
         numberMap = {
             '੧': '1',
@@ -78577,7 +78987,21 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
         ),
         monthsSubjective = 'stycznia_lutego_marca_kwietnia_maja_czerwca_lipca_sierpnia_września_października_listopada_grudnia'.split(
             '_'
-        );
+        ),
+        monthsParse = [
+            /^sty/i,
+            /^lut/i,
+            /^mar/i,
+            /^kwi/i,
+            /^maj/i,
+            /^cze/i,
+            /^lip/i,
+            /^sie/i,
+            /^wrz/i,
+            /^paź/i,
+            /^lis/i,
+            /^gru/i,
+        ];
     function plural(n) {
         return n % 10 < 5 && n % 10 > 1 && ~~(n / 10) % 10 !== 1;
     }
@@ -78594,6 +79018,8 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
                 return withoutSuffix ? 'godzina' : 'godzinę';
             case 'hh':
                 return result + (plural(number) ? 'godziny' : 'godzin');
+            case 'ww':
+                return result + (plural(number) ? 'tygodnie' : 'tygodni');
             case 'MM':
                 return result + (plural(number) ? 'miesiące' : 'miesięcy');
             case 'yy':
@@ -78605,17 +79031,6 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
         months: function (momentToFormat, format) {
             if (!momentToFormat) {
                 return monthsNominative;
-            } else if (format === '') {
-                // Hack: if format empty we know this is used to generate
-                // RegExp by moment. Give then back both valid forms of months
-                // in RegExp ready format.
-                return (
-                    '(' +
-                    monthsSubjective[momentToFormat.month()] +
-                    '|' +
-                    monthsNominative[momentToFormat.month()] +
-                    ')'
-                );
             } else if (/D MMMM/.test(format)) {
                 return monthsSubjective[momentToFormat.month()];
             } else {
@@ -78623,6 +79038,9 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
             }
         },
         monthsShort: 'sty_lut_mar_kwi_maj_cze_lip_sie_wrz_paź_lis_gru'.split('_'),
+        monthsParse: monthsParse,
+        longMonthsParse: monthsParse,
+        shortMonthsParse: monthsParse,
         weekdays: 'niedziela_poniedziałek_wtorek_środa_czwartek_piątek_sobota'.split(
             '_'
         ),
@@ -78683,6 +79101,8 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
             hh: translate,
             d: '1 dzień',
             dd: '%d dni',
+            w: 'tydzień',
+            ww: translate,
             M: 'miesiąc',
             MM: translate,
             y: 'rok',
@@ -78770,6 +79190,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
         },
         dayOfMonthOrdinalParse: /\d{1,2}º/,
         ordinal: '%dº',
+        invalidDate: 'Data inválida',
     });
 
     return ptBr;
@@ -78839,6 +79260,8 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
             hh: '%d horas',
             d: 'um dia',
             dd: '%d dias',
+            w: 'uma semana',
+            ww: '%d semanas',
             M: 'um mês',
             MM: '%d meses',
             y: 'um ano',
@@ -78885,6 +79308,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
                 mm: 'minute',
                 hh: 'ore',
                 dd: 'zile',
+                ww: 'săptămâni',
                 MM: 'luni',
                 yy: 'ani',
             },
@@ -78933,6 +79357,8 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
             hh: relativeTimeWithPlural,
             d: 'o zi',
             dd: relativeTimeWithPlural,
+            w: 'o săptămână',
+            ww: relativeTimeWithPlural,
             M: 'o lună',
             MM: relativeTimeWithPlural,
             y: 'un an',
@@ -78985,6 +79411,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
             mm: withoutSuffix ? 'минута_минуты_минут' : 'минуту_минуты_минут',
             hh: 'час_часа_часов',
             dd: 'день_дня_дней',
+            ww: 'неделя_недели_недель',
             MM: 'месяц_месяца_месяцев',
             yy: 'год_года_лет',
         };
@@ -79125,6 +79552,8 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
             hh: relativeTimeWithPlural,
             d: 'день',
             dd: relativeTimeWithPlural,
+            w: 'неделя',
+            ww: relativeTimeWithPlural,
             M: 'месяц',
             MM: relativeTimeWithPlural,
             y: 'год',
@@ -79889,6 +80318,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
 //! moment.js locale configuration
 //! locale : Serbian Cyrillic [sr-cyrl]
 //! author : Milan Janačković<milanjanackovic@gmail.com> : https://github.com/milan-j
+//! author : Stefan Crnjaković <stefan@hotmail.rs> : https://github.com/crnjakovic
 
 ;(function (global, factory) {
     true ? factory(__webpack_require__(/*! ../moment */ "./node_modules/moment/moment.js")) :
@@ -79945,10 +80375,10 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
         longDateFormat: {
             LT: 'H:mm',
             LTS: 'H:mm:ss',
-            L: 'DD.MM.YYYY',
-            LL: 'D. MMMM YYYY',
-            LLL: 'D. MMMM YYYY H:mm',
-            LLLL: 'dddd, D. MMMM YYYY H:mm',
+            L: 'D. M. YYYY.',
+            LL: 'D. MMMM YYYY.',
+            LLL: 'D. MMMM YYYY. H:mm',
+            LLLL: 'dddd, D. MMMM YYYY. H:mm',
         },
         calendar: {
             sameDay: '[данас у] LT',
@@ -80003,7 +80433,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
         ordinal: '%d.',
         week: {
             dow: 1, // Monday is the first day of the week.
-            doy: 7, // The week that contains Jan 7th is the first week of the year.
+            doy: 7, // The week that contains Jan 1st is the first week of the year.
         },
     });
 
@@ -80024,6 +80454,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
 //! moment.js locale configuration
 //! locale : Serbian [sr]
 //! author : Milan Janačković<milanjanackovic@gmail.com> : https://github.com/milan-j
+//! author : Stefan Crnjaković <stefan@hotmail.rs> : https://github.com/crnjakovic
 
 ;(function (global, factory) {
     true ? factory(__webpack_require__(/*! ../moment */ "./node_modules/moment/moment.js")) :
@@ -80082,10 +80513,10 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
         longDateFormat: {
             LT: 'H:mm',
             LTS: 'H:mm:ss',
-            L: 'DD.MM.YYYY',
-            LL: 'D. MMMM YYYY',
-            LLL: 'D. MMMM YYYY H:mm',
-            LLLL: 'dddd, D. MMMM YYYY H:mm',
+            L: 'D. M. YYYY.',
+            LL: 'D. MMMM YYYY.',
+            LLL: 'D. MMMM YYYY. H:mm',
+            LLLL: 'dddd, D. MMMM YYYY. H:mm',
         },
         calendar: {
             sameDay: '[danas u] LT',
@@ -80435,16 +80866,16 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     //! moment.js locale configuration
 
     var symbolMap = {
-            '1': '௧',
-            '2': '௨',
-            '3': '௩',
-            '4': '௪',
-            '5': '௫',
-            '6': '௬',
-            '7': '௭',
-            '8': '௮',
-            '9': '௯',
-            '0': '௦',
+            1: '௧',
+            2: '௨',
+            3: '௩',
+            4: '௪',
+            5: '௫',
+            6: '௬',
+            7: '௭',
+            8: '௮',
+            9: '௯',
+            0: '௦',
         },
         numberMap = {
             '௧': '1',
@@ -80803,9 +81234,14 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     };
 
     var tg = moment.defineLocale('tg', {
-        months: 'январ_феврал_март_апрел_май_июн_июл_август_сентябр_октябр_ноябр_декабр'.split(
-            '_'
-        ),
+        months: {
+            format: 'январи_феврали_марти_апрели_майи_июни_июли_августи_сентябри_октябри_ноябри_декабри'.split(
+                '_'
+            ),
+            standalone: 'январ_феврал_март_апрел_май_июн_июл_август_сентябр_октябр_ноябр_декабр'.split(
+                '_'
+            ),
+        },
         monthsShort: 'янв_фев_мар_апр_май_июн_июл_авг_сен_окт_ноя_дек'.split('_'),
         weekdays: 'якшанбе_душанбе_сешанбе_чоршанбе_панҷшанбе_ҷумъа_шанбе'.split(
             '_'
@@ -80815,14 +81251,14 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
         longDateFormat: {
             LT: 'HH:mm',
             LTS: 'HH:mm:ss',
-            L: 'DD/MM/YYYY',
+            L: 'DD.MM.YYYY',
             LL: 'D MMMM YYYY',
             LLL: 'D MMMM YYYY HH:mm',
             LLLL: 'dddd, D MMMM YYYY HH:mm',
         },
         calendar: {
             sameDay: '[Имрӯз соати] LT',
-            nextDay: '[Пагоҳ соати] LT',
+            nextDay: '[Фардо соати] LT',
             lastDay: '[Дирӯз соати] LT',
             nextWeek: 'dddd[и] [ҳафтаи оянда соати] LT',
             lastWeek: 'dddd[и] [ҳафтаи гузашта соати] LT',
@@ -80958,6 +81394,8 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
             hh: '%d ชั่วโมง',
             d: '1 วัน',
             dd: '%d วัน',
+            w: '1 สัปดาห์',
+            ww: '%d สัปดาห์',
             M: '1 เดือน',
             MM: '%d เดือน',
             y: '1 ปี',
@@ -81393,6 +81831,8 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
             hh: '%d saat',
             d: 'bir gün',
             dd: '%d gün',
+            w: 'bir hafta',
+            ww: '%d hafta',
             M: 'bir ay',
             MM: '%d ay',
             y: 'bir yıl',
@@ -82318,6 +82758,8 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
             hh: '%d giờ',
             d: 'một ngày',
             dd: '%d ngày',
+            w: 'một tuần',
+            ww: '%d tuần',
             M: 'một tháng',
             MM: '%d tháng',
             y: 'một năm',
@@ -82623,6 +83065,8 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
             hh: '%d 小时',
             d: '1 天',
             dd: '%d 天',
+            w: '1 周',
+            ww: '%d 周',
             M: '1 个月',
             MM: '%d 个月',
             y: '1 年',
@@ -83010,7 +83454,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(module) {var require;//! moment.js
-//! version : 2.28.0
+//! version : 2.29.1
 //! authors : Tim Wood, Iskren Chernev, Moment.js contributors
 //! license : MIT
 //! momentjs.com
@@ -85550,8 +85994,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     hooks.createFromInputFallback = deprecate(
         'value provided is not in a recognized RFC2822 or ISO format. moment construction falls back to js Date(), ' +
             'which is not reliable across all browsers and versions. Non RFC2822/ISO date formats are ' +
-            'discouraged and will be removed in an upcoming major release. Please refer to ' +
-            'http://momentjs.com/guides/#/warnings/js-date/ for more info.',
+            'discouraged. Please refer to http://momentjs.com/guides/#/warnings/js-date/ for more info.',
         function (config) {
             config._d = new Date(config._i + (config._useUTC ? ' UTC' : ''));
         }
@@ -86736,7 +87179,10 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     function calendar$1(time, formats) {
         // Support for single parameter, formats only overload to the calendar function
         if (arguments.length === 1) {
-            if (isMomentInput(arguments[0])) {
+            if (!arguments[0]) {
+                time = undefined;
+                formats = undefined;
+            } else if (isMomentInput(arguments[0])) {
                 time = arguments[0];
                 formats = undefined;
             } else if (isCalendarSpec(arguments[0])) {
@@ -88628,7 +89074,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
 
     //! moment.js
 
-    hooks.version = '2.28.0';
+    hooks.version = '2.29.1';
 
     setHookCallback(createLocal);
 
@@ -91596,9 +92042,7 @@ var render = function() {
       { staticClass: "table no-border" },
       [
         _c("tr", [
-          _c("th", { attrs: { colspan: "1" } }, [
-            _vm._v(_vm._s(_vm.__("app.sellings.total_price")) + ":")
-          ]),
+          _c("th", { attrs: { colspan: "1" } }),
           _vm._v(" "),
           _c("th", {
             domProps: { textContent: _vm._s(_vm.priceFormat(_vm.totalPrice)) }
@@ -91779,6 +92223,56 @@ var render = function() {
             {
               name: "model",
               rawName: "v-model",
+              value: _vm.form.customer_id,
+              expression: "form.customer_id"
+            }
+          ],
+          staticClass: "form-control",
+          class: _vm.errors.customer_id ? "is-invalid" : "",
+          on: {
+            change: function($event) {
+              var $$selectedVal = Array.prototype.filter
+                .call($event.target.options, function(o) {
+                  return o.selected
+                })
+                .map(function(o) {
+                  var val = "_value" in o ? o._value : o.value
+                  return val
+                })
+              _vm.$set(
+                _vm.form,
+                "customer_id",
+                $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+              )
+            }
+          }
+        },
+        [
+          _c("option", { attrs: { value: "null" } }, [
+            _vm._v(_vm._s(_vm.__("app.sellings.column.customer")))
+          ]),
+          _vm._v(" "),
+          _vm._l(_vm.customers, function(customer) {
+            return _c("option", {
+              domProps: {
+                value: customer.value,
+                textContent: _vm._s(customer.text)
+              }
+            })
+          })
+        ],
+        2
+      )
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "form-group" }, [
+      _c(
+        "select",
+        {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
               value: _vm.form.payment_method_id,
               expression: "form.payment_method_id"
             }
@@ -91805,7 +92299,7 @@ var render = function() {
         },
         [
           _c("option", { attrs: { value: "null" } }, [
-            _vm._v(_vm._s(_vm.__("app.sellings.payment_method_id")))
+            _vm._v(_vm._s(_vm.__("app.sellings.column.payment_method")))
           ]),
           _vm._v(" "),
           _vm._l(_vm.paymentMethods, function(paymentMethod) {
@@ -91833,7 +92327,10 @@ var render = function() {
         ],
         staticClass: "form-control",
         class: _vm.errors.money ? "is-invalid" : "",
-        attrs: { type: "text", placeholder: _vm.__("app.sellings.money") },
+        attrs: {
+          type: "text",
+          placeholder: _vm.__("app.sellings.placeholder.money")
+        },
         domProps: { value: _vm.money },
         on: {
           focus: _vm.onFocus,
@@ -92335,38 +92832,41 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
-    _c(
-      "div",
-      { staticClass: "mb-3", class: _vm.prepend ? "input-group" : "" },
-      [
-        !_vm.prepend
-          ? _c("label", { staticClass: "text-muted" }, [
-              _vm._v(_vm._s(_vm.label))
-            ])
-          : _vm._e(),
-        _vm._v(" "),
-        _c("textarea", {
-          staticClass: "form-control",
-          class: _vm.dataError ? "is-invalid" : _vm.validClass,
-          attrs: {
-            type: _vm.type,
-            name: _vm.name,
-            placeholder: _vm.placeholder,
-            rows: "3"
-          },
-          domProps: { value: _vm.value },
-          on: { focus: _vm.checkValidation, blur: _vm.checkValidation }
-        }),
-        _vm._v(" "),
-        _vm.dataError
-          ? _c("div", { staticClass: "invalid-feedback" }, [
-              _vm._v(_vm._s(_vm.dataErrorMessage))
-            ])
-          : _vm._e()
-      ]
-    )
-  ])
+  return _c(
+    "div",
+    {
+      staticClass: "mb-3",
+      class: _vm.prepend
+        ? "input-group col-md-" + _vm.size
+        : "col-md-" + _vm.size
+    },
+    [
+      !_vm.prepend
+        ? _c("label", { staticClass: "text-muted" }, [
+            _vm._v(_vm._s(_vm.label))
+          ])
+        : _vm._e(),
+      _vm._v(" "),
+      _c("textarea", {
+        staticClass: "form-control",
+        class: _vm.dataError ? "is-invalid" : _vm.validClass,
+        attrs: {
+          type: _vm.type,
+          name: _vm.name,
+          placeholder: _vm.placeholder,
+          rows: "3"
+        },
+        domProps: { value: _vm.value },
+        on: { focus: _vm.checkValidation, blur: _vm.checkValidation }
+      }),
+      _vm._v(" "),
+      _vm.dataError
+        ? _c("div", { staticClass: "invalid-feedback" }, [
+            _vm._v(_vm._s(_vm.dataErrorMessage))
+          ])
+        : _vm._e()
+    ]
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -92661,7 +93161,7 @@ var render = function() {
                 _c(
                   "button",
                   {
-                    staticClass: "btn btn-outline-success",
+                    staticClass: "btn btn-outline-success sub-total",
                     attrs: { type: "button" },
                     on: { click: _vm.addItem }
                   },
@@ -107240,8 +107740,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "mapMutations", function() { return mapMutations; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "mapState", function() { return mapState; });
 /*!
- * vuex v3.5.1
- * (c) 2020 Evan You
+ * vuex v3.6.2
+ * (c) 2021 Evan You
  * @license MIT
  */
 function applyMixin (Vue) {
@@ -107527,7 +108027,11 @@ ModuleCollection.prototype.isRegistered = function isRegistered (path) {
   var parent = this.get(path.slice(0, -1));
   var key = path[path.length - 1];
 
-  return parent.hasChild(key)
+  if (parent) {
+    return parent.hasChild(key)
+  }
+
+  return false
 };
 
 function update (path, targetModule, newModule) {
@@ -108202,7 +108706,7 @@ var mapState = normalizeNamespace(function (namespace, states) {
 /**
  * Reduce the code which written in Vue.js for committing the mutation
  * @param {String} [namespace] - Module's namespace
- * @param {Object|Array} mutations # Object's item can be a function which accept `commit` function as the first param, it can accept anthor params. You can commit mutation and do any other things in this function. specially, You need to pass anthor params from the mapped function.
+ * @param {Object|Array} mutations # Object's item can be a function which accept `commit` function as the first param, it can accept another params. You can commit mutation and do any other things in this function. specially, You need to pass anthor params from the mapped function.
  * @return {Object}
  */
 var mapMutations = normalizeNamespace(function (namespace, mutations) {
@@ -108467,7 +108971,7 @@ function pad (num, maxLength) {
 var index = {
   Store: Store,
   install: install,
-  version: '3.5.1',
+  version: '3.6.2',
   mapState: mapState,
   mapMutations: mapMutations,
   mapGetters: mapGetters,
@@ -108571,6 +109075,9 @@ var api = {
   payment_method_list: function payment_method_list(request) {
     return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get(_helpers__WEBPACK_IMPORTED_MODULE_1__["default"].route('payment_method.index', request));
   },
+  customer_list: function customer_list(request) {
+    return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get(_helpers__WEBPACK_IMPORTED_MODULE_1__["default"].route('customer.index', request));
+  },
   submit_item: function submit_item(request) {
     return axios__WEBPACK_IMPORTED_MODULE_0___default.a.post(_helpers__WEBPACK_IMPORTED_MODULE_1__["default"].route('api.selling.store'), request);
   }
@@ -108588,13 +109095,14 @@ var api = {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var ziggy__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ziggy */ "./vendor/tightenco/ziggy/src/js/route.js");
-/* harmony import */ var _ziggy_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ziggy.js */ "./resources/js/ziggy.js");
-/* harmony import */ var chart_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! chart.js */ "./node_modules/chart.js/dist/Chart.js");
-/* harmony import */ var chart_js__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(chart_js__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./store */ "./resources/js/store/index.js");
-/* harmony import */ var vue_notification__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! vue-notification */ "./node_modules/vue-notification/dist/index.js");
-/* harmony import */ var vue_notification__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(vue_notification__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _helpers__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./helpers */ "./resources/js/helpers.js");
+/* harmony import */ var ziggy__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ziggy */ "./vendor/tightenco/ziggy/src/js/route.js");
+/* harmony import */ var _ziggy_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ziggy.js */ "./resources/js/ziggy.js");
+/* harmony import */ var chart_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! chart.js */ "./node_modules/chart.js/dist/Chart.js");
+/* harmony import */ var chart_js__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(chart_js__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./store */ "./resources/js/store/index.js");
+/* harmony import */ var vue_notification__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! vue-notification */ "./node_modules/vue-notification/dist/index.js");
+/* harmony import */ var vue_notification__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(vue_notification__WEBPACK_IMPORTED_MODULE_5__);
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
 __webpack_require__(/*! datatables.net-bs4 */ "./node_modules/datatables.net-bs4/js/dataTables.bootstrap4.js");
@@ -108615,10 +109123,11 @@ var _ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
 
 
 
+
 Vue.mixin({
   methods: {
     route: function route(name, params, absolute) {
-      return Object(ziggy__WEBPACK_IMPORTED_MODULE_0__["default"])(name, params, absolute, _ziggy_js__WEBPACK_IMPORTED_MODULE_1__["Ziggy"]);
+      return Object(ziggy__WEBPACK_IMPORTED_MODULE_1__["default"])(name, params, absolute, _ziggy_js__WEBPACK_IMPORTED_MODULE_2__["Ziggy"]);
     },
     priceFormat: function priceFormat(number) {
       var formatter = new Intl.NumberFormat('id-ID', {
@@ -108630,30 +109139,31 @@ Vue.mixin({
     }
   }
 });
+window.helpers = _helpers__WEBPACK_IMPORTED_MODULE_0__["default"];
 Vue.mixin(__webpack_require__(/*! ./trans */ "./resources/js/trans.js"));
 /*
 or for SSR:
 import Notifications from 'vue-notification/dist/ssr.js'
 */
 
-Vue.use(vue_notification__WEBPACK_IMPORTED_MODULE_4___default.a);
-Vue.component('v-input', __webpack_require__(/*! ./components/Form/Input */ "./resources/js/components/Form/Input.vue")["default"]);
-Vue.component('v-date-picker', __webpack_require__(/*! ./components/Form/DatePicker */ "./resources/js/components/Form/DatePicker.vue")["default"]);
-Vue.component('v-text-area', __webpack_require__(/*! ./components/Form/TextArea */ "./resources/js/components/Form/TextArea.vue")["default"]);
-Vue.component('v-checkbox', __webpack_require__(/*! ./components/Form/Checkbox */ "./resources/js/components/Form/Checkbox.vue")["default"]);
-Vue.component('v-button', __webpack_require__(/*! ./components/Button/Button */ "./resources/js/components/Button/Button.vue")["default"]);
-Vue.component('v-button-upload', __webpack_require__(/*! ./components/Button/UploadFile */ "./resources/js/components/Button/UploadFile.vue")["default"]);
-Vue.component('v-dropdown', __webpack_require__(/*! ./components/Form/Dropdown */ "./resources/js/components/Form/Dropdown.vue")["default"]);
-Vue.component('select2', __webpack_require__(/*! ./components/Form/Select2 */ "./resources/js/components/Form/Select2.vue")["default"]);
-Vue.component('v-select', __webpack_require__(/*! ./components/Form/Select */ "./resources/js/components/Form/Select.vue")["default"]);
-Vue.component('v-add-item', __webpack_require__(/*! ./components/Purchasing/AddItem */ "./resources/js/components/Purchasing/AddItem.vue")["default"]);
-Vue.component('cashier-app', __webpack_require__(/*! ./components/App */ "./resources/js/components/App.vue")["default"]);
+Vue.use(vue_notification__WEBPACK_IMPORTED_MODULE_5___default.a);
+Vue.component('v-input', __webpack_require__(/*! ./components/Form/Input.vue */ "./resources/js/components/Form/Input.vue")["default"]);
+Vue.component('v-date-picker', __webpack_require__(/*! ./components/Form/DatePicker.vue */ "./resources/js/components/Form/DatePicker.vue")["default"]);
+Vue.component('v-text-area', __webpack_require__(/*! ./components/Form/TextArea.vue */ "./resources/js/components/Form/TextArea.vue")["default"]);
+Vue.component('v-checkbox', __webpack_require__(/*! ./components/Form/Checkbox.vue */ "./resources/js/components/Form/Checkbox.vue")["default"]);
+Vue.component('v-button', __webpack_require__(/*! ./components/Button/Button.vue */ "./resources/js/components/Button/Button.vue")["default"]);
+Vue.component('v-button-upload', __webpack_require__(/*! ./components/Button/UploadFile.vue */ "./resources/js/components/Button/UploadFile.vue")["default"]);
+Vue.component('v-dropdown', __webpack_require__(/*! ./components/Form/Dropdown.vue */ "./resources/js/components/Form/Dropdown.vue")["default"]);
+Vue.component('select2', __webpack_require__(/*! ./components/Form/Select2.vue */ "./resources/js/components/Form/Select2.vue")["default"]);
+Vue.component('v-select', __webpack_require__(/*! ./components/Form/Select.vue */ "./resources/js/components/Form/Select.vue")["default"]);
+Vue.component('v-add-item', __webpack_require__(/*! ./components/Purchasing/AddItem.vue */ "./resources/js/components/Purchasing/AddItem.vue")["default"]);
+Vue.component('cashier-app', __webpack_require__(/*! ./components/App.vue */ "./resources/js/components/App.vue")["default"]);
 Vue.component('passport-clients', __webpack_require__(/*! ./components/passport/Clients.vue */ "./resources/js/components/passport/Clients.vue")["default"]);
 Vue.component('passport-authorized-clients', __webpack_require__(/*! ./components/passport/AuthorizedClients.vue */ "./resources/js/components/passport/AuthorizedClients.vue")["default"]);
 Vue.component('passport-personal-access-tokens', __webpack_require__(/*! ./components/passport/PersonalAccessTokens.vue */ "./resources/js/components/passport/PersonalAccessTokens.vue")["default"]);
 var app = new Vue({
   el: '#app',
-  store: _store__WEBPACK_IMPORTED_MODULE_3__["default"]
+  store: _store__WEBPACK_IMPORTED_MODULE_4__["default"]
 });
 
 /***/ }),
@@ -110098,6 +110608,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   route: function route(name, params, absolute) {
     return Object(ziggy__WEBPACK_IMPORTED_MODULE_0__["default"])(name, params, absolute, _ziggy_js__WEBPACK_IMPORTED_MODULE_1__["Ziggy"]);
+  },
+  priceFormat: function priceFormat(number) {
+    var formatter = new Intl.NumberFormat('id-ID', {
+      style: 'currency',
+      currency: 'IDR',
+      minimumFractionDigits: 2
+    });
+    return formatter.format(number);
   }
 });
 
@@ -110248,6 +110766,70 @@ var mutations = {
   state: state,
   mutations: mutations,
   getters: getters
+});
+
+/***/ }),
+
+/***/ "./resources/js/modules/customers.js":
+/*!*******************************************!*\
+  !*** ./resources/js/modules/customers.js ***!
+  \*******************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _api__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./../api */ "./resources/js/api/index.js");
+
+
+var state = function state() {
+  return {
+    customers: [],
+    loading: false
+  };
+};
+
+var actions = {
+  getCustomers: function getCustomers(_ref, req) {
+    var commit = _ref.commit;
+    commit({
+      type: 'customerRequest'
+    });
+    return new Promise(function (resolve, reject) {
+      _api__WEBPACK_IMPORTED_MODULE_0__["default"].customer_list(req).then(function (res) {
+        commit({
+          type: 'customerRequestSuccess',
+          data: res.data.payload.map(function (data) {
+            return {
+              value: data.id,
+              text: data.name
+            };
+          })
+        });
+      })["catch"](function (res) {
+        commit({
+          type: 'customerRequestError'
+        });
+      });
+    });
+  }
+};
+var mutations = {
+  customerRequest: function customerRequest(state) {
+    state.loading = true;
+  },
+  customerRequestSuccess: function customerRequestSuccess(state, payload) {
+    state.customers = payload.data;
+    state.loading = false;
+  },
+  customerRequestError: function customerRequestError(state) {
+    state.loading = false;
+  }
+};
+/* harmony default export */ __webpack_exports__["default"] = ({
+  actions: actions,
+  state: state,
+  mutations: mutations
 });
 
 /***/ }),
@@ -110420,6 +111002,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_items__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./modules/items */ "./resources/js/store/modules/items/index.js");
 /* harmony import */ var _modules_cart__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modules/cart */ "./resources/js/store/modules/cart/index.js");
 /* harmony import */ var _modules_paymentMethods__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./modules/paymentMethods */ "./resources/js/store/modules/paymentMethods/index.js");
+/* harmony import */ var _modules_customers__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./modules/customers */ "./resources/js/store/modules/customers/index.js");
+
 
 
 
@@ -110449,7 +111033,8 @@ var mutations = {
   modules: {
     items: _modules_items__WEBPACK_IMPORTED_MODULE_2__["default"],
     cart: _modules_cart__WEBPACK_IMPORTED_MODULE_3__["default"],
-    paymentMethods: _modules_paymentMethods__WEBPACK_IMPORTED_MODULE_4__["default"]
+    paymentMethods: _modules_paymentMethods__WEBPACK_IMPORTED_MODULE_4__["default"],
+    customers: _modules_customers__WEBPACK_IMPORTED_MODULE_5__["default"]
   },
   state: state,
   mutations: mutations
@@ -110474,6 +111059,26 @@ __webpack_require__.r(__webpack_exports__);
   mutations: _modules_carts__WEBPACK_IMPORTED_MODULE_0__["default"].mutations,
   state: _modules_carts__WEBPACK_IMPORTED_MODULE_0__["default"].state,
   getters: _modules_carts__WEBPACK_IMPORTED_MODULE_0__["default"].getters
+});
+
+/***/ }),
+
+/***/ "./resources/js/store/modules/customers/index.js":
+/*!*******************************************************!*\
+  !*** ./resources/js/store/modules/customers/index.js ***!
+  \*******************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _modules_customers__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./../../../modules/customers */ "./resources/js/modules/customers.js");
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  namespaced: true,
+  actions: _modules_customers__WEBPACK_IMPORTED_MODULE_0__["default"].actions,
+  mutations: _modules_customers__WEBPACK_IMPORTED_MODULE_0__["default"].mutations,
+  state: _modules_customers__WEBPACK_IMPORTED_MODULE_0__["default"].state
 });
 
 /***/ }),
@@ -111741,8 +112346,8 @@ function route(name, params, absolute, customZiggy) {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /home/sheenazien/code/lakasir_organizations/lakasir/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /home/sheenazien/code/lakasir_organizations/lakasir/resources/sass/app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! /home/sheena/code/myproject/lakasir_project/lakasir/resources/js/app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! /home/sheena/code/myproject/lakasir_project/lakasir/resources/sass/app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

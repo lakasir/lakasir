@@ -3,13 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Traits\HasLaTable;
+use Sheenazien8\Hascrudactions\Traits\HasLaTable;
 
 class Customer extends Model
 {
     use HasLaTable;
 
-    protected $fillable = ['name', 'email', 'code'];
+    protected $fillable = ['name', 'email', 'code', 'customer_type_id'];
 
     public function groups()
     {
@@ -25,5 +25,4 @@ class Customer extends Model
     {
         return $this->belongsTo(CustomerType::class, 'customer_type_id');
     }
-
 }

@@ -1,38 +1,38 @@
-@extends('adminlte::page')
+@extends(config('hascrudactions.wrapper.layouts'))
 
-@section('content')
-  <div class="row col">
-    <v-button float="right" text="{{ __('app.global.create') }}" to="{{ route($resources.'.create') }}" icon="fas fa-plus"></v-button>
-  </div>
-  <br>
-
-  <x-index-table :title="__('app.user.title')" :resources="$resources">
-    @slot('thead')
-      <th> {{ __('app.user.column.username') }} </th>
-      <th> {{ __('app.user.column.email') }} </th>
-      <th> {{ __('app.user.column.role') }} </th>
-    @endslot
-  </x-index-table>
+@section(config('hascrudactions.wrapper.section'))
+  @if (config('lakasir.index-style') == 'table')
+    @include('app.user.components.table')
+  @endif
+  @if (config('lakasir.index-style') == 'grid')
+    <table class="">
+      <div class="row">
+        @foreach ($users as $user)
+          <div class="col-xs-12 col-md-4 odd" role="row">
+            <div class="card">
+              <div class="card-header">
+                <h5 class="text-primary">{{ $user->username }}</h5>
+                <span class="text-muted">@lang('app.global.created_at'): {{ $user->created_at->diffForHumans() }}</span>
+              </div>
+              <div class="card-body">
+                @foreach ($user->showColumns() as $column => $schema)
+                  <p><span>{{ $schema['label'] }}</span>: {{ $user->{$column} }}</p>
+                @endforeach
+              </div>
+              <div class="card-footer">
+                @include('partials.grid.action', [
+                  'resources' => $resources,
+                  'row' => $user
+                ])
+              </div>
+            </div>
+          </div>
+        @endforeach
+      </div>
+      <div class="float-right">
+        {{ $users->links() }}
+      </div>
+    </table>
+  @endif
 @endsection
 
-@push('js')
-  <script>
-    $(function() {
-      $('#{{ $resources }}-table').DataTable({
-        processing: true,
-        serverSide: true,
-        ajax: '{!! route($resources.'.index') !!}',
-        columns: [
-          { data: 'checkbox', name: '#', orderable: false, searchable: false, width: '3%' },
-          { data: 'username', name: 'username', render: function ( data, type, row ) {
-            return '<a href='+ route('{{ $resources }}.edit', row) +'>'+data+'</a>'
-          }},
-          { data: 'email', name: 'email' },
-          { data: 'role', name: 'role' },
-          { data: 'created_at', name: 'Created At' },
-          { data: 'action', name: 'action', orderable: false, searchable: false, width: '3%' },
-        ]
-      });
-    });
-  </script>
-@endpush

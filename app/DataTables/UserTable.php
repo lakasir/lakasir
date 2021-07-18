@@ -2,11 +2,18 @@
 
 namespace App\DataTables;
 
-use App\Abstracts\LaTable;
 use Carbon\Carbon;
+use Illuminate\Contracts\Container\BindingResolutionException;
+use Sheenazien8\Hascrudactions\Abstracts\LaTable;
+use Yajra\DataTables\Services\DataTable;
 
+/** @package App\DataTables */
 class UserTable extends LaTable
 {
+    /**
+     * @return DataTable
+     * @throws BindingResolutionException
+     */
     public function newTable()
     {
         return datatables($this->query)

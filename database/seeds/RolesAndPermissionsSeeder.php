@@ -17,23 +17,25 @@ class RolesAndPermissionsSeeder extends Seeder
     {
         // Reset cached roles and permissions
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
-        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
-        Permission::truncate();
-        Role::truncate();
-        DB::statement('TRUNCATE TABLE role_has_permissions');
-        DB::statement('TRUNCATE TABLE model_has_permissions');
-        DB::statement('TRUNCATE TABLE model_has_roles');
+        if (app()->environment() != 'testing') {
+            DB::statement('SET FOREIGN_KEY_CHECKS = 0');
+            Permission::truncate();
+            Role::truncate();
+            DB::statement('TRUNCATE TABLE role_has_permissions');
+            DB::statement('TRUNCATE TABLE model_has_permissions');
+            DB::statement('TRUNCATE TABLE model_has_roles');
+        }
         $permissions = config('permission_seeder');
         foreach ($permissions as $key => $value) {
             if ($key == 'role') {
-                foreach ($value as $k => $v) {
-                    Role::create(['name' => $v]);
+                foreach ($value as $role_name) {
+                    Role::create(['name' => $role_name]);
                 }
             }
             if ($key == 'permissions') {
-                foreach ($value as $k => $v) {
-                    $permission = Permission::create(['name' => $k]);
-                    foreach ($v as $s) {
+                foreach ($value as $permission_name => $role_name) {
+                    $permission = Permission::create(['name' => $permission_name]);
+                    foreach ($role_name as $s) {
                         Role::where('name', $s)->first()->givePermissionTo($permission);
                     }
                 }

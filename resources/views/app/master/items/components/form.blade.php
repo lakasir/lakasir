@@ -15,22 +15,6 @@
      @enderror
      >
   </select2>
-  <a href="{{ route('unit.create') }}" class="float-right" target="_blank"> {{ __('app.units.create.title') }}</a>
-  <select2
-     default-value="{{ optional(optional( $data ?? '' )->unit ?? '')->id }}"
-     label="{{ __('app.items.column.unit.name') }}"
-     placeholder="{{ __('app.items.placeholder.unit.name') }}"
-     name="unit_id"
-     keytext="id"
-     text="name"
-     url="{{ route('unit.index') }}"
-     old="{{ json_encode(old('unit_id')) }}"
-     @error('unit_id')
-     error-message="{{ $message }}"
-     :error="true"
-     @enderror
-     >
-  </select2>
   <div class="form-group">
     <label for="exampleFormControlFile1" class="text-muted"> {{ __('app.items.column.images') }}</label>
     <input type="file" name="image" class="form-control-file @error('image') 'is-invalid' @enderror" id="exampleFormControlFile1">

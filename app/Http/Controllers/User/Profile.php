@@ -5,6 +5,7 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\Profile\Index;
 use App\Http\Requests\User\Profile\Store;
+use App\Repositories\Company;
 use App\Repositories\Profile as ProfileRepository;
 use App\Services\ProfileService;
 use App\Traits\HasCrudActions;
@@ -36,14 +37,18 @@ class Profile extends Controller
     {
         get_lang();
 
-        $request = resolve($this->indexRequest);
+        $company = new Company();
 
         $this->authorize("browse-$this->permission");
 
         $data = collect();
-        $data->put('activity', Activity::where('user_id', auth()->user()->id)->latest()->cursor()->groupBy(function ($activity) {
-            return $activity->created_at->format('Y-m-d');
-        }));
+        $data->put('activity', Activity::where('user_id', auth()->user()->id)->latest()->cursor()->groupBy(
+            function ($activity) {
+                return $activity->created_at->format('Y-m-d');
+            }
+        ));
+        $data->put('companies', $company->query()->first());
+        $data->put('user', auth()->user());
 
         $resources = $this->permission;
 

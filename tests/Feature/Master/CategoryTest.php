@@ -3,101 +3,216 @@
 namespace Tests\Feature\Master;
 
 use App\Models\Category;
-use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
+use Tests\Feature\FeatureTestCase as TestCase;
 
 class CategoryTest extends TestCase
 {
-    /**
-     * A basic feature create test.
-     *
-     * @return void
-     */
-    public function test_category_create()
-    {
-        $user = User::find(1);
-        $response = $this->actingAs($user)->post('/master/category', [
-            'name' => 'category'
-        ]);
+    use RefreshDatabase;
 
-        $response->assertStatus(302);
-        $response->assertRedirect('/master/category');
+    /** @test */
+    public function it_cant_browse_categories(): void
+    {
+        $this->loginAs()
+            ->get(route('category.index'))
+            ->assertStatus(403);
     }
 
-    /**
-     * A basic feature browse test.
-     *
-     * @return void
-     */
-    public function test_category_browse()
+    /** @test */
+    public function it_can_browse_categories(): void
     {
-        $user = User::find(1);
-        $response = $this->actingAs($user)->get('/master/category');
-
-        $response->assertStatus(200);
+        $this->assignPermission('browse-category');
+        $this->loginAs()
+            ->get(route('category.index'))
+            ->assertStatus(200)
+            ->assertViewIs('app.master.categories.index')
+            ->assertSeeText(__('app.categories.title'));
     }
 
-    /**
-     * A basic feature browse test.
-     *
-     * @return void
-     */
-    public function test_category_show()
+    /** @test */
+    public function it_can_browse_categories_via_ajax_datatbales(): void
     {
-        $user = User::find(1);
-        factory(Category::class, 10)->create();
-        $response = $this->actingAs($user)->get('/master/category/' . Category::inRandomOrder()->first()->id);
-
-        $response->assertStatus(200);
+        $this->assignPermission('browse-category');
+        $category = factory(Category::class)->create();
+        $this->loginAs()
+            ->getJson(route('category.index'), $this->ajaxHeader())
+            ->assertJsonFragment([
+                'name' => $category->name,
+            ])
+            ->assertSeeText($category->name)
+            ->assertSeeText($category->id);
     }
 
-    /**
-     * A basic feature browse test.
-     *
-     * @return void
-     */
-    public function test_category_update()
+    /** @test */
+    public function it_cant_see_create_form_category(): void
     {
-        $user = User::find(1);
-        factory(Category::class, 10)->create();
-        $response = $this->actingAs($user)->put('/master/category/' . Category::inRandomOrder()->first()->id, [
-            'name' => 'siap'
-        ]);
-
-        $response->assertStatus(302);
-        $response->assertRedirect('/master/category');
+        $this->loginAs()
+            ->get(route('category.create'))
+            ->assertSeeText(trans('app.auth.unauthorized'))
+            ->assertStatus(403);
     }
 
-    /**
-     * A basic feature browse test.
-     *
-     * @return void
-     */
-    public function test_category_delete()
+    /** @test */
+    public function it_can_see_create_form_category(): void
     {
-        $user = User::find(1);
-        factory(Category::class, 10)->create();
-        $response = $this->actingAs($user)->delete('/master/category/' . Category::inRandomOrder()->first()->id);
-
-        $response->assertStatus(302);
+        $this->assignPermission('create-category');
+        $this->loginAs()
+            ->get(route('category.create'))
+            ->assertSeeText(__('app.categories.create.title'))
+            ->assertStatus(200);
     }
 
-
-    /**
-     * A basic feature browse test.
-     *
-     * @return void
-     */
-    public function test_category_bulk_delete()
+    /** @test */
+    public function it_cant_store_category_validation_error(): void
     {
-        $user = User::find(1);
-        factory(Category::class, 10)->create();
-        $response = $this->actingAs($user)->delete('/master/category/bulk-destroy', [
-            'ids' => Category::inRandomOrder()->get()->pluck('id')
-        ]);
+        $this->assignPermission('create-category');
+        $request = array_merge($this->data(), ['name' => '']);
+        $this->loginAs()
+            ->post(route('category.store'), $request)
+            ->assertStatus(302)
+            ->assertSessionHasErrors(['name' => trans('validation.required', ['attribute' => 'name'])]);
+    }
 
-        $response->assertStatus(302);
+    /** @test */
+    public function it_can_store_category(): void
+    {
+        $this->assignPermission('create-category');
+        $request = $this->data();
+        $this->loginAs()
+            ->post(route('category.store'), $request)
+            ->assertStatus(302);
+        $category_created = Category::where('name', $request['name'])->first();
+        $this->assertTrue(!is_null($category_created));
+        $this->assertFlashLevel('success', __('app.global.message.success.create', [
+            'item' => ucfirst('category')
+        ]));
+    }
+
+    /** @test */
+    public function it_cant_see_edit_form_category(): void
+    {
+        $category = factory(Category::class)->create();
+        $this->loginAs()
+            ->get(route('category.edit', $category))
+            ->assertSeeText(trans('app.auth.unauthorized'))
+            ->assertStatus(403);
+    }
+
+    /** @test */
+    public function it_can_see_edit_form_category(): void
+    {
+        $this->assignPermission('update-category');
+        $category = factory(Category::class)->create();
+        $this->loginAs()
+            ->get(route('category.edit', $category))
+            ->assertSeeText(__('app.categories.edit.title'))
+            ->assertStatus(200);
+    }
+
+    /** @test */
+    public function it_cant_update_category_validation_error(): void
+    {
+        $this->assignPermission('update-category');
+        $category = factory(Category::class)->create();
+        $request = array_merge($this->data(), ['name' => '']);
+        $this->loginAs()
+            ->patch(route('category.update', $category), $request)
+            ->assertStatus(302)
+            ->assertSessionHasErrors(['name' => trans('validation.required', ['attribute' => 'name'])]);
+    }
+
+    /** @test */
+    public function it_can_update_category(): void
+    {
+        $this->assignPermission('update-category');
+        $category = factory(Category::class)->create();
+        $data = $this->data();
+        $request = array_merge($data, ['name' => 'siap']);
+        $this->loginAs()
+            ->patch(route('category.update', $category), $request)
+            ->assertStatus(302);
+        $category_original = Category::where('name', $data['name'])->first();
+        $category_updated = Category::where('name', $request['name'])->first();
+        $this->assertTrue(is_null($category_original));
+        $this->assertTrue(!is_null($category_updated));
+        $this->assertFlashLevel('success', __('app.global.message.success.update', [
+            'item' => ucfirst('category')
+        ]));
+    }
+
+    /** @test */
+    public function it_cant_see_delete_category(): void
+    {
+        $category = factory(Category::class)->create();
+        $this->loginAs()
+            ->delete(route('category.destroy', $category))
+            ->assertSeeText(trans('app.auth.unauthorized'))
+            ->assertStatus(403);
+    }
+
+    /** @test */
+    public function it_can_delete_category(): void
+    {
+        $this->assignPermission('delete-category');
+        $category = factory(Category::class)->create();
+        $this->loginAs()
+            ->delete(route('category.destroy', $category))
+            ->assertStatus(302);
+        $category_deleted = Category::find($category->id);
+        $this->assertTrue(is_null($category_deleted));
+        $this->assertFlashLevel('success', __('app.global.message.success.delete', [
+            'item' => ucfirst('category')
+        ]));
+    }
+
+    /** @test */
+    public function it_cant_see_bulk_delete_category(): void
+    {
+        $ids = [
+            'ids' => []
+        ];
+        $this->loginAs()
+            ->delete(route('category.bulkDestroy'), $ids)
+            ->assertSeeText(trans('app.auth.unauthorized'))
+            ->assertStatus(403);
+    }
+
+    /** @test */
+    public function it_cant_bulk_delete_category_validation_error(): void
+    {
+        $this->assignPermission('bulk-delete-category');
+        $ids = [
+            'ids' => null
+        ];
+        $this->loginAs()
+            ->delete(route('category.bulkDestroy'), $ids)
+            ->assertSessionHasErrors('ids')
+            ->assertStatus(302);
+    }
+
+    /** @test */
+    public function it_can_bulk_delete_category(): void
+    {
+        $this->assignPermission('bulk-delete-category');
+        $categories = factory(Category::class, 2)->create();
+        $id = $categories->pluck('id');
+        $ids = [
+            'ids' => $id->toArray()
+        ];
+        $this->loginAs()
+            ->delete(route('category.bulkDestroy'), $ids)
+            ->assertStatus(302);
+        $category_deleted = Category::find($id);
+        $this->assertTrue($category_deleted->isEmpty());
+        $this->assertFlashLevel('success', __('app.global.message.success.bulk-delete', [
+            'item' => ucfirst('category')
+        ]));
+    }
+
+    private function data(): array
+    {
+        return [
+            'name' => $this->faker->randomLetter
+        ];
     }
 }

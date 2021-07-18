@@ -14,10 +14,6 @@ class AlterColumnStocksToFifoRule extends Migration
     public function up()
     {
         Schema::table('stocks', function (Blueprint $table) {
-            $table->dropColumn('current_stock');
-            $table->dropColumn('last_stock');
-            $table->double('amount')->after('item_id');
-            $table->foreignId('price_id')->references('id')->on('prices')->after('item_id')->onDelete('cascade');
         });
     }
 
@@ -29,9 +25,6 @@ class AlterColumnStocksToFifoRule extends Migration
     public function down()
     {
         Schema::table('stocks', function (Blueprint $table) {
-            $table->double('last_stock')->nullable()->after('item_id');
-            $table->double('current_stock')->nullable()->after('last_stock');
-            $table->dropColumn('amount');
         });
     }
 }

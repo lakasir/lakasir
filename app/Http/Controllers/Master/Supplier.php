@@ -8,11 +8,11 @@ use App\Http\Requests\Master\Supplier\Index;
 use App\Http\Requests\Master\Supplier\Store;
 use App\Http\Requests\Master\Supplier\Update;
 use App\Repositories\Supplier as SupplierRepository;
-use App\Traits\HasCrudActions;
+use Sheenazien8\Hascrudactions\Traits\HasCrudAction;
 
 class Supplier extends Controller
 {
-    use HasCrudActions;
+    use HasCrudAction;
 
     protected $viewPath = 'app.master.suppliers';
 
@@ -26,7 +26,7 @@ class Supplier extends Controller
 
     protected $bulkDestroyRequest = BulkDelete::class;
 
-    protected $redirect = '/master/supplier';
+    protected $resources = 'supplier';
 
     protected $repositoryClass = SupplierRepository::class;
 }

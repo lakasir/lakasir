@@ -14,7 +14,6 @@ class DropColumnPaymentMethodInPurchasingsTable extends Migration
     public function up()
     {
         Schema::table('purchasings', function (Blueprint $table) {
-            $table->dropColumn('payment_method');
         });
     }
 
@@ -26,7 +25,6 @@ class DropColumnPaymentMethodInPurchasingsTable extends Migration
     public function down()
     {
         Schema::table('purchasings', function (Blueprint $table) {
-            $table->string('payment_method')->after('supplier_id');
         });
     }
 }

@@ -3,7 +3,7 @@
   <div class="card-body box-profile">
     <div class="text-center">
       <img class="img-thumbnail" width="200" height="200"
-            src="{{ media(optional(optional(auth()->user()->profile)->media)->first()) }}"
+            src="{{ getProfileImage() }}"
             alt="User profile picture">
     </div>
 

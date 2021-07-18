@@ -6,7 +6,8 @@ use App\DataTables\ItemTable;
 use App\Traits\Media;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\HasLaTable;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Item extends Model
 {
@@ -18,24 +19,39 @@ class Item extends Model
     protected $fillable = [
         'name',
         'internal_production',
+        'sku',
+        'item_type'
     ];
 
-    public function category()
+    /**
+     * category relationship
+     *
+     * @access public
+     * @return BelongsTo
+     */
+    public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class, 'category_id');
     }
 
-    public function sellingDetails()
+    /**
+     * sellingDetails relationship
+     *
+     * @access public
+     * @return HasMany
+     */
+    public function sellingDetails(): HasMany
     {
         return $this->hasMany(SellingDetail::class);
     }
 
-    public function unit()
-    {
-        return $this->belongsTo(Unit::class, 'unit_id');
-    }
-
-    public function prices()
+    /**
+     * prices Relations
+     *
+     * @access public
+     * @return HasMany
+     */
+    public function prices(): HasMany
     {
         return $this->hasMany(Price::class, 'item_id');
     }
@@ -97,7 +113,4 @@ class Item extends Model
         /*     return 100; */
         /* } */
     }
-
-
-
 }

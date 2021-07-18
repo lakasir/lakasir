@@ -2,40 +2,42 @@
 
 namespace App\Repositories;
 
-use App\Abstracts\Repository as RepositoryAbstract;
 use App\Models\Category;
 use App\Models\Item as ItemModel;
 use App\Models\Price;
 use App\Models\Stock;
-use App\Models\Unit;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
-use Yajra\DataTables\DataTables;
+use Sheenazien8\Hascrudactions\Abstracts\LaTable;
+use Sheenazien8\Hascrudactions\Abstracts\Repository;
 
-class Item extends RepositoryAbstract
+/** @package App\Repositories */
+class Item extends Repository
 {
-    protected string $model = 'App\Models\Item';
-
-    public function datatable(Request $request)
+    public function __construct()
     {
-        $items = $this->query()->toBase()->addSelect([
-            'unit_name' => Unit::select('name')->whereColumn('unit_id', 'units.id')->latest()->limit(1),
+        parent::__construct(new ItemModel());
+    }
+
+    public function datatable(Request $request): LaTable
+    {
+        $items = $this->query()->addSelect([
             'category_name' => Category::select('name')->whereColumn('category_id', 'categories.id')->latest()->limit(1),
             'initial_price' => Price::select('initial_price')->whereColumn('item_id', 'items.id')->orderBy('date', 'asc')->limit(1),
             'selling_price' => Price::select('selling_price')->whereColumn('item_id', 'items.id')->orderBy('date', 'asc')->limit(1),
             'last_stock' => Stock::select(DB::raw('(CASE WHEN (SUM(amount) > 0) THEN SUM(amount) ELSE 0 END)'))->whereColumn('item_id', 'items.id')->latest()->limit(1)
-        ])->latest()->get();
+        ])->latest();
 
         return $this->getObjectModel()->table($items);
     }
 
     /**
-     * store item
+     * create
      *
-     * @return App\Models\Item as ItemModel
+     * @param Request $request
+     * @access public
+     * @return ItemModel
      */
     public function create(Request $request): ItemModel
     {
@@ -47,16 +49,18 @@ class Item extends RepositoryAbstract
             ]);
             $item = new $self->model();
             $item->fill($request->only('internal_production', 'name'));
-            $item->unit()->associate(Unit::find($request->unit_id));
             $item->category()->associate(Category::find($request->category_id));
             $item->save();
             $item->createMediaFromFile($request->image);
 
             $checkPrice = array_must_same(
-                $request->only('initial_price', 'selling_price'), [
-                'initial_price',
-                'selling_price'
-            ], 0);
+                $request->only('initial_price', 'selling_price'),
+                [
+                    'initial_price',
+                    'selling_price'
+                ],
+                0
+            );
 
             if (!$checkPrice) {
                 // create price
@@ -67,9 +71,12 @@ class Item extends RepositoryAbstract
             }
 
             $checkStock = array_must_same(
-                $request->only('amount'), [
-                'amount',
-            ], 0);
+                $request->only('amount'),
+                [
+                    'amount',
+                ],
+                0
+            );
 
             if (!$checkStock) {
                 // create stock
@@ -85,14 +92,16 @@ class Item extends RepositoryAbstract
     }
 
     /**
-     * update item
+     * update
      *
-     * @return App\Models\Item as ItemModel
+     * @param Request $request
+     * @param \App\Models\Item $item
+     * @access public
+     * @return ItemModel
      */
     public function update(Request $request, $item): ItemModel
     {
-        $self = $this;
-        return DB::transaction(static function () use ($request, $self, $item) {
+        return DB::transaction(static function () use ($request, $item) {
             $request->merge([
                 'date' => now()->format('Y-m-d'),
                 'current_stock' => $request->stock,
@@ -102,7 +111,6 @@ class Item extends RepositoryAbstract
                 $request->merge(['internal_production' => false]);
             }
             $item->fill($request->only('internal_production', 'name'));
-            $item->unit()->associate(Unit::find($request->unit_id));
             $item->category()->associate(Category::find($request->category_id));
             $item->save();
             // delete image
@@ -114,11 +122,15 @@ class Item extends RepositoryAbstract
         });
     }
 
+    /**
+     * @param array $items
+     * @param string $key
+     * @return null|float
+     */
     public function totalPriceByRequest(array $items, string $key = 'selling_price'): ?float
     {
         $self = $this;
-        $itemPrice = array_map( function($el) use ($self, $key)
-        {
+        $itemPrice = array_map(function ($el) use ($self, $key) {
             $item = $self->find($el['id']);
             if ($item) {
                 $lastPrice = $item->last_price->{$key} * $el['qty'];
@@ -130,19 +142,16 @@ class Item extends RepositoryAbstract
         return array_sum($itemPrice);
     }
 
+    /** @return Collection  */
     public function getNewestOrder(): Collection
     {
         return $this->query()
-             ->whereHas('sellingDetails.selling', function ($query)
-             {
-                 return $query->whereTransactionDate(now()->format('Y-m-d'));
-             })->with(['sellingDetails' => function ($sellingDetails)
-             {
-                 return $sellingDetails->whereHas('selling', function ($query)
-                 {
-                     return $query->whereTransactionDate(now()->format('Y-m-d'));
-                 });
-             }])->limit(5)->get();
+            ->whereHas('sellingDetails.selling', function ($query) {
+                return $query->whereTransactionDate(now()->format('Y-m-d'));
+            })->with(['sellingDetails' => function ($sellingDetails) {
+                return $sellingDetails->whereHas('selling', function ($query) {
+                    return $query->whereTransactionDate(now()->format('Y-m-d'));
+                });
+            }])->limit(5)->get();
     }
-
 }

@@ -17,7 +17,6 @@ class CreatePurchasingsTable extends Migration
             $table->id();
             $table->foreignId('supplier_id')->references('id')->on('suppliers')->onDelete('cascade');
             $table->date('date');
-            $table->string('payment_method');
             $table->string('invoice_number');
             $table->double('total_initial_price');
             $table->double('total_selling_price');

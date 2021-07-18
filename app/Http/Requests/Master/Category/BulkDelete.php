@@ -2,11 +2,13 @@
 
 namespace App\Http\Requests\Master\Category;
 
+use App\Traits\Category\CategoryTrait;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 
 class BulkDelete extends FormRequest
 {
+    use CategoryTrait;
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -14,7 +16,7 @@ class BulkDelete extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return Gate::authorize("bulk-delete-{$this->prefixPermission()}");
     }
 
     /**
@@ -25,7 +27,7 @@ class BulkDelete extends FormRequest
     public function rules()
     {
         return [
-            'ids.*' => 'required'
+            'ids' => ['array', 'required']
         ];
     }
 }

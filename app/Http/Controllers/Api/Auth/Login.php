@@ -55,7 +55,7 @@ class Login extends Controller
                     return Response::success($response);
                 } else {
                     $errors = ['errors' => [
-                        'password' => [ __('app.auth.password.missmatch') ]
+                        'password' => [__('app.auth.password.missmatch')]
                     ]];
 
                     return Response::clientError($errors, JsonResponse::HTTP_UNPROCESSABLE_ENTITY);

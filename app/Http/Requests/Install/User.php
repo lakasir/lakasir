@@ -26,7 +26,7 @@ class User extends FormRequest
         return [
             'username' => ['required', 'alpha_dash', 'min:3', 'unique:users'],
             'email' => ['required', 'email'],
-            'password' => ['required', 'alpha_dash', 'confirmed'],
+            'password' => ['required', 'confirmed'],
             'password_confirmation' => ['required'],
         ];
     }

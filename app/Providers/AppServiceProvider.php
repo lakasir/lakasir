@@ -5,10 +5,8 @@ namespace App\Providers;
 use App\Helpers\Response;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
-use JeroenNoten\LaravelAdminLte\Events\BuildingMenu;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -35,6 +33,7 @@ class AppServiceProvider extends ServiceProvider
         if (!env('APP_KEY')) {
             Artisan::call('key:generate');
         }
+
         \Spatie\Flash\Flash::levels([
             'success' => 'alert-success',
             'warning' => 'alert-warning',
@@ -49,14 +48,14 @@ class AppServiceProvider extends ServiceProvider
         Validator::extend('confirmation', function ($attribute, $value, $parameters, $validator) {
             $keyConfirmed = explode('_', request()->key)[0];
 
-            return $value == request()->{ $keyConfirmed };
+            return $value == request()->{$keyConfirmed};
         });
 
         $this->app->bind('ResponseHelper', function () {
             return new Response();
         });
 
-        if (app()->environment() == 'local') {
+        if (app()->environment() == 'testing') {
             app('debugbar')->disable();
         }
     }
