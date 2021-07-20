@@ -6,7 +6,7 @@ use App\Traits\Customer\CustomerTrait;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 
-class BulkDelete extends FormRequest
+class Destroy extends FormRequest
 {
     use CustomerTrait;
     /**
@@ -16,7 +16,7 @@ class BulkDelete extends FormRequest
      */
     public function authorize()
     {
-        return Gate::authorize("bulk-delete-{$this->prefixPermission()}");
+        return Gate::authorize("delete-{$this->prefixPermission()}");
     }
 
     /**
@@ -26,8 +26,6 @@ class BulkDelete extends FormRequest
      */
     public function rules()
     {
-        return [
-            'ids.*' => 'required'
-        ];
+        return [];
     }
 }
