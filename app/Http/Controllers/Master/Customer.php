@@ -91,7 +91,6 @@ class Customer extends Controller
      */
     public function edit($model, CustomerRepository $itemRepository, Update $request)
     {
-		dd($model);
         $data = $itemRepository->find($model);
 
         return view("{$this->viewPath}.edit", [
