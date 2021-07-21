@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Repositories\Item;
-use App\Repositories\Purchasing;
-use App\Repositories\Selling;
-use App\Repositories\SellingDetail;
+use App\Services\Item;
+use App\Services\Purchasing;
+use App\Services\Selling;
+use App\Services\SellingDetail;
 use Illuminate\Http\Request;
 
 class Dashboard extends Controller
