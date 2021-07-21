@@ -30,8 +30,9 @@ class Store extends FormRequest
             return [];
         }
         return [
-            'name' => 'required',
-            'email' => 'required',
+            'name' => 'required|string',
+            'email' => 'required|email|unique:customers',
+            'code' => 'nullable|unique:customers,code',
         ];
     }
 }
