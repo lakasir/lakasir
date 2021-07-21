@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repositories;
+namespace App\Services;
 
 use Sheenazien8\Hascrudactions\Abstracts\Repository as RepositoryAbstract;
 use App\Builder\NumberGeneratorBuilder;
