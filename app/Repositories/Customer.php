@@ -66,7 +66,7 @@ class Customer extends RepositoryAbstract
     {
         try {
             DB::beginTransaction();
-            $numberGenerator = (new NumberGeneratorBuilder())->model($this->model)->prefix('CUS')->build();
+            $numberGenerator = (new NumberGeneratorBuilder())->model($customer->getMorphClass())->prefix('CUS')->build();
             if (!$request->code) {
                 $request->merge([
                     'code' => $numberGenerator->create()
