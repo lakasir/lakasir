@@ -67,7 +67,7 @@ class CustomerTest extends TestCase
             ->assertSeeText(__('app.customers.column.name'))
             ->assertSeeText(__('app.customers.column.email'))
             ->assertSeeText(__('app.customers.column.code'))
-            ->assertSeeText(__('app.customers.column.info.code'))
+            ->assertSeeText(__('app.customers.info.code'))
             ->assertSeeText(__('app.global.submit'))
             ->assertStatus(200);
     }
@@ -180,7 +180,7 @@ class CustomerTest extends TestCase
             ->assertSeeText(__('app.customers.column.name'))
             ->assertSeeText(__('app.customers.column.email'))
             ->assertSeeText(__('app.customers.column.code'))
-            ->assertSeeText(__('app.customers.column.info.code'))
+            ->assertSeeText(__('app.customers.info.code'))
             ->assertSeeText(__('app.global.submit'))
             ->assertStatus(200);
     }
