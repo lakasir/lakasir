@@ -1,6 +1,6 @@
 <?php
 
-Namespace App\Repositories;
+namespace App\Services;
 
 use App\Abstracts\Repository as RepositoryAbstract;
 

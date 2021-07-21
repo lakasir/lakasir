@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repositories;
+namespace App\Services;
 
 use App\Models\Category;
 use App\Models\Item as ItemModel;

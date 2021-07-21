@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repositories;
+namespace App\Services;
 
 use App\Abstracts\Repository as RepositoryAbstract;
 use Illuminate\Http\Request;
