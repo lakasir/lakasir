@@ -21,8 +21,8 @@
           }},
           { data: 'email', name: 'email' },
           { data: 'code', name: 'code' },
-          { data: 'total_point', name: 'total_point' },
-          { data: 'created_at', name: 'Created At' },
+          { data: 'total_point', name: 'total_point', searchable: false },
+          { data: 'created_at', name: 'Created At', searchable: false },
           { data: 'action', name: 'action', orderable: false, searchable: false, width: '3%' },
         ]
       });
