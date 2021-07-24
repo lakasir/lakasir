@@ -209,6 +209,7 @@ class CustomerTest extends TestCase
             ->assertSessionHasErrors(['email' => trans('validation.unique', ['attribute' => 'email'])]);
     }
 
+    /** @test */
     public function it_cant_update_customer_validation_error_uniqe_code(): void
     {
         $this->assignPermission('update-customer');
