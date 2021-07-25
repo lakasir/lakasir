@@ -135,7 +135,8 @@ class CustomerTest extends TestCase
         // expected_format = CUSYYYYMMDD001 -> increment
         $this->assignPermission('create-customer');
         $prefix_expected_number = 'CUS'.now()->format('Ymd');
-        foreach (range(1, 50) as $key) {
+
+        foreach (range(1, 5) as $key) {
             $request = $this->data();
             $this->loginAs()
                  ->post(route('customer.store'), $request)
@@ -147,6 +148,9 @@ class CustomerTest extends TestCase
             $this->assertFlashLevel('success', __('app.global.message.success.create', [
                 'item' => ucfirst('customer')
             ]));
+
+            // add delay between request
+            sleep(1);
         }
     }
 
