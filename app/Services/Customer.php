@@ -24,17 +24,17 @@ class Customer extends RepositoryAbstract
         $this->customerType = new CustomerType();
     }
 
-    public function datatable(Request $request): LaTable
-    {
-        $items = $this->query()->toBase()
-            ->addSelect([
-                'total_point' => CustomerPoint::select(DB::raw("IF(SUM(point), SUM(point), 0)"))
-                    ->whereColumn('customer_id', 'customers.id')
-            ])
-            ->latest();
+    // public function datatable(Request $request): LaTable
+    // {
+    //     $items = $this->query()->toBase()
+    //         ->addSelect([
+    //             'total_point' => CustomerPoint::select(DB::raw("IF(SUM(point), SUM(point), 0)"))
+    //                 ->whereColumn('customer_id', 'customers.id')
+    //         ])
+    //         ->latest();
 
-        return $this->getObjectModel()->table($items);
-    }
+    //     return $this->getObjectModel()->table($items);
+    // }
 
 
     public function create(Request $request): ModelsCustomer
