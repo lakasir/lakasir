@@ -4,6 +4,7 @@ namespace Tests\Feature\Master;
 
 use App\Models\Customer;
 use App\Models\CustomerType;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\Feature\FeatureTestCase as TestCase;
 
@@ -139,8 +140,10 @@ class CustomerTest extends TestCase
             $this->loginAs()
                  ->post(route('customer.store'), $request)
                  ->assertStatus(302);
+            /** @var Customer $customer_created */
             $customer_created = Customer::where('email', $request['email'])->first();
-            $this->assertTrue($customer_created->code == $prefix_expected_number . str_pad($key, 3, 0, STR_PAD_LEFT));
+            $this->assertEquals($prefix_expected_number . str_pad($key, 3, 0, STR_PAD_LEFT), $customer_created->code);
+            /* $this->assertTrue($customer_created->code == $prefix_expected_number . str_pad($key, 3, 0, STR_PAD_LEFT)); */
             $this->assertFlashLevel('success', __('app.global.message.success.create', [
                 'item' => ucfirst('customer')
             ]));
@@ -303,6 +306,10 @@ class CustomerTest extends TestCase
         ]));
     }
 
+    /**
+     * @return array
+     * @throws BindingResolutionException
+     */
     private function data(): array
     {
         $customer_type = factory(CustomerType::class)->create();
