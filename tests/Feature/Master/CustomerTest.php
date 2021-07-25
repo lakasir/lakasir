@@ -133,30 +133,18 @@ class CustomerTest extends TestCase
     {
         // expected_format = CUSYYYYMMDD001 -> increment
         $this->assignPermission('create-customer');
-        $request = $this->data();
         $prefix_expected_number = 'CUS'.now()->format('Ymd');
-
-        $this->loginAs()
-            ->post(route('customer.store'), $request)
-            ->assertStatus(302);
-        $customer_created = Customer::where('email', $request['email'])->first();
-        $this->assertTrue($customer_created->code == $prefix_expected_number . 001);
-
-        $this->loginAs()
-            ->post(route('customer.store'), $request)
-            ->assertStatus(302);
-        $customer_created = Customer::where('email', $request['email'])->first();
-        $this->assertTrue($customer_created->code == $prefix_expected_number . 002);
-
-        $request = $this->data();
-        $this->loginAs()
-            ->post(route('customer.store'), $request)
-            ->assertStatus(302);
-        $this->assertTrue($customer_created->code == $prefix_expected_number . 003);
-
-        $this->assertFlashLevel('success', __('app.global.message.success.create', [
-            'item' => ucfirst('customer')
-        ]));
+        foreach (range(1, 50) as $key) {
+            $request = $this->data();
+            $this->loginAs()
+                 ->post(route('customer.store'), $request)
+                 ->assertStatus(302);
+            $customer_created = Customer::where('email', $request['email'])->first();
+            $this->assertTrue($customer_created->code == $prefix_expected_number . str_pad($key, 3, 0, STR_PAD_LEFT));
+            $this->assertFlashLevel('success', __('app.global.message.success.create', [
+                'item' => ucfirst('customer')
+            ]));
+        }
     }
 
     /** @test */
