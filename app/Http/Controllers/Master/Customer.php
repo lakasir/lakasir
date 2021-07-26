@@ -23,10 +23,10 @@ class Customer extends Controller
      *
      * @return mix
      */
-    public function index(Browse $request, CustomerService $itemRepository)
+    public function index(Browse $request, CustomerService $customerService)
     {
         if ($request->ajax() || isset($this->return) && $this->return == 'api') {
-            return $itemRepository->datatable($request);
+            return $customerService->datatable($request);
         }
 
         return view("{$this->viewPath}.index", [
@@ -48,13 +48,13 @@ class Customer extends Controller
 
 	/**
      * @param Store $request
-     * @param CustomerService $itemRepository
+     * @param CustomerService $customerService
      * @return RedirectResponse
      * @throws BindingResolutionException
      */
-    public function store(Store $request, CustomerService $itemRepository)
+    public function store(Store $request, CustomerService $customerService)
     {
-        $itemRepository->create($request);
+        $customerService->create($request);
 
         $message = __('app.global.message.success.create', [
             'item' => ucfirst($this->resources())
@@ -67,14 +67,14 @@ class Customer extends Controller
 
     /**
      * @param mixed $model
-     * @param CustomerService $itemRepository
+     * @param CustomerService $customerService
      * @param Browse $request
      * @return View|Factory
      * @throws BindingResolutionException
      */
-    public function show($model, CustomerService $itemRepository, Browse $request)
+    public function show($model, CustomerService $customerService, Browse $request)
     {
-        $data = $itemRepository->find($model);
+        $data = $customerService->find($model);
 
         return view("{$this->viewPath}.show", [
             'resources' => $this->resources(),
@@ -84,14 +84,14 @@ class Customer extends Controller
 
     /**
      * @param mixed $model
-     * @param CustomerService $itemRepository
+     * @param CustomerService $customerService
      * @param Update $request
      * @return View|Factory
      * @throws BindingResolutionException
      */
-    public function edit($model, CustomerService $itemRepository, Update $request)
+    public function edit($model, CustomerService $customerService, Update $request)
     {
-        $data = $itemRepository->find($model);
+        $data = $customerService->find($model);
 
         return view("{$this->viewPath}.edit", [
             'resources' => $this->resources(),
@@ -101,17 +101,17 @@ class Customer extends Controller
 
     /**
      * @param string|int $model
-     * @param CustomerService $itemRepository
+     * @param CustomerService $customerService
      * @param Update $request
      * @return RedirectResponse
      * @throws AuthorizationException
      * @throws BindingResolutionException
      */
-    public function update($model, CustomerService $itemRepository, Update $request)
+    public function update($model, CustomerService $customerService, Update $request)
     {
-        $data = $itemRepository->find($model);
+        $data = $customerService->find($model);
 
-        $data = $itemRepository->update($request, $data);
+        $data = $customerService->update($request, $data);
 
         $message = __('app.global.message.success.update', [
             'item' => ucfirst($this->resources())
@@ -124,14 +124,14 @@ class Customer extends Controller
 
     /**
      * @param mixed $model
-     * @param CustomerService $itemRepository
+     * @param CustomerService $customerService
      * @param Destroy $request
      * @return RedirectResponse
      * @throws BindingResolutionException
      */
-    public function destroy($model, CustomerService $itemRepository, Destroy $request)
+    public function destroy($model, CustomerService $customerService, Destroy $request)
     {
-        $data = $itemRepository->find($model);
+        $data = $customerService->find($model);
 
         $data->delete();
 
@@ -146,14 +146,14 @@ class Customer extends Controller
 
     /**
      * @param BulkDelete $request
-     * @param CustomerService $itemRepository
+     * @param CustomerService $customerService
      * @return Sheenazien8\Hascrudactions\Traits\Illuminate\Http\Response
      * @throws BindingResolutionException
      * @throws AuthorizationException
      */
-    public function bulkDestroy(BulkDelete $request, CustomerService $itemRepository)
+    public function bulkDestroy(BulkDelete $request, CustomerService $customerService)
     {
-        $itemRepository->bulkDestroy($request);
+        $customerService->bulkDestroy($request);
 
         $message = __('app.global.message.success.bulk-delete', [
             'item' => ucfirst($this->resources())
