@@ -42,7 +42,7 @@ class CustomerTest extends TestCase
             ->assertJsonFragment([
                 'name' => $customer->name,
                 'email' => $customer->email,
-                'code' => $customer->code,
+                'code' => strval($customer->code),
             ])
             ->assertSeeText($customer->code)
             ->assertSeeText($customer->email)
@@ -68,7 +68,7 @@ class CustomerTest extends TestCase
             ->assertSeeText(__('app.customers.column.name'))
             ->assertSeeText(__('app.customers.column.email'))
             ->assertSeeText(__('app.customers.column.code'))
-            ->assertSeeText(__('app.customers.column.info.code'))
+            ->assertSeeText(__('app.customers.info.code'))
             ->assertSeeText(__('app.global.submit'))
             ->assertStatus(200);
     }
@@ -135,7 +135,8 @@ class CustomerTest extends TestCase
         // expected_format = CUSYYYYMMDD001 -> increment
         $this->assignPermission('create-customer');
         $prefix_expected_number = 'CUS'.now()->format('Ymd');
-        foreach (range(1, 50) as $key) {
+
+        foreach (range(1, 5) as $key) {
             $request = $this->data();
             $this->loginAs()
                  ->post(route('customer.store'), $request)
@@ -147,6 +148,9 @@ class CustomerTest extends TestCase
             $this->assertFlashLevel('success', __('app.global.message.success.create', [
                 'item' => ucfirst('customer')
             ]));
+
+            // add delay between request
+            sleep(1);
         }
     }
 
@@ -171,7 +175,7 @@ class CustomerTest extends TestCase
             ->assertSeeText(__('app.customers.column.name'))
             ->assertSeeText(__('app.customers.column.email'))
             ->assertSeeText(__('app.customers.column.code'))
-            ->assertSeeText(__('app.customers.column.info.code'))
+            ->assertSeeText(__('app.customers.info.code'))
             ->assertSeeText(__('app.global.submit'))
             ->assertStatus(200);
     }

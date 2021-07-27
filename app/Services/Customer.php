@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repositories;
+namespace App\Services;
 
 use Sheenazien8\Hascrudactions\Abstracts\Repository as RepositoryAbstract;
 use App\Builder\NumberGeneratorBuilder;
@@ -24,17 +24,17 @@ class Customer extends RepositoryAbstract
         $this->customerType = new CustomerType();
     }
 
-    public function datatable(Request $request): LaTable
-    {
-        $items = $this->query()->toBase()
-            ->addSelect([
-                'total_point' => CustomerPoint::select(DB::raw("IF(SUM(point), SUM(point), 0)"))
-                    ->whereColumn('customer_id', 'customers.id')
-            ])
-            ->latest();
+    // public function datatable(Request $request): LaTable
+    // {
+    //     $items = $this->query()->toBase()
+    //         ->addSelect([
+    //             'total_point' => CustomerPoint::select(DB::raw("IF(SUM(point), SUM(point), 0)"))
+    //                 ->whereColumn('customer_id', 'customers.id')
+    //         ])
+    //         ->latest();
 
-        return $this->getObjectModel()->table($items);
-    }
+    //     return $this->getObjectModel()->table($items);
+    // }
 
 
     public function create(Request $request): ModelsCustomer
@@ -66,7 +66,7 @@ class Customer extends RepositoryAbstract
     {
         try {
             DB::beginTransaction();
-            $numberGenerator = (new NumberGeneratorBuilder())->model($this->model)->prefix('CUS')->build();
+            $numberGenerator = (new NumberGeneratorBuilder())->model($customer->getMorphClass())->prefix('CUS')->build();
             if (!$request->code) {
                 $request->merge([
                     'code' => $numberGenerator->create()

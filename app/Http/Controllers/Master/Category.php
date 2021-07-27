@@ -8,7 +8,7 @@ use App\Http\Requests\Master\Category\Browse;
 use App\Http\Requests\Master\Category\Create;
 use App\Http\Requests\Master\Category\Destroy;
 use App\Http\Requests\Master\Category\Update;
-use App\Repositories\Category as CategoryRepository;
+use App\Services\Category as CategoryService;
 use App\Traits\Category\CategoryTrait;
 use Illuminate\View\View;
 
@@ -23,10 +23,10 @@ class Category extends Controller
      *
      * @return mix
      */
-    public function index(Browse $request, CategoryRepository $itemRepository)
+    public function index(Browse $request, CategoryService $categoryService)
     {
         if ($request->ajax() || isset($this->return) && $this->return == 'api') {
-            return $itemRepository->datatable($request);
+            return $categoryService->datatable($request);
         }
 
         return view("{$this->viewPath}.index", [
@@ -48,13 +48,13 @@ class Category extends Controller
 
     /**
      * @param Create $request
-     * @param ItemRepository $itemRepository
+     * @param ItemRepository $categoryService
      * @return RedirectResponse
      * @throws BindingResolutionException
      */
-    public function store(Create $request, CategoryRepository $itemRepository)
+    public function store(Create $request, CategoryService $categoryService)
     {
-        $itemRepository->create($request);
+        $categoryService->create($request);
 
         $message = __('app.global.message.success.create', [
             'item' => ucfirst($this->resources())
@@ -67,14 +67,14 @@ class Category extends Controller
 
     /**
      * @param mixed $model
-     * @param ItemRepository $itemRepository
+     * @param ItemRepository $categoryService
      * @param Browse $request
      * @return View|Factory
      * @throws BindingResolutionException
      */
-    public function show($model, CategoryRepository $itemRepository, Browse $request)
+    public function show($model, CategoryService $categoryService, Browse $request)
     {
-        $data = $itemRepository->find($model);
+        $data = $categoryService->find($model);
 
         return view("{$this->viewPath}.show", [
             'resources' => $this->resources(),
@@ -84,14 +84,14 @@ class Category extends Controller
 
     /**
      * @param mixed $model
-     * @param ItemRepository $itemRepository
+     * @param ItemRepository $categoryService
      * @param Update $request
      * @return View|Factory
      * @throws BindingResolutionException
      */
-    public function edit($model, CategoryRepository $itemRepository, Update $request)
+    public function edit($model, CategoryService $categoryService, Update $request)
     {
-        $data = $itemRepository->find($model);
+        $data = $categoryService->find($model);
 
         return view("{$this->viewPath}.edit", [
             'resources' => $this->resources(),
@@ -101,17 +101,17 @@ class Category extends Controller
 
     /**
      * @param string|int $model
-     * @param ItemRepository $itemRepository
+     * @param ItemRepository $categoryService
      * @param Update $request
      * @return RedirectResponse
      * @throws AuthorizationException
      * @throws BindingResolutionException
      */
-    public function update($model, CategoryRepository $itemRepository, Update $request)
+    public function update($model, CategoryService $categoryService, Update $request)
     {
-        $data = $itemRepository->find($model);
+        $data = $categoryService->find($model);
 
-        $data = $itemRepository->update($request, $data);
+        $data = $categoryService->update($request, $data);
 
         $message = __('app.global.message.success.update', [
             'item' => ucfirst($this->resources())
@@ -124,14 +124,14 @@ class Category extends Controller
 
     /**
      * @param mixed $model
-     * @param ItemRepository $itemRepository
+     * @param ItemRepository $categoryService
      * @param Destroy $request
      * @return RedirectResponse
      * @throws BindingResolutionException
      */
-    public function destroy($model, CategoryRepository $itemRepository, Destroy $request)
+    public function destroy($model, CategoryService $categoryService, Destroy $request)
     {
-        $data = $itemRepository->find($model);
+        $data = $categoryService->find($model);
 
         $data->delete();
 
@@ -146,14 +146,14 @@ class Category extends Controller
 
     /**
      * @param BulkDelete $request
-     * @param ItemRepository $itemRepository
+     * @param ItemRepository $categoryService
      * @return Sheenazien8\Hascrudactions\Traits\Illuminate\Http\Response
      * @throws BindingResolutionException
      * @throws AuthorizationException
      */
-    public function bulkDestroy(BulkDelete $request, CategoryRepository $itemRepository)
+    public function bulkDestroy(BulkDelete $request, CategoryService $categoryService)
     {
-        $itemRepository->bulkDestroy($request);
+        $categoryService->bulkDestroy($request);
 
         $message = __('app.global.message.success.bulk-delete', [
             'item' => ucfirst($this->resources())
