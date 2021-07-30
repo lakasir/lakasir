@@ -6,7 +6,7 @@ use App\Traits\Supplier\SupplierTrait;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 
-class Store extends FormRequest
+class Destroy extends FormRequest
 {
     use SupplierTrait;
     /**
@@ -16,7 +16,7 @@ class Store extends FormRequest
      */
     public function authorize()
     {
-        return Gate::authorize("create-{$this->prefixPermission()}");
+        return Gate::authorize("delete-{$this->prefixPermission()}");
     }
 
     /**
@@ -26,16 +26,6 @@ class Store extends FormRequest
      */
     public function rules()
     {
-        if ($this->method() != 'POST') {
-            return [];
-        }
-
-        return [
-            'code' => 'nullable|unique:suppliers,code',
-            'name' => 'required|string',
-            'shop_name' => 'required|string',
-            'phone' => 'required|unique:suppliers,phone',
-            'address' => 'required',
-        ];
+        return [];
     }
 }
