@@ -112,7 +112,7 @@ class LoginController extends Controller
             'identity' => ['required', 'string', function ($attr, $val, $fail) {
                 $user = User::where($this->username(), $val)->first();
                 if (!$user) {
-                    $fail(trans('auth.failed'));
+                    $fail(trans('auth.failed', ['item' => $attr]));
                 }
             }],
             'password' => 'required|string',
