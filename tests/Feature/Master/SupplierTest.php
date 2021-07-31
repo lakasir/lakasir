@@ -40,7 +40,7 @@ class SupplierTest extends TestCase
             ->assertJsonFragment([
                 'name' => $supplier->name,
                 'email' => $supplier->email,
-                'code' => $supplier->code,
+                'code' => strval($supplier->code),
             ])
             ->assertSeeText($supplier->code)
             ->assertSeeText($supplier->email)
@@ -130,17 +130,26 @@ class SupplierTest extends TestCase
     /** @test */
     public function code_should_equals_with_format(): void
     {
-        // expected_format = SUPYYYYMMDD001
+        // expected_format = SUPYYYYMMDD001 -> increment
         $this->assignPermission('create-supplier');
-        $request = $this->data();
-        $this->loginAs()
-            ->post(route('supplier.store'), $request)
-            ->assertStatus(302);
-        $supplier_created = Supplier::where('email', $request['email'])->first();
-        $this->assertTrue($supplier_created->code == 'SUPYYYYMMDD001');
-        $this->assertFlashLevel('success', __('app.global.message.success.create', [
-            'item' => ucfirst('supplier')
-        ]));
+        $prefix_expected_number = 'SUP'.now()->format('Ymd');
+
+        foreach (range(1, 5) as $key) {
+            $request = $this->data();
+            $this->loginAs()
+                 ->post(route('supplier.store'), $request)
+                 ->assertStatus(302);
+            /** @var Customer $supplier_created */
+            $supplier_created = Supplier::where('email', $request['email'])->first();
+            $this->assertEquals($prefix_expected_number . str_pad($key, 3, 0, STR_PAD_LEFT), $supplier_created->code);
+            $this->assertFlashLevel('success', __('app.global.message.success.create', [
+                'item' => ucfirst('supplier')
+            ]));
+
+            // add delay between request
+            sleep(1);
+        }
+
     }
 
     /** @test */

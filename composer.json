@@ -28,7 +28,6 @@
         "livewire/livewire": "^2.4",
         "maatwebsite/excel": "^3.1",
         "pusher/pusher-php-server": "~4.0",
-        "sheenazien8/hascrudactions": "^1.0",
         "sheenazien8/livewire-components": "dev-develop",
         "spatie/laravel-flash": "^1.6",
         "spatie/laravel-permission": "^3.13",
