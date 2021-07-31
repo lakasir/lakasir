@@ -12,7 +12,7 @@ class Supplier extends RepositoryAbstract
 
     public function create(Request $request)
     {
-        $numberGenerator = ( new NumberGeneratorBuilder() )->model($this->model)->prefix('CUS')->build();
+        $numberGenerator = ( new NumberGeneratorBuilder() )->model($this->model)->prefix('SUP')->build();
         $request->merge([
             'code' => $numberGenerator->create()
         ]);
@@ -25,7 +25,7 @@ class Supplier extends RepositoryAbstract
 
     public function update(Request $request, $supplier)
     {
-        $numberGenerator = ( new NumberGeneratorBuilder() )->model($this->model)->prefix('CUS')->build();
+        $numberGenerator = ( new NumberGeneratorBuilder() )->model($this->model)->prefix('SUP')->build();
         if (!$request->code) {
             $request->merge([
                 'code' => $numberGenerator->create()
