@@ -16,7 +16,7 @@ class Supplier extends Controller
 {
     use SupplierTrait;
 
-	private $viewPath = 'app.master.supliers';
+	private $viewPath = 'app.master.suppliers';
 
 	/**
      * Display a listing of the resource.
