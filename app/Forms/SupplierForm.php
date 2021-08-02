@@ -14,7 +14,7 @@ class SupplierForm extends ComponentAbstracts
                 'label' =>  __('app.suppliers.column.code'),
                 'placeholder' =>  __('app.suppliers.placeholder.code'),
                 'value' => optional($this->value->data)->code,
-                'info' => __('app.customers.info.code')
+                'info' => __('app.suppliers.info.code')
             ],
             'name' => [
                 'type' => 'text',
@@ -27,6 +27,12 @@ class SupplierForm extends ComponentAbstracts
                 'label' =>  __('app.suppliers.column.shop_name'),
                 'placeholder' =>  __('app.suppliers.placeholder.shop_name'),
                 'value' => optional($this->value->data)->shop_name,
+            ],
+            'email' => [
+                'type' => 'text',
+                'label' =>  __('app.suppliers.column.email'),
+                'placeholder' =>  __('app.suppliers.placeholder.email'),
+                'value' => optional($this->value->data ?? '')->email
             ],
             'phone' => [
                 'type' => 'text',
@@ -58,13 +64,13 @@ class SupplierForm extends ComponentAbstracts
         ];
     }
 
-    public function validations(): array
-    {
-        return [
-            'name' => ['required', 'min:3'],
-            'shop_name' => ['required'],
-            'phone' => ['required'],
-            'address' => ['required'],
-        ];
-    }
+    // public function validations(): array
+    // {
+    //     return [
+    //         'name' => ['required', 'min:3'],
+    //         'shop_name' => ['required'],
+    //         'phone' => ['required'],
+    //         'address' => ['required'],
+    //     ];
+    // }
 }

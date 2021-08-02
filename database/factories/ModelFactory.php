@@ -55,6 +55,7 @@ $factory->define(Supplier::class, function (Faker $faker) {
         'name' => $faker->name(),
         'shop_name' => $faker->name(),
         'name' => $faker->name(),
+        'email' => $faker->email(),
         'phone' => $faker->phoneNumber(),
         'address' => $faker->streetAddress(),
         'code' => $faker->languageCode()

@@ -2,11 +2,13 @@
 
 namespace App\Http\Requests\Master\Supplier;
 
+use App\Traits\Supplier\SupplierTrait;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 
 class Store extends FormRequest
 {
+    use SupplierTrait;
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -14,7 +16,7 @@ class Store extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return Gate::authorize("create-{$this->prefixPermission()}");
     }
 
     /**
@@ -24,11 +26,17 @@ class Store extends FormRequest
      */
     public function rules()
     {
+        if ($this->method() != 'POST') {
+            return [];
+        }
+
         return [
-            'name' => 'required',
-            'shop_name' => 'required',
-            'phone' => 'required',
-            'address' => 'required'
+            'code' => 'nullable|unique:suppliers,code',
+            'email' => 'required|email|unique:suppliers,email',
+            'name' => 'required|string',
+            'shop_name' => 'required|string',
+            'phone' => 'required|unique:suppliers,phone',
+            'address' => 'required',
         ];
     }
 }

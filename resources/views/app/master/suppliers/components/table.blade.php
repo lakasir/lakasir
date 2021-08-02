@@ -14,6 +14,7 @@
     <th> {{ __('app.suppliers.column.name') }} </th>
     <th> {{ __('app.suppliers.column.code') }} </th>
     <th> {{ __('app.suppliers.column.shop_name') }} </th>
+    <th> {{ __('app.suppliers.column.email') }} </th>
     <th> {{ __('app.suppliers.column.phone') }} </th>
     <th> {{ __('app.suppliers.column.address') }} </th>
   @endslot
@@ -33,6 +34,7 @@
           }},
           { data: 'code', name: 'code' },
           { data: 'shop_name', name: 'shop_name' },
+          { data: 'email', name: 'email' },
           { data: 'phone', name: 'phone' },
           { data: 'address', name: 'address' },
           { data: 'created_at', name: 'Created At' },
