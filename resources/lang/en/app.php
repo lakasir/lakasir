@@ -380,6 +380,7 @@ return [
             'name' => 'Name',
             'shop_name' => 'Shop Name',
             'code' => 'Code',
+            'email' => 'Email',
             'phone' => 'Phone',
             'address' => 'Address'
         ],
@@ -387,8 +388,12 @@ return [
             'name' => 'Name',
             'shop_name' => 'Shop Name',
             'code' => 'Code',
+            'email' => 'Email',
             'phone' => 'Phone',
             'address' => 'Address'
+        ],
+        'info' => [
+            'code' => 'Leave it Empty for use default generate code'
         ],
         'edit' => [
             'title' => 'Edit Supplier'
@@ -400,6 +405,7 @@ return [
             'name' => 'Supplier Name ( required )',
             'code' => 'Code ( Empty for default code )',
             'shop_name' => 'Shop Name',
+            'email' => 'Email',
             'phone' => 'Phone',
             'address' => 'Address'
         ],
