@@ -32,7 +32,7 @@ class DatabaseSeeder extends Seeder
         Price::truncate();
         Item::truncate();
         $this->call([
-            /* UserSeeder::class, */
+            UserSeeder::class,
             RolesAndPermissionsSeeder::class,
             PaymentMethod::class,
             CategorySeeder::class,

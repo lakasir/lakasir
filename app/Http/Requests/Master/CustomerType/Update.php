@@ -2,11 +2,15 @@
 
 namespace App\Http\Requests\Master\CustomerType;
 
+use App\Traits\CustomerType\CustomerTypeTrait;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Validation\Rule;
 
 class Update extends FormRequest
 {
+    use CustomerTypeTrait;
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -14,19 +18,33 @@ class Update extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return Gate::authorize("update-{$this->prefixPermission()}");
     }
 
     /**
      * Get the validation rules that apply to the request.
      *
+     * @param Request $request
      * @return array
      */
-    public function rules()
+    public function rules(Request $request)
     {
+        if (!in_array($this->method(), ['PUT', 'PATCH'])) {
+            return [];
+        }
+
+        $routeParameters = $request->route()->parameters();
         return [
-            'name' => 'required',
-            'default_point' => 'required',
+            'name' => 'required|string',
+            'email' => [
+                'required',
+                'email',
+                Rule::unique('customers')->ignore($routeParameters['customer'])
+            ],
+            'code' => [
+                'nullable',
+                Rule::unique('customers')->ignore($routeParameters['customer'])
+            ],
         ];
     }
 }

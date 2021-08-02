@@ -335,8 +335,8 @@ return [
                 ],
                 [
                     'text' => 'menu.customer_type',
-                    'url'  => 'master/type_customer',
-                    'active' => ['master/type_customer', 'master/type_customer/create', 'regex:/^master\/type_customer\/[0-9]\/edit/'],
+                    'url'  => 'master/customer_type',
+                    'active' => ['master/customer_type', 'master/customer_type/create', 'regex:/^master\/customer_type\/[0-9]\/edit/'],
                     'can' => 'browse-customer_type'
                 ],
             ],
