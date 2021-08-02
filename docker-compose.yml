@@ -61,7 +61,7 @@ services:
     ports:
       - 9000:9000
     command: >
-      sh -c 'composer install
+      sh -c 'composer install --ignore-platform-reqs
       && yarn install
       && yarn run dev
       && php artisan migrate

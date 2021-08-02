@@ -1,14 +1,14 @@
 <template>
   <div>
-    <button @click="clicked" :type="type" class="btn" :class="`float-${float} btn-${color}`" :disabled="loading"> <div v-if="!loading"><i :class="icon"></i> <span class="mr-1"></span>{{ text }}</div>
-      <div v-if="loading"><span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> {{ loadingText }}</div>
+    <button @click="clicked" :type="type" class="btn" :class="`float-${float} btn-${color}`" :disabled="loadingState"> <div v-if="!loadingState"><i :class="icon"></i> <span class="mr-1"></span>{{ text }}</div>
+      <div v-if="loadingState"><span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> {{ loadingText }}</div>
     </button>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'button',
+  name: 'l-button',
 
   props: {
     text: {default: 'Submit', type: String},
@@ -23,17 +23,19 @@ export default {
 
   data() {
     return {
-
+      loadingState : this.loading
     }
   },
 
   methods: {
     clicked() {
-      this.loading = true
       if (this.type != 'submit') {
+        this.loadingState = true
         window.location.href = this.to
+      }else{
+        return false;
       }
-    }
+    },
   },
 
   mounted() {
