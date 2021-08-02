@@ -508,6 +508,7 @@ return [
         'submit' => 'Submit',
         'action' => 'Action',
         'edit' => 'Edit',
+        'create' => 'Create :title',
         'delete' => 'Delete',
         'create' => 'Create',
         'created_at' => 'Created At',

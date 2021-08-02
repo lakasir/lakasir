@@ -1,55 +1,36 @@
 <div>
-  @if ($withoutcard)
-    <div class="table-responsive">
-      <table class="table table-hover" id="{{ $resources }}-table">
-        <thead>
-          <tr>
-            @if (!$withoutcheckbox)
-              @include('partials.table.select-all')
-            @endif
-            {{ $thead }}
-            @if (!$withoutTime)
-              <th> {{ __('app.global.created_at') }}</th>
-            @endif
-            @if (!$withoutaction)
-              <th></th>
-            @endif
-          </tr>
-        </thead>
-        @if (isset($tbody))
-          <tbody>
-            {{ $tbody }}
-          </tbody>
-        @endif
-      </table>
+  @isset ($topDiv)
+  {{ $topDiv }}
+  @endisset
+  <div class="card">
+    <div class="card-header">
+      {{ $title }}
     </div>
-  @else
-    <div class="card">
-      <div class="card-header">
-        {{ $title }}
-      </div>
-      <div class="card-body">
-        <div class="table-responsive">
-          <table class="table table-hover" id="{{ $resources }}-table">
-            <thead>
-              <tr>
-                @if (!$withoutcheckbox)
-                  @include('partials.table.select-all')
-                @endif
-                {{ $thead }}
-                @if (!$withoutTime)
-                  <th> {{ __('app.global.created_at') }}</th>
-                @endif
-                @if (!$withoutaction)
-                  <th></th>
-                @endif
-              </tr>
-            </thead>
-          </table>
-        </div>
-      </div>
-      <div class="card-footer">
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-hover" id="{{ $resources }}-table">
+          <thead>
+            <tr>
+              @if (!$withoutCheckbox)
+                @include('partials.table.select-all')
+              @endif
+              {{ $thead }}
+              @if (!$withoutTime)
+                <th> {{ __('app.global.created_at') }}</th>
+              @endif
+              @if (!$withoutaction)
+                <th></th>
+              @endif
+            </tr>
+          </thead>
+        </table>
       </div>
     </div>
-  @endif
+    <div class="card-footer">
+      {{ $title }}
+    </div>
+  </div>
+  @isset ($bottomDiv)
+  {{ $bottomDiv }}
+  @endisset
 </div>

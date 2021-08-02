@@ -497,7 +497,7 @@ return [
         'action' => 'Tindakan',
         'edit' => 'Ubah',
         'delete' => 'Hapus',
-        'create' => 'Tambah',
+        'create' => 'Tambah :title',
         'created_at' => 'Dibuat Pada',
         'suredelete' => 'Apa Anda Yakin?',
         'error_old_password' => 'Password Kamu tidak valid',

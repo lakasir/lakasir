@@ -2,7 +2,7 @@
 
 @section('content')
   @include('app.master.customer_types.components.form', [
-    'route' => route('type_customer.store'),
+    'route' => route('customer_type.store'),
     'title' => __('app.customer_types.create.title')
   ])
 @endsection

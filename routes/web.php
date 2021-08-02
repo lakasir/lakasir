@@ -9,7 +9,6 @@ use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\User\ChangePassword;
 use App\Http\Controllers\User\Profile;
 use App\Http\Controllers\Master\Customer;
-use App\Http\Controllers\Master\CustomerType;
 use App\Http\Controllers\Master\Group;
 use App\Http\Controllers\Master\Supplier;
 use App\Http\Controllers\Master\Item;
@@ -20,6 +19,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Master\CustomerPoint;
+use App\Http\Controllers\Master\CustomerType;
 use App\Http\Controllers\Master\PaymentMethod;
 use App\Http\Controllers\Settings\DefaultSetting;
 use App\Http\Controllers\Settings\General\Company;
@@ -88,8 +88,8 @@ Route::group(['middleware' => ['installed', 'auth']], function () {
         Route::delete('/group/bulk-destroy', [Group::class, 'bulkDestroy']);
         Route::resource('/group', Group::class);
 
-        Route::delete('/type_customer/bulk-destroy', [CustomerType::class, 'bulkDestroy']);
-        Route::resource('/type_customer', CustomerType::class);
+        Route::delete('/customer_type/bulk-destroy', [CustomerType::class, 'bulkDestroy'])->name('customer_type.bulkDestroy');
+        Route::resource('/customer_type', CustomerType::class);
 
         Route::delete('/customer/bulk-destroy', [Customer::class, 'bulkDestroy'])->name('customer.bulkDestroy');
         Route::resource('/customer', Customer::class);
