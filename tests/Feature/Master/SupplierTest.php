@@ -121,7 +121,7 @@ class SupplierTest extends TestCase
         $this->assertTrue(!is_null($supplier_created));
         $this->assertTrue($request['name'] == $supplier_created->name);
         $this->assertTrue($request['email'] == $supplier_created->email);
-        $this->assertTrue($request['supplier_type_id'] == $supplier_created->supplier_type_id);
+        // $this->assertTrue($request['supplier_type_id'] == $supplier_created->supplier_type_id);
         $this->assertFlashLevel('success', __('app.global.message.success.create', [
             'item' => ucfirst('supplier')
         ]));
@@ -218,22 +218,26 @@ class SupplierTest extends TestCase
     {
         $this->assignPermission('update-supplier');
         $origin_supplier = factory(Supplier::class)->create();
-        $supplier_type_id = factory(SupplierType::class)->create();
         /* $data = $this->data(); */
         $data_update = [
+            // data to update
             'name' => $this->faker->randomLetter,
             'email' => $this->faker->email,
-            'supplier_type_id' => $supplier_type_id->getKey()
+            // append origin data
+            "shop_name" => $origin_supplier->shop_name,
+            "phone" => $origin_supplier->phone,
+            "address" => $origin_supplier->address
         ];
         $id = $origin_supplier->getKey();
         $this->loginAs()
-            ->patch(route('supplier.update', $origin_supplier), $data_update)
+            ->patch(route('supplier.update', $id), $data_update)
+            ->assertSessionHasNoErrors()
             ->assertStatus(302);
         $supplier_updated = Supplier::find($id);
+
         $this->assertTrue(!is_null($supplier_updated));
         $this->assertTrue($data_update['name'] == $supplier_updated->name);
         $this->assertTrue($data_update['email'] == $supplier_updated->email);
-        $this->assertTrue($data_update['supplier_type_id'] == $supplier_updated->supplier_type_id);
         $this->assertFlashLevel('success', __('app.global.message.success.update', [
             'item' => ucfirst('supplier')
         ]));
@@ -309,6 +313,13 @@ class SupplierTest extends TestCase
 
     private function data(): array
     {
-        return [ ];
+        return [
+            'name' => $this->faker->randomLetter,
+            'shop_name' => $this->faker->randomLetter,
+            'address' => $this->faker->randomLetter,
+            'name' => $this->faker->randomLetter,
+            'email' => $this->faker->email,
+            'phone' => $this->faker->phoneNumber
+        ];
     }
 }
