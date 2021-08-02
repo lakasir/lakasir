@@ -6,7 +6,7 @@ use App\Models\CustomerPoint;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\Feature\FeatureTestCase as TestCase;
 
-class CustomerPointTest extends TestCase
+class CustomerTypeTest extends TestCase
 {
     use RefreshDatabase;
 
