@@ -42,6 +42,11 @@ class Update extends FormRequest
             ],
             'name' => 'required|string',
             'shop_name' => 'required|string',
+            'email' => [
+                'required',
+                'email',
+                Rule::unique('suppliers')->ignore($routeParameters['supplier'])
+            ],
             'phone' => [
                 'required',
                 Rule::unique('suppliers')->ignore($routeParameters['supplier'])

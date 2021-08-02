@@ -32,6 +32,7 @@ class Store extends FormRequest
 
         return [
             'code' => 'nullable|unique:suppliers,code',
+            'email' => 'required|email|unique:suppliers,email',
             'name' => 'required|string',
             'shop_name' => 'required|string',
             'phone' => 'required|unique:suppliers,phone',
