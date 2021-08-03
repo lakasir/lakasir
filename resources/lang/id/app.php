@@ -495,6 +495,7 @@ return [
     'global' => [
         'submit' => 'Simpan',
         'action' => 'Tindakan',
+        'bulk-action' => 'Tindakan massal',
         'edit' => 'Ubah',
         'delete' => 'Hapus',
         'create' => 'Tambah :title',
@@ -517,7 +518,7 @@ return [
         'login_cashier' => 'Login Sebagai Kasir',
         'payit' => 'Bayar',
         'more_info' => 'Info Selanjutnya',
-        'checkAll' => 'Pilih Semua'
+        'checkAll' => 'Pilih Semua',
     ],
     'dashboard' => [
         'total_profit' => 'Total Keuntungan',

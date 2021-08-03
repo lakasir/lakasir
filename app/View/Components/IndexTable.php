@@ -28,7 +28,7 @@ class IndexTable extends Component
     /**
      * @var bool
      */
-    public $withoutcheckbox;
+    public $withoutCheckbox;
 
     /**
      * @var bool
@@ -50,7 +50,7 @@ class IndexTable extends Component
         array $thead = [],
         string $resources,
         bool $withoutaction = false,
-        bool $withoutcheckbox = false,
+        bool $withoutCheckbox = false,
         bool $withoutcard = false,
         bool $withoutTime = false
     )
@@ -58,7 +58,7 @@ class IndexTable extends Component
         $this->title = $title;
         $this->resources = $resources;
         $this->withoutaction = $withoutaction;
-        $this->withoutcheckbox = $withoutcheckbox;
+        $this->withoutCheckbox = $withoutCheckbox;
         $this->withoutcard = $withoutcard;
         $this->withoutTime = $withoutTime;
     }

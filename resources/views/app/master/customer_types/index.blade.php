@@ -8,6 +8,8 @@
          role="button"
          >@lang('app.global.create', ['title' => __('app.customer_types.title')])
       </a>
+      <x-bulk-action>
+      </x-bulk-action>
     @endslot
     @slot('thead')
       <th> {{ __('app.customer_types.column.name') }} </th>
