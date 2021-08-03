@@ -507,6 +507,7 @@ return [
     'global' => [
         'submit' => 'Submit',
         'action' => 'Action',
+        'bulk-action' => 'Bulk Action',
         'edit' => 'Edit',
         'create' => 'Create :title',
         'delete' => 'Delete',
@@ -530,7 +531,7 @@ return [
         'login_cashier' => 'Login as Cashier',
         'payit' => 'Pay It',
         'more_info' => 'More Info',
-        'checkAll' => 'Check All'
+        'checkAll' => 'Check All',
     ],
     'dashboard' => [
         'total_profit' => 'Total Profit',
