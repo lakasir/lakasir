@@ -8,13 +8,13 @@
   @csrf
   <v-input icon="fa-database"
            placeholder="{{ __('app.install.placeholder.database.host') }}"
-           default-value="localhost"
+           default-value="127.0.0.1"
            old="{{ old('host') }}"
            default-value="host"
            @error('host') :error="true"
            error-message="{{ $message }}"
            @enderror
-           :prepend="true" name="host" :validation="['required', 'alpha_dash']"
+           :prepend="true" name="host" :validation="['required', 'ip']"
   ></v-input>
   <v-input icon="fa-database"
            placeholder="{{ __('app.install.placeholder.database.name') }}"

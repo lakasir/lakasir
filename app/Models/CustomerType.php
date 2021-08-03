@@ -2,13 +2,10 @@
 
 namespace App\Models;
 
-use App\Traits\HasLaTable;
 use Illuminate\Database\Eloquent\Model;
 
 class CustomerType extends Model
 {
-    use HasLaTable;
-
     protected $fillable = [
         'default_point',
         'name'

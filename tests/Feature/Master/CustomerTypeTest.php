@@ -2,217 +2,221 @@
 
 namespace Tests\Feature\Master;
 
-use App\Models\CustomerPoint;
+use App\Models\CustomerType;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\Feature\FeatureTestCase as TestCase;
 
-class CustomerPointTest extends TestCase
+class CustomerTypeTest extends TestCase
 {
     use RefreshDatabase;
 
     /** @test */
-    public function it_cant_browse_categories(): void
+    public function it_cant_browse_customer_types(): void
     {
         $this->loginAs()
-            ->get(route('category.index'))
+            ->get(route('customer_type.index'))
             ->assertStatus(403);
     }
 
     /** @test */
-    public function it_can_browse_categories(): void
+    public function it_can_browse_customer_types(): void
     {
-        $this->assignPermission('browse-category');
+        $this->assignPermission('browse-customer_type');
         $this->loginAs()
-            ->get(route('category.index'))
+            ->get(route('customer_type.index'))
             ->assertStatus(200)
-            ->assertViewIs('app.master.categories.index')
-            ->assertSeeText(__('app.categories.title'));
+            ->assertViewIs('app.master.customer_types.index')
+            ->assertSeeText(__('app.customer_types.title'));
     }
 
     /** @test */
-    public function it_can_browse_categories_via_ajax_datatbales(): void
+    public function it_can_browse_customer_types_datatables(): void
     {
-        $this->assignPermission('browse-category');
-        $category = factory(CustomerPoint::class)->create();
+        $this->assignPermission('browse-customer_type');
+        $customer_type = factory(CustomerType::class)->create();
         $this->loginAs()
-            ->getJson(route('category.index'), $this->ajaxHeader())
+            ->getJson(route('customer_type.index'), $this->ajaxHeader())
             ->assertJsonFragment([
-                'name' => $category->name,
+                'name' => $customer_type->name,
             ])
-            ->assertSeeText($category->name)
-            ->assertSeeText($category->id);
+            ->assertSeeText($customer_type->name)
+            ->assertSeeText($customer_type->id);
     }
 
     /** @test */
-    public function it_cant_see_create_form_category(): void
+    public function it_cant_see_create_form_customer_type(): void
     {
         $this->loginAs()
-            ->get(route('category.create'))
+            ->get(route('customer_type.create'))
             ->assertSeeText(trans('app.auth.unauthorized'))
             ->assertStatus(403);
     }
 
     /** @test */
-    public function it_can_see_create_form_category(): void
+    public function it_can_see_create_form_customer_type(): void
     {
-        $this->assignPermission('create-category');
+        $this->assignPermission('create-customer_type');
         $this->loginAs()
-            ->get(route('category.create'))
-            ->assertSeeText(__('app.categories.create.title'))
+            ->get(route('customer_type.create'))
+            ->assertSeeText(__('app.customer_types.create.title'))
             ->assertStatus(200);
     }
 
     /** @test */
-    public function it_cant_store_category_validation_error(): void
+    public function it_cant_store_customer_type_validation_error(): void
     {
-        $this->assignPermission('create-category');
+        $this->assignPermission('create-customer_type');
         $request = array_merge($this->data(), ['name' => '']);
         $this->loginAs()
-            ->post(route('category.store'), $request)
+            ->post(route('customer_type.store'), $request)
             ->assertStatus(302)
             ->assertSessionHasErrors(['name' => trans('validation.required', ['attribute' => 'name'])]);
     }
 
     /** @test */
-    public function it_can_store_category(): void
+    public function it_can_store_customer_type(): void
     {
-        $this->assignPermission('create-category');
+        $this->assignPermission('create-customer_type');
         $request = $this->data();
+
         $this->loginAs()
-            ->post(route('category.store'), $request)
+            ->post(route('customer_type.store'), $request)
             ->assertStatus(302);
-        $category_created = CustomerPoint::where('name', $request['name'])->first();
-        $this->assertTrue(!is_null($category_created));
+
+        $customer_type_created = CustomerType::where('name', $request['name'])->first();
+
+        $this->assertTrue(!is_null($customer_type_created));
         $this->assertFlashLevel('success', __('app.global.message.success.create', [
-            'item' => ucfirst('category')
+            'item' => ucfirst('customer_type')
         ]));
     }
 
     /** @test */
-    public function it_cant_see_edit_form_category(): void
+    public function it_cant_see_edit_form_customer_type(): void
     {
-        $category = factory(CustomerPoint::class)->create();
+        $customer_type = factory(CustomerType::class)->create();
         $this->loginAs()
-            ->get(route('category.edit', $category))
+            ->get(route('customer_type.edit', $customer_type))
             ->assertSeeText(trans('app.auth.unauthorized'))
             ->assertStatus(403);
     }
 
     /** @test */
-    public function it_can_see_edit_form_category(): void
+    public function it_can_see_edit_form_customer_type(): void
     {
-        $this->assignPermission('update-category');
-        $category = factory(CustomerPoint::class)->create();
+        $this->assignPermission('update-customer_type');
+        $customer_type = factory(CustomerType::class)->create();
         $this->loginAs()
-            ->get(route('category.edit', $category))
-            ->assertSeeText(__('app.categories.edit.title'))
+            ->get(route('customer_type.edit', $customer_type))
+            ->assertSeeText(__('app.customer_types.edit.title'))
             ->assertStatus(200);
     }
 
     /** @test */
-    public function it_cant_update_category_validation_error(): void
+    public function it_cant_update_customer_type_validation_error(): void
     {
-        $this->assignPermission('update-category');
-        $category = factory(CustomerPoint::class)->create();
+        $this->assignPermission('update-customer_type');
+        $customer_type = factory(CustomerType::class)->create();
         $request = array_merge($this->data(), ['name' => '']);
         $this->loginAs()
-            ->patch(route('category.update', $category), $request)
+            ->patch(route('customer_type.update', $customer_type), $request)
             ->assertStatus(302)
             ->assertSessionHasErrors(['name' => trans('validation.required', ['attribute' => 'name'])]);
     }
 
     /** @test */
-    public function it_can_update_category(): void
+    public function it_can_update_customer_type(): void
     {
-        $this->assignPermission('update-category');
-        $category = factory(CustomerPoint::class)->create();
+        $this->assignPermission('update-customer_type');
+        $customer_type = factory(CustomerType::class)->create();
         $data = $this->data();
         $request = array_merge($data, ['name' => 'siap']);
         $this->loginAs()
-            ->patch(route('category.update', $category), $request)
+            ->patch(route('customer_type.update', $customer_type), $request)
             ->assertStatus(302);
-        $category_original = CustomerPoint::where('name', $data['name'])->first();
-        $category_updated = CustomerPoint::where('name', $request['name'])->first();
-        $this->assertTrue(is_null($category_original));
-        $this->assertTrue(!is_null($category_updated));
+        $customer_type_original = CustomerType::where('name', $data['name'])->first();
+        $customer_type_updated = CustomerType::where('name', $request['name'])->first();
+        $this->assertTrue(is_null($customer_type_original));
+        $this->assertTrue(!is_null($customer_type_updated));
         $this->assertFlashLevel('success', __('app.global.message.success.update', [
-            'item' => ucfirst('category')
+            'item' => ucfirst('customer_type')
         ]));
     }
 
     /** @test */
-    public function it_cant_see_delete_category(): void
+    public function it_cant_see_delete_customer_type(): void
     {
-        $category = factory(CustomerPoint::class)->create();
+        $customer_type = factory(CustomerType::class)->create();
         $this->loginAs()
-            ->delete(route('category.destroy', $category))
+            ->delete(route('customer_type.destroy', $customer_type))
             ->assertSeeText(trans('app.auth.unauthorized'))
             ->assertStatus(403);
     }
 
     /** @test */
-    public function it_can_delete_category(): void
+    public function it_can_delete_customer_type(): void
     {
-        $this->assignPermission('delete-category');
-        $category = factory(CustomerPoint::class)->create();
+        $this->assignPermission('delete-customer_type');
+        $customer_type = factory(CustomerType::class)->create();
         $this->loginAs()
-            ->delete(route('category.destroy', $category))
+            ->delete(route('customer_type.destroy', $customer_type))
             ->assertStatus(302);
-        $category_deleted = CustomerPoint::find($category->id);
-        $this->assertTrue(is_null($category_deleted));
+        $customer_type_deleted = CustomerType::find($customer_type->id);
+        $this->assertTrue(is_null($customer_type_deleted));
         $this->assertFlashLevel('success', __('app.global.message.success.delete', [
-            'item' => ucfirst('category')
+            'item' => ucfirst('customer_type')
         ]));
     }
 
     /** @test */
-    public function it_cant_see_bulk_delete_category(): void
+    public function it_cant_see_bulk_delete_customer_type(): void
     {
         $ids = [
             'ids' => []
         ];
         $this->loginAs()
-            ->delete(route('category.bulkDestroy'), $ids)
+            ->delete(route('customer_type.bulkDestroy'), $ids)
             ->assertSeeText(trans('app.auth.unauthorized'))
             ->assertStatus(403);
     }
 
     /** @test */
-    public function it_cant_bulk_delete_category_validation_error(): void
+    public function it_cant_bulk_delete_customer_type_validation_error(): void
     {
-        $this->assignPermission('bulk-delete-category');
+        $this->assignPermission('bulk-delete-customer_type');
         $ids = [
             'ids' => null
         ];
         $this->loginAs()
-            ->delete(route('category.bulkDestroy'), $ids)
+            ->delete(route('customer_type.bulkDestroy'), $ids)
             ->assertSessionHasErrors('ids')
             ->assertStatus(302);
     }
 
     /** @test */
-    public function it_can_bulk_delete_category(): void
+    public function it_can_bulk_delete_customer_type(): void
     {
-        $this->assignPermission('bulk-delete-category');
-        $categories = factory(CustomerPoint::class, 2)->create();
-        $id = $categories->pluck('id');
+        $this->assignPermission('bulk-delete-customer_type');
+        $customer_types = factory(CustomerType::class, 2)->create();
+        $id = $customer_types->pluck('id');
         $ids = [
             'ids' => $id->toArray()
         ];
         $this->loginAs()
-            ->delete(route('category.bulkDestroy'), $ids)
+            ->delete(route('customer_type.bulkDestroy'), $ids)
             ->assertStatus(302);
-        $category_deleted = CustomerPoint::find($id);
-        $this->assertTrue($category_deleted->isEmpty());
+        $customer_type_deleted = CustomerType::find($id);
+        $this->assertTrue($customer_type_deleted->isEmpty());
         $this->assertFlashLevel('success', __('app.global.message.success.bulk-delete', [
-            'item' => ucfirst('category')
+            'item' => ucfirst('customer_type')
         ]));
     }
 
     private function data(): array
     {
         return [
-            'name' => $this->faker->randomLetter
+            'name' => $this->faker->name(),
+            'default_point' => $this->faker->randomDigit
         ];
     }
 }

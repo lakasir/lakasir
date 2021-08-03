@@ -26,6 +26,12 @@ class Create extends FormRequest
      */
     public function rules()
     {
-        return [];
+        if ($this->method() != 'POST') {
+            return [];
+        }
+        return [
+            'name' => 'required|string',
+            'default_point' => 'required|integer'
+        ];
     }
 }

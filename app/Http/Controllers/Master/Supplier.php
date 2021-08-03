@@ -8,6 +8,7 @@ use App\Http\Requests\Master\Supplier\Browse;
 use App\Http\Requests\Master\Supplier\Store;
 use App\Http\Requests\Master\Supplier\Destroy;
 use App\Http\Requests\Master\Supplier\Update;
+use App\Models\Supplier as SupplierModel;
 use App\Services\Supplier as SupplierService;
 use App\Traits\Supplier\SupplierTrait;
 use Illuminate\View\View;
@@ -16,11 +17,12 @@ class Supplier extends Controller
 {
     use SupplierTrait;
 
-	private $viewPath = 'app.master.suppliers';
+    private $viewPath = 'app.master.suppliers';
 
-	/**
+    /**
      * Display a listing of the resource.
      *
+     * @param Browse $request
      * @return mix
      */
     public function index(Browse $request, SupplierService $supplierService)
@@ -34,7 +36,7 @@ class Supplier extends Controller
         ]);
     }
 
-	/**
+    /**
      * @param Store $request
      * @return View
      * @throws BindingResolutionException
@@ -46,7 +48,7 @@ class Supplier extends Controller
         ]);
     }
 
-	/**
+    /**
      * @param Store $request
      * @param SupplierService $supplierService
      * @return RedirectResponse
@@ -66,15 +68,15 @@ class Supplier extends Controller
     }
 
     /**
-     * @param mixed $model
+     * @param SupplierModel $supplier
      * @param SupplierService $supplierService
      * @param Browse $request
      * @return View|Factory
      * @throws BindingResolutionException
      */
-    public function show($model, SupplierService $supplierService, Browse $request)
+    public function show(SupplierModel $supplier, SupplierService $supplierService, Browse $request): View
     {
-        $data = $supplierService->find($model);
+        $data = $supplier;
 
         return view("{$this->viewPath}.show", [
             'resources' => $this->resources(),
@@ -83,15 +85,15 @@ class Supplier extends Controller
     }
 
     /**
-     * @param mixed $model
+     * @param SupplierModel $supplier
      * @param SupplierService $supplierService
      * @param Update $request
      * @return View|Factory
      * @throws BindingResolutionException
      */
-    public function edit($model, SupplierService $supplierService, Update $request)
+    public function edit(SupplierModel $supplier, SupplierService $supplierService, Update $requestModal)
     {
-        $data = $supplierService->find($model);
+        $data = $supplier;
 
         return view("{$this->viewPath}.edit", [
             'resources' => $this->resources(),
@@ -100,18 +102,16 @@ class Supplier extends Controller
     }
 
     /**
-     * @param string|int $model
+     * @param SupplierModel $supplier
      * @param SupplierService $supplierService
      * @param Update $request
      * @return RedirectResponse
      * @throws AuthorizationException
      * @throws BindingResolutionException
      */
-    public function update($model, SupplierService $supplierService, Update $request)
+    public function update(SupplierModel $supplier, SupplierService $supplierService, Update $request)
     {
-        $data = $supplierService->find($model);
-
-        $data = $supplierService->update($request, $data);
+        $supplierService->update($request, $supplier);
 
         $message = __('app.global.message.success.update', [
             'item' => ucfirst($this->resources())
@@ -123,17 +123,14 @@ class Supplier extends Controller
     }
 
     /**
-     * @param mixed $model
-     * @param SupplierService $supplierService
+     * @param SupplierModel $supplier
      * @param Destroy $request
      * @return RedirectResponse
      * @throws BindingResolutionException
      */
-    public function destroy($model, SupplierService $supplierService, Destroy $request)
+    public function destroy(SupplierModel $supplier, Destroy $request)
     {
-        $data = $supplierService->find($model);
-
-        $data->delete();
+        $supplier->delete();
 
         $message = __('app.global.message.success.delete', [
             'item' => ucfirst($this->resources())
@@ -147,7 +144,6 @@ class Supplier extends Controller
     /**
      * @param BulkDelete $request
      * @param SupplierService $supplierService
-     * @return Sheenazien8\Hascrudactions\Traits\Illuminate\Http\Response
      * @throws BindingResolutionException
      * @throws AuthorizationException
      */
