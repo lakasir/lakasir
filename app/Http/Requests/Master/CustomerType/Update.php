@@ -36,15 +36,7 @@ class Update extends FormRequest
         $routeParameters = $request->route()->parameters();
         return [
             'name' => 'required|string',
-            'email' => [
-                'required',
-                'email',
-                Rule::unique('customers')->ignore($routeParameters['customer'])
-            ],
-            'code' => [
-                'nullable',
-                Rule::unique('customers')->ignore($routeParameters['customer'])
-            ],
+            'default_point' => 'required|integer'
         ];
     }
 }

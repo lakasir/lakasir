@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Master;
 
+use App\Models\CustomerType as CustomerTypeModel;
 use App\Http\Requests\Master\CustomerType\Browse;
 use App\Http\Requests\Master\CustomerType\BulkDelete;
 use App\Http\Requests\Master\CustomerType\Destroy;
@@ -20,6 +21,8 @@ class CustomerType
     /**
      * Display a listing of the resource.
      *
+     * @param Browse $request
+     * @param CustomerTypeService $customerTypeService
      * @return mix
      */
     public function index(Browse $request, CustomerTypeService $customerTypeService)
@@ -47,13 +50,12 @@ class CustomerType
 
     /**
      * @param Create $request
-     * @param ItemRepository $customerTypeService
      * @return RedirectResponse
      * @throws BindingResolutionException
      */
-    public function store(Create $request, CustomerTypeService $customerTypeService)
+    public function store(Create $request)
     {
-        $customerTypeService->create($request);
+        CustomerTypeModel::create($request->all());
 
         $message = __('app.global.message.success.create', [
             'item' => ucfirst($this->resources())
@@ -65,15 +67,14 @@ class CustomerType
     }
 
     /**
-     * @param mixed $model
-     * @param ItemRepository $customerTypeService
+     * @param CustomerTypeModel $customerType
      * @param Browse $request
      * @return View|Factory
      * @throws BindingResolutionException
      */
-    public function show($model, CustomerTypeService $customerTypeService, Browse $request)
+    public function show(CustomerTypeModel $customerType, Browse $request)
     {
-        $data = $customerTypeService->find($model);
+        $data = $customerType;
 
         return view("{$this->viewPath}.show", [
             'resources' => $this->resources(),
@@ -82,15 +83,15 @@ class CustomerType
     }
 
     /**
-     * @param mixed $model
+     * @param CustomerTypeModel $customerType
      * @param ItemRepository $customerTypeService
      * @param Update $request
      * @return View|Factory
      * @throws BindingResolutionException
      */
-    public function edit($model, CustomerTypeService $customerTypeService, Update $request)
+    public function edit(CustomerTypeModel $customerType, Update $request)
     {
-        $data = $customerTypeService->find($model);
+        $data = $customerType;
 
         return view("{$this->viewPath}.edit", [
             'resources' => $this->resources(),
@@ -99,16 +100,15 @@ class CustomerType
     }
 
     /**
-     * @param string|int $model
-     * @param ItemRepository $customerTypeService
+     * @param CustomerTypeModel $customerType
      * @param Update $request
      * @return RedirectResponse
      * @throws AuthorizationException
      * @throws BindingResolutionException
      */
-    public function update($model, CustomerTypeService $customerTypeService, Update $request)
+    public function update(CustomerTypeModel $customerType, CustomerTypeService $customerTypeService, Update $request)
     {
-        $data = $customerTypeService->update($request, $data);
+        $customerType->update($request->all());
 
         $message = __('app.global.message.success.update', [
             'item' => ucfirst($this->resources())
@@ -120,17 +120,14 @@ class CustomerType
     }
 
     /**
-     * @param mixed $model
-     * @param ItemRepository $customerTypeService
+     * @param CustomerTypeModel $customerType
      * @param Destroy $request
      * @return RedirectResponse
      * @throws BindingResolutionException
      */
-    public function destroy($model, CustomerTypeService $customerTypeService, Destroy $request)
+    public function destroy(CustomerTypeModel $customerType, Destroy $request)
     {
-        $data = $customerTypeService->find($model);
-
-        $data->delete();
+        $customerType->delete();
 
         $message = __('app.global.message.success.delete', [
             'item' => ucfirst($this->resources())
@@ -143,8 +140,8 @@ class CustomerType
 
     /**
      * @param BulkDelete $request
-     * @param ItemRepository $customerTypeService
-     * @return Sheenazien8\Hascrudactions\Traits\Illuminate\Http\Response
+     * @param CustomerTypeService $customerTypeService
+     * @return RedirectResponse
      * @throws BindingResolutionException
      * @throws AuthorizationException
      */
