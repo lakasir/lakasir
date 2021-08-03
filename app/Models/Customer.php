@@ -6,13 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Sheenazien8\Hascrudactions\Traits\HasLaTable;
 
 /** @package App\Models */
 class Customer extends Model
 {
-    use HasLaTable;
-
     protected $fillable = ['name', 'email', 'code', 'customer_type_id'];
 
     /** @return BelongsToMany  */
