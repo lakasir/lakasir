@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Master;
 
+use App\DataTables\CustomerTypeDataTable;
 use App\Models\CustomerType as CustomerTypeModel;
 use App\Http\Requests\Master\CustomerType\Browse;
 use App\Http\Requests\Master\CustomerType\BulkDelete;
@@ -22,16 +23,12 @@ class CustomerType
      * Display a listing of the resource.
      *
      * @param Browse $request
-     * @param CustomerTypeService $customerTypeService
+     * @param CustomerTypeDataTable $dataTable
      * @return mix
      */
-    public function index(Browse $request, CustomerTypeService $customerTypeService)
+    public function index(Browse $request, CustomerTypeDataTable $dataTable)
     {
-        if ($request->ajax() || isset($this->return) && $this->return == 'api') {
-            return $customerTypeService->datatable($request);
-        }
-
-        return view("{$this->viewPath}.index", [
+        return $dataTable->render("{$this->viewPath}.index", [
             'resources' => $this->resources()
         ]);
     }

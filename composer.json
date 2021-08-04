@@ -34,6 +34,7 @@
         "tightenco/ziggy": "^0.9.4",
         "yajra/laravel-datatables": "^1.5",
         "yajra/laravel-datatables-buttons": "^4.0",
+        "yajra/laravel-datatables-html": "^4.0",
         "yajra/laravel-datatables-oracle": "~9.0"
     },
     "require-dev": {

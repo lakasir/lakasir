@@ -505,6 +505,7 @@ return [
         ]
     ],
     'global' => [
+        'reload' => 'Reload',
         'submit' => 'Submit',
         'action' => 'Action',
         'bulk-action' => 'Bulk Action',

@@ -65,6 +65,7 @@ return [
             'print',
             'reset',
             'reload',
+            'bulkDelete'
         ],
     ],
 

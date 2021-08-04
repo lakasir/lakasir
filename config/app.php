@@ -174,12 +174,13 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-        Yajra\DataTables\DataTablesServiceProvider::class,
-        Yajra\DataTables\ButtonsServiceProvider::class,
         App\Providers\TranslationServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
-        App\Providers\FormServiceProvider::class
-
+        App\Providers\FormServiceProvider::class,
+        // ...
+        Yajra\DataTables\DataTablesServiceProvider::class,
+        Yajra\DataTables\ButtonsServiceProvider::class,
+        Yajra\DataTables\HtmlServiceProvider::class,
     ],
 
     /*

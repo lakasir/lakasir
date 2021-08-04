@@ -8,22 +8,9 @@
     </div>
     <div class="card-body">
       <div class="table-responsive">
-        <table class="table table-hover" id="{{ $resources }}-table">
-          <thead>
-            <tr>
-              @if (!$withoutCheckbox)
-                @include('partials.table.select-all')
-              @endif
-              {{ $thead }}
-              @if (!$withoutTime)
-                <th> {{ __('app.global.created_at') }}</th>
-              @endif
-              @if (!$withoutaction)
-                <th></th>
-              @endif
-            </tr>
-          </thead>
-        </table>
+        @isset($content)
+        {{ $content }}
+        @endisset
       </div>
     </div>
     <div class="card-footer">

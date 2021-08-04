@@ -493,6 +493,7 @@ return [
         ]
     ],
     'global' => [
+        'reload' => 'Muat Ulang',
         'submit' => 'Simpan',
         'action' => 'Tindakan',
         'bulk-action' => 'Tindakan massal',
