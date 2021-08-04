@@ -6,61 +6,13 @@ use Illuminate\View\Component;
 
 class IndexTable extends Component
 {
-    /**
-     * @var string
-     */
+    /** @var string */
     public $title;
-    /**
-     * @var array
-     */
-    public $thead;
-
-    /**
-     * @var string
-     */
-    public $resources;
-
-    /**
-     * @var bool
-     */
-    public $withoutaction;
-
-    /**
-     * @var bool
-     */
-    public $withoutCheckbox;
-
-    /**
-     * @var bool
-     */
-    public $withoutcard;
-
-    /**
-     * @var bool
-     */
-    public $withoutTime;
-
-    /**
-     * Create a new component instance.
-     *
-     * @return void
-     */
     public function __construct(
-        string $title,
-        array $thead = [],
-        string $resources,
-        bool $withoutaction = false,
-        bool $withoutCheckbox = false,
-        bool $withoutcard = false,
-        bool $withoutTime = false
+        string $title = ""
     )
     {
         $this->title = $title;
-        $this->resources = $resources;
-        $this->withoutaction = $withoutaction;
-        $this->withoutCheckbox = $withoutCheckbox;
-        $this->withoutcard = $withoutcard;
-        $this->withoutTime = $withoutTime;
     }
 
     /**

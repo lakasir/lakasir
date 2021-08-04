@@ -40,6 +40,7 @@ class CustomerTypeTest extends TestCase
                 'name' => $customer_type->name,
             ])
             ->assertSeeText($customer_type->name)
+            ->assertSeeText($customer_type->default_point)
             ->assertSeeText($customer_type->id);
     }
 
@@ -71,6 +72,12 @@ class CustomerTypeTest extends TestCase
             ->post(route('customer_type.store'), $request)
             ->assertStatus(302)
             ->assertSessionHasErrors(['name' => trans('validation.required', ['attribute' => 'name'])]);
+
+        $request = array_merge($this->data(), ['default_point' => '']);
+        $this->loginAs()
+            ->post(route('customer_type.store'), $request)
+            ->assertStatus(302)
+            ->assertSessionHasErrors(['default_point' => trans('validation.required', ['attribute' => 'default point'])]);
     }
 
     /** @test */
@@ -122,6 +129,12 @@ class CustomerTypeTest extends TestCase
             ->patch(route('customer_type.update', $customer_type), $request)
             ->assertStatus(302)
             ->assertSessionHasErrors(['name' => trans('validation.required', ['attribute' => 'name'])]);
+
+        $request = array_merge($this->data(), ['default_point' => '']);
+        $this->loginAs()
+            ->put(route('customer_type.update', $customer_type), $request)
+            ->assertStatus(302)
+            ->assertSessionHasErrors(['default_point' => trans('validation.required', ['attribute' => 'default point'])]);
     }
 
     /** @test */

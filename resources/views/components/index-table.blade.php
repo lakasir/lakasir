@@ -3,9 +3,11 @@
   {{ $topDiv }}
   @endisset
   <div class="card">
-    <div class="card-header">
-      {{ $title }}
-    </div>
+    @if ($title)
+      <div class="card-header">
+        {{ $title }}
+      </div>
+    @endif
     <div class="card-body">
       <div class="table-responsive">
         @isset($content)

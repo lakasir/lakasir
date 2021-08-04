@@ -2,11 +2,17 @@
 
 namespace App\DataTables;
 
+use App\Html\Item as Item;
 use App\Models\CustomerType;
+use App\Traits\CustomerType\CustomerTypeTrait;
+use Illuminate\Contracts\Container\BindingResolutionException;
+use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
 
 class CustomerTypeDataTable extends BaseDataTable
 {
+    use CustomerTypeTrait;
+
     /**
      * Get query source of dataTable.
      *
@@ -23,13 +29,14 @@ class CustomerTypeDataTable extends BaseDataTable
      *
      * @return array
      */
-    protected function getColumns()
+    public function getColumns(): array
     {
         return [
             Column::make('name')->title(trans('app.customer_types.column.name')),
             Column::make('default_point')->title(trans('app.customer_types.column.default_point')),
             Column::make('created_at')->title(trans('app.global.created_at')),
             Column::computed('action')
+                ->title('')
                 ->exportable(false)
                 ->printable(false)
                 ->orderable(false)
@@ -38,13 +45,59 @@ class CustomerTypeDataTable extends BaseDataTable
         ];
     }
 
-    /**
-     * Get filename for export.
-     *
-     * @return string
-     */
-    protected function filename()
+    /** @return array[]  */
+    public function addOptionsBuilder($customerType): array
     {
-        return 'CustomerType_' . date('YmdHis');
+        $permission = $this->getPermission();
+        return [
+            Item::make(__('app.global.view'))
+                ->icon('<i class="fa fa-eye mr-2"></i>')
+                ->url(route('customer_type.show', $customerType))
+                ->show($permission['browse']),
+            Item::make(__('app.global.edit'))
+                ->icon('<i class="fa fa-pen mr-2"></i>')
+                ->url(route('customer_type.edit', $customerType))
+                ->show($permission['edit']),
+            Item::make(__('app.global.delete'))
+                ->icon('<i class="fa fa-trash mr-2"></i>')
+                ->method('DELETE')
+                ->confirm(__('app.global.suredelete'))
+                ->url(route('customer_type.destroy', $customerType))
+                ->show($permission['delete']),
+        ];
+    }
+
+    /**
+     * @return array[]
+     * @throws BindingResolutionException
+     */
+    public function getButton(): array
+    {
+        $create = $this->getPermission()['create'];
+
+        return [
+            Button::make('create')->text('<i class="fa fa-plus"></i> '. __('app.global.create'))->enabled($create),
+            Button::make('reload')->text('<i class="fas fa-sync"></i> '. __('app.global.reload')),
+        ];
+    }
+
+    /**
+     * @return array
+     * @throws BindingResolutionException
+     */
+    private function getPermission()
+    {
+        $auth = optional(auth()->user() ?? '');
+        $browse = $auth->can("browse-{$this->prefixPermission()}");
+        $edit = $auth->can("update-{$this->prefixPermission()}");
+        $delete = $auth->can("delete-{$this->prefixPermission()}");
+        $create = $auth->can("create-{$this->prefixPermission()}");
+
+        return [
+            'browse' => $browse,
+            'edit' => $edit,
+            'delete' => $delete,
+            'create' => $create
+        ];
     }
 }

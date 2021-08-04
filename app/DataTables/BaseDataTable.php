@@ -2,16 +2,18 @@
 
 namespace App\DataTables;
 
+use App\Interfaces\Button as InterfacesButton;
+use App\Interfaces\Columns;
+use App\Interfaces\Options;
 use Carbon\Carbon;
 use Illuminate\View\View;
 use Yajra\DataTables\Services\DataTable;
-use Yajra\DataTables\Html\Button;
 
 /**
  * Class BaseDataTable
  * @author sheenazien8
  */
-abstract class BaseDataTable extends DataTable
+abstract class BaseDataTable extends DataTable implements Options, Columns, InterfacesButton
 {
     /**
      * Build DataTable class.
@@ -29,7 +31,10 @@ abstract class BaseDataTable extends DataTable
 
                 return $date;
             })
-            ->addColumn('action', $this->addActions());
+            ->addColumn('action', function ($row)
+            {
+                return $this->addActions($row);
+            });
     }
 
     /**
@@ -44,16 +49,12 @@ abstract class BaseDataTable extends DataTable
                     ->columns($this->getColumns())
                     ->minifiedAjax()
                     ->dom('Bfrtip')
-                    ->buttons(
-                        Button::make('create')->text('<i class="fa fa-plus"></i> '. __('app.global.create')),
-                        Button::make('reload')->text('<i class="fas fa-sync"></i> '. __('app.global.reload')),
-                        /* Button::make('bulkDelete')->text('<i class="fa fa-trash"></i> '. __('app.global.bulk-delete')), */
-                    );
+                    ->buttons($this->getButton());
     }
 
     /** @return string|View  */
-    protected function addActions()
+    private function addActions($row)
     {
-        return 'partials.table.action';
+        return view('partials.table.action', ['actions' => $this->addOptionsBuilder($row)]);
     }
 }

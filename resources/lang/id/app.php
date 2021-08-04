@@ -495,9 +495,11 @@ return [
     'global' => [
         'reload' => 'Muat Ulang',
         'submit' => 'Simpan',
+        'options' => 'Opsi',
         'action' => 'Tindakan',
         'bulk-action' => 'Tindakan massal',
         'edit' => 'Ubah',
+        'view' => 'Lihat',
         'delete' => 'Hapus',
         'create' => 'Tambah :title',
         'created_at' => 'Dibuat Pada',

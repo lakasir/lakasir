@@ -295,7 +295,7 @@ return [
             'default_point' => 'Default Point'
         ],
         'edit' => [
-            'title' => 'Edit Customer Type'
+            'title' => 'Edit :title Customer Type'
         ],
         'create' => [
             'title' => 'Create Customer Type'
@@ -507,9 +507,11 @@ return [
     'global' => [
         'reload' => 'Reload',
         'submit' => 'Submit',
+        'options' => 'Options',
         'action' => 'Action',
         'bulk-action' => 'Bulk Action',
         'edit' => 'Edit',
+        'view' => 'View',
         'create' => 'Create :title',
         'delete' => 'Delete',
         'create' => 'Create',

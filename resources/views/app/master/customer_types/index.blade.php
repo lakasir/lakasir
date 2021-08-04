@@ -1,10 +1,9 @@
 @extends('adminlte::page')
 
 @section('content')
-  <x-index-table :title="__('app.customer_types.title')" :resources="$resources">
+  <x-index-table>
     @slot('topDiv')
-      <x-bulk-action>
-      </x-bulk-action>
+      {{ Breadcrumbs::render('customer_type.index') }}
     @endslot
     @slot('content')
       {{ $dataTable->table() }}

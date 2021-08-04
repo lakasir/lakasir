@@ -105,6 +105,10 @@
         display: inline-block;
         font-size: 16px
       }
+
+      .dropdown-toggle::after {
+        display: none;
+      }
     </style>
     <script>
       window._locale = '{{ app()->getLocale() }}';
