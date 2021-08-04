@@ -3,6 +3,7 @@
 namespace App\DataTables;
 
 use Carbon\Carbon;
+use Illuminate\View\View;
 use Yajra\DataTables\Services\DataTable;
 use Yajra\DataTables\Html\Button;
 
@@ -28,7 +29,7 @@ abstract class BaseDataTable extends DataTable
 
                 return $date;
             })
-            ->addColumn('action', 'partials.table.action');
+            ->addColumn('action', $this->addActions());
     }
 
     /**
@@ -48,5 +49,11 @@ abstract class BaseDataTable extends DataTable
                         Button::make('reload')->text('<i class="fas fa-sync"></i> '. __('app.global.reload')),
                         /* Button::make('bulkDelete')->text('<i class="fa fa-trash"></i> '. __('app.global.bulk-delete')), */
                     );
+    }
+
+    /** @return string|View  */
+    protected function addActions()
+    {
+        return 'partials.table.action';
     }
 }
