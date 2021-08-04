@@ -138,6 +138,11 @@
     @else
     @endif
 
+    <form action="#" method="POST" id="form-bulk-delete">
+      @csrf
+      @method("DELETE")
+    </form>
+
     {{-- Custom Scripts --}}
     @yield('adminlte_js')
     <script charset="utf-8">

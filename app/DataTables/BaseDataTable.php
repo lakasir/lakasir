@@ -31,6 +31,9 @@ abstract class BaseDataTable extends DataTable implements Options, Columns, Inte
 
                 return $date;
             })
+            ->addColumn('checkbox', function ($model) {
+                return view('partials.table.checkbox', compact('model'));
+            })
             ->addColumn('action', function ($row)
             {
                 return $this->addActions($row);
@@ -45,11 +48,11 @@ abstract class BaseDataTable extends DataTable implements Options, Columns, Inte
     public function html()
     {
         return $this->builder()
-                    ->setTableId('customertype-table')
-                    ->columns($this->getColumns())
-                    ->minifiedAjax()
-                    ->dom('Bfrtip')
-                    ->buttons($this->getButton());
+            ->setTableId('customertype-table')
+            ->columns($this->getColumns())
+            ->minifiedAjax()
+            ->dom('Bfrtip')
+            ->buttons($this->getButton());
     }
 
     /** @return string|View  */

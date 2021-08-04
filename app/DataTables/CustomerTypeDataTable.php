@@ -32,9 +32,21 @@ class CustomerTypeDataTable extends BaseDataTable
     public function getColumns(): array
     {
         return [
-            Column::make('name')->title(trans('app.customer_types.column.name')),
-            Column::make('default_point')->title(trans('app.customer_types.column.default_point')),
-            Column::make('created_at')->title(trans('app.global.created_at')),
+            Column::computed('checkbox')
+                ->title('#')
+                ->exportable(false)
+                ->printable(false)
+                ->orderable(false)
+                ->width(30)
+                ->addClass('text-center'),
+            Column::make('name')
+                ->title(trans('app.customer_types.column.name')),
+            Column::make('default_point')
+                ->title(trans('app.customer_types.column.default_point'))
+                ->width(120),
+            Column::make('created_at')
+                ->title(trans('app.global.created_at'))
+                ->width(120),
             Column::computed('action')
                 ->title('')
                 ->exportable(false)
@@ -76,8 +88,17 @@ class CustomerTypeDataTable extends BaseDataTable
         $create = $this->getPermission()['create'];
 
         return [
-            Button::make('create')->text('<i class="fa fa-plus"></i> '. __('app.global.create'))->enabled($create),
-            Button::make('reload')->text('<i class="fas fa-sync"></i> '. __('app.global.reload')),
+            Button::make('create')
+                ->text('<i class="fa fa-plus"></i> ' . __('app.global.create'))
+                ->authorized($create),
+            Button::make('reload')
+                ->text('<i class="fas fa-sync"></i> ' . __('app.global.reload')),
+            Button::make('bulkDelete')
+                ->text('<i class="fas fa-trash"></i> ' . __('app.global.bulk-delete'))
+                ->idTarget('select-row')
+                ->url(route('customer_type.bulkDestroy'))
+                ->warning(__('app.global.warning.checked_first'))
+                ->confirm(__('app.global.confirm.bulk-delete'))
         ];
     }
 

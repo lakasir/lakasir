@@ -510,13 +510,13 @@ return [
         'options' => 'Options',
         'action' => 'Action',
         'bulk-action' => 'Bulk Action',
+        'bulk-delete' => 'Bulk Delete',
         'edit' => 'Edit',
         'view' => 'View',
         'create' => 'Create :title',
         'delete' => 'Delete',
         'create' => 'Create',
         'created_at' => 'Created At',
-        'suredelete' => 'Are You Sure?',
         'error_old_password' => 'Your Old Password is Not Valid',
         'cancel' => 'Cancel',
         'total' => 'Total',
@@ -535,6 +535,13 @@ return [
         'payit' => 'Pay It',
         'more_info' => 'More Info',
         'checkAll' => 'Check All',
+        'warning' => [
+            'checked_first' => 'Sorry, there is no data you selected!'
+        ],
+        'confirm' => [
+            'suredelete' => 'Are You Sure?',
+            'bulk-delete' => 'Are you sure you want to mass delete?'
+        ]
     ],
     'dashboard' => [
         'total_profit' => 'Total Profit',

@@ -498,12 +498,12 @@ return [
         'options' => 'Opsi',
         'action' => 'Tindakan',
         'bulk-action' => 'Tindakan massal',
+        'bulk-delete' => 'Hapus massal',
         'edit' => 'Ubah',
         'view' => 'Lihat',
         'delete' => 'Hapus',
         'create' => 'Tambah :title',
         'created_at' => 'Dibuat Pada',
-        'suredelete' => 'Apa Anda Yakin?',
         'error_old_password' => 'Password Kamu tidak valid',
         'cancel' => 'Batal',
         'total' => 'Total',
@@ -522,6 +522,13 @@ return [
         'payit' => 'Bayar',
         'more_info' => 'Info Selanjutnya',
         'checkAll' => 'Pilih Semua',
+        'warning' => [
+            'checked_first' => 'Maaf, tidak ada data yang kamu pilih'
+        ],
+        'confirm' => [
+            'suredelete' => 'Apa Anda Yakin?',
+            'bulk-delete' => 'Apa anda yakin mau melakukan penghapusan massal?'
+        ]
     ],
     'dashboard' => [
         'total_profit' => 'Total Keuntungan',

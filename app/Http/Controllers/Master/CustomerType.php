@@ -97,13 +97,12 @@ class CustomerType
     }
 
     /**
-     * @param CustomerTypeModel $customerType
      * @param Update $request
      * @return RedirectResponse
      * @throws AuthorizationException
      * @throws BindingResolutionException
      */
-    public function update(CustomerTypeModel $customerType, CustomerTypeService $customerTypeService, Update $request)
+    public function update(CustomerTypeModel $customerType, Update $request)
     {
         $customerType->update($request->all());
 
