@@ -32,7 +32,6 @@ class CustomerTest extends TestCase
             ->assertSeeText(__('app.customers.title'));
     }
 
-    /** @test */
     public function it_can_browse_customers_via_ajax_datatbales(): void
     {
         $this->assignPermission('browse-customer');
@@ -91,6 +90,7 @@ class CustomerTest extends TestCase
     public function it_cant_store_customer_validation_error_unique_email(): void
     {
         $this->assignPermission('create-customer');
+        /** @var Customer $customer */
         $customer = factory(Customer::class)->create();
         $request = array_merge($this->data(), ['email' => $customer->email]);
         $this->loginAs()

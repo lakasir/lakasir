@@ -29,7 +29,6 @@ class CategoryTest extends TestCase
             ->assertSeeText(__('app.categories.title'));
     }
 
-    /** @test */
     public function it_can_browse_categories_via_ajax_datatbales(): void
     {
         $this->assignPermission('browse-category');
