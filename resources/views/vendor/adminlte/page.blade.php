@@ -80,6 +80,53 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.0.3/css/buttons.dataTables.min.css">
     <script src="https://cdn.datatables.net/buttons/1.0.3/js/dataTables.buttons.min.js"></script>
     <script src="{{ asset('vendor/datatables/buttons.server-side.js') }}"></script>
+    <script charset="utf-8">
+      (function ($, DataTable) {
+        "use strict";
+          DataTable.ext.buttons.bulkDelete = {
+          className: 'buttons-bulk-delete',
+
+          action: function (e, dt, button, config) {
+            let checkbox = $(`input[type=checkbox].${config.idTarget}:checked`);
+            if (checkbox.length == 0) {
+              let warning = 'Sorry, there is no data you selected!';
+              if (config.warning) {
+                warning = config.warning;
+              }
+              alert(dt.i18n('app.global.warning.checked_first', warning));
+              return;
+            }
+            let confirmQuestion = 'Are you sure you want to mass delete?';
+            if (config.confirm) {
+              confirmQuestion = config.confirm
+            }
+            if (confirm(confirmQuestion)) {
+              for (let i = 0, len = checkbox.length; i < len; i++) {
+                $('form#form-bulk-delete').append(
+                  $("<input/>", {
+                    id: 'row-selected',
+                    name: 'ids[]',
+                    type: 'hidden',
+                    value: $(checkbox[i]).val()
+                  })
+                )
+              }
+              $('form#form-bulk-delete').attr('action', config.url).submit()
+            }
+            return;
+          }
+        };
+
+        DataTable.ext.buttons.bulkAction = {
+          className: 'buttons-bulk-action',
+
+          action: function (e, dt, button, config) {
+            console.log(config, e, dt, button);
+            // window.location = window.location.href.replace(/\/+$/, "") + '/create';
+          }
+        };
+      })(jQuery, jQuery.fn.dataTable);
+    </script>
     @stack('js')
     @yield('js')
   @stop

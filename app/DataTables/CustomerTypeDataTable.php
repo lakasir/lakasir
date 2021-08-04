@@ -73,7 +73,7 @@ class CustomerTypeDataTable extends BaseDataTable
             Item::make(__('app.global.delete'))
                 ->icon('<i class="fa fa-trash mr-2"></i>')
                 ->method('DELETE')
-                ->confirm(__('app.global.suredelete'))
+                ->confirm(__('app.global.confirm.suredelete'))
                 ->url(route('customer_type.destroy', $customerType))
                 ->show($permission['delete']),
         ];
