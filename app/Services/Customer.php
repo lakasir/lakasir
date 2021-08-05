@@ -130,10 +130,10 @@ class Customer
                     'code' => $numberGenerator->create()
                 ]);
             }
-            $customer->fill($request->all());
             if ($request->customer_type_id) {
                 $customer->customerType()->associate($this->customerType->find($request->customer_type_id));
             }
+            $customer->fill($request->all());
             $customer->save();
             DB::commit();
 
