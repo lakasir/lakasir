@@ -3,11 +3,13 @@
 namespace App\DataTables;
 
 use App\Interfaces\WithButton;
+use App\Interfaces\WithCheckbox;
 use App\Interfaces\WithOptions;
 use Carbon\Carbon;
 use Illuminate\View\View;
 use Yajra\DataTables\Services\DataTable;
 use App\Interfaces\WithColumn;
+use App\Interfaces\WithCustomColumn;
 
 /**
  * Class BaseDataTable
@@ -30,10 +32,13 @@ abstract class BaseDataTable extends DataTable implements WithColumn
                 $date = (new Carbon($value->created_at))->diffForHumans();
 
                 return $date;
-            })
-            ->addColumn('checkbox', function ($model) {
+            });
+
+        if ($this instanceof WithCheckbox) {
+            $datatbale->addColumn('checkbox', function ($model) {
                 return view('partials.table.checkbox', compact('model'));
             });
+        }
 
         if ($this instanceof WithOptions) {
             $datatbale->addColumn('options', function ($row)
@@ -41,6 +46,11 @@ abstract class BaseDataTable extends DataTable implements WithColumn
                 return $this->addActions($row);
             });
         }
+
+        if ($this instanceof WithCustomColumn) {
+            $datatbale = $this->customColumn($datatbale);
+        }
+
 
         return $datatbale;
     }

@@ -9,11 +9,24 @@ use Illuminate\Contracts\Container\BindingResolutionException;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
 use App\Interfaces\WithButton;
+use App\Interfaces\WithCheckbox;
+use App\Interfaces\WithCustomColumn;
 use App\Interfaces\WithOptions;
+use Carbon\Carbon;
 
-class CustomerTypeDataTable extends BaseDataTable implements WithOptions, WithButton
+class CustomerTypeDataTable extends BaseDataTable implements WithOptions, WithButton, WithCustomColumn, WithCheckbox
 {
     use CustomerTypeTrait;
+
+    public function customColumn($datatbale)
+    {
+        return $datatbale->addColumn('updated_at', function ($value)
+        {
+            $date = (new Carbon($value->updated_at))->diffForHumans();
+
+            return $date;
+        });
+    }
 
     /**
      * Get query source of dataTable.
@@ -45,6 +58,9 @@ class CustomerTypeDataTable extends BaseDataTable implements WithOptions, WithBu
                 ->title(trans('app.customer_types.column.name')),
             Column::make('default_point')
                 ->title(trans('app.customer_types.column.default_point'))
+                ->width(120),
+            Column::make('created_at')
+                ->title(trans('app.global.created_at'))
                 ->width(120),
             Column::make('created_at')
                 ->title(trans('app.global.created_at'))
