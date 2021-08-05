@@ -297,6 +297,9 @@ return [
     ],
     'customers' => [
         'title' => 'Pelanggan',
+        'default' => [
+            'customer_type' => '-'
+        ],
         'column' => [
             'name' => 'Nama',
             'email' => 'Email',

@@ -303,6 +303,9 @@ return [
     ],
     'customers' => [
         'title' => 'Customer',
+        'default' => [
+            'customer_type' => '-'
+        ],
         'column' => [
             'name' => 'Name',
             'email' => 'Email',

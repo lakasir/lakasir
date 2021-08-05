@@ -52,6 +52,7 @@ class CustomerDataTable extends BaseDataTable implements
             Column::make('code')
                 ->title(trans('app.customers.column.code')),
             Column::make('customer_type.name')
+                ->content(__('app.customers.default.customer_type'))
                 ->title(trans('app.customers.column.customer_type')),
             Column::make('created_at')
                 ->title(trans('app.global.created_at'))
