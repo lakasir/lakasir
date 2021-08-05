@@ -96,6 +96,7 @@ class Customer
                 'code' => $numberGenerator->create()
             ]);
             $customer->fill($request->all());
+            $customer->customerType()->associate($this->customerType->find($request->customer_type_id));
             $customer->save();
             $points = new CustomerPoint([
                 'date' => today()->format('Y-m-d'),

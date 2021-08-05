@@ -301,13 +301,15 @@ return [
             'name' => 'Nama',
             'email' => 'Email',
             'code' => 'Kode',
-            'total_point' => 'Total Point'
+            'total_point' => 'Total Point',
+            'customer_type' => 'Tipe Customer',
         ],
         'placeholder' => [
             'name' => 'Nama',
             'email' => 'Email',
             'code' => 'Kode',
-            'total_point' => 'Total Point'
+            'total_point' => 'Total Point',
+            'customer_type' => 'Masukkan tipe customer',
         ],
         'info' => [
             'code' => 'Biarkan kosong untuk menggunakan generate kode otomatis'
