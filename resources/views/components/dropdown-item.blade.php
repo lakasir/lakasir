@@ -1,5 +1,5 @@
 <div>
-  @if (isset($option->confirm))
+  @if (isset($option->confirm) && $option->confirm)
     <a class="dropdown-item {{ $option->className }} has-icon"
       href="#"
       onclick="event.preventDefault();
@@ -9,9 +9,9 @@
         {!! $option->icon !!}
       @endif
       <span>{!! $option->title ?? $option->extend !!}</span>
-      <form id="delete-form-{{ $option->extend }}" option="{{ $option->url }}" method="POST" style="display:none">
+      <form id="delete-form-{{ $option->extend }}" action="{{ $option->url }}" method="POST" style="display:none">
         @csrf
-        @if (isset($option->method))
+        @if (isset($option->method) && $option->method)
           @method($option->method)
         @endif
       </form>
