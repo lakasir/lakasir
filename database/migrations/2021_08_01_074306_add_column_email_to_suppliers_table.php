@@ -26,7 +26,7 @@ class AddColumnEmailToSuppliersTable extends Migration
     public function down()
     {
         Schema::table('suppliers', function (Blueprint $table) {
-            //
+            $table->dropColumn('email');
         });
     }
 }
