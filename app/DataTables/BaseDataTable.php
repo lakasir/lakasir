@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use Illuminate\View\View;
 use Yajra\DataTables\Services\DataTable;
 use App\Interfaces\WithColumn;
+use App\Interfaces\WithCreatedHumanDate;
 use App\Interfaces\WithCustomColumn;
 
 /**
@@ -26,13 +27,16 @@ abstract class BaseDataTable extends DataTable implements WithColumn
     public function dataTable($query)
     {
         $datatbale = datatables()
-            ->eloquent($query)
-            ->editColumn('created_at', function ($value)
+            ->eloquent($query);
+
+        if ($this instanceof WithCreatedHumanDate) {
+            $datatbale->editColumn('created_at', function ($value)
             {
                 $date = (new Carbon($value->created_at))->diffForHumans();
 
                 return $date;
             });
+        }
 
         if ($this instanceof WithCheckbox) {
             $datatbale->addColumn('checkbox', function ($model) {
@@ -66,6 +70,7 @@ abstract class BaseDataTable extends DataTable implements WithColumn
             ->setTableId('customertype-table')
             ->columns($this->getColumns())
             ->minifiedAjax();
+
         if ($this instanceof WithButton) {
             $builder_html
                 ->dom('Bfrtip')
