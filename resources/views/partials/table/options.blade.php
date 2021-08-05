@@ -10,9 +10,9 @@
     @lang('app.global.options')
   </button>
   <div class="dropdown-menu" aria-labelledby="dLabel">
-    @foreach ($actions as $action)
-      @if ($action->show)
-        <x-dropdown-item :action="$action"></x-dropdown-item>
+    @foreach ($options as $option)
+      @if ($option->show)
+        <x-dropdown-item :option="$option"></x-dropdown-item>
       @endif
     @endforeach
   </div>

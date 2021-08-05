@@ -6,17 +6,17 @@ use Illuminate\View\Component;
 
 class DropdownItem extends Component
 {
-    /** @var array|object $action */
-    public $action;
+    /** @var array|object $option */
+    public $option;
 
     /**
      * Create a new component instance.
      *
      * @return void
      */
-    public function __construct($action)
+    public function __construct($option)
     {
-        $this->action = $action;
+        $this->option = $option;
     }
 
     /**

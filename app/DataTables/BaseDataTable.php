@@ -36,7 +36,7 @@ abstract class BaseDataTable extends DataTable implements WithColumn
             });
 
         if ($this instanceof WithOptions) {
-            $datatbale->addColumn('action', function ($row)
+            $datatbale->addColumn('options', function ($row)
             {
                 return $this->addActions($row);
             });
@@ -69,7 +69,7 @@ abstract class BaseDataTable extends DataTable implements WithColumn
     private function addActions($row)
     {
         if ($this instanceof WithOptions) {
-            return view('partials.table.action', ['actions' => $this->addOptionsBuilder($row)]);
+            return view('partials.table.options', ['options' => $this->addOptionsBuilder($row)]);
         }
 
         return;
