@@ -2,18 +2,18 @@
 
 namespace App\DataTables;
 
-use App\Interfaces\Button as InterfacesButton;
-use App\Interfaces\Columns;
-use App\Interfaces\Options;
+use App\Interfaces\WithButton;
+use App\Interfaces\WithOptions;
 use Carbon\Carbon;
 use Illuminate\View\View;
 use Yajra\DataTables\Services\DataTable;
+use App\Interfaces\WithColumn;
 
 /**
  * Class BaseDataTable
  * @author sheenazien8
  */
-abstract class BaseDataTable extends DataTable implements Options, Columns, InterfacesButton
+abstract class BaseDataTable extends DataTable implements WithColumn
 {
     /**
      * Build DataTable class.
@@ -23,7 +23,7 @@ abstract class BaseDataTable extends DataTable implements Options, Columns, Inte
      */
     public function dataTable($query)
     {
-        return datatables()
+        $datatbale = datatables()
             ->eloquent($query)
             ->editColumn('created_at', function ($value)
             {
@@ -33,11 +33,16 @@ abstract class BaseDataTable extends DataTable implements Options, Columns, Inte
             })
             ->addColumn('checkbox', function ($model) {
                 return view('partials.table.checkbox', compact('model'));
-            })
-            ->addColumn('action', function ($row)
+            });
+
+        if ($this instanceof WithOptions) {
+            $datatbale->addColumn('action', function ($row)
             {
                 return $this->addActions($row);
             });
+        }
+
+        return $datatbale;
     }
 
     /**
@@ -47,17 +52,26 @@ abstract class BaseDataTable extends DataTable implements Options, Columns, Inte
      */
     public function html()
     {
-        return $this->builder()
+        $builder_html = $this->builder()
             ->setTableId('customertype-table')
             ->columns($this->getColumns())
-            ->minifiedAjax()
-            ->dom('Bfrtip')
-            ->buttons($this->getButton());
+            ->minifiedAjax();
+        if ($this instanceof WithButton) {
+            $builder_html
+                ->dom('Bfrtip')
+                ->buttons($this->getButton());
+        }
+
+        return $builder_html;
     }
 
-    /** @return string|View  */
+    /** @return string|View|null  */
     private function addActions($row)
     {
-        return view('partials.table.action', ['actions' => $this->addOptionsBuilder($row)]);
+        if ($this instanceof WithOptions) {
+            return view('partials.table.action', ['actions' => $this->addOptionsBuilder($row)]);
+        }
+
+        return;
     }
 }

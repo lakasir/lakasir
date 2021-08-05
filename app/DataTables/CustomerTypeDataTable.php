@@ -8,8 +8,10 @@ use App\Traits\CustomerType\CustomerTypeTrait;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
+use App\Interfaces\WithButton;
+use App\Interfaces\WithOptions;
 
-class CustomerTypeDataTable extends BaseDataTable
+class CustomerTypeDataTable extends BaseDataTable implements WithOptions, WithButton
 {
     use CustomerTypeTrait;
 

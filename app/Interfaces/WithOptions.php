@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
  * Interface Options
  * @author sheenazien8
  */
-interface Options
+interface WithOptions
 {
     /** @return array[]|array|string[] */
     public function addOptionsBuilder(Model $model): array;

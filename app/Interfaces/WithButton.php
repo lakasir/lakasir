@@ -6,7 +6,7 @@ namespace App\Interfaces;
  * Interface Button
  * @author sheenazien8
  */
-interface Button
+interface WithButton
 {
     /**
      * get button for datatable

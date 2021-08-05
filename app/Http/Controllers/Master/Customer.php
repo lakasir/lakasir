@@ -27,7 +27,6 @@ class Customer extends Controller
      */
     public function index(Browse $request, CustomerService $customerService)
     {
-        dd('ok');
         if ($request->ajax() || isset($this->return) && $this->return == 'api') {
             return $customerService->datatable($request);
         }
