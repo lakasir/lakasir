@@ -325,7 +325,7 @@ return [
                     'text' => 'menu.customer_list',
                     'url'  => 'master/customer',
                     'can' => 'browse-customer',
-                    'active' => ['master/customer', 'master/customer/create', 'regex:/^master\/customer.*/']
+                    'active' => ['master/customer', 'master/customer/create', 'regex:/^master\/[c][u][s][t][o][m][e][r][^.*]+g/']
                 ],
                 [
                     'text' => 'menu.group',
