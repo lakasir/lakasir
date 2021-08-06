@@ -68,7 +68,7 @@ class SupplierDataTable extends BaseDataTable implements
             Column::make('created_at')
                 ->title(trans('app.global.created_at'))
                 ->width(120),
-            Column::computed('action')
+            Column::computed('options')
                 ->title('')
                 ->exportable(false)
                 ->printable(false)
