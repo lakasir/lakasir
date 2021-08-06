@@ -17,7 +17,6 @@ class CustomerDataTable extends BaseDataTable implements
     WithButton,
     WithCheckbox,
     WithCreatedHumanDate
-
 {
     use CustomerTrait;
 
@@ -84,7 +83,7 @@ class CustomerDataTable extends BaseDataTable implements
             Button::make('bulkDelete')
                 ->text('<i class="fas fa-trash"></i> ' . __('app.global.bulk-delete'))
                 ->idTarget('select-row')
-                ->url(route('customer_type.bulkDestroy'))
+                ->url(route('customer.bulkDestroy'))
                 ->warning(__('app.global.warning.checked_first'))
                 ->confirm(__('app.global.confirm.bulk-delete'))
         ];
