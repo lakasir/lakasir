@@ -22,3 +22,22 @@ Breadcrumbs::for('customer_type.edit', function (BreadcrumbTrail $trail, $data) 
     $trail->parent('customer_type.index');
     $trail->push(__('app.customer_types.edit.title', ['title' => $data->name]), route('customer_type.index'));
 });
+
+/**
+ * Suppplier
+ *
+ */
+
+Breadcrumbs::for('supplier.index', function (BreadcrumbTrail $trail) {
+    $trail->push(__('app.suppliers.title'), route('supplier.index'));
+});
+
+Breadcrumbs::for('supplier.create', function (BreadcrumbTrail $trail) {
+    $trail->parent('supplier.index');
+    $trail->push(__('app.suppliers.create.title'), route('supplier.index'));
+});
+
+Breadcrumbs::for('supplier.edit', function (BreadcrumbTrail $trail, $data) {
+    $trail->parent('supplier.index');
+    $trail->push(__('app.suppliers.edit.title', ['title' => $data->name]), route('supplier.index'));
+});
