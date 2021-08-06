@@ -89,11 +89,5 @@
             "@php artisan key:generate --ansi",
             "@php artisan vendor:publish --force --tag=livewire:assets --ansi"
         ]
-    },
-    "repositories": {
-        "local": {
-            "type": "path",
-            "url": "../packages/livewire-components"
-        }
     }
 }
