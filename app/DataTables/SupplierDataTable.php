@@ -8,8 +8,16 @@ use App\Traits\Supplier\SupplierTrait;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
+use App\Interfaces\WithButton;
+use App\Interfaces\WithCheckbox;
+use App\Interfaces\WithCreatedHumanDate;
+use App\Interfaces\WithOptions;
 
-class SupplierDataTable extends BaseDataTable
+class SupplierDataTable extends BaseDataTable implements
+    WithOptions,
+    WithButton,
+    WithCheckbox,
+    WithCreatedHumanDate
 {
     use SupplierTrait;
 
@@ -71,23 +79,23 @@ class SupplierDataTable extends BaseDataTable
     }
 
     /** @return array[]  */
-    public function addOptionsBuilder($customerType): array
+    public function addOptionsBuilder($supplier): array
     {
         $permission = $this->getPermission();
         return [
             Item::make(__('app.global.view'))
                 ->icon('<i class="fa fa-eye mr-2"></i>')
-                ->url(route('supplier.show', $customerType))
+                ->url(route('supplier.show', $supplier))
                 ->show($permission['browse']),
             Item::make(__('app.global.edit'))
                 ->icon('<i class="fa fa-pen mr-2"></i>')
-                ->url(route('supplier.edit', $customerType))
+                ->url(route('supplier.edit', $supplier))
                 ->show($permission['edit']),
             Item::make(__('app.global.delete'))
                 ->icon('<i class="fa fa-trash mr-2"></i>')
                 ->method('DELETE')
                 ->confirm(__('app.global.confirm.suredelete'))
-                ->url(route('supplier.destroy', $customerType))
+                ->url(route('supplier.destroy', $supplier))
                 ->show($permission['delete']),
         ];
     }
