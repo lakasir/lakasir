@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Master;
 
-use App\Http\Controllers\Controller;
+use App\DataTables\SupplierDataTable;
 use App\Http\Requests\Master\Supplier\BulkDelete;
 use App\Http\Requests\Master\Supplier\Browse;
 use App\Http\Requests\Master\Supplier\Store;
@@ -13,7 +13,7 @@ use App\Services\Supplier as SupplierService;
 use App\Traits\Supplier\SupplierTrait;
 use Illuminate\View\View;
 
-class Supplier extends Controller
+class Supplier
 {
     use SupplierTrait;
 
@@ -23,15 +23,12 @@ class Supplier extends Controller
      * Display a listing of the resource.
      *
      * @param Browse $request
+     * @param SupplierDataTable $dataTable
      * @return mix
      */
-    public function index(Browse $request, SupplierService $supplierService)
+    public function index(Browse $request, SupplierDataTable $dataTable)
     {
-        if ($request->ajax() || isset($this->return) && $this->return == 'api') {
-            return $supplierService->datatable($request);
-        }
-
-        return view("{$this->viewPath}.index", [
+        return $dataTable->render("{$this->viewPath}.index", [
             'resources' => $this->resources()
         ]);
     }
@@ -69,12 +66,11 @@ class Supplier extends Controller
 
     /**
      * @param SupplierModel $supplier
-     * @param SupplierService $supplierService
      * @param Browse $request
      * @return View|Factory
      * @throws BindingResolutionException
      */
-    public function show(SupplierModel $supplier, SupplierService $supplierService, Browse $request): View
+    public function show(SupplierModel $supplier, Browse $request): View
     {
         $data = $supplier;
 
@@ -86,12 +82,11 @@ class Supplier extends Controller
 
     /**
      * @param SupplierModel $supplier
-     * @param SupplierService $supplierService
      * @param Update $request
      * @return View|Factory
      * @throws BindingResolutionException
      */
-    public function edit(SupplierModel $supplier, SupplierService $supplierService, Update $requestModal)
+    public function edit(SupplierModel $supplier, Update $requestModal)
     {
         $data = $supplier;
 
