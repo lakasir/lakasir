@@ -2,6 +2,7 @@
 
 namespace App\Forms;
 
+use App\Models\CustomerType;
 use Sheenazien8\LivewireComponents\Abstracts\ComponentAbstracts;
 
 /**
@@ -32,9 +33,13 @@ class CustomerForm extends ComponentAbstracts
                 'placeholder' =>  __('app.customers.placeholder.email'),
                 'value' => optional($this->value->data ?? '')->email
             ],
-            'customer_type_id' => view('app.master.customers.components.select-customer-type', [
-                'data' => $this->value->data
-            ])
+            'customer_type_id' => [
+                'type' => 'select',
+                'label' =>  __('app.customers.column.customer_type'),
+                'placeholder' =>  __('app.customers.placeholder.customer_type'),
+                'value' => optional($this->value->data ?? '')->customer_type ?? 0,
+                'option' => $this->customerType()
+            ]
         ];
     }
 
@@ -46,5 +51,17 @@ class CustomerForm extends ComponentAbstracts
                 'color' => 'primary'
             ],
         ];
+    }
+
+    private function customerType(): array
+    {
+        $customer_type_map = CustomerType::get()->map(function($customer_type) {
+            return [
+                'text' => $customer_type->name,
+                'value' => $customer_type->getKey()
+            ];
+        })->toArray();
+
+        return array_merge($customer_type_map, [['text' => __('app.customer.placeholder.customer_type'), 'value' => 0]]);
     }
 }

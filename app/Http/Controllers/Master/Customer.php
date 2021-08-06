@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Master;
 
+use App\DataTables\CustomerDataTable;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Master\Customer\BulkDelete;
 use App\Http\Requests\Master\Customer\Browse;
@@ -11,6 +12,7 @@ use App\Http\Requests\Master\Customer\Update;
 use App\Models\Customer as CustomerModel;
 use App\Services\Customer as CustomerService;
 use App\Traits\Customer\CustomerTrait;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\View\View;
 
 class Customer extends Controller
@@ -20,18 +22,14 @@ class Customer extends Controller
     private $viewPath = 'app.master.customers';
 
     /**
-     * Display a listing of the resource.
-     *
      * @param Browse $request
-     * @return mix
+     * @param CustomerDataTable $dataTable
+     * @return mixed
+     * @throws BindingResolutionException
      */
-    public function index(Browse $request, CustomerService $customerService)
+    public function index(Browse $request, CustomerDataTable $dataTable)
     {
-        if ($request->ajax() || isset($this->return) && $this->return == 'api') {
-            return $customerService->datatable($request);
-        }
-
-        return view("{$this->viewPath}.index", [
+        return $dataTable->render("{$this->viewPath}.index", [
             'resources' => $this->resources()
         ]);
     }

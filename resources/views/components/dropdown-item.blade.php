@@ -1,28 +1,28 @@
 <div>
-  @if (isset($action->confirm))
-    <a class="dropdown-item {{ $action->className }} has-icon"
+  @if (isset($option->confirm) && $option->confirm)
+    <a class="dropdown-item {{ $option->className }} has-icon"
       href="#"
       onclick="event.preventDefault();
-      confirm('{{ $action->confirm }}') ?
-      document.getElementById('delete-form-{{ $action->extend }}').submit() : '';">
-      @if (isset($action->icon))
-        {!! $action->icon !!}
+      confirm('{{ $option->confirm }}') ?
+      document.getElementById('delete-form-{{ $option->extend }}').submit() : '';">
+      @if (isset($option->icon))
+        {!! $option->icon !!}
       @endif
-      <span>{!! $action->title ?? $action->extend !!}</span>
-      <form id="delete-form-{{ $action->extend }}" action="{{ $action->url }}" method="POST" style="display:none">
+      <span>{!! $option->title ?? $option->extend !!}</span>
+      <form id="delete-form-{{ $option->extend }}" action="{{ $option->url }}" method="POST" style="display:none">
         @csrf
-        @if (isset($action->method))
-          @method($action->method)
+        @if (isset($option->method) && $option->method)
+          @method($option->method)
         @endif
       </form>
     </a>
   @else
-    <a class="dropdown-item {{ $action->className }} has-icon"
-      href="{{ $action->url ?? "#" }}" >
-      @if (isset($action->icon))
-        {!! $action->icon !!}
+    <a class="dropdown-item {{ $option->className }} has-icon"
+      href="{{ $option->url ?? "#" }}" >
+      @if (isset($option->icon))
+        {!! $option->icon !!}
       @endif
-      <span>{!! $action->title ?? $action->extend !!}</span>
+      <span>{!! $option->title ?? $option->extend !!}</span>
     </a>
   @endif
 </div>

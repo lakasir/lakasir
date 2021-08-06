@@ -2,34 +2,33 @@
 
 namespace App\DataTables;
 
-use App\Html\Item as Item;
-use App\Models\CustomerType;
-use App\Traits\CustomerType\CustomerTypeTrait;
-use Illuminate\Contracts\Container\BindingResolutionException;
-use Yajra\DataTables\Html\Button;
-use Yajra\DataTables\Html\Column;
+use App\Html\Item;
 use App\Interfaces\WithButton;
 use App\Interfaces\WithCheckbox;
 use App\Interfaces\WithCreatedHumanDate;
 use App\Interfaces\WithOptions;
+use App\Models\Customer;
+use App\Traits\Customer\CustomerTrait;
+use Yajra\DataTables\Html\Button;
+use Yajra\DataTables\Html\Column;
 
-class CustomerTypeDataTable extends BaseDataTable implements
+class CustomerDataTable extends BaseDataTable implements
     WithOptions,
     WithButton,
     WithCheckbox,
     WithCreatedHumanDate
 {
-    use CustomerTypeTrait;
+    use CustomerTrait;
 
     /**
      * Get query source of dataTable.
      *
-     * @param \App\Models\CustomerType $model
+     * @param \App\Models\Customer $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function query(CustomerType $model)
+    public function query(Customer $model)
     {
-        return $model->newQuery();
+        return $model->newQuery()->with('customerType');
     }
 
     /**
@@ -48,10 +47,12 @@ class CustomerTypeDataTable extends BaseDataTable implements
                 ->width(30)
                 ->addClass('text-center'),
             Column::make('name')
-                ->title(trans('app.customer_types.column.name')),
-            Column::make('default_point')
-                ->title(trans('app.customer_types.column.default_point'))
-                ->width(120),
+                ->title(trans('app.customers.column.name')),
+            Column::make('code')
+                ->title(trans('app.customers.column.code')),
+            Column::make('customer_type.name')
+                ->content(__('app.customers.default.customer_type'))
+                ->title(trans('app.customers.column.customer_type')),
             Column::make('created_at')
                 ->title(trans('app.global.created_at'))
                 ->width(120),
@@ -62,27 +63,6 @@ class CustomerTypeDataTable extends BaseDataTable implements
                 ->orderable(false)
                 ->width(60)
                 ->addClass('text-center'),
-        ];
-    }
-
-    public function addOptionsBuilder($customerType): array
-    {
-        $permission = $this->getPermission();
-        return [
-            Item::make(__('app.global.view'))
-                ->icon('<i class="fa fa-eye mr-2"></i>')
-                ->url(route('customer_type.show', $customerType))
-                ->show($permission['browse']),
-            Item::make(__('app.global.edit'))
-                ->icon('<i class="fa fa-pen mr-2"></i>')
-                ->url(route('customer_type.edit', $customerType))
-                ->show($permission['edit']),
-            Item::make(__('app.global.delete'))
-                ->icon('<i class="fa fa-trash mr-2"></i>')
-                ->method('DELETE')
-                ->confirm(__('app.global.confirm.suredelete'))
-                ->url(route('customer_type.destroy', $customerType))
-                ->show($permission['delete']),
         ];
     }
 
@@ -103,7 +83,7 @@ class CustomerTypeDataTable extends BaseDataTable implements
             Button::make('bulkDelete')
                 ->text('<i class="fas fa-trash"></i> ' . __('app.global.bulk-delete'))
                 ->idTarget('select-row')
-                ->url(route('customer_type.bulkDestroy'))
+                ->url(route('customer.bulkDestroy'))
                 ->warning(__('app.global.warning.checked_first'))
                 ->confirm(__('app.global.confirm.bulk-delete'))
         ];
@@ -126,6 +106,28 @@ class CustomerTypeDataTable extends BaseDataTable implements
             'edit' => $edit,
             'delete' => $delete,
             'create' => $create
+        ];
+    }
+
+    public function addOptionsBuilder($customer): array
+    {
+        $permission = $this->getPermission();
+
+        return [
+            Item::make(__('app.global.view'))
+                ->icon('<i class="fa fa-eye mr-2"></i>')
+                ->url(route('customer.show', $customer))
+                ->show($permission['browse']),
+            Item::make(__('app.global.edit'))
+                ->icon('<i class="fa fa-pen mr-2"></i>')
+                ->url(route('customer.edit', $customer))
+                ->show($permission['edit']),
+            Item::make(__('app.global.delete'))
+                ->icon('<i class="fa fa-trash mr-2"></i>')
+                ->method('DELETE')
+                ->confirm(__('app.global.confirm.suredelete'))
+                ->url(route('customer.destroy', $customer))
+                ->show($permission['delete']),
         ];
     }
 }

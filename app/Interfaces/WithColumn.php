@@ -6,7 +6,7 @@ namespace App\Interfaces;
  * Interface Columns
  * @author sheenazien8
  */
-interface Columns
+interface WithColumn
 {
     /**
      * Get columns.

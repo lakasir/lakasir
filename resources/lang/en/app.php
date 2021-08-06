@@ -303,17 +303,22 @@ return [
     ],
     'customers' => [
         'title' => 'Customer',
+        'default' => [
+            'customer_type' => '-'
+        ],
         'column' => [
             'name' => 'Name',
             'email' => 'Email',
             'code' => 'Code',
-            'total_point' => 'Total Point'
+            'total_point' => 'Total Point',
+            'customer_type' => 'Customer Type',
         ],
         'placeholder' => [
             'name' => 'Name',
             'email' => 'Email',
             'code' => 'Code',
-            'total_point' => 'Total Point'
+            'total_point' => 'Total Point',
+            'customer_type' => 'Input Customer Type',
         ],
         'info' => [
             'code' => 'Leave it Empty for use default generate code'
