@@ -2,14 +2,20 @@
 
 namespace App\Http\Controllers\Master;
 
+use App\DataTables\CategoryDataTable;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Master\Category\BulkDelete;
 use App\Http\Requests\Master\Category\Browse;
 use App\Http\Requests\Master\Category\Create;
 use App\Http\Requests\Master\Category\Destroy;
 use App\Http\Requests\Master\Category\Update;
-use App\Services\Category as CategoryService;
+use App\Models\Category as ModelsCategory;
+use App\Services\Category as ServicesCategory;
 use App\Traits\Category\CategoryTrait;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\Container\BindingResolutionException;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Database\Eloquent\MassAssignmentException;
 use Illuminate\View\View;
 
 class Category extends Controller
@@ -23,13 +29,9 @@ class Category extends Controller
      *
      * @return mix
      */
-    public function index(Browse $request, CategoryService $categoryService)
+    public function index(Browse $request, CategoryDataTable $datatable)
     {
-        if ($request->ajax() || isset($this->return) && $this->return == 'api') {
-            return $categoryService->datatable($request);
-        }
-
-        return view("{$this->viewPath}.index", [
+        return $datatable->render("{$this->viewPath}.index", [
             'resources' => $this->resources()
         ]);
     }
@@ -48,13 +50,12 @@ class Category extends Controller
 
     /**
      * @param Create $request
-     * @param ItemRepository $categoryService
      * @return RedirectResponse
      * @throws BindingResolutionException
      */
-    public function store(Create $request, CategoryService $categoryService)
+    public function store(Create $request)
     {
-        $categoryService->create($request);
+        ModelsCategory::create($request->all());
 
         $message = __('app.global.message.success.create', [
             'item' => ucfirst($this->resources())
@@ -66,15 +67,14 @@ class Category extends Controller
     }
 
     /**
-     * @param mixed $model
-     * @param ItemRepository $categoryService
+     * @param ModelsCategory $category
      * @param Browse $request
      * @return View|Factory
      * @throws BindingResolutionException
      */
-    public function show($model, CategoryService $categoryService, Browse $request)
+    public function show(ModelsCategory $category, Browse $request)
     {
-        $data = $categoryService->find($model);
+        $data = $category;
 
         return view("{$this->viewPath}.show", [
             'resources' => $this->resources(),
@@ -83,15 +83,14 @@ class Category extends Controller
     }
 
     /**
-     * @param mixed $model
-     * @param ItemRepository $categoryService
+     * @param ModelsCategory $category
      * @param Update $request
      * @return View|Factory
      * @throws BindingResolutionException
      */
-    public function edit($model, CategoryService $categoryService, Update $request)
+    public function edit(ModelsCategory $category, Update $request)
     {
-        $data = $categoryService->find($model);
+        $data = $category;
 
         return view("{$this->viewPath}.edit", [
             'resources' => $this->resources(),
@@ -100,18 +99,15 @@ class Category extends Controller
     }
 
     /**
-     * @param string|int $model
-     * @param ItemRepository $categoryService
+     * @param ModelsCategory $category
      * @param Update $request
      * @return RedirectResponse
-     * @throws AuthorizationException
+     * @throws MassAssignmentException
      * @throws BindingResolutionException
      */
-    public function update($model, CategoryService $categoryService, Update $request)
+    public function update(ModelsCategory $category, Update $request)
     {
-        $data = $categoryService->find($model);
-
-        $data = $categoryService->update($request, $data);
+        $category->update($request->all());
 
         $message = __('app.global.message.success.update', [
             'item' => ucfirst($this->resources())
@@ -122,18 +118,9 @@ class Category extends Controller
         return redirect()->to(route("{$this->resources()}.index"));
     }
 
-    /**
-     * @param mixed $model
-     * @param ItemRepository $categoryService
-     * @param Destroy $request
-     * @return RedirectResponse
-     * @throws BindingResolutionException
-     */
-    public function destroy($model, CategoryService $categoryService, Destroy $request)
+    public function destroy(ModelsCategory $category, Destroy $request)
     {
-        $data = $categoryService->find($model);
-
-        $data->delete();
+        $category->delete();
 
         $message = __('app.global.message.success.delete', [
             'item' => ucfirst($this->resources())
@@ -144,16 +131,9 @@ class Category extends Controller
         return redirect()->to(route("{$this->resources()}.index"));
     }
 
-    /**
-     * @param BulkDelete $request
-     * @param ItemRepository $categoryService
-     * @return Sheenazien8\Hascrudactions\Traits\Illuminate\Http\Response
-     * @throws BindingResolutionException
-     * @throws AuthorizationException
-     */
-    public function bulkDestroy(BulkDelete $request, CategoryService $categoryService)
+    public function bulkDestroy(BulkDelete $request, ServicesCategory $category)
     {
-        $categoryService->bulkDestroy($request);
+        $category->bulkDestroy($request);
 
         $message = __('app.global.message.success.bulk-delete', [
             'item' => ucfirst($this->resources())

@@ -36,3 +36,17 @@ Breadcrumbs::for('customer.edit', function (BreadcrumbTrail $trail, $data) {
     $trail->parent('customer.index');
     $trail->push(__('app.customers.edit.title', ['title' => $data->name]), route('customer.index'));
 });
+
+Breadcrumbs::for('category.index', function (BreadcrumbTrail $trail) {
+    $trail->push(__('app.categories.title'), route('category.index'));
+});
+
+Breadcrumbs::for('category.create', function (BreadcrumbTrail $trail) {
+    $trail->parent('category.index');
+    $trail->push(__('app.categories.create.title'), route('category.index'));
+});
+
+Breadcrumbs::for('category.edit', function (BreadcrumbTrail $trail, $data) {
+    $trail->parent('category.index');
+    $trail->push(__('app.categories.edit.title', ['title' => $data->name]), route('category.index'));
+});
