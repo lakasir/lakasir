@@ -82,3 +82,17 @@ Breadcrumbs::for('category.edit', function (BreadcrumbTrail $trail, $data) {
     $trail->parent('category.index');
     $trail->push(__('app.categories.edit.title', ['title' => $data->name]), route('category.index'));
 });
+
+Breadcrumbs::for('group.index', function (BreadcrumbTrail $trail) {
+    $trail->push(__('app.groups.title'), route('group.index'));
+});
+
+Breadcrumbs::for('group.create', function (BreadcrumbTrail $trail) {
+    $trail->parent('group.index');
+    $trail->push(__('app.groups.create.title'), route('group.index'));
+});
+
+Breadcrumbs::for('group.edit', function (BreadcrumbTrail $trail, $data) {
+    $trail->parent('group.index');
+    $trail->push(__('app.groups.edit.title', ['title' => $data->name]), route('group.index'));
+});

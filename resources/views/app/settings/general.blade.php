@@ -48,28 +48,27 @@
 
 @section('content')
   <div class="card">
-    {{-- <div class="card-header"> --}}
-      {{--   {{ __('menu.general') }} --}}
-      {{-- </div> --}}
     <div class="card-body">
       <div class="row">
-        <div class="col-md-4">
-          <a href="{{ route('s.general.company.index') }}">
-            <button type="button" class="btn-icon-clipboard p-2">
-              <div class="row mx-0">
-                <div class="col-auto">
-                  <div class="badge badge-secondary settings-icons">
-                    <i class="fa fa-lg fa-building"></i>
+        @foreach (config('setting.menu') as $key => $menu)
+          <div class="col-md-3">
+            <a href="{{ $menu['url']['route'] ? route($menu['url']['route']) : $menu['url'] }}">
+              <button type="button" class="btn-icon-clipboard p-2">
+                <div class="row mx-0">
+                  <div class="col-auto">
+                    <div class="badge badge-secondary settings-icons">
+                      <i class="{{ $menu['icon'] }}"></i>
+                    </div>
+                  </div>
+                  <div class="col ml--2">
+                    <h4 class="mb-0">{{ __($menu['title']) }}</h4>
+                    <p class="text-sm text-muted mb-0">{{ __($menu['description']) }}</p>
                   </div>
                 </div>
-                <div class="col ml--2">
-                  <h4 class="mb-0">{{ __('app.settings.general.company.title') }}</h4>
-                  <p class="text-sm text-muted mb-0">{{ __('app.settings.general.company.description') }}</p>
-                </div>
-              </div>
-            </button>
-          </a>
-        </div>
+              </button>
+            </a>
+          </div>
+        @endforeach
       </div>
     </div>
   </div>

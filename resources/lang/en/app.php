@@ -84,7 +84,23 @@ return [
             'company' => [
                 'title' => 'Company',
                 'description' => 'Update company name, email, address, NPWP and etc.'
-            ]
+            ],
+            'date' => [
+                'title' => 'Date',
+                'description' => 'Configure your date format.'
+            ],
+            'currency' => [
+                'title' => 'Currency',
+                'description' => 'Configure your currency use.'
+            ],
+            'appearance' => [
+                'title' => 'Appearance',
+                'description' => 'Configure your system appearance.'
+            ],
+            'plugins' => [
+                'title' => 'Plugins',
+                'description' => 'Add the awesome tools for Lakasir.'
+            ],
         ],
     ],
     'auth' => [

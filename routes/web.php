@@ -85,7 +85,7 @@ Route::group(['middleware' => ['installed', 'auth']], function () {
         Route::delete('/supplier/bulk-destroy', [Supplier::class, 'bulkDestroy'])->name('supplier.bulkDestroy');
         Route::resource('/supplier', Supplier::class);
 
-        Route::delete('/group/bulk-destroy', [Group::class, 'bulkDestroy']);
+        Route::delete('/group/bulk-destroy', [Group::class, 'bulkDestroy'])->name('group.bulkDestroy');
         Route::resource('/group', Group::class);
 
         Route::delete('/customer_type/bulk-destroy', [CustomerType::class, 'bulkDestroy'])->name('customer_type.bulkDestroy');
@@ -119,10 +119,6 @@ Route::group(['middleware' => ['installed', 'auth']], function () {
         Route::get('/cashier', function () {
             get_lang();
 
-            /* $token = $user->createToken('Create token from login ui')->accessToken; */
-            /* dd($token); */
-            /* $request->session()->put('bearer-token', $token); */
-
             Gate::authorize('browse-selling');
 
             $token = session()->get('bearer-token');
@@ -140,6 +136,10 @@ Route::group(['middleware' => ['installed', 'auth']], function () {
         Route::resource('/general', General::class)->only(['index']);
         Route::group(['prefix' => '/general', 'as' => 'general.'], function () {
             Route::resource('/company', Company::class)->only(['index', 'store']);
+            Route::resource('/date', Company::class)->only(['index', 'store']);
+            Route::resource('/currency', Company::class)->only(['index', 'store']);
+            Route::resource('/appearance', Company::class)->only(['index', 'store']);
+            Route::resource('/plugins', Company::class)->only(['index', 'store']);
         });
         Route::resource('/default', DefaultSetting::class)->only(['index', 'store']);
     });
