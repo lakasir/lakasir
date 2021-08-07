@@ -515,12 +515,16 @@ return [
         'download' => 'Unduh :title',
         'import' => 'Import :title',
         'message' => [
-            'create' => 'Menambahkan',
-            'update' => 'Memeperbarui',
-            'delete' => 'Menghapus',
-            'success' => 'Sukses',
-            'error' => 'Gagal',
+            'success' => [
+                'create' => 'Sukses menambahkan :item',
+                'update' => 'Sukses memperbarui :item'
+            ],
+            'error' => [
+                'create' => 'Gagal menambahkan :item'
+            ],
         ],
+        'success' => 'Sukses',
+        'error' => 'Gagal',
         'yes' => 'Ya',
         'no' => 'Tidak',
         'login_cashier' => 'Login Sebagai Kasir',

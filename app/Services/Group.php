@@ -2,43 +2,83 @@
 
 namespace App\Services;
 
-use App\Abstracts\Repository as RepositoryAbstract;
+use App\Models\Customer;
+use App\Models\Group as GroupModel;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use InvalidArgumentException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class Group extends RepositoryAbstract
+class Group
 {
-    protected string $model = 'App\Models\Group';
-
+    /**
+     * @param Request $request
+     * @return GroupModel
+     * @throws Exception
+     */
     public function create(Request $request)
     {
-        $self = $this;
-        return DB::transaction(static function () use ($self, $request) {
-            $group = $self->model::create($request->all());
-            $customer = ( new Customer() )->findByKeyArray($request->customer_id);
-            $group->customers()->attach($customer);
+        try {
+            DB::beginTransaction();
+            /** @var GroupModel $group */
+            $group = GroupModel::create($request->all());
+            $group->customers()->saveMany(Customer::find($request->customers));
+
+            DB::commit();
 
             return $group;
-        });
+        } catch (Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
     }
 
-    public function update(Request $request, $group)
+    /**
+     * @param Request $request
+     * @param GroupModel $group
+     * @return GroupModel|void
+     * @throws Exception
+     */
+    public function update(Request $request, GroupModel $group)
     {
-        $self = $this;
-        return DB::transaction(static function () use ($self, $request, $group) {
-            $group->fill($request->all());
-            $group->save();
-            $customer = ( new Customer() )->findByKeyArray($request->customer_id);
-            $group->customers()->sync($customer);
+        try {
+            DB::beginTransaction();
+            /** @var GroupModel $group */
+            $group->update($request->all());
+            $customers = Customer::find($request->customers);
+            $group->customers()->detach();
+            $group->customers()->attach($customers);
+            DB::commit();
 
             return $group;
-        });
+        } catch (Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
     }
 
-    public function datatable(Request $request)
+    /**
+     * @param Request $request
+     * @param string $column
+     * @return void
+     * @throws InvalidArgumentException
+     * @throws HttpException
+     * @throws NotFoundHttpException
+     */
+    public function bulkDestroy(Request $request, string $column = 'id'): void
     {
-        $items = $this->model::withCount([ 'customers' ])->toBase()->latest()->get();
-
-        return $this->getobjectmodel()->table($items);
+        $group_query = GroupModel::query();
+        if ($group_query->find($request->ids)->count() == 0) {
+            abort(404);
+        }
+        DB::transaction(static function () use ($request, $column, $group_query) {
+            collect($request->ids)
+                ->chunk(1000)
+                ->each(static function ($bulkChunk) use ($column, $group_query) {
+                    $group_query->whereIn($column, $bulkChunk)->delete();
+                });
+        });
     }
 }

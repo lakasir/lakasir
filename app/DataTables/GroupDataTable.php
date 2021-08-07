@@ -104,15 +104,22 @@ class GroupDataTable extends BaseDataTable implements
     public function getColumns(): array
     {
         return [
-            Column::computed('action')
+            Column::computed('checkbox')
+                ->title('#')
                   ->exportable(false)
                   ->printable(false)
                   ->width(60)
                   ->addClass('text-center'),
-            Column::make('id'),
-            Column::make('add your columns'),
-            Column::make('created_at'),
-            Column::make('updated_at'),
+            Column::make('name')
+                ->title(trans('app.groups.column.name')),
+            Column::make('created_at')
+                ->title(trans('app.global.created_at'))
+                ->width(120),
+            Column::computed('options')
+                ->exportable(false)
+                ->printable(false)
+                ->width(60)
+                ->addClass('text-center'),
         ];
     }
 }

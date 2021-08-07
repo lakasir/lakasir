@@ -544,12 +544,16 @@ return [
         'download' => 'Download :title',
         'import' => 'Import :title',
         'message' => [
-            'create' => 'Create',
-            'update' => 'Update',
-            'delete' => 'Delete',
-            'success' => 'Success',
-            'error' => 'Error',
+            'success' => [
+                'create' => 'Success created the :item',
+                'update' => 'Success update the :item'
+            ],
+            'error' => [
+                'create' => 'Error to create :item'
+            ],
         ],
+        'success' => 'Yay!!, ',
+        'error' => 'Ohh no way..',
         'yes' => 'Yes',
         'no' => 'No',
         'login_cashier' => 'Login as Cashier',
@@ -573,5 +577,5 @@ return [
         'since_last_month' => 'Since Last Month',
         'this_year' => 'This Year',
         'last_year' => 'Last Year'
-    ]
+    ],
 ];

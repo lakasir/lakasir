@@ -30,7 +30,8 @@ class Update extends FormRequest
             return [];
         }
         return [
-            'name' => 'required'
+            'name' => 'required',
+            'customers' => 'required'
         ];
     }
 }

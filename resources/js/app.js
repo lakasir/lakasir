@@ -70,3 +70,7 @@ const app = new Vue({
   el: '#app',
   store
 });
+
+$(document).ready(function() {
+    $('.select2').select2();
+});

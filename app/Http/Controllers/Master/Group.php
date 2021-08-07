@@ -9,8 +9,14 @@ use App\Http\Requests\Master\Group\BulkDelete;
 use App\Http\Requests\Master\Group\Create;
 use App\Http\Requests\Master\Group\Destroy;
 use App\Http\Requests\Master\Group\Update;
+use App\Models\Customer;
 use App\Traits\Group\GroupTrait;
 use App\Models\Group as GroupModel;
+use App\Services\Group as GroupService;
+use Exception;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\DB;
+use Illuminate\View\View;
 
 class Group extends Controller
 {
@@ -40,7 +46,8 @@ class Group extends Controller
     public function create(Create $request): View
     {
         return view("{$this->viewPath}.create", [
-            'resources' => $this->resources()
+            'resources' => $this->resources(),
+            'customers' => Customer::select('id', 'name')->get()
         ]);
     }
 
@@ -49,28 +56,37 @@ class Group extends Controller
      * @return RedirectResponse
      * @throws BindingResolutionException
      */
-    public function store(Create $request)
+    public function store(Create $request, GroupService $groupService)
     {
-        GroupModel::create($request->all());
+        try {
+            $groupService->create($request);
 
-        $message = __('app.global.message.success.create', [
-            'item' => ucfirst($this->resources())
-        ]);
+            $message = __('app.global.message.success.create', [
+                'item' => ucfirst($this->resources())
+            ]);
 
-        flash()->success($message);
+            flash()->success($message);
+
+        } catch (Exception $e) {
+            $message = __('app.global.message.error.create', [
+                'item' => ucfirst($this->resources())
+            ]);
+
+            flash()->error($message);
+        }
 
         return redirect()->to(route("{$this->resources()}.index"));
     }
 
     /**
-     * @param GroupModel $customerType
+     * @param GroupModel $group
      * @param Browse $request
      * @return View|Factory
      * @throws BindingResolutionException
      */
-    public function show(GroupModel $customerType, Browse $request)
+    public function show(GroupModel $group, Browse $request)
     {
-        $data = $customerType;
+        $data = $group;
 
         return view("{$this->viewPath}.show", [
             'resources' => $this->resources(),
@@ -79,50 +95,62 @@ class Group extends Controller
     }
 
     /**
-     * @param GroupModel $customerType
-     * @param ItemRepository $customerTypeService
+     * @param GroupModel $group
+     * @param ItemRepository $groupService
      * @param Update $request
      * @return View|Factory
      * @throws BindingResolutionException
      */
-    public function edit(GroupModel $customerType, Update $request)
+    public function edit(GroupModel $group, Update $request)
     {
-        $data = $customerType;
+        $data = $group;
+        $selected_customer = $data->customers->pluck('id')->toArray();
 
         return view("{$this->viewPath}.edit", [
             'resources' => $this->resources(),
-            'data' => $data
+            'data' => $data,
+            'selected_customer' => $selected_customer,
+            'customers' => Customer::select('id', 'name')->get()
         ]);
     }
 
     /**
+     * @param GroupModel $group
      * @param Update $request
+     * @param GroupService $groupService
      * @return RedirectResponse
-     * @throws AuthorizationException
-     * @throws BindingResolutionException
      */
-    public function update(GroupModel $customerType, Update $request)
+    public function update(GroupModel $group, Update $request, GroupService $groupService)
     {
-        $customerType->update($request->all());
+         try {
+             $groupService->update($request, $group);
 
-        $message = __('app.global.message.success.update', [
-            'item' => ucfirst($this->resources())
-        ]);
+             $message = __('app.global.message.success.update', [
+                 'item' => ucfirst($this->resources())
+             ]);
 
-        flash()->success($message);
+             flash()->success($message);
+        } catch (Exception $e) {
+            DB::rollBack();
+            $message = __('app.global.message.error.update', [
+                'item' => ucfirst($this->resources())
+            ]);
 
-        return redirect()->to(route("{$this->resources()}.index"));
+            flash()->error($message);
+        }
+
+         return redirect()->to(route("{$this->resources()}.index"));
     }
 
     /**
-     * @param GroupModel $customerType
+     * @param GroupModel $group
      * @param Destroy $request
      * @return RedirectResponse
      * @throws BindingResolutionException
      */
-    public function destroy(GroupModel $customerType, Destroy $request)
+    public function destroy(GroupModel $group, Destroy $request)
     {
-        $customerType->delete();
+        $group->delete();
 
         $message = __('app.global.message.success.delete', [
             'item' => ucfirst($this->resources())
@@ -135,23 +163,28 @@ class Group extends Controller
 
     /**
      * @param BulkDelete $request
-     * @param GroupService $customerTypeService
+     * @param GroupService $groupService
      * @return RedirectResponse
-     * @throws BindingResolutionException
-     * @throws AuthorizationException
      */
-    public function bulkDestroy(BulkDelete $request, GroupService $customerTypeService)
+    public function bulkDestroy(BulkDelete $request, GroupService $groupService)
     {
-        $customerTypeService->bulkDestroy($request);
+        try {
+            $groupService->bulkDestroy($request);
 
-        $message = __('app.global.message.success.bulk-delete', [
-            'item' => ucfirst($this->resources())
-        ]);
+            $message = __('app.global.message.success.bulk-delete', [
+                'item' => ucfirst($this->resources())
+            ]);
 
-        flash()->success($message);
+            flash()->success($message);
+
+        } catch (Exception $e) {
+            $message = __('app.global.message.error.bulk-delete', [
+                'item' => ucfirst($this->resources())
+            ]);
+
+            flash()->error($message);
+        }
 
         return redirect()->to(route("{$this->resources()}.index"));
     }
-
-
 }
