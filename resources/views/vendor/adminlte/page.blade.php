@@ -48,7 +48,7 @@
                   @if(flash()->message)
                     <div class="">
                       <div class="alert {{ flash()->class }} alert-dismissible fade show" role="alert">
-                        <strong>{{ __('app.global.message.'.flash()->level) }}</strong> {{ flash()->message }}
+                        <strong>{{ __('app.global.'.flash()->level) }}</strong> {{ flash()->message }}
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                           <span aria-hidden="true">&times;</span>
                         </button>
