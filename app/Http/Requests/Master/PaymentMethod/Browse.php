@@ -6,7 +6,7 @@ use App\Traits\PaymentMethod\PaymentMethodTrait;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 
-class BulkDelete extends FormRequest
+class Browse extends FormRequest
 {
     use PaymentMethodTrait;
     /**
@@ -16,7 +16,7 @@ class BulkDelete extends FormRequest
      */
     public function authorize()
     {
-        return Gate::authorize("bulk-delete-{$this->prefixPermission()}");
+        return Gate::authorize("browse-{$this->prefixPermission()}");
     }
 
     /**
@@ -27,7 +27,12 @@ class BulkDelete extends FormRequest
     public function rules()
     {
         return [
-            'ids' => ['array', 'required']
+            'orderBy' => 'in:id,name,url_customize,website,status,sort|nullable',
+            'orderDirection' => 'in:asc,desc|nullable',
+            's' => 'string|nullable',
+            'page' => 'integer|nullable',
+            'per_page' => 'integer|nullable',
+            'limit' => 'integer|nullable',
         ];
     }
 }

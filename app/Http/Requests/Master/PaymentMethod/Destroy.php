@@ -2,10 +2,13 @@
 
 namespace App\Http\Requests\Master\PaymentMethod;
 
+use App\Traits\PaymentMethod\PaymentMethodTrait;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
 
-class Store extends FormRequest
+class Destroy extends FormRequest
 {
+    use PaymentMethodTrait;
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -13,7 +16,7 @@ class Store extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return Gate::authorize("delete-{$this->prefixPermission()}");
     }
 
     /**
@@ -23,10 +26,6 @@ class Store extends FormRequest
      */
     public function rules()
     {
-        return [
-            'name' => ['required'],
-            'code' => ['required', 'unique:payment_methods'],
-            'visible_in' => ['array'],
-        ];
+        return [];
     }
 }

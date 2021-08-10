@@ -2,11 +2,13 @@
 
 namespace App\Http\Requests\Master\PaymentMethod;
 
+use App\Traits\PaymentMethod\PaymentMethodTrait;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Gate;
 
 class Update extends FormRequest
 {
+    use PaymentMethodTrait;
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -14,7 +16,7 @@ class Update extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return Gate::authorize("update-{$this->prefixPermission()}");
     }
 
     /**
@@ -24,10 +26,11 @@ class Update extends FormRequest
      */
     public function rules()
     {
+        if (!in_array($this->method(), ['PUT', 'PATCH'])) {
+            return [];
+        }
         return [
-            'name' => ['required'],
-            'code' => ['required', Rule::unique('payment_methods')->ignore($this->segments()[2])],
-            'visible_in' => ['array'],
+            'name' => 'required'
         ];
     }
 }

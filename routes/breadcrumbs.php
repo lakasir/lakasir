@@ -96,3 +96,17 @@ Breadcrumbs::for('group.edit', function (BreadcrumbTrail $trail, $data) {
     $trail->parent('group.index');
     $trail->push(__('app.groups.edit.title', ['title' => $data->name]), route('group.index'));
 });
+
+Breadcrumbs::for('payment_method.index', function (BreadcrumbTrail $trail) {
+    $trail->push(__('app.payment_methods.title'), route('payment_method.index'));
+});
+
+Breadcrumbs::for('payment_method.create', function (BreadcrumbTrail $trail) {
+    $trail->parent('payment_method.index');
+    $trail->push(__('app.payment_methods.create.title'), route('payment_method.index'));
+});
+
+Breadcrumbs::for('payment_method.edit', function (BreadcrumbTrail $trail, $data) {
+    $trail->parent('payment_method.index');
+    $trail->push(__('app.payment_methods.edit.title', ['title' => $data->name]), route('payment_method.index'));
+});

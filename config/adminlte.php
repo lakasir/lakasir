@@ -359,6 +359,12 @@ return [
                     'active' => ['master/supplier', 'master/supplier/create', 'regex:/^master\/supplier.*/'],
                     'can' => 'browse-supplier'
                 ],
+                [
+                    'text' => 'menu.payment_method',
+                    'url'  => 'master/payment_method',
+                    'active' => ['master/payment_method', 'master/payment_method/create', 'regex:/^master\/payment_method.*/'],
+                    'can' => 'browse-payment_method'
+                ],
             ],
         ],
         /* ['header' => 'menu.user_management'], */
