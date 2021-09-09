@@ -6,17 +6,21 @@ use App\Html\Item;
 use App\Interfaces\WithButton;
 use App\Interfaces\WithCheckbox;
 use App\Interfaces\WithCreatedHumanDate;
+use App\Interfaces\WithCustomColumn;
 use App\Interfaces\WithOptions;
 use App\Models\User;
 use App\Traits\User\UserTrait;
+use Yajra\DataTables\DataTableAbstract;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
 
+/** @package App\DataTables */
 class UserDataTable extends BaseDataTable implements
     WithOptions,
     WithButton,
     WithCheckbox,
-    WithCreatedHumanDate
+    WithCreatedHumanDate,
+    WithCustomColumn
 {
     use UserTrait;
 
@@ -28,7 +32,19 @@ class UserDataTable extends BaseDataTable implements
      */
     public function query(User $model)
     {
-        return $model->newQuery();
+        return $model->newQuery()->with('roles');
+    }
+
+    /**
+     * @param DataTableAbstract $datatbale
+     * @return DataTableAbstract
+     */
+    public function customColumn($datatbale)
+    {
+        return $datatbale->addColumn('roles_name', function (User $row)
+        {
+            return optional($row->roles()->first())->name ?? '-';
+        });
     }
 
     /**
@@ -46,6 +62,15 @@ class UserDataTable extends BaseDataTable implements
                 ->orderable(false)
                 ->width(30)
                 ->addClass('text-center'),
+            Column::make('username')
+                ->title(trans('app.user.column.username'))
+                ->width(120),
+            Column::make('email')
+                ->title(trans('app.user.column.email'))
+                ->width(120),
+            Column::make('roles_name')
+                ->title(trans('app.user.column.role'))
+                ->width(120),
             Column::make('created_at')
                 ->title(trans('app.global.created_at'))
                 ->width(120),

@@ -59,6 +59,12 @@ return [
         ]
     ],
     'profiles' => [
+        'index' => [
+            'title' => 'Your Profile'
+        ],
+        'change_password' => [
+            'title' => 'Update Password'
+        ],
         'column' => [
             'bio' => 'Bio',
             'phone' => 'Phone',
@@ -81,6 +87,7 @@ return [
     ],
     'settings' => [
         'general' => [
+            'title' => 'General',
             'company' => [
                 'title' => 'Company',
                 'description' => 'Update company name, email, address, NPWP and etc.'

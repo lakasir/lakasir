@@ -19,6 +19,7 @@ class FormServiceProvider extends ServiceProvider
             'supplier-form' => \App\Forms\SupplierForm::class,
             'login-form' => \App\Forms\LoginForm::class,
             'profile-form' => \App\Forms\ProfileForm::class,
+            'change-password-form' => \App\Forms\ChangePasswordForm::class,
             'customer-form' => \App\Forms\CustomerForm::class
         ]);
     }

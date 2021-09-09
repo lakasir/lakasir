@@ -112,17 +112,17 @@ Breadcrumbs::for('payment_method.edit', function (BreadcrumbTrail $trail, $data)
 });
 
 Breadcrumbs::for('user.index', function (BreadcrumbTrail $trail) {
-    $trail->push(__('app.users.title'), route('user.index'));
+    $trail->push(__('app.user.title'), route('user.index'));
 });
 
 Breadcrumbs::for('user.create', function (BreadcrumbTrail $trail) {
     $trail->parent('user.index');
-    $trail->push(__('app.users.create.title'), route('user.index'));
+    $trail->push(__('app.user.create.title'), route('user.index'));
 });
 
 Breadcrumbs::for('user.edit', function (BreadcrumbTrail $trail, $data) {
     $trail->parent('user.index');
-    $trail->push(__('app.users.edit.title', ['title' => $data->name]), route('user.index'));
+    $trail->push(__('app.user.edit.title', ['title' => $data->name]), route('user.index'));
 });
 
 Breadcrumbs::for('setting.general.index', function (BreadcrumbTrail $trail) {

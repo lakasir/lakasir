@@ -81,6 +81,7 @@ return [
     ],
     'settings' => [
         'general' => [
+            'title' => 'Umum',
             'company' => [
                 'title' => 'Perusahaan',
                 'description' => 'Ubah nama, email, alamat dan NPWP perusahaan.'

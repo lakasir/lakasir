@@ -16,14 +16,13 @@ class User
      */
     public function create(Request $request): UserModel
     {
-        $self = $this;
-        return DB::transaction(static function () use ($request, $self) {
+        return DB::transaction(static function () use ($request) {
             if (!config('lakasir.installed')) {
                 $session = $request->session()->all()['user'];
                 $request->merge($session);
             }
             $request->merge(['password' => bcrypt($request->password)]);
-            $user = new $self->model();
+            $user = new UserModel();
             $user = $user->fill($request->all());
             $user->save();
             $role_name = UserVariable::EMPLOYEE;
