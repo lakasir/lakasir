@@ -31,5 +31,16 @@ trait ProfileTrait
     {
         return UserVariable::PROFILE;
     }
+
+    /**
+     * resources
+     *
+     * @access protected
+     * @return string
+     */
+    protected function password(): string
+    {
+        return UserVariable::PASSWORD;
+    }
 }
 

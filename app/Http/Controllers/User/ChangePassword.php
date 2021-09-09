@@ -2,28 +2,52 @@
 
 namespace App\Http\Controllers\User;
 
-use App\Http\Controllers\Controller;
 use App\Http\Requests\User\ChangePassword\Store;
-use App\Http\Requests\User\Index;
-use App\Repositories\User as UserRepository;
-use App\Services\UserService;
-use App\Traits\HasCrudActions;
+use App\Services\User;
+use App\Traits\User\ProfileTrait;
+use Exception;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\Container\BindingResolutionException;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 
-class ChangePassword extends Controller
+/** @package App\Http\Controllers\User */
+class ChangePassword
 {
-    use HasCrudActions;
+    use ProfileTrait;
 
     protected $viewPath = 'app.user.change_passwords';
 
-    protected $permission = null;
+    /**
+     * @return View|Factory
+     * @throws BindingResolutionException
+     */
+    public function index()
+    {
+        return view("{$this->viewPath}.index");
+    }
 
-    protected $redirect = '/user/change_password';
+    /**
+     * @param Store $request
+     * @param User $userService
+     * @return RedirectResponse|void
+     */
+    public function store(Store $request, User $userService)
+    {
+        try {
+            $userService->updatePassword($request, auth()->user());
+            $message = __('app.global.message.success.update', [
+                'item' => ucfirst($this->password())
+            ]);
 
-    protected $storeRequest = Store::class;
+            flash()->success($message);
 
-    protected $indexRequest = Index::class;
+            return redirect()->back();
+        } catch (Exception $e) {
+            $message = $e->getMessage();
+            flash()->error($message);
+            return redirect()->back();
+        }
+    }
 
-    protected $repositoryClass = UserRepository::class;
-
-    protected $storeService = [ UserService::class, 'updatePassword' ];
 }

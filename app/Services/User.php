@@ -99,6 +99,7 @@ class User
      */
     public function updatePassword(Request $request, $user)
     {
+        $request->merge(['password' => bcrypt($request->new_password)]);
         $user->update($request->only(['password']));
 
         return $user;

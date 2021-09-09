@@ -13,4 +13,6 @@ class UserVariable
     public const EMPLOYEE = 'employee';
 
     public const PROFILE = 'profile';
+
+    public const PASSWORD = 'password';
 }
