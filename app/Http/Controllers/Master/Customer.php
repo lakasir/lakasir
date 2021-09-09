@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Master;
 
 use App\DataTables\CustomerDataTable;
-use App\Http\Controllers\Controller;
 use App\Http\Requests\Master\Customer\BulkDelete;
 use App\Http\Requests\Master\Customer\Browse;
 use App\Http\Requests\Master\Customer\Store;
@@ -15,7 +14,7 @@ use App\Traits\Customer\CustomerTrait;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\View\View;
 
-class Customer extends Controller
+class Customer
 {
     use CustomerTrait;
 

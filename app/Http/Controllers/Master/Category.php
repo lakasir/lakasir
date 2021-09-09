@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Master;
 
 use App\DataTables\CategoryDataTable;
-use App\Http\Controllers\Controller;
 use App\Http\Requests\Master\Category\BulkDelete;
 use App\Http\Requests\Master\Category\Browse;
 use App\Http\Requests\Master\Category\Create;
@@ -18,11 +17,12 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Database\Eloquent\MassAssignmentException;
 use Illuminate\View\View;
 
-class Category extends Controller
+class Category
 {
     use CategoryTrait;
 
     private $viewPath = 'app.master.categories';
+
 
     /**
      * Display a listing of the resource.

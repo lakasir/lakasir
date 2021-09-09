@@ -11,6 +11,7 @@ use App\Http\Requests\Master\Supplier\Update;
 use App\Models\Supplier as SupplierModel;
 use App\Services\Supplier as SupplierService;
 use App\Traits\Supplier\SupplierTrait;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\View\View;
 
 class Supplier
@@ -20,11 +21,10 @@ class Supplier
     private $viewPath = 'app.master.suppliers';
 
     /**
-     * Display a listing of the resource.
-     *
      * @param Browse $request
      * @param SupplierDataTable $dataTable
-     * @return mix
+     * @return mixed
+     * @throws BindingResolutionException
      */
     public function index(Browse $request, SupplierDataTable $dataTable)
     {

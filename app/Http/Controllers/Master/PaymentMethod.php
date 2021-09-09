@@ -154,6 +154,4 @@ class PaymentMethod
 
         return redirect()->to(route("{$this->resources()}.index"));
     }
-
-
 }
