@@ -27,7 +27,8 @@ class Profile
     {
         return view("{$this->viewPath}.index", [
             'auth' => auth()->user(),
-            'company' => Company::first()
+            'company' => Company::first(),
+            'resources' => $this->resources()
         ]);
     }
 

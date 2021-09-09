@@ -24,7 +24,9 @@ class ChangePassword
      */
     public function index()
     {
-        return view("{$this->viewPath}.index");
+        return view("{$this->viewPath}.index", [
+            "resources" => $this->resources()
+        ]);
     }
 
     /**

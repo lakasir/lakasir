@@ -110,3 +110,34 @@ Breadcrumbs::for('payment_method.edit', function (BreadcrumbTrail $trail, $data)
     $trail->parent('payment_method.index');
     $trail->push(__('app.payment_methods.edit.title', ['title' => $data->name]), route('payment_method.index'));
 });
+
+Breadcrumbs::for('user.index', function (BreadcrumbTrail $trail) {
+    $trail->push(__('app.users.title'), route('user.index'));
+});
+
+Breadcrumbs::for('user.create', function (BreadcrumbTrail $trail) {
+    $trail->parent('user.index');
+    $trail->push(__('app.users.create.title'), route('user.index'));
+});
+
+Breadcrumbs::for('user.edit', function (BreadcrumbTrail $trail, $data) {
+    $trail->parent('user.index');
+    $trail->push(__('app.users.edit.title', ['title' => $data->name]), route('user.index'));
+});
+
+Breadcrumbs::for('setting.general.index', function (BreadcrumbTrail $trail) {
+    $trail->push(__('app.settings.general.title'), route('s.general.index'));
+});
+
+Breadcrumbs::for('setting.general.date.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('setting.general.index');
+    $trail->push(__('app.settings.general.date.title'), route('s.general.index'));
+});
+
+Breadcrumbs::for('profile.index', function (BreadcrumbTrail $trail) {
+    $trail->push(__('app.profiles.index.title'), route('profile.index'));
+});
+
+Breadcrumbs::for('profile.change_password', function (BreadcrumbTrail $trail) {
+    $trail->push(__('app.profiles.change_password.title'), route('change_password.index'));
+});

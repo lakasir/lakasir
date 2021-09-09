@@ -8,6 +8,7 @@
 @endsection
 
 @section('content')
+  {{ Breadcrumbs::render("{$resources}.index") }}
   <div class="row">
     <div class="col-md-3">
       @include('app.user.profiles.components.image')
