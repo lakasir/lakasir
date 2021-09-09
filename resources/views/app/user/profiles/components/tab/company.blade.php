@@ -2,37 +2,37 @@
   <tr>
     <td>
       <span class="text-muted small d-block">{{ __('app.companies.column.name') }}</span>
-      {{ optional($data->get('companies'))->name }}
+      {{ optional($company)->name }}
     </td>
   </tr>
   <tr>
     <td>
       <span class="text-muted small d-block">{{ __('app.companies.column.reg_number') }}</span>
-      {{ optional($data->get('companies'))->reg_number }}
+      {{ optional($company)->reg_number }}
     </td>
   </tr>
   <tr>
     <td>
       <span class="text-muted small d-block">{{ __('app.companies.column.description') }}</span>
-      {{ optional($data->get('companies'))->business_description }}
+      {{ optional($company)->business_description }}
     </td>
   </tr>
   <tr>
     <td>
       <span class="text-muted small d-block">{{ __('app.companies.column.business_type') }}</span>
-      {{ optional($data->get('companies'))->business_type }}
+      {{ optional($company)->business_type }}
     </td>
   </tr>
   <tr>
     <td>
       <span class="text-muted small d-block">{{ __('app.companies.column.address') }}</span>
-      {{ optional($data->get('companies'))->address }}
+      {{ optional($company)->address }}
     </td>
   </tr>
   <tr>
     <td>
       <span class="text-muted small d-block">{{ __('app.companies.column.default_currency') }}</span>
-      {{ optional($data->get('companies'))->default_currency }}
+      {{ optional($company)->default_currency }}
     </td>
   </tr>
 </table>

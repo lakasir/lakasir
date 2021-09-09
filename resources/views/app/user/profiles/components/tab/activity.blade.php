@@ -1,6 +1,6 @@
 <!-- The timeline -->
 <div class="timeline timeline-inverse">
-  @foreach ($data['activity'] as $key => $activities)
+  @foreach ($auth['activity'] as $key => $activities)
     <!-- timeline time label -->
     <div class="time-label">
       <span class="bg-info">

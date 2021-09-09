@@ -4,6 +4,13 @@ return
 [
     'role' => ['owner', 'employee'],
     'permissions' => [
+        // add company permission
+        'create-company' => ['owner'],
+        'browse-company' => ['owner'],
+        'delete-company' => ['owner'],
+        'update-company' => ['owner'],
+        'bulk-delete-company' => ['owner'],
+
         'create-customer_type' => ['owner', 'employee'],
         'browse-customer_type' => ['owner', 'employee'],
         'delete-customer_type' => ['owner', 'employee'],

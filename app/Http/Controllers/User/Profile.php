@@ -2,59 +2,50 @@
 
 namespace App\Http\Controllers\User;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\User\Profile\Index;
 use App\Http\Requests\User\Profile\Store;
-use App\Repositories\Company;
-use App\Repositories\Profile as ProfileRepository;
-use App\Services\ProfileService;
-use App\Traits\HasCrudActions;
-use Lakasir\UserLoggingActivity\Models\Activity;
+use App\Models\Company;
+use App\Services\User;
+use App\Traits\User\ProfileTrait;
+use Exception;
+use Illuminate\View\View;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\Container\BindingResolutionException;
 
-class Profile extends Controller
+/** @package App\Http\Controllers\User */
+class Profile
 {
-    use HasCrudActions;
+    use ProfileTrait;
 
-    protected $viewPath = 'app.user.profiles';
+    protected $viewPath = "app.user.profiles";
 
-    protected $permission = 'profile';
-
-    protected $redirect = '/user/profile';
-
-    protected $storeRequest = Store::class;
-
-    protected $indexRequest = Index::class;
-
-    protected $repositoryClass = ProfileRepository::class;
-
-    protected $storeService = [ProfileService::class, 'create'];
     /**
-     * Display a listing of the resource.
-     *
-     * @return mix
+     * @return View|Factory
+     * @throws BindingResolutionException
      */
     public function index()
     {
-        get_lang();
-
-        $company = new Company();
-
-        $this->authorize("browse-$this->permission");
-
-        $data = collect();
-        $data->put('activity', Activity::where('user_id', auth()->user()->id)->latest()->cursor()->groupBy(
-            function ($activity) {
-                return $activity->created_at->format('Y-m-d');
-            }
-        ));
-        $data->put('companies', $company->query()->first());
-        $data->put('user', auth()->user());
-
-        $resources = $this->permission;
-
         return view("{$this->viewPath}.index", [
-            'resources' => $resources,
-            'data' => $data
+            'auth' => auth()->user(),
+            'company' => Company::first()
         ]);
+    }
+
+    /** @return null  */
+    public function store(Store $request, User $userService)
+    {
+        try {
+            $userService->updateProfile($request, auth()->user());
+            $message = __('app.global.message.success.update', [
+                'item' => ucfirst($this->resources())
+            ]);
+            flash()->success($message);
+
+            return redirect()->back();
+        } catch (Exception $e) {
+            $message = $e->getMessage();
+            flash()->error($message);
+            return redirect()->back()->withInput($request->except(['photo_profile']));
+        }
+
     }
 }

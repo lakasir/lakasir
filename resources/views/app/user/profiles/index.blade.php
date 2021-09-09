@@ -20,7 +20,9 @@
           <ul class="nav nav-pills">
             <li class="nav-item"><a class="nav-link active" href="#settings" data-toggle="tab"> {{ __('app.profiles.settings') }}</a></li>
             @if (app()->environment('local', 'stagging'))
-              <li class="nav-item"><a class="nav-link" href="#activity" data-toggle="tab"> {{ __('app.profiles.activity') }}</a></li>
+              @if ($auth->is_owner || $auth->can('browse-company'))
+                <li class="nav-item"><a class="nav-link" href="#activity" data-toggle="tab"> {{ __('app.profiles.activity') }}</a></li>
+              @endif
             @endif
             @if (app()->environment('local', 'stagging'))
               <li class="nav-item"><a class="nav-link" href="#company" data-toggle="tab"> {{ __('app.profiles.company') }}</a></li>
@@ -35,18 +37,19 @@
             <!-- /.tab-pane -->
             @if (app()->environment('local', 'stagging'))
               <div class="tab-pane" id="activity">
-                @include('app.user.profiles.components.tab.activity')
+                {{-- @include('app.user.profiles.components.tab.activity') --}}
               </div>
             @endif
 
             <!-- /.tab-pane -->
             @if (app()->environment('local', 'stagging'))
-              <div class="tab-pane" id="company">
-                @include('app.user.profiles.components.tab.company')
-              </div>
+              @if ($auth->is_owner || $auth->can('browse-company'))
+                <div class="tab-pane" id="company">
+                  @include('app.user.profiles.components.tab.company')
+                </div>
+              @endif
             @endif
             <!-- /.tab-pane -->
-
           </div>
           <!-- /.tab-content -->
         </div><!-- /.card-body -->

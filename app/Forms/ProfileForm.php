@@ -13,7 +13,7 @@ class ProfileForm extends ComponentAbstracts
     public function builder(): array
     {
         /** @var \App\Models\User */
-        $user = $this->value->data['user'];
+        $user = $this->value->auth;
         return [
             'phone' => [
                 'type' => 'text',

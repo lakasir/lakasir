@@ -20,7 +20,6 @@
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^6.3",
         "jeroennoten/laravel-adminlte": "^3.3",
-        "lakasir/user-logging-activity": "^1.0@beta",
         "laravel/framework": "^7.0",
         "laravel/horizon": "^4.3",
         "laravel/passport": "^9.3",

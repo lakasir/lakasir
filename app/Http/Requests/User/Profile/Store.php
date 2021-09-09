@@ -2,10 +2,9 @@
 
 namespace App\Http\Requests\User\Profile;
 
-use App\Traits\JsonValidateResponse;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Gate;
 
+/** @package App\Http\Requests\User\Profile */
 class Store extends FormRequest
 {
     /* use JsonValidateResponse; */

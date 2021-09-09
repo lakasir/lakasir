@@ -2,28 +2,18 @@
 
 namespace App\Services;
 
+use App\Consntanta\UserVariable;
 use Illuminate\Http\Request;
 use App\Models\User as UserModel;
 use Illuminate\Support\Facades\DB;
-use Sheenazien8\Hascrudactions\Abstracts\Repository as AbstractsRepository;
 use Spatie\Permission\Models\Role;
 
-class User extends AbstractsRepository
+class User
 {
     /**
-     * @param
+     * @param Request $request
+     * @return UserModel
      */
-    public function __construct()
-    {
-        parent::__construct(new UserModel());
-    }
-
-
-    /**
-     * @var string
-     */
-    private string $role = 'employee';
-
     public function create(Request $request): UserModel
     {
         $self = $this;
@@ -36,16 +26,22 @@ class User extends AbstractsRepository
             $user = new $self->model();
             $user = $user->fill($request->all());
             $user->save();
+            $role_name = UserVariable::EMPLOYEE;
             if ($request->role) {
-                $self->role = $request->role;
+                $role_name = $request->role;
             }
-            $role = Role::whereName($self->role)->first();
+            $role = Role::whereName($role_name)->first();
             $user->assignRole($role);
 
             return $user;
         });
     }
 
+    /**
+     * @param Request $request
+     * @param UserModel $user
+     * @return UserModel
+     */
     public function update(Request $request, $user): UserModel
     {
         $self = $this;
@@ -63,14 +59,35 @@ class User extends AbstractsRepository
             $user->save();
             if ($request->role) {
                 $self->role = $request->role;
+                $role = Role::whereName($self->role)->first();
+                $user->syncRoles($role);
             }
-            $role = Role::whereName($self->role)->first();
-            $user->syncRoles($role);
 
             return $user;
         });
     }
 
+    /**
+     * @param Request $request
+     * @param UserModel $user
+     * @return UserModel
+     */
+    public function updateProfile(Request $request, $user): UserModel
+    {
+        $self = $this;
+        return DB::transaction(static function () use ($request, $self, $user) {
+            $auth = $self->update($request, $user);
+            $auth->profile()->updateOrCreate([], $request->only(['phone', 'bio', 'address', 'lang']));
+
+            return $auth;
+        });
+    }
+
+    /**
+     * @param Request $request
+     * @param UserModel $user
+     * @return mixed
+     */
     public function updatePassword(Request $request, $user)
     {
         $user->update($request->only(['password']));
@@ -79,6 +96,10 @@ class User extends AbstractsRepository
     }
 
 
+    /**
+     * @param string $role
+     * @return User
+     */
     public function role(string $role): self
     {
         $this->role = $role;
