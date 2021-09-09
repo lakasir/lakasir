@@ -78,6 +78,15 @@ class User
         return DB::transaction(static function () use ($request, $self, $user) {
             $auth = $self->update($request, $user);
             $auth->profile()->updateOrCreate([], $request->only(['phone', 'bio', 'address', 'lang']));
+            if ($request->file('photo_profile')) {
+                /** @var \App\Models\Profile $profile */
+                $profile = $auth->profile;
+                $media = $auth->profile->media;
+                if ($media->count() > 0) {
+                    $profile->deleteMedia($media->first());
+                }
+                $profile->createMediaFromFile($request->file('photo_profile'));
+            }
 
             return $auth;
         });
