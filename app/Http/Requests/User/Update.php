@@ -2,11 +2,15 @@
 
 namespace App\Http\Requests\User;
 
+use App\Traits\User\UserTrait;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Validation\Rule;
 
 class Update extends FormRequest
 {
+    use UserTrait;
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -14,21 +18,22 @@ class Update extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return Gate::authorize("update-{$this->prefixPermission()}");
     }
 
     /**
      * Get the validation rules that apply to the request.
      *
+     * @param Request $request
      * @return array
      */
-    public function rules()
+    public function rules(Request $request)
     {
-        return [
-            'username' => ['required', 'string', 'regex:/^\S*$/u', 'max:255', 'unique:users,id,' . auth()->user()->id],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,id,'. auth()->user()->id],
-            'password' => ['confirmed'],
-            'role' => ['required']
-        ];
+        if (!in_array($this->method(), ['PUT', 'PATCH'])) {
+            return [];
+        }
+
+        $routeParameters = $request->route()->parameters();
+        return [ ];
     }
 }

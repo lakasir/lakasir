@@ -2,228 +2,154 @@
 
 namespace App\Http\Controllers\User;
 
+use App\DataTables\UserDataTable;
 use App\Http\Requests\User\BulkDelete;
-use App\Http\Requests\User\Index;
+use App\Http\Requests\User\Browse;
 use App\Http\Requests\User\Store;
+use App\Http\Requests\User\Destroy;
 use App\Http\Requests\User\Update;
-use App\Repositories\User as UserRepository;
-use Illuminate\Contracts\View\Factory;
+use App\Models\User as UserModel;
+use App\Services\User as UserService;
+use App\Traits\User\UserTrait;
 use Illuminate\Contracts\Container\BindingResolutionException;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
-use Sheenazien8\Hascrudactions\Abstracts\LaTable;
-use InvalidArgumentException;
-use Spatie\Permission\Models\Role;
-use Symfony\Component\HttpKernel\Exception\HttpException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-/** @package App\Http\Controllers\User */
 class UserController
 {
+    use UserTrait;
+
     private $viewPath = 'app.user';
 
-    private $permission = 'user';
-
-    private $resources = 'user';
-
     /**
-     * @param UserRepository $userRepository
-     * @param Index $request
-     * @return View|Factory|LaTable
-     * @throws InvalidArgumentException
+     * @param Browse $request
+     * @param UserDataTable $dataTable
+     * @return mixed
      * @throws BindingResolutionException
      */
-    public function index(UserRepository $userRepository, Index $request)
+    public function index(Browse $request, UserDataTable $dataTable)
     {
-        if (isset($this->permission)) {
-            if ($this->permission && $request->type != 'select2') {
-                Gate::authorize("browse-{$this->permission}");
-            }
-        }
-
-        if ($request->ajax() || isset($this->return) && $this->return == 'api') {
-            return $userRepository->datatable($request);
-        }
-
-        $resources = except_last_word($request->route()->getName());
-
-        if (isset($this->resources)) {
-            $resources = $this->resources;
-        }
-
-        $data = [
-            'resources' => $resources,
-        ];
-
-        if (config('lakasir.index-style') == 'grid') {
-            $data = array_merge($data, [
-                'users' => $userRepository->query()->paginate()
-            ]);
-        }
-
-        return view("{$this->viewPath}.index", $data);
-    }
-
-    /**
-     * @return View
-     * @throws BindingResolutionException
-     */
-    public function create(): View
-    {
-        Gate::authorize("create-$this->permission");
-
-        $roles = Role::toBase()->get()->map(function ($c) {
-            return ['id' => $c->name, 'text' => $c->name];
-        });
-
-        return view("{$this->viewPath}.create", compact('roles'));
+        return $dataTable->render("{$this->viewPath}.index", [
+            'resources' => $this->resources()
+        ]);
     }
 
     /**
      * @param Store $request
-     * @param UserRepository $userRepository
-     * @return RedirectResponse
+     * @return View
+     * @throws BindingResolutionException
      */
-    public function store(Store $request, UserRepository $userRepository)
+    public function create(Store $request): View
     {
-        if (isset($this->permission)) {
-            Gate::authorize("create-$this->permission");
-        }
-
-        $userRepository->create($request);
-
-        $resources = except_last_word(request()->route()->getName());
-
-        $message = __('hascrudactions::app.global.message.success.create', [
-            'item' => ucfirst($resources ?? '')
-        ]);
-
-        if (isset($this->resources)) {
-            $resources = $this->resources;
-        }
-
-        return redirect()->to(route($this->redirect ?? $resources . '.index'))->with('message', [
-            'success' => dash_to_space($message)
+        return view("{$this->viewPath}.create", [
+            'resources' => $this->resources()
         ]);
     }
 
     /**
+     * @param Store $request
+     * @param UserService $userService
+     * @return RedirectResponse
+     * @throws BindingResolutionException
+     */
+    public function store(Store $request, UserService $userService)
+    {
+        $userService->create($request);
+
+        $message = __('app.global.message.success.create', [
+            'item' => ucfirst($this->resources())
+        ]);
+
+        flash()->success($message);
+
+        return redirect()->to(route("{$this->resources()}.index"));
+    }
+
+    /**
+     * @param UserModel $user
+     * @param Browse $request
+     * @return View|Factory
+     * @throws BindingResolutionException
+     */
+    public function show(UserModel $user, Browse $request)
+    {
+        return view("{$this->viewPath}.show", [
+            'resources' => $this->resources(),
+            'data' => $user
+        ]);
+    }
+
+    /**
+     * @param UserModel $user
      * @param Update $request
-     * @param UserRepository $userRepository
-     * @param mixed $model
+     * @return View|Factory
+     * @throws BindingResolutionException
+     */
+    public function edit(UserModel $user, Update $request)
+    {
+        $data = $user;
+
+        return view("{$this->viewPath}.edit", [
+            'resources' => $this->resources(),
+            'data' => $data
+        ]);
+    }
+
+    /**
+     * @param UserModel $user
+     * @param Update $request
+     * @param UserService $userService
      * @return RedirectResponse
-     * @throws ModelNotFoundException
+     * @throws AuthorizationException
+     * @throws BindingResolutionException
      */
-    public function update(Update $request, UserRepository $userRepository, $model)
+    public function update(UserModel $user, UserService $userService, Update $request)
     {
-        if (isset($this->permission)) {
-            Gate::authorize("update-{$this->permission}");
-        }
+        $userService->update($request, $user);
 
-        $data = $userRepository->find($model);
-
-        $data = $userRepository->update($request, $data);
-
-        if (isset($this->resources)) {
-            $resources = $this->resources;
-        }
-
-        $message = __('hascrudactions::app.global.message.success.update', [
-            'item' => ucfirst($resources ?? '')
+        $message = __('app.global.message.success.update', [
+            'item' => ucfirst($this->resources())
         ]);
 
-        return redirect()->to(route($this->redirect ?? $resources . '.index'))->with('message', [
-            'success' => dash_to_space($message)
-        ]);
+        flash()->success($message);
+
+        return redirect()->to(route("{$this->resources()}.index"));
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\View\View
+     * @param UserModel $user
+     * @param Destroy $request
+     * @return RedirectResponse
+     * @throws BindingResolutionException
      */
-    public function edit(int $model): View
+    public function destroy(UserModel $user, Destroy $request)
     {
-        $data = $this->repository->find($model);
+        $user->delete();
 
-        Gate::authorize("update-$this->permission");
+        $message = __('app.global.message.success.delete', [
+            'item' => ucfirst($this->resources())
+        ]);
 
-        $roles = Role::toBase()->get()->map(function ($c) {
-            return ['id' => $c->name, 'text' => $c->name];
-        });
+        flash()->success($message);
 
-        return view("{$this->viewPath}.edit", compact('roles', 'data'));
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int $model
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(int $model): RedirectResponse
-    {
-        get_lang();
-
-        Gate::authorize("delete-{$this->permission}");
-
-        $data = $this->repository->find($model);
-
-        $response = Gate::inspect("can-delete-{$this->permission}", $data);
-
-        if (!$response->allowed()) {
-            flash()->error(trans('app.user.message.delete.error'));
-
-            return redirect()->to(route($this->resources . '.index'));
-        }
-
-        $data->delete();
-
-        $message = __('app.global.message.delete') . ' ' . ucfirst($this->permission);
-
-        flash()->success(dash_to_space($message));
-
-        return redirect()->to(route($this->resources . '.index'));
+        return redirect()->to(route("{$this->resources()}.index"));
     }
 
     /**
      * @param BulkDelete $request
-     * @param UserRepository $userRepository
-     * @return RedirectResponse
+     * @param UserService $userService
      * @throws BindingResolutionException
-     * @throws HttpException
-     * @throws NotFoundHttpException
+     * @throws AuthorizationException
      */
-    public function bulkDestroy(BulkDelete $request, UserRepository $userRepository)
+    public function bulkDestroy(BulkDelete $request, UserService $userService)
     {
-        if (isset($this->resources)) {
-            $resources = $this->resources;
-        }
+        $userService->bulkDestroy($request);
 
-        $message = __('hascrudactions::app.global.message.fail.delete', [
-            'item' => ucfirst($resources ?? '')
+        $message = __('app.global.message.success.bulk-delete', [
+            'item' => ucfirst($this->resources())
         ]);
 
-        if (!request()->ids) {
-            return redirect()->to(route($resources . '.index'))->with('message', [
-                'error' => dash_to_space($message)
-            ]);
-        }
+        flash()->success($message);
 
-        if (isset($this->permission)) {
-            Gate::authorize("create-$this->permission");
-        }
-
-        $userRepository->bulkDestroy($request);
-
-        $message = __('hascrudactions::app.global.message.success.delete', [
-            'item' => ucfirst($resources ?? '')
-        ]);
-
-        return redirect()->to(route($this->redirect ?? $resources . '.index'))->with('message', [
-            'success' => dash_to_space($message)
-        ]);
+        return redirect()->to(route("{$this->resources()}.index"));
     }
 }

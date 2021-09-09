@@ -2,11 +2,13 @@
 
 namespace App\Http\Requests\User;
 
+use App\Traits\User\UserTrait;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 
-class Index extends FormRequest
+class Browse extends FormRequest
 {
+    use UserTrait;
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -14,7 +16,7 @@ class Index extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return Gate::authorize("browse-{$this->prefixPermission()}");
     }
 
     /**
