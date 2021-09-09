@@ -18,6 +18,7 @@ use App\Interfaces\WithCustomColumn;
  */
 abstract class BaseDataTable extends DataTable implements WithColumn
 {
+    protected $table_id = "datatable";
     /**
      * Build DataTable class.
      *
@@ -67,7 +68,7 @@ abstract class BaseDataTable extends DataTable implements WithColumn
     public function html()
     {
         $builder_html = $this->builder()
-            ->setTableId('customertype-table')
+            ->setTableId($this->table_id)
             ->columns($this->getColumns())
             ->minifiedAjax();
 

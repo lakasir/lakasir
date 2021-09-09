@@ -106,4 +106,12 @@ class Item extends Fluent implements Arrayable
 
         return $this;
     }
+
+    public function setData(array $data)
+    {
+        $this->attributes['data'] = $data;
+
+        return $this;
+    }
+
 }
