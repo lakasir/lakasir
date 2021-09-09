@@ -10,6 +10,7 @@ use Exception;
 use Illuminate\View\View;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\Container\BindingResolutionException;
+use Illuminate\Http\RedirectResponse;
 
 /** @package App\Http\Controllers\User */
 class Profile
@@ -30,7 +31,11 @@ class Profile
         ]);
     }
 
-    /** @return null  */
+    /**
+     * @param Store $request
+     * @param User $userService
+     * @return RedirectResponse|void
+     */
     public function store(Store $request, User $userService)
     {
         try {
