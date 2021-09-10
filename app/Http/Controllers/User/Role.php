@@ -2,122 +2,157 @@
 
 namespace App\Http\Controllers\User;
 
+use App\DataTables\RoleDataTable;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\Role\BulkDelete;
-use App\Http\Requests\User\Role\Index;
-use App\Http\Requests\User\Role\Store;
+use App\Http\Requests\User\Role\Browse;
+use App\Http\Requests\User\Role\Create;
 use App\Http\Requests\User\Role\Update;
+use App\Models\Role as RoleModel;
 use App\Repositories\Role as RoleRepository;
 use App\Services\RoleService;
+use App\Traits\RoleTrait;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
 use Sheenazien8\Hascrudactions\Traits\HasCrudAction;
 use Spatie\Permission\Models\Permission;
 
-class Role extends Controller
+class Role
 {
-    use HasCrudAction;
+    use RoleTrait;
 
     protected $viewPath = 'app.user.role';
 
-    protected $permission = 'role';
-
-    protected $indexRequest = Index::class;
-
-    protected $storeRequest = Store::class;
-
-    protected $updateRequest = Update::class;
-
-    protected $bulkDestroyRequest = BulkDelete::class;
-
-    protected $resources = 'role';
-
-    protected $repositoryClass = RoleRepository::class;
-
-    protected $storeService = [RoleService::class, 'create'];
-
-    protected $updateService = [RoleService::class, 'update'];
-
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\View\View
+     * @param Browse $request
+     * @param RoleDataTable $dataTable
+     * @return mixed
+     * @throws BindingResolutionException
      */
-    public function create(): View
+    public function index(Browse $request, RoleDataTable $dataTable)
     {
-        get_lang();
-
-        $this->authorize("create-$this->permission");
-        $permissions = Permission::toBase()->get()->map(function ($c, $i) {
-            $name = str_replace('-', ' ', Str::title($c->name));
-            $explode = Str::of($name)->explode(' ')->last();
-            return [
-                'id' => $c->id,
-                'text' => $name,
-                'header' => $explode
-            ];
-        });
-        $permissions = $permissions->groupBy('header');
-
-        return view("{$this->viewPath}.create", compact('permissions'));
+        return $dataTable->render("{$this->viewPath}.index", [
+            'resources' => $this->resources(),
+        ]);
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\View\View
+     * @param Create $request
+     * @return View
+     * @throws BindingResolutionException
      */
-    public function edit(int $model): View
+    public function create(Create $request): View
     {
-        get_lang();
-
-        $data = $this->repository->find($model);
-
-        $this->authorize("update-$this->permission");
-
-        $permissions = Permission::toBase()->get()->map(function ($c) {
-            $name = str_replace('-', ' ', Str::title($c->name));
-            $explode = Str::of($name)->explode(' ')->last();
-            return [
-                'id' => $c->id,
-                'text' => $name,
-                'header' => $explode
-            ];
-        });
-        $permissions = $permissions->groupBy('header');
-
-        return view("{$this->viewPath}.edit", compact('permissions', 'data'));
+        return view("{$this->viewPath}.create", [
+            'resources' => $this->resources()
+        ]);
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int $model
-     * @return \Illuminate\Http\Response
+     * @param Create $request
+     * @param RoleService $roleService
+     * @return RedirectResponse
+     * @throws BindingResolutionException
      */
-    public function destroy(int $model): RedirectResponse
+    public function store(Create $request, RoleService $roleService)
     {
-        get_lang();
+        $roleService->create($request);
 
-        $this->authorize("delete-{$this->permission}");
+        $message = __('app.global.message.success.create', [
+            'item' => ucfirst($this->resources())
+        ]);
 
-        $data = $this->repository->find($model);
+        flash()->success($message);
 
-        if ($data->id == 1) {
-            $message = __('app.role.message.error.delete_owner');
+        return redirect()->to(route("{$this->resources()}.index"));
+    }
 
-            flash()->error(dash_to_space($message));
+    /**
+     * @param RoleModel $role
+     * @param Browse $request
+     * @return View|Factory
+     * @throws BindingResolutionException
+     */
+    public function show(RoleModel $role, Browse $request)
+    {
+        return view("{$this->viewPath}.show", [
+            'resources' => $this->resources(),
+            'data' => $role
+        ]);
+    }
 
-            return redirect()->to($this->redirect);
-        }
+    /**
+     * @param RoleModel $role
+     * @param Update $request
+     * @return View|Factory
+     * @throws BindingResolutionException
+     */
+    public function edit(RoleModel $role, Update $request)
+    {
+        $data = $role;
 
-        $data->delete();
+        return view("{$this->viewPath}.edit", [
+            'resources' => $this->resources(),
+            'data' => $data
+        ]);
+    }
 
-        $message = __('app.global.message.delete').' '. ucfirst($this->permission);
+    /**
+     * @param RoleModel $role
+     * @param Update $request
+     * @param RoleService $roleService
+     * @return RedirectResponse
+     * @throws AuthorizationException
+     * @throws BindingResolutionException
+     */
+    public function update(RoleModel $role, RoleService $roleService, Update $request)
+    {
+        $roleService->update($request, $role);
 
-        flash()->success(dash_to_space($message));
+        $message = __('app.global.message.success.update', [
+            'item' => ucfirst($this->resources())
+        ]);
 
-        return redirect()->to(route($this->resources . '.index'));
+        flash()->success($message);
+
+        return redirect()->to(route("{$this->resources()}.index"));
+    }
+
+    /**
+     * @param RoleModel $role
+     * @param Destroy $request
+     * @return RedirectResponse
+     * @throws BindingResolutionException
+     */
+    public function destroy(RoleModel $role, Destroy $request)
+    {
+        $role->delete();
+
+        $message = __('app.global.message.success.delete', [
+            'item' => ucfirst($this->resources())
+        ]);
+
+        flash()->success($message);
+
+        return redirect()->to(route("{$this->resources()}.index"));
+    }
+
+    /**
+     * @param BulkDelete $request
+     * @param RoleService $roleService
+     * @throws BindingResolutionException
+     * @throws AuthorizationException
+     */
+    public function bulkDestroy(BulkDelete $request, RoleService $roleService)
+    {
+        $message = __('app.global.message.success.bulk-delete', [
+            'item' => ucfirst($this->resources()),
+            'count' => $roleService->bulkDestroy($request)
+        ]);
+
+        flash()->success($message);
+
+        return redirect()->to(route("{$this->resources()}.index"));
     }
 }

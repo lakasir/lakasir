@@ -5,7 +5,7 @@ namespace App\Http\Controllers\User;
 use App\DataTables\UserDataTable;
 use App\Http\Requests\User\BulkDelete;
 use App\Http\Requests\User\Browse;
-use App\Http\Requests\User\Store;
+use App\Http\Requests\User\Create;
 use App\Http\Requests\User\Destroy;
 use App\Http\Requests\User\Update;
 use App\Models\Role;
@@ -38,11 +38,11 @@ class UserController
     }
 
     /**
-     * @param Store $request
+     * @param Create $request
      * @return View
      * @throws BindingResolutionException
      */
-    public function create(Store $request): View
+    public function create(Create $request): View
     {
         return view("{$this->viewPath}.create", [
             'resources' => $this->resources()
@@ -50,12 +50,12 @@ class UserController
     }
 
     /**
-     * @param Store $request
+     * @param Create $request
      * @param UserService $userService
      * @return RedirectResponse
      * @throws BindingResolutionException
      */
-    public function store(Store $request, UserService $userService)
+    public function store(Create $request, UserService $userService)
     {
         $userService->create($request);
 

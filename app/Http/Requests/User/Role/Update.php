@@ -2,11 +2,13 @@
 
 namespace App\Http\Requests\User\Role;
 
+use App\Traits\RoleTrait;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 
 class Update extends FormRequest
 {
+    use RoleTrait;
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -14,7 +16,7 @@ class Update extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return Gate::authorize("create-{$this->prefixPermission()}");
     }
 
     /**
@@ -24,6 +26,9 @@ class Update extends FormRequest
      */
     public function rules()
     {
+        if (!in_array($this->method(), ["PUT", "PATCH"])) {
+            return [];
+        }
         return [
             'name' => 'required'
         ];

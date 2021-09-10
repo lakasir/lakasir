@@ -2,11 +2,14 @@
 
 namespace App\Http\Requests\User\Role;
 
+use App\Traits\RoleTrait;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 
-class Store extends FormRequest
+/** @package App\Http\Requests\User\Role */
+class Create extends FormRequest
 {
+    use RoleTrait;
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -14,7 +17,7 @@ class Store extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return Gate::authorize("create-{$this->prefixPermission()}");
     }
 
     /**
@@ -24,6 +27,9 @@ class Store extends FormRequest
      */
     public function rules()
     {
+        if ($this->method() != "POST") {
+            return [];
+        }
         return [
             'name' => 'required'
         ];

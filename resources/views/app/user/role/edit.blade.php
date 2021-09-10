@@ -1,6 +1,7 @@
 @extends('adminlte::page')
 
 @section('content')
+  {{ Breadcrumbs::render("{$resources}.edit", $data) }}
   @include('app.user.role.components.form', [
     'route' => route('role.update', $data),
     'data' => $data,
