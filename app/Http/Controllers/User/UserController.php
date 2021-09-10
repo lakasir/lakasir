@@ -8,6 +8,7 @@ use App\Http\Requests\User\Browse;
 use App\Http\Requests\User\Store;
 use App\Http\Requests\User\Destroy;
 use App\Http\Requests\User\Update;
+use App\Models\Role;
 use App\Models\User as UserModel;
 use App\Services\User as UserService;
 use App\Traits\User\UserTrait;
@@ -29,7 +30,10 @@ class UserController
     public function index(Browse $request, UserDataTable $dataTable)
     {
         return $dataTable->render("{$this->viewPath}.index", [
-            'resources' => $this->resources()
+            'resources' => $this->resources(),
+            'roles' => Role::toBase()->get()->map(function ($c) {
+              return ['id' => $c->name, 'text' => $c->name];
+            })
         ]);
     }
 
@@ -142,10 +146,9 @@ class UserController
      */
     public function bulkDestroy(BulkDelete $request, UserService $userService)
     {
-        $userService->bulkDestroy($request);
-
         $message = __('app.global.message.success.bulk-delete', [
-            'item' => ucfirst($this->resources())
+            'item' => ucfirst($this->resources()),
+            'count' => $userService->bulkDestroy($request)
         ]);
 
         flash()->success($message);

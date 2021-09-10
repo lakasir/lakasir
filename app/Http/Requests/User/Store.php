@@ -2,9 +2,11 @@
 
 namespace App\Http\Requests\User;
 
+use App\Models\Role;
 use App\Traits\User\UserTrait;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Validation\Rule;
 
 class Store extends FormRequest
 {
@@ -29,7 +31,12 @@ class Store extends FormRequest
         if ($this->method() != 'POST') {
             return [];
         }
+        $role_rule = Role::get()->pluck("name")->toArray();
         return [
+            "username" => "required|unique:users,username|min:5",
+            "email" => "required|unique:users,email|min:5|email",
+            "password" => "required|confirmed|min:5",
+            "role" => Rule::in($role_rule)
         ];
     }
 }

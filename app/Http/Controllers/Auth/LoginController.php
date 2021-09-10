@@ -52,31 +52,6 @@ class LoginController extends Controller
     }
 
     /**
-     * The user has been authenticated.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  mixed  $user
-     * @return mixed
-     */
-    protected function authenticated(Request $request, User $user): void
-    {
-        $permission = [
-            'create-selling',
-            'browse-selling',
-            'delete-selling',
-            'update-selling',
-            'bulk-delete-selling',
-            'create-profile',
-            'browse-profile'
-        ];
-        $check = $user->hasAllPermissions($permission);
-        if ($check) {
-            $token = $user->createToken('Create token from login ui')->accessToken;
-            $request->session()->put('bearer-token', $token);
-        }
-    }
-
-    /**
      * Get the login username to be used by the controller.
      *
      * @return string

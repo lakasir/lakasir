@@ -10,6 +10,7 @@ use App\Interfaces\WithCustomColumn;
 use App\Interfaces\WithOptions;
 use App\Models\User;
 use App\Traits\User\UserTrait;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Yajra\DataTables\DataTableAbstract;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
@@ -102,8 +103,7 @@ class UserDataTable extends BaseDataTable implements
                 ->text('<i class="fas fa-trash"></i> ' . __('app.global.bulk-delete'))
                 ->idTarget('select-row')
                 ->url(route('user.bulkDestroy'))
-                ->warning(__('app.global.warning.checked_first'))
-                ->confirm(__('app.global.confirm.bulk-delete'))
+                ->warning(__('app.global.warning.checked_first')),
         ];
     }
 
@@ -127,6 +127,11 @@ class UserDataTable extends BaseDataTable implements
         ];
     }
 
+    /**
+     * @param User $user
+     * @return array
+     * @throws BindingResolutionException
+     */
     public function addOptionsBuilder($user): array
     {
         $permission = $this->getPermission();
@@ -146,6 +151,16 @@ class UserDataTable extends BaseDataTable implements
                 ->confirm(__('app.global.confirm.suredelete'))
                 ->url(route('user.destroy', $user))
                 ->show($permission['delete']),
+            Item::make(__('app.user.custom_action.assign_role'))
+                ->icon('<i class="fa fa-pen mr-2"></i>')
+                ->addClass('action-assign-role')
+                ->setData([
+                    'id' => $user->getKey(),
+                    'key' => bcrypt($user->getKey()),
+                    'routes' => route('user.update', $user->getKey()),
+                    'role' => $user->roles()->first()
+                ])
+                ->show($permission['edit']),
         ];
     }
 }

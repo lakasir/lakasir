@@ -8,6 +8,7 @@ use App\Models\User as UserModel;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 
+/** @package App\Services */
 class User
 {
     /**
@@ -114,4 +115,31 @@ class User
         $this->role = $role;
         return $this;
     }
+
+    /**
+     * Bulk Destroy
+     *
+     * @param Request $request
+     * @param string $column (optional)
+     *
+     * @return int
+     */
+    public function bulkDestroy(Request $request, string $column = 'id'): int
+    {
+        $users = UserModel::whereIn($column, $request->ids);
+        $count = $users->count();
+        if ($count == 0) {
+            abort(404);
+        }
+        DB::transaction(static function () use ($request, $column) {
+            collect($request->ids)
+                ->chunk(1000)
+                ->each(static function ($bulkChunk) use ($column) {
+                    UserModel::query()->whereIn($column, $bulkChunk)->delete();
+                });
+        });
+
+        return $count;
+    }
+
 }

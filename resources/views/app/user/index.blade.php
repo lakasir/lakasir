@@ -1,38 +1,35 @@
-@extends(config('hascrudactions.wrapper.layouts'))
+@extends('adminlte::page')
 
-@section(config('hascrudactions.wrapper.section'))
-  @if (config('lakasir.index-style') == 'table')
-    @include('app.user.components.table')
-  @endif
-  @if (config('lakasir.index-style') == 'grid')
-    <table class="">
-      <div class="row">
-        @foreach ($users as $user)
-          <div class="col-xs-12 col-md-4 odd" role="row">
-            <div class="card">
-              <div class="card-header">
-                <h5 class="text-primary">{{ $user->username }}</h5>
-                <span class="text-muted">@lang('app.global.created_at'): {{ $user->created_at->diffForHumans() }}</span>
-              </div>
-              <div class="card-body">
-                @foreach ($user->showColumns() as $column => $schema)
-                  <p><span>{{ $schema['label'] }}</span>: {{ $user->{$column} }}</p>
-                @endforeach
-              </div>
-              <div class="card-footer">
-                @include('partials.grid.action', [
-                  'resources' => $resources,
-                  'row' => $user
-                ])
-              </div>
-            </div>
-          </div>
-        @endforeach
-      </div>
-      <div class="float-right">
-        {{ $users->links() }}
-      </div>
-    </table>
-  @endif
+@section('content')
+  <x-index-table>
+    @slot('topDiv')
+      {{ Breadcrumbs::render("{$resources}.index") }}
+    @endslot
+    @slot('content')
+      {{ $dataTable->table() }}
+    @endslot
+  </x-index-table>
+  @can('update-user')
+    @include('app.user.components.modals.assign_role')
+  @endcan
 @endsection
+
+@push('js')
+  {{$dataTable->scripts()}}
+  <script charset="utf-8">
+    $(document).ready(function() {
+      $(".select2").select2({ width: '100%' });
+      $('#datatable').on('click', '.action-assign-role', function(event) {
+        event.preventDefault();
+        let user_id = $(event.target).data('id');
+        let key = $(event.target).data('key');
+        let routes = $(event.target).data('routes') + "?key-bypass-update=" + key;
+        let role = $(event.target).data('role');
+        $('#assign-role-modal').modal('show');
+        console.log($('form.form-assign-role'))
+        $('form.form-assign-role').attr("action", routes);
+      })
+    })
+  </script>
+@endpush
 

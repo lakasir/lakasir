@@ -480,6 +480,9 @@ return [
                     'has_purchasing' => 'You cant to delete user has purchasing'
                 ]
             ]
+        ],
+        'custom_action' => [
+            'assign_role' => 'Assign role'
         ]
     ],
     'role' => [
@@ -488,7 +491,8 @@ return [
             'name' => 'Role Name',
             'guard_name' => 'Guard Name',
             'permission_name' => 'Permission Name',
-            'permission' => 'Permission'
+            'permission' => 'Permission',
+            'users_count' => 'Users'
         ],
         'placeholder' => [
             'name' => 'Type Your Role Name',
@@ -553,7 +557,8 @@ return [
         'message' => [
             'success' => [
                 'create' => 'Success created the :item',
-                'update' => 'Success update the :item'
+                'update' => 'Success update the :item',
+                'bulk-delete' => 'Success deleted :count :item'
             ],
             'error' => [
                 'create' => 'Error to create :item'
