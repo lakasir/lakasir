@@ -8,7 +8,8 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rule;
 
-class Store extends FormRequest
+/** @package App\Http\Requests\User */
+class Create extends FormRequest
 {
     use UserTrait;
     /**
