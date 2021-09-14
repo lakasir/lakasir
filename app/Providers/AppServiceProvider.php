@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Helpers\Response;
+use App\Helpers\Setting;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Validator;
@@ -53,6 +54,11 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->bind('ResponseHelper', function () {
             return new Response();
+        });
+
+        $this->app->bind('setting', function ()
+        {
+            return new Setting();
         });
 
         if (app()->environment() == 'testing') {

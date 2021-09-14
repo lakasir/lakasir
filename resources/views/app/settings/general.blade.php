@@ -37,16 +37,8 @@
   </style>
 @endsection
 
-@section('breadcrumb')
-  <nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
-      <li class="breadcrumb-item active" aria-current="page">{{ __('menu.settings') }}</li>
-    </ol>
-  </nav>
-@endsection
-
 @section('content')
+  {{ Breadcrumbs::render("setting.general.index") }}
   <div class="card">
     <div class="card-body">
       <div class="row">

@@ -23,6 +23,7 @@ use App\Http\Controllers\Master\CustomerType;
 use App\Http\Controllers\Master\PaymentMethod;
 use App\Http\Controllers\Settings\DefaultSetting;
 use App\Http\Controllers\Settings\General\Company;
+use App\Http\Controllers\Settings\General\Date;
 use App\Http\Controllers\Transaction\Selling;
 
 /**
@@ -34,7 +35,6 @@ use App\Http\Controllers\Transaction\Selling;
  * yang terakhir semoga kita diberikan kemudahan rizki dan hati
  */
 Route::get('/update', function (\Codedge\Updater\UpdaterManager $updater) {
-
     // Check if new version is available
     if ($updater->source()->isNewVersionAvailable()) {
         // Get the current installed version
@@ -68,7 +68,7 @@ Route::group(['middleware' => ['installed', 'auth']], function () {
     Route::get('dashboard/data-selling', Dashboard::class)->name('data-selling');
 
     Route::group(['prefix' => 'master'], function () {
-        Route::delete('/payment_method/bulk-destroy', [PaymentMethod::class, 'bulkDestroy']);
+        Route::delete('/payment_method/bulk-destroy', [PaymentMethod::class, 'bulkDestroy'])->name('payment_method.bulkDestroy');
         Route::resource('/payment_method', PaymentMethod::class);
 
         Route::delete('/category/bulk-destroy', [Category::class, 'bulkDestroy'])->name('category.bulkDestroy');
@@ -132,11 +132,11 @@ Route::group(['middleware' => ['installed', 'auth']], function () {
     Route::post('/cashdrawer/open', [CashDrawer::class, 'open'])->name('cashdrawer.open');
     Route::post('/cashdrawer/close', [CashDrawer::class, 'close'])->name('cashdrawer.close');
 
-    Route::group(['prefix' => 's', 'as' => 's.'], function () {
+    Route::group(['prefix' => 'setting', 'as' => 's.'], function () {
         Route::resource('/general', General::class)->only(['index']);
         Route::group(['prefix' => '/general', 'as' => 'general.'], function () {
             Route::resource('/company', Company::class)->only(['index', 'store']);
-            Route::resource('/date', Company::class)->only(['index', 'store']);
+            Route::resource('/date', Date::class)->only(['index', 'store']);
             Route::resource('/currency', Company::class)->only(['index', 'store']);
             Route::resource('/appearance', Company::class)->only(['index', 'store']);
             Route::resource('/plugins', Company::class)->only(['index', 'store']);

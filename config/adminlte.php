@@ -402,10 +402,17 @@ return [
         ['header' => 'menu.settings', 'can' => ['browse-general-setting']],
         [
             'text' => 'menu.settings',
-            'url'  => 's/general',
             'icon' => 'fas fa-fw fa-cogs',
-            'active' => ['s/general', 'regex:/^s\/general\/[aA-zZ]/'],
-            'can' => ['browse-general-setting']
+            'active' => ['setting/general', 'regex:/^setting\/general\/[aA-zZ]/'],
+            'can' => ['browse-general-setting'],
+            'submenu' => [
+                [
+                    'text' => 'app.settings.general.title',
+                    'url'  => 'setting/general',
+                    'active' => ['setting/general', 'regex:/^setting\/general\/[aA-zZ]/'],
+                    'can' => ['browse-general-setting']
+                ],
+            ],
         ],
         /* [ */
         /*     'text' => 'menu.default', */

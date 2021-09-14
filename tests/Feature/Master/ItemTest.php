@@ -14,7 +14,9 @@ class ItemTest extends FeatureTestCase
     /** @test */
     public function it_response_unauthorized_for_see_list_items()
     {
-        $response = $this->loginAs()->get(route('item.index'), $this->data())->assertStatus(403);
+        $response = $this->loginAs()
+                         ->get(route('item.index'), $this->data())
+                         ->assertStatus(403);
         $response->assertSee('This action is unauthorized.');
     }
 

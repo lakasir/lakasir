@@ -37,6 +37,7 @@ class DatabaseSeeder extends Seeder
             PaymentMethod::class,
             CategorySeeder::class,
             UserSeeder::class,
+            TimezoneSeeder::class
         ]);
     }
 }
