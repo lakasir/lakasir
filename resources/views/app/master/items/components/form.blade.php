@@ -1,5 +1,5 @@
 <div class="d-flex">
-  <div class="card col-md-8 p-0">
+  <div class="card col-md-12 p-0">
     <div class="card-header container-fluid">
       <div class="row">
         <div class="col-md-8 col-sm-12">
