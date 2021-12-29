@@ -11,15 +11,56 @@ use App\Models\PaymentMethod;
 use App\Traits\PaymentMethod\PaymentMethodTrait;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
-use Yajra\DataTables\Services\DataTable;
 
-class PaymentMethodDataTable extends DataTable implements
+/** @package App\DataTables */
+class PaymentMethodDataTable extends BaseDataTable implements
     WithOptions,
     WithButton,
     WithCheckbox,
     WithCreatedHumanDate
 {
     use PaymentMethodTrait;
+
+    /**
+     * Get query source of dataTable.
+     *
+     * @param \App\Models\PaymentMethod $model
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function query(PaymentMethod $model)
+    {
+        return $model->newQuery();
+    }
+
+    /**
+     * Get columns.
+     *
+     * @return array
+     */
+    public function getColumns(): array
+    {
+        return [
+            Column::computed('checkbox')
+                ->title('#')
+                ->exportable(false)
+                ->printable(false)
+                ->orderable(false)
+                ->width(30)
+                ->addClass('text-center'),
+            Column::make('name')
+                ->title(trans('app.payment_methods.column.name')),
+            Column::make('created_at')
+                ->title(trans('app.global.created_at'))
+                ->width(120),
+            Column::computed('options')
+                ->title('')
+                ->exportable(false)
+                ->printable(false)
+                ->orderable(false)
+                ->width(60)
+                ->addClass('text-center'),
+        ];
+    }
 
     /**
      * @return array[]
@@ -83,45 +124,6 @@ class PaymentMethodDataTable extends DataTable implements
                 ->confirm(__('app.global.confirm.suredelete'))
                 ->url(route('payment_method.destroy', $payment_method))
                 ->show($permission['delete']),
-        ];
-    }
-    /**
-     * Get query source of dataTable.
-     *
-     * @param \App\Models\PaymentMethod $model
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function query(PaymentMethod $model)
-    {
-        return $model->newQuery();
-    }
-    /**
-     * Get columns.
-     *
-     * @return array
-     */
-    public function getColumns(): array
-    {
-        return [
-            Column::computed('checkbox')
-                ->title('#')
-                ->exportable(false)
-                ->printable(false)
-                ->orderable(false)
-                ->width(30)
-                ->addClass('text-center'),
-            Column::make('name')
-                ->title(trans('app.payment_methods.column.name')),
-            Column::make('created_at')
-                ->title(trans('app.global.created_at'))
-                ->width(120),
-            Column::computed('options')
-                ->title('')
-                ->exportable(false)
-                ->printable(false)
-                ->orderable(false)
-                ->width(60)
-                ->addClass('text-center'),
         ];
     }
 }
