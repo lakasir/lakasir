@@ -33,11 +33,12 @@ class CustomerForm extends ComponentAbstracts
                 'placeholder' =>  __('app.customers.placeholder.email'),
                 'value' => optional($this->value->data ?? '')->email
             ],
-            'customer_type_id' => [
-                'type' => 'select',
+            'customer_type' => [
+                'type' => 'select2',
                 'label' =>  __('app.customers.column.customer_type'),
                 'placeholder' =>  __('app.customers.placeholder.customer_type'),
                 'value' => optional($this->value->data ?? '')->customer_type ?? 0,
+                'add-url' => route('customer_type.create', ['from' => request()->getPathInfo()]),
                 'option' => $this->customerType()
             ]
         ];
@@ -62,6 +63,8 @@ class CustomerForm extends ComponentAbstracts
             ];
         })->toArray();
 
-        return array_merge($customer_type_map, [['text' => __('app.customer.placeholder.customer_type'), 'value' => 0]]);
+        return array_merge([
+            ['text' => __('app.customer.placeholder.customer_type.none'), 'value' => 0]
+        ], $customer_type_map);
     }
 }

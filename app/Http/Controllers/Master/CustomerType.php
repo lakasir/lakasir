@@ -52,13 +52,17 @@ class CustomerType
      */
     public function store(Create $request)
     {
-        CustomerTypeModel::create($request->all());
+        $customerType = CustomerTypeModel::create($request->all());
 
         $message = __('app.global.message.success.create', [
             'item' => ucfirst($this->resources())
         ]);
 
         flash()->success($message);
+
+        if ($request->input('from')) {
+            return redirect()->to($request->input('from') . "?selected=" . $customerType->id);
+        }
 
         return redirect()->to(route("{$this->resources()}.index"));
     }
@@ -111,6 +115,10 @@ class CustomerType
         ]);
 
         flash()->success($message);
+
+        if ($request->input('from')) {
+            return redirect()->to($request->input('from') . "?selected=" . $customerType->id);
+        }
 
         return redirect()->to(route("{$this->resources()}.index"));
     }
