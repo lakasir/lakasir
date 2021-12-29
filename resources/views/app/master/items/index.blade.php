@@ -1,5 +1,16 @@
 @extends('adminlte::page')
 
 @section('content')
-  @include('app.master.items.components.table')
+  <x-index-table>
+    @slot('topDiv')
+      {{ Breadcrumbs::render("{$resources}.index") }}
+    @endslot
+    @slot('content')
+      {{ $dataTable->table() }}
+    @endslot
+  </x-index-table>
 @endsection
+
+@push('js')
+  {{$dataTable->scripts()}}
+@endpush

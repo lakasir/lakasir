@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\DataTables\ItemTable;
 use App\Traits\Media;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\HasLaTable;
@@ -14,14 +13,38 @@ class Item extends Model
     use Media;
     use HasLaTable;
 
-    protected $latable = ItemTable::class;
-
     protected $fillable = [
         'name',
         'internal_production',
         'sku',
-        'item_type'
+        'item_type',
+        'unit'
     ];
+
+    public static function boot() {
+        parent::boot();
+        self::creating(function($model){
+            $model->internal_production = $model->internal_production == 'on';
+        });
+        self::updating(function($model){
+            $model->internal_production = $model->internal_production == 'on';
+        });
+    }
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'internal_production' => 'boolean',
+    ];
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = [];
 
     /**
      * category relationship
@@ -72,6 +95,7 @@ class Item extends Model
         return Stock::where('amount', '>', 0)->where('item_id', $this->id)->orderBy('date', 'asc')->first();
     }
 
+    /** @return Price|Object  */
     public function getLastPriceAttribute()
     {
         $stockPrice = optional($this->last_stock)->price;

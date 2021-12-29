@@ -125,6 +125,20 @@ Breadcrumbs::for('user.edit', function (BreadcrumbTrail $trail, $data) {
     $trail->push(__('app.user.edit.title', ['title' => $data->name]), route('user.index'));
 });
 
+Breadcrumbs::for('item.index', function (BreadcrumbTrail $trail) {
+    $trail->push(__('app.item.title'), route('item.index'));
+});
+
+Breadcrumbs::for('item.create', function (BreadcrumbTrail $trail) {
+    $trail->parent('item.index');
+    $trail->push(__('app.item.create.title'), route('item.index'));
+});
+
+Breadcrumbs::for('item.edit', function (BreadcrumbTrail $trail, $data) {
+    $trail->parent('item.index');
+    $trail->push(__('app.item.edit.title', ['title' => $data->name]), route('item.index'));
+});
+
 Breadcrumbs::for('role.index', function (BreadcrumbTrail $trail) {
     $trail->push(__('app.role.title'), route('role.index'));
 });

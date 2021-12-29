@@ -53,6 +53,13 @@ Route::get('/update', function (\Codedge\Updater\UpdaterManager $updater) {
     }
 });
 
+Route::get('/xdebug', function ()
+{
+    $siap = "OK";
+    $ok = $siap;
+    dd($ok);
+});
+
 Route::get('/', function () {
     return redirect()->to('/dashboard');
 })->middleware(['installed', 'auth']);
@@ -78,7 +85,7 @@ Route::group(['middleware' => ['installed', 'auth']], function () {
         Route::post('/item/import', [Item::class, 'importTemplate'])->name('item.import');
         Route::delete('/item/bulk-destroy', [Item::class, 'bulkDestroy'])->name('item.bulkDestroy');
         Route::resource('/item', Item::class);
-
+        Route::put('/item/{item}/update-stock-rate', [Item::class, 'updateStockRate'])->name('item.update-stock-rate');
 
         Route::get('/supplier/download-template', [Supplier::class, 'downloadTemplate'])->name('supplier.download-template');
         Route::post('/supplier/import', [Supplier::class, 'importTemplate'])->name('supplier.import');

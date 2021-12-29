@@ -131,6 +131,7 @@ return [
         'placeholder' => [
             'name' => 'Name',
             'images' => 'Images',
+            'sku' => 'sku',
             'internal_production' => 'Internal Production',
             'category' => [
                 'name' => 'Choose one of category',
@@ -153,6 +154,7 @@ return [
             'images' => 'Images',
             'internal_production' => 'Internal Production',
             'sales' => 'Sales',
+            'sku' => 'Sku',
             'category' => [
                 'name' => 'Category Name',
             ],
@@ -168,6 +170,25 @@ return [
                 'stock' => 'Stock',
                 'empty' => 'Empty',
                 'last_stock' => 'Last Stock'
+            ],
+            'item_type' => [
+                'name' => 'Item Type',
+                'label' => [
+                    'default' => 'Default',
+                    'imei' => 'Imei',
+                    'variant' => 'Variant',
+                    'multi_unit' => 'Multi Unit',
+                    'package' => 'Package',
+                    'raw_material' => 'Raw Material',
+                ],
+                'value' => [
+                    'default' => '0',
+                    'imei' => '1',
+                    'variant' => '2',
+                    'multi_unit' => '3',
+                    'package' => '4',
+                    'raw_material' => '5',
+                ]
             ]
         ],
         'export' => [
@@ -190,10 +211,12 @@ return [
             ],
         ],
         'edit' => [
-            'title' => 'Edit Items'
+            'title' => 'Edit Items',
+            'prices_stock' => 'Edit Rate Or Stocks',
         ],
         'create' => [
-            'title' => 'Create Items'
+            'title' => 'Create Items',
+            'category' => 'Create Category'
         ],
     ],
     'sellings' => [

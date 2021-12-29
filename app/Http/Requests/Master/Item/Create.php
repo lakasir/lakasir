@@ -32,7 +32,7 @@ class Create extends FormRequest
         return [
             'name' => 'required',
             'stock' => ['required'],
-            'category_id' => 'required',
+            'category' => 'required',
             'initial_price' => ['required', 'min:1'],
             'selling_price' => ['required', 'min:1'],
         ];

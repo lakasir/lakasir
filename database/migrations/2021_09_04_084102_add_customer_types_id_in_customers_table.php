@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class UpdateCustomerTypeIdColumnToNullableInCustomersTable extends Migration
+class AddCustomerTypesIdInCustomersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,11 +14,7 @@ class UpdateCustomerTypeIdColumnToNullableInCustomersTable extends Migration
     public function up()
     {
         Schema::table('customers', function (Blueprint $table) {
-            $table->dropForeign(['customer_type_id']);
-            $table->dropColumn('customer_type_id');
-        });
-        Schema::table('customers', function (Blueprint $table) {
-            $table->foreignId('customer_type_id')->after('id')->nullable();
+            $table->foreignId('customer_type_id')->nullable();
         });
     }
 
@@ -30,10 +26,8 @@ class UpdateCustomerTypeIdColumnToNullableInCustomersTable extends Migration
     public function down()
     {
         Schema::table('customers', function (Blueprint $table) {
+            $table->dropForeign(['customer_type_id']);
             $table->dropColumn('customer_type_id');
-        });
-        Schema::table('customers', function (Blueprint $table) {
-            $table->foreignId('customer_type_id')->after('id')->nullable();
         });
     }
 }

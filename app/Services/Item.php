@@ -6,32 +6,14 @@ use App\Models\Category;
 use App\Models\Item as ItemModel;
 use App\Models\Price;
 use App\Models\Stock;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
-use Sheenazien8\Hascrudactions\Abstracts\LaTable;
-use Sheenazien8\Hascrudactions\Abstracts\Repository;
 
 /** @package App\Repositories */
-class Item extends Repository
+class Item
 {
-    public function __construct()
-    {
-        parent::__construct(new ItemModel());
-    }
-
-    public function datatable(Request $request): LaTable
-    {
-        $items = $this->query()->addSelect([
-            'category_name' => Category::select('name')->whereColumn('category_id', 'categories.id')->latest()->limit(1),
-            'initial_price' => Price::select('initial_price')->whereColumn('item_id', 'items.id')->orderBy('date', 'asc')->limit(1),
-            'selling_price' => Price::select('selling_price')->whereColumn('item_id', 'items.id')->orderBy('date', 'asc')->limit(1),
-            'last_stock' => Stock::select(DB::raw('(CASE WHEN (SUM(amount) > 0) THEN SUM(amount) ELSE 0 END)'))->whereColumn('item_id', 'items.id')->latest()->limit(1)
-        ])->latest();
-
-        return $this->getObjectModel()->table($items);
-    }
-
     /**
      * create
      *
@@ -41,54 +23,38 @@ class Item extends Repository
      */
     public function create(Request $request): ItemModel
     {
-        $self = $this;
-        return DB::transaction(static function () use ($request, $self) {
-            $request->merge([
-                'date' => now()->format('Y-m-d'),
-                'amount' => $request->stock,
-            ]);
-            $item = new $self->model();
-            $item->fill($request->only('internal_production', 'name'));
-            $item->category()->associate(Category::find($request->category_id));
+        try {
+            DB::beginTransaction();
+            $item = new ItemModel();
+            $item->fill($request->all());
+            $category = Category::find($request->category);
+            if (!$category) {
+                throw new Exception("Category not found");
+            }
+            $item->category()->associate($category);
             $item->save();
-            $item->createMediaFromFile($request->image);
 
-            $checkPrice = array_must_same(
-                $request->only('initial_price', 'selling_price'),
-                [
-                    'initial_price',
-                    'selling_price'
-                ],
-                0
-            );
+            // create price
+            $price = new Price();
+            $price->fill($request->merge([
+                'date' => now()->format('Y-m-d')
+            ])->all());
+            $price->item()->associate($item);
+            $price->save();
 
-            if (!$checkPrice) {
-                // create price
-                $price = new Price();
-                $price->fill($request->only('initial_price', 'selling_price', 'date'));
-                $price->item()->associate($item);
-                $price->save();
-            }
+            // create stocks
+            $stock = new Stock();
+            $stock->fill($request->merge(['amount' => $request->stock])->all());
+            $stock->price()->associate($price);
+            $stock->item()->associate($item);
+            $stock->save();
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
 
-            $checkStock = array_must_same(
-                $request->only('amount'),
-                [
-                    'amount',
-                ],
-                0
-            );
-
-            if (!$checkStock) {
-                // create stock
-                $stock = new Stock();
-                $stock->fill($request->only('amount', 'date'));
-                $stock->item()->associate($item);
-                $stock->price()->associate($item);
-                $stock->save();
-            }
-
-            return $item;
-        });
+        return $item;
     }
 
     /**
@@ -101,25 +67,55 @@ class Item extends Repository
      */
     public function update(Request $request, $item): ItemModel
     {
-        return DB::transaction(static function () use ($request, $item) {
-            $request->merge([
-                'date' => now()->format('Y-m-d'),
-                'current_stock' => $request->stock,
-                'last_stock' => $request->stock,
-            ]);
-            if (!$request->internal_production) {
-                $request->merge(['internal_production' => false]);
+        try {
+            if (!$item->exists) {
+                throw new Exception("Updated item not found");
             }
-            $item->fill($request->only('internal_production', 'name'));
-            $item->category()->associate(Category::find($request->category_id));
-            $item->save();
-            // delete image
-            if ($request->hasFile('image')) {
-                $item->deleteMedia($item->media->first())->createMediaFromFile($request->image);
+            DB::beginTransaction();
+            $item->fill($request->all());
+            $category = Category::find($request->category);
+            if (!$category) {
+                throw new Exception("Category not found");
             }
+            $item->category()->associate($category);
+            $item->update();
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
 
-            return $item;
-        });
+        return $item;
+    }
+
+    public function updateStockRate(Request $request, ItemModel $item)
+    {
+        try {
+            DB::beginTransaction();
+            $item->prices->dd();
+            $item->fill($request->all());
+            $item->save();
+            // create price
+            $price = new Price();
+            $price->fill($request->merge([
+                'date' => now()->format('Y-m-d')
+            ])->all());
+            $price->item()->associate($item);
+            $price->save();
+
+            // create stocks
+            $stock = new Stock();
+            $stock->fill($request->merge(['amount' => $request->stock])->all());
+            $stock->price()->associate($price);
+            $stock->item()->associate($item);
+            $stock->save();
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
+
+        return $item;
     }
 
     /**
