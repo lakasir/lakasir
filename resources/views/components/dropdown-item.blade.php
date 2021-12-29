@@ -9,12 +9,12 @@
       href="#"
       onclick="event.preventDefault();
       confirm('{{ $option->confirm }}') ?
-      document.getElementById('delete-form-{{ $option->extend }}').submit() : '';">
+      document.getElementById('delete-form-{{ $option->extend }}-{{ $option->url }}').submit() : '';">
       @if (isset($option->icon))
         {!! $option->icon !!}
       @endif
       {!! $option->title ?? $option->extend !!}
-      <form id="delete-form-{{ $option->extend }}" action="{{ $option->url }}" method="POST" style="display:none">
+      <form id="delete-form-{{ $option->extend }}-{{ $option->url }}" action="{{ $option->url }}" method="POST" style="display:none">
         @csrf
         @if (isset($option->method) && $option->method)
           @method($option->method)
