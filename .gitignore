@@ -8,6 +8,7 @@
 /public/css/
 /public/app/
 /nginx/*.log
+/packages
 tags
 .env
 .env.backup

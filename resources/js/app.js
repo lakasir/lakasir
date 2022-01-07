@@ -9,7 +9,6 @@ const _ = require('lodash');
 import helpers from './helpers';
 import route from 'ziggy';
 import {Ziggy} from './ziggy.js';
-import Chart from 'chart.js';
 import store from './store';
 import Notifications from 'vue-notification'
 
@@ -30,26 +29,11 @@ window.helpers = helpers
 
 Vue.mixin(require('./trans'))
 
-/*
-or for SSR:
-import Notifications from 'vue-notification/dist/ssr.js'
-*/
-
 Vue.use(Notifications)
 
-Vue.component('v-input', require('./components/Form/Input.vue').default)
-Vue.component('v-date-picker', require('./components/Form/DatePicker.vue').default)
-Vue.component('v-text-area', require('./components/Form/TextArea.vue').default)
-Vue.component('v-checkbox', require('./components/Form/Checkbox.vue').default)
-Vue.component('v-button', require('./components/Button/Button.vue').default)
-Vue.component('v-button-upload', require('./components/Button/UploadFile.vue').default)
-Vue.component('v-dropdown', require('./components/Form/Dropdown.vue').default)
-Vue.component('select2', require('./components/Form/Select2.vue').default)
-Vue.component('v-select', require('./components/Form/Select.vue').default)
+Vue.component('create-purchasing', require('./Form/CreatePurchasing/Index').default)
 
 Vue.component('v-add-item', require('./components/Purchasing/AddItem.vue').default)
-
-Vue.component('cashier-app', require('./components/App.vue').default)
 
 Vue.component(
   'passport-clients',
@@ -71,6 +55,8 @@ const app = new Vue({
   store
 });
 
-$(document).ready(function() {
-    $('.select2').select2();
+$(document).ready(() => {
+  $(".select2").select2({
+    width: "100%",
+  });
 });

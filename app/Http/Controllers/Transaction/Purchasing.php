@@ -2,80 +2,123 @@
 
 namespace App\Http\Controllers\Transaction;
 
+use App\DataTables\PurchasingDataTable;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Transaction\Purchasing\BulkDelete;
-use App\Http\Requests\Transaction\Purchasing\Index;
-use App\Http\Requests\Transaction\Purchasing\Store;
-use App\Http\Requests\Transaction\Purchasing\Update;
-use App\Models\Purchasing as PurchasingModel;
-use App\Repositories\Item;
-use App\Repositories\PaymentMethod;
-use App\Repositories\Purchasing as PurchasingRepository;
-use App\Repositories\Supplier;
-use App\Services\PurchasingService;
-use App\Traits\HasCrudActions;
+use App\Http\Requests\Transaction\Purchasing\Browse;
+use App\Http\Requests\Transaction\Purchasing\Create;
+use App\Traits\PurchasingTrait;
 use Illuminate\View\View;
 
 class Purchasing extends Controller
 {
-    use HasCrudActions;
+    use PurchasingTrait;
 
-    protected $viewPath = 'app.transaction.purchasings';
+    private $viewPath = 'app.transaction.purchasings';
 
-    protected $permission = 'purchasing';
-
-    protected $indexRequest = Index::class;
-
-    protected $storeRequest = Store::class;
-
-    protected $updateRequest = Update::class;
-
-    protected $bulkDestroyRequest = BulkDelete::class;
-
-    protected $redirect = '/transaction/purchasing';
-
-    protected $repositoryClass = PurchasingRepository::class;
-
-    protected $storeService = [PurchasingService::class, 'create'];
-
-    public function index()
+    /**
+     * Display a listing of the resource.
+     *
+     * @return mix
+     */
+    public function index(Browse $request, PurchasingDataTable $datatable)
     {
-        get_lang();
-
-        $request = resolve($this->indexRequest);
-
-        if ($this->permission) {
-            $this->authorize("browse-$this->permission");
-        }
-
-        if ($request->ajax() || isset($this->return) && $this->return == 'api') {
-            return $this->repository->datatable($request);
-        }
-
-        $resources = $this->permission;
-
-        if (isset($this->resources)) {
-            $resources = $this->resources;
-        }
-
-        return view("{$this->viewPath}.index", [
-            'resources' => $resources,
-            'spending' => $this->repository->card()
+        return $datatable->render("{$this->viewPath}.index", [
+            'resources' => $this->resources()
         ]);
     }
 
-    public function updatePaid(PurchasingModel $purchasing)
+    /**
+     * @param Create $request
+     * @return View
+     * @throws BindingResolutionException
+     */
+    public function create(Create $request): View
     {
-        $this->authorize('update-paid-purchasing');
-
-        $purchasing->update([
-            'is_paid' => $purchasing->is_paid ? false : true
+        return view("{$this->viewPath}.create", [
+            'resources' => $this->resources()
         ]);
-
-        $message = __('app.global.message.update').' '. ucfirst($this->permission);
-
-        flash()->success(dash_to_space($message));
-
-        return redirect()->back();
     }
+
+    /**
+     * @param Create $request
+     * @return RedirectResponse
+     * @throws BindingResolutionException
+     */
+    public function store(Create $request, ServicesPurchasing $purchasing)
+    {
+        try {
+            $purchasing->create($request);
+
+            $message = __('app.global.message.success.create', [
+                'purchasing' => ucfirst($this->resources())
+            ]);
+
+            flash()->success($message);
+
+            return redirect()->to(route("{$this->resources()}.index"));
+        } catch (Exception $e) {
+            flash()->error($e->getMessage());
+
+            return redirect()->back()->withInput($request->all());
+        }
+    }
+
+    /**
+     * @param ModelsPurchasing $purchasing
+     * @param Browse $request
+     * @return View|Factory
+     * @throws BindingResolutionException
+     */
+    public function show(ModelsPurchasing $purchasing, Browse $request)
+    {
+        $data = $purchasing;
+
+        return view("{$this->viewPath}.show", [
+            'resources' => $this->resources(),
+            'data' => $data
+        ]);
+    }
+
+    /**
+     * @param ModelsPurchasing $purchasing
+     * @param Update $request
+     * @return View|Factory
+     * @throws BindingResolutionException
+     */
+    public function edit(ModelsPurchasing $purchasing, Update $request)
+    {
+        $data = $purchasing;
+
+        return view("{$this->viewPath}.edit", [
+            'resources' => $this->resources(),
+            'data' => $data
+        ]);
+    }
+
+    /**
+     * @param ModelsPurchasing $purchasing
+     * @param Update $request
+     * @param ServicesPurchasing $servicesPurchasing
+     * @return RedirectResponse
+     */
+    public function update(ModelsPurchasing $purchasing, Update $request, ServicesPurchasing $servicesPurchasing)
+    {
+        try {
+            $servicesPurchasing->update($request, $purchasing);
+
+            $message = __('app.global.message.success.update', [
+                'purchasing' => ucfirst($this->resources())
+            ]);
+
+            flash()->success($message);
+
+        } catch (Exception $e) {
+            flash()->error($e->getMessage());
+
+            return redirect()->back()->withInput($request->all());
+        }
+
+        return redirect()->to(route("{$this->resources()}.index"));
+    }
+
 }

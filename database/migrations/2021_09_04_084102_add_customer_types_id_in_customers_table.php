@@ -14,7 +14,7 @@ class AddCustomerTypesIdInCustomersTable extends Migration
     public function up()
     {
         Schema::table('customers', function (Blueprint $table) {
-            $table->foreignId('customer_type_id')->nullable();
+            //$table->foreignId('customer_type_id')->nullable();
         });
     }
 

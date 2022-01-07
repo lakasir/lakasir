@@ -211,7 +211,7 @@ return [
             ],
         ],
         'edit' => [
-            'title' => 'Edit Items',
+            'title' => 'Edit Items :title',
             'prices_stock' => 'Edit Rate Or Stocks',
         ],
         'create' => [

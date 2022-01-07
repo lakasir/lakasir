@@ -25,13 +25,6 @@ class ItemForm extends ComponentAbstracts
             /*     'placeholder' =>  __('app.items.placeholder.images'), */
             /*     'value' => optional($this->value->data ?? '')->image */
             /* ], */
-            'category' => [
-                'type' => 'options',
-                'label' =>  __('app.items.column.category.name'),
-                'placeholder' =>  __('app.customers.placeholder.category.name'),
-                'value' => optional($this->value->data ?? '')->category_id ?? null,
-                'option' => $this->categories()
-            ],
             'inline' => [
                 [
                     'name' => [
@@ -39,21 +32,32 @@ class ItemForm extends ComponentAbstracts
                         'label' =>  __('app.items.column.name'),
                         'placeholder' =>  __('app.items.placeholder.name'),
                         'value' => optional($this->value->data ?? '')->name,
-                        'col' => 'col-md-4'
+                        'col' => 'col-md-6'
                     ],
+                    'category' => [
+                        'type' => 'select2',
+                        'label' =>  __('app.items.column.category.name'),
+                        'placeholder' =>  __('app.customers.placeholder.category.name'),
+                        'value' => optional($this->value->data ?? '')->category_id ?? null,
+                        'option' => $this->categories(),
+                        'add-url' => route('category.create', ['from' => request()->getPathInfo()]),
+                        'col' => 'col-md-6'
+                    ]
+                ],
+                [
                     'sku' => [
                         'type' => 'text',
                         'label' =>  __('app.items.column.sku'),
                         'placeholder' =>  __('app.items.placeholder.sku'),
                         'value' => optional($this->value->data ?? '')->sku,
-                        'col' => 'col-md-4'
+                        'col' => 'col-md-6'
                     ],
                     'unit' => [
                         'type' => 'text',
                         'label' =>  __('app.items.column.unit.name'),
                         'placeholder' =>  __('app.items.placeholder.unit.name'),
                         'value' => optional($this->value->data ?? '')->unit,
-                        'col' => 'col-md-4'
+                        'col' => 'col-md-6'
                     ],
                 ],
                 [
@@ -139,8 +143,8 @@ class ItemForm extends ComponentAbstracts
         })->toArray();
 
         return array_merge([
-            ['text' => __('app.items.create.category'), 'value' => route('category.create'), 'type' => 'link'],
-            ['text' => __('app.items.placeholder.category.name'), 'value' => null],
+            /* ['text' => __('app.items.create.category'), 'value' => route('category.create'), 'type' => 'link'], */
+            /* ['text' => __('app.items.placeholder.category.name'), 'value' => null], */
         ], $customer_type_map);
     }
 }

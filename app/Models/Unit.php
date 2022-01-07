@@ -4,11 +4,10 @@ namespace App\Models;
 
 use App\Traits\HasLaTable;
 use Illuminate\Database\Eloquent\Model;
-use Lakasir\UserLoggingActivity\Traits\HasLog;
 
 class Unit extends Model
 {
-    use HasLaTable, HasLog;
+    use HasLaTable;
 
     protected $fillable = ['name'];
 }

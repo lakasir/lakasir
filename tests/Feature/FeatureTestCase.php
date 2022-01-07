@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Role;
 use App\Models\User;
+use Closure;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Faker\Factory as Faker;
 use Faker\Generator;
@@ -39,7 +40,7 @@ abstract class FeatureTestCase extends BaseTestCase
     {
         parent::setUp();
 
-        Artisan::call('migrate:fresh');
+        Artisan::call('migrate:refresh');
 
         $user = factory(User::class)->create([
             'username' => 'ownertest',
@@ -106,5 +107,32 @@ abstract class FeatureTestCase extends BaseTestCase
         if (!empty($message)) {
             $this->assertEquals($message, $flash['message']);
         }
+    }
+    /**
+     * Fix for: BadMethodCallException : SQLite doesn't support dropping foreign keys (you would need to re-create the table).
+     */
+    public function hotfixSqlite()
+    {
+        \Illuminate\Database\Connection::resolverFor('sqlite', function ($connection, $database, $prefix, $config) {
+            return new class($connection, $database, $prefix, $config) extends \Illuminate\Database\SQLiteConnection {
+                public function getSchemaBuilder()
+                {
+                    if ($this->schemaGrammar === null) {
+                        $this->useDefaultSchemaGrammar();
+                    }
+                    return new class($this) extends \Illuminate\Database\Schema\SQLiteBuilder {
+                        protected function createBlueprint($table, Closure $callback = null)
+                        {
+                            return new class($table, $callback) extends \Illuminate\Database\Schema\Blueprint {
+                                public function dropForeign($index)
+                                {
+                                    return new \Illuminate\Support\Fluent();
+                                }
+                            };
+                        }
+                    };
+                }
+            };
+        });
     }
 }

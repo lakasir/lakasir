@@ -57,7 +57,7 @@ Route::get('/xdebug', function ()
 {
     $siap = "OK";
     $ok = $siap;
-    dd($ok);
+    dd($ok, php_ini_loaded_file());
 });
 
 Route::get('/', function () {

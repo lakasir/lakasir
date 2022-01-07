@@ -3,7 +3,7 @@
 @section('content')
   {{ Breadcrumbs::render("{$resources}.edit", $data) }}
   @include('app.master.categories.components.form', [
-    'route' => route('category.update', $data),
+    'route' => route('category.update', $data, request()->input()),
     'data' => $data,
     'method' => 'PUT',
     'title' => __('app.categories.edit.title')

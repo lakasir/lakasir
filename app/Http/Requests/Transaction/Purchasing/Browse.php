@@ -2,13 +2,14 @@
 
 namespace App\Http\Requests\Transaction\Purchasing;
 
-use App\Rules\CheckPrice;
+use App\Traits\PurchasingTrait;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Validation\Rule;
 
-class Store extends FormRequest
+class Browse extends FormRequest
 {
+    use PurchasingTrait;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -16,7 +17,7 @@ class Store extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return Gate::authorize("browse-{$this->prefixPermission()}");
     }
 
     /**
@@ -27,11 +28,12 @@ class Store extends FormRequest
     public function rules()
     {
         return [
-            'supplier_id' => ['required'],
-            'payment_method' => [
-                'required',
-            ],
-            'items' => ['array', 'required', new CheckPrice()]
+            'orderBy' => 'in:id,name,url_customize,website,status,sort|nullable',
+            'orderDirection' => 'in:asc,desc|nullable',
+            's' => 'string|nullable',
+            'page' => 'integer|nullable',
+            'per_page' => 'integer|nullable',
+            'limit' => 'integer|nullable',
         ];
     }
 }

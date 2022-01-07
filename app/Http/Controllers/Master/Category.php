@@ -55,13 +55,16 @@ class Category
      */
     public function store(Create $request)
     {
-        ModelsCategory::create($request->all());
+        $category = ModelsCategory::create($request->all());
 
         $message = __('app.global.message.success.create', [
             'item' => ucfirst($this->resources())
         ]);
 
         flash()->success($message);
+        if ($request->input('from')) {
+            return redirect()->to($request->input('from') . "?selected=" . $category->id);
+        }
 
         return redirect()->to(route("{$this->resources()}.index"));
     }
@@ -114,6 +117,10 @@ class Category
         ]);
 
         flash()->success($message);
+
+        if ($request->input('from')) {
+            return redirect()->to($request->input('from') . "?selected=" . $category->id);
+        }
 
         return redirect()->to(route("{$this->resources()}.index"));
     }

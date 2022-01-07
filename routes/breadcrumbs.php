@@ -126,17 +126,31 @@ Breadcrumbs::for('user.edit', function (BreadcrumbTrail $trail, $data) {
 });
 
 Breadcrumbs::for('item.index', function (BreadcrumbTrail $trail) {
-    $trail->push(__('app.item.title'), route('item.index'));
+    $trail->push(__('app.items.title'), route('item.index'));
 });
 
 Breadcrumbs::for('item.create', function (BreadcrumbTrail $trail) {
     $trail->parent('item.index');
-    $trail->push(__('app.item.create.title'), route('item.index'));
+    $trail->push(__('app.items.create.title'), route('item.index'));
 });
 
 Breadcrumbs::for('item.edit', function (BreadcrumbTrail $trail, $data) {
     $trail->parent('item.index');
-    $trail->push(__('app.item.edit.title', ['title' => $data->name]), route('item.index'));
+    $trail->push(__('app.items.edit.title', ['title' => $data->name]), route('item.index'));
+});
+
+Breadcrumbs::for('purchasing.index', function (BreadcrumbTrail $trail) {
+    $trail->push(__('app.purchasings.title'), route('purchasing.index'));
+});
+
+Breadcrumbs::for('purchasing.create', function (BreadcrumbTrail $trail) {
+    $trail->parent('purchasing.index');
+    $trail->push(__('app.purchasings.create.title'), route('purchasing.index'));
+});
+
+Breadcrumbs::for('purchasing.edit', function (BreadcrumbTrail $trail, $data) {
+    $trail->parent('purchasing.index');
+    $trail->push(__('app.purchasings.edit.title', ['title' => $data->name]), route('purchasing.index'));
 });
 
 Breadcrumbs::for('role.index', function (BreadcrumbTrail $trail) {

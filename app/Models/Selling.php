@@ -5,12 +5,9 @@ namespace App\Models;
 use App\DataTables\SellingTable;
 use App\Traits\HasLaTable;
 use Illuminate\Database\Eloquent\Model;
-use Lakasir\UserLoggingActivity\Traits\HasLog;
 
 class Selling extends Model
 {
-    use HasLog;
-
     use HasLaTable;
 
     protected $latable = SellingTable::class;

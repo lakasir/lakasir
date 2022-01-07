@@ -28,7 +28,7 @@
         "livewire/livewire": "^2.4",
         "maatwebsite/excel": "^3.1",
         "pusher/pusher-php-server": "~4.0",
-        "sheenazien8/livewire-components": "dev-develop",
+        "sheenazien8/lakas-form-builder": "dev-master",
         "spatie/laravel-flash": "^1.6",
         "spatie/laravel-permission": "^3.13",
         "tightenco/ziggy": "^0.9.4",
@@ -54,7 +54,9 @@
     },
     "extra": {
         "laravel": {
-            "dont-discover": []
+            "providers": [
+                "Sheenazien8\\LivewireComponents\\LivewireComponentsServiceProvider"
+            ]
         }
     },
     "autoload": {
@@ -62,7 +64,8 @@
             "app/helpers.php"
         ],
         "psr-4": {
-            "App\\": "app/"
+            "App\\": "app/",
+            "Sheenazien8\\LivewireComponents\\": "packages/sheenazien8/lakas-form-builder/src"
         },
         "classmap": [
             "database/seeds",
