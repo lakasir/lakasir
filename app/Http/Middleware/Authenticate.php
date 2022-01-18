@@ -6,8 +6,11 @@ use App\Facades\Response;
 use App\Models\User;
 use Closure;
 use Exception;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Auth\Middleware\Authenticate as Middleware;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Hash;
@@ -28,6 +31,15 @@ class Authenticate extends Middleware
         }
     }
 
+    /**
+     * @param Request $request
+     * @param Closure $next
+     * @param string[][] $guards
+     * @return mixed
+     * @throws HttpResponseException
+     * @throws BindingResolutionException
+     * @throws AuthenticationException
+     */
     public function handle($request, Closure $next, ...$guards)
     {
         if (in_array('api', $guards)) {
