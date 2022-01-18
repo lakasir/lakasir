@@ -32,7 +32,7 @@ class Create extends FormRequest
             return [];
         }
         return [
-            'supplier_id' => ['required'],
+            'supplier' => ['required'],
             'payment_method' => [
                 'required',
             ],

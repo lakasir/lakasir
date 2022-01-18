@@ -6,7 +6,11 @@ use App\DataTables\PurchasingDataTable;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Transaction\Purchasing\Browse;
 use App\Http\Requests\Transaction\Purchasing\Create;
+use App\Services\Purchasing as ServicesPurchasing;
 use App\Traits\PurchasingTrait;
+use Exception;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class Purchasing extends Controller
@@ -41,26 +45,27 @@ class Purchasing extends Controller
 
     /**
      * @param Create $request
-     * @return RedirectResponse
+     * @return JsonResponse
      * @throws BindingResolutionException
      */
     public function store(Create $request, ServicesPurchasing $purchasing)
     {
         try {
+            DB::beginTransaction();
             $purchasing->create($request);
-
-            $message = __('app.global.message.success.create', [
-                'purchasing' => ucfirst($this->resources())
-            ]);
-
-            flash()->success($message);
-
-            return redirect()->to(route("{$this->resources()}.index"));
         } catch (Exception $e) {
-            flash()->error($e->getMessage());
-
-            return redirect()->back()->withInput($request->all());
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
         }
+
+        DB::commit();
+        return response()->json([
+            'success' => true,
+            'message' => $e->getMessage()
+        ]);
     }
 
     /**
