@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use App\Facades\Response;
 use App\Models\User;
 use Closure;
+use Exception;
 use Illuminate\Auth\Middleware\Authenticate as Middleware;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Facades\Auth;
@@ -35,26 +36,28 @@ class Authenticate extends Middleware
                     Response::clientError(['message' => 'This action is unauthorized.'], JsonResponse::HTTP_UNAUTHORIZED)
                 );
             } else {
-                $hashSecureAuth = $request->headers->get('secure-auth');
-                $decodedSecureAuth = json_decode(Crypt::decrypt($hashSecureAuth), 1);
-                $username = $decodedSecureAuth['username'];
-                $password = Crypt::decrypt($decodedSecureAuth['password']);
-                /** @var \App\Models\User $user  */
-                $user = User::where('username', $username)->first();
-                if (!$user) {
-                    throw new HttpResponseException(
-                        Response::clientError(['message' => 'User is not exist.'], JsonResponse::HTTP_UNAUTHORIZED)
-                    );
+                try {
+                    $hashSecureAuth = $request->headers->get('secure-auth');
+                    $decodedSecureAuth = json_decode(Crypt::decrypt($hashSecureAuth), 1);
+                    $username = $decodedSecureAuth['username'];
+                    $password = Crypt::decrypt($decodedSecureAuth['password']);
+                    /** @var \App\Models\User $user  */
+                    $user = User::where('username', $username)->first();
+                    if (!$user) {
+                        throw new Exception('User is not exist.');
+                    }
+                    $checked = Hash::check($password, $user->password);
+                    if (!$checked) {
+                        throw new Exception('User is not exist.');
+                    }
+                    Auth::login($user);
+                } catch (Exception $e) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => $e->getMessage()
+                    ]);
                 }
-                $checked = Hash::check($password, $user->password);
-                if (!$checked) {
-                    throw new HttpResponseException(
-                        Response::clientError(['message' => 'Password is wrong.'], JsonResponse::HTTP_UNAUTHORIZED)
-                    );
-                }
-
             }
-            Auth::login($user);
         } else {
             $this->authenticate($request, $guards);
         }
