@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\Auth\Login;
 use App\Http\Controllers\Api\Transaction\Selling;
 use App\Http\Controllers\Api\CheckValidation;
 use App\Http\Controllers\Api\Item;
+use App\Http\Controllers\Transaction\Purchasing;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -26,7 +27,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::post('/formvalidation', CheckValidation::class)->withoutMiddleware('throttle');
 Route::get('/item/{id}', Item::class)->name('api.item.show');
 
-Route::group(['prefix' => 'v1', 'as' => 'api.'], function () {
+Route::group(['middleware' => 'auth:api'], function () {
+    Route::post('/purchasing/store', [Purchasing::class, 'store'])->name('purchasing.store');
     Route::post('/auth/login', [Login::class, 'login'])->name('auth.login');
     Route::group(['middleware' => ['auth:api']], function () {
         Route::resource('/auth/profile', Profile::class)->only(['index', 'store']);

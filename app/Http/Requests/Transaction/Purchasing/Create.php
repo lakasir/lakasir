@@ -2,13 +2,14 @@
 
 namespace App\Http\Requests\Transaction\Purchasing;
 
+use App\Traits\JsonValidateResponse;
 use App\Traits\PurchasingTrait;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 
 class Create extends FormRequest
 {
-    use PurchasingTrait;
+    use PurchasingTrait, JsonValidateResponse;
 
     /**
      * Determine if the user is authorized to make this request.
@@ -17,7 +18,7 @@ class Create extends FormRequest
      */
     public function authorize()
     {
-        return Gate::authorize("create-{$this->prefixPermission()}");
+        return Gate::allows("create-{$this->prefixPermission()}");
     }
 
     /**
