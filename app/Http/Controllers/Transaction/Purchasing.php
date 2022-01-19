@@ -55,16 +55,24 @@ class Purchasing extends Controller
             $purchasing->create($request);
         } catch (Exception $e) {
             DB::rollBack();
+            $code = $e->getCode();
+            if ($e->getCode() > 600 || $e->getCode() == 0) {
+                $code = 500;
+            }
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage()
-            ]);
+            ], $code);
         }
 
+        $message = __('app.global.message.success.create', [
+            'item' => ucfirst($this->resources())
+        ]);
         DB::commit();
+
         return response()->json([
             'success' => true,
-            'message' => $e->getMessage()
+            'message' => $message
         ]);
     }
 

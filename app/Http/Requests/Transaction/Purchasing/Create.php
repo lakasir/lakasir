@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Transaction\Purchasing;
 
+use App\Models\PaymentMethod;
 use App\Traits\JsonValidateResponse;
 use App\Traits\PurchasingTrait;
 use Illuminate\Foundation\Http\FormRequest;
@@ -32,9 +33,19 @@ class Create extends FormRequest
             return [];
         }
         return [
-            'supplier' => ['required'],
+            // 'supplier' => ['required'],
             'payment_method' => [
-                'required',
+                'required', function ($attribute, $value, $fail)
+                {
+                    /** @var \App\Models\PaymentMethod $paymentMethod */
+                    $paymentMethod = PaymentMethod::find($value);
+                    if (!$paymentMethod) {
+                        return $fail("Payment method is not found");
+                    }
+                    if (!$paymentMethod->getArrayVisibleInAttribute()->purchasing) {
+                        return $fail("this payment method is not allowed in this feature");
+                    }
+                }
             ],
             'items' => ['array', 'required']
         ];

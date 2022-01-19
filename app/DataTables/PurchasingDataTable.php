@@ -46,8 +46,8 @@ class PurchasingDataTable extends BaseDataTable implements
                 ->orderable(false)
                 ->width(30)
                 ->addClass('text-center'),
-            Column::make('name')
-                ->title(trans('app.purchasings.column.name')),
+            Column::make('date')
+                ->title(trans('app.purchasings.column.date')),
             Column::make('created_at')
                 ->title(trans('app.global.created_at'))
                 ->width(120),

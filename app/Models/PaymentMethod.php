@@ -21,6 +21,6 @@ class PaymentMethod extends Model
 
     public function getArrayVisibleInAttribute()
     {
-        return json_decode($this->getAttribute('visible_in'), 1);
+        return (object)json_decode($this->getAttribute('visible_in'), 1);
     }
 }

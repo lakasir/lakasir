@@ -10,8 +10,6 @@ class PurchasingDetail extends Model
         'qty',
         'initial_price',
         'selling_price',
-        'item_id',
-        'purchasing_id'
     ];
 
     public function item()

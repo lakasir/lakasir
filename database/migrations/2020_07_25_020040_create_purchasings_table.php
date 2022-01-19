@@ -15,7 +15,7 @@ class CreatePurchasingsTable extends Migration
     {
         Schema::create('purchasings', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('supplier_id')->references('id')->on('suppliers')->onDelete('cascade');
+            $table->foreignId('supplier_id')->nullable()->references('id')->on('suppliers')->onDelete('cascade');
             $table->date('date');
             $table->string('invoice_number');
             $table->double('total_initial_price');
