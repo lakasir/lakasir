@@ -56,4 +56,4 @@ if you want to contribute and add some ideas, please check this link [ideas](htt
 Support Lakasir to becoming a sponsor on [Github](https://github.com/lakasir), Your Profile Picture will show up here with link to your account
 
 ## License
-Lakasir is licensed under [MIT License](https://github.com/lakasir/lakasir/blob/master/LICENSE) which means it's completely free.
+Lakasir is licensed under [GPL-3.0 License](https://github.com/lakasir/lakasir/blob/master/LICENSE)
