@@ -11,6 +11,7 @@ use Illuminate\Auth\Middleware\Authenticate as Middleware;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Hash;
@@ -49,6 +50,13 @@ class Authenticate extends Middleware
                 );
             } else {
                 try {
+                    /* dd(Crypt::encrypt(json_encode([ */
+                    /*     "username" => "admin", */
+                    /*     "password" => Crypt::encrypt("password"), */
+                    /*     "loged_at" => now()->format("Y-m-d"), */
+                    /*     "active" => ((60 * 24) * 30) * 12, */
+                    /*     "method" => env("API_KEY") */
+                    /* ]))); */
                     $hashSecureAuth = $request->headers->get('secure-auth');
                     $decodedSecureAuth = json_decode(Crypt::decrypt($hashSecureAuth), 1);
                     $username = $decodedSecureAuth['username'];
@@ -61,6 +69,16 @@ class Authenticate extends Middleware
                     $checked = Hash::check($password, $user->password);
                     if (!$checked) {
                         throw new Exception('User is not exist.');
+                    }
+                    if ($decodedSecureAuth["method"] != env("API_KEY")) {
+                        throw new Exception('Key is not registered');
+                    }
+                    $loginTime = $decodedSecureAuth['loged_at'];
+                    $now = now()->format("Y-m-d H:i:s");
+                    // dd(Carbon::createFromDate($loginTime)->diffInMinutes($now), $decodedSecureAuth['active']);
+                    $inActiveCheck = Carbon::createFromDate($loginTime)->diffInMinutes($now) >= $decodedSecureAuth["active"];
+                    if ($inActiveCheck) {
+                        throw new Exception('Token is expired');
                     }
                     Auth::login($user);
                 } catch (Exception $e) {
