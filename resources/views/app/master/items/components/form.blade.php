@@ -3,7 +3,7 @@
     <div class="card-header container-fluid">
       <div class="row">
         <div class="col-md-8 col-sm-12">
-          <h4>{{ $title }}</h4>
+          <h4 class="text-muted">{{ $title }}</h4>
         </div>
         @if (isset($method) && in_array($method, ['PUT', 'PATCH']))
           <div class="col-md-4 col-sm-12">
