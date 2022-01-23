@@ -581,6 +581,7 @@ return [
             'success' => [
                 'create' => 'Success created the :item',
                 'update' => 'Success update the :item',
+                'delete' => 'Success delete the :item',
                 'bulk-delete' => 'Success deleted :count :item'
             ],
             'error' => [
