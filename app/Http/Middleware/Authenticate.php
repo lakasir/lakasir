@@ -76,7 +76,8 @@ class Authenticate extends Middleware
                     $loginTime = $decodedSecureAuth['loged_at'];
                     $now = now()->format("Y-m-d H:i:s");
                     // dd(Carbon::createFromDate($loginTime)->diffInMinutes($now), $decodedSecureAuth['active']);
-                    $inActiveCheck = Carbon::createFromDate($loginTime)->diffInMinutes($now) >= $decodedSecureAuth["active"];
+                    $diffInMinutes = Carbon::createFromDate($loginTime)->diffInMinutes($now);
+                    $inActiveCheck = $diffInMinutes >= $decodedSecureAuth["active"];
                     if ($inActiveCheck) {
                         throw new Exception('Token is expired');
                     }

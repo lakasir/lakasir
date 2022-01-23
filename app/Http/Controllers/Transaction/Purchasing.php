@@ -6,6 +6,7 @@ use App\DataTables\PurchasingDataTable;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Transaction\Purchasing\Browse;
 use App\Http\Requests\Transaction\Purchasing\Create;
+use App\Models\Purchasing as ModelsPurchasing;
 use App\Services\Purchasing as ServicesPurchasing;
 use App\Traits\PurchasingTrait;
 use Exception;
@@ -132,6 +133,20 @@ class Purchasing extends Controller
         }
 
         return redirect()->to(route("{$this->resources()}.index"));
+    }
+
+    public function destroy(ModelsPurchasing $purchasing)
+    {
+        $invoice_number = $purchasing->invoice_number;
+        $purchasing->purchasingDetails()->delete();
+        $purchasing->delete();
+
+        $message = __('app.global.message.success.delete', [
+            'item' => ucfirst($this->resources()) . " with invoice number " . $invoice_number
+        ]);
+        flash()->success($message);
+
+        return redirect()->back();
     }
 
 }

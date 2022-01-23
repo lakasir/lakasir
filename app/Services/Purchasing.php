@@ -8,10 +8,15 @@ use App\Models\Purchasing as ModelsPurchasing;
 use App\Models\PurchasingDetail;
 use App\Models\Supplier;
 use Exception;
+use Illuminate\Database\Eloquent\MassAssignmentException;
+use Illuminate\Database\Eloquent\JsonEncodingException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use LogicException;
+use InvalidArgumentException;
 
+/** @package App\Services */
 class Purchasing
 {
     /**
@@ -65,6 +70,16 @@ class Purchasing
         return $purchasing;
     }
 
+    /**
+     * @param ModelsPurchasing $purchasing
+     * @param Request $request
+     * @return array
+     * @throws Exception
+     * @throws MassAssignmentException
+     * @throws LogicException
+     * @throws JsonEncodingException
+     * @throws InvalidArgumentException
+     */
     private function createPurchasingDetail(ModelsPurchasing $purchasing, Request $request): array
     {
         $purchasingDetails = [];

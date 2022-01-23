@@ -28,7 +28,7 @@ class PurchasingDataTable extends BaseDataTable implements
      */
     public function query(Purchasing $model)
     {
-        return $model->newQuery();
+        return $model->newQuery()->with('supplier');
     }
 
     /**
@@ -46,6 +46,8 @@ class PurchasingDataTable extends BaseDataTable implements
                 ->orderable(false)
                 ->width(30)
                 ->addClass('text-center'),
+            Column::make('invoice_number')
+                ->title(trans('app.purchasings.column.invoice_number')),
             Column::make('date')
                 ->title(trans('app.purchasings.column.date')),
             Column::make('created_at')
