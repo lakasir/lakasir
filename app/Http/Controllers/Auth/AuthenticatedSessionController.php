@@ -18,10 +18,17 @@ class AuthenticatedSessionController extends Controller
     public function store(LoginRequest $request)
     {
         $request->authenticate();
+        /** @var \App\Models\User $user */
+        $user = $request->user();
+        $token = $request->user()->createToken($user->getRememberTokenName());
 
-        $request->session()->regenerate();
-
-        return response()->noContent();
+        return response()->json([
+            'success' => true,
+            'message' => 'Yay! success to login',
+            'data' => array_merge([
+                'token' => $token->plainTextToken,
+            ], $user->toArray())
+        ]);
     }
 
     /**
