@@ -1,0 +1,12 @@
+name: lakasir
+recipe: laravel
+services:
+  appserver:
+    xdebug: true
+config:
+  via: nginx
+  php: '8.1'
+  webroot: public
+  composer_version: '2.2.12'
+  database: mysql
+
