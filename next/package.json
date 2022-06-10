@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@ionic/core": "^5.4.1",
+    "ionicons": "^5.2.3",
     "@headlessui/react": "^1.6.4",
     "@heroicons/react": "^1.0.6",
     "autoprefixer": "^10.4.7",
