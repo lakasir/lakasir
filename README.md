@@ -1,2 +1,6 @@
 ## IMPORTANT NOTE!!
 REWRITING IDEAS, REWRITING PLAN, REWRITING CODE, REWRITING EVERYTHING!
+
+
+Design source
+https://www.figma.com/file/7yy1zKDwkWoNYKUwIFdfxq/LAKASIR?node-id=0%3A1
