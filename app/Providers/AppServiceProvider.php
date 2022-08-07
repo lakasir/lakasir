@@ -29,27 +29,29 @@ class AppServiceProvider extends ServiceProvider
         {
             /* WIP:  <07-08-22, sheenazien8> */
             $columns = $request->filters;
+            $query = $this;
             if ($columns) {
                 foreach ($columns as $filterColumn) {
-                    if ($filterColumn['condition'] == "like") {
-                        $column = "%". $filterColumn['column'] . "%";
-                    } else {
-                        $column = $filterColumn['column'];
-                    }
+                    $column = $filterColumn['column'];
 
                     if ($filterColumn['condition'] == "equals") {
                         $condition = "=";
                     } else {
                         $condition = $filterColumn['condition'];
                     }
-                    $value = $filterColumn['value'];
+                    if ($filterColumn['condition'] == "like") {
+                        $value = "%". $filterColumn['value'] . "%";
+                    } else {
+                        $value = $filterColumn['value'];
+                    }
                     if (!$value) {
                         return $this;
                     }
+                    $query = optional($this)->where($column, $condition, $value);
                 }
             }
 
-            return $columns ? $this->where($column, $condition, $value) : $this;
+            return $columns ? $query : $this;
         });
     }
 }
