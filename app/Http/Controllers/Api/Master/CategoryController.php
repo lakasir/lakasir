@@ -36,7 +36,7 @@ class CategoryController extends Controller
             'name' => 'required'
         ]);
         $category->fill($request->all());
-        $category->save();
+        $category->update();
 
         return $this->success([], "success updating items");
     }
