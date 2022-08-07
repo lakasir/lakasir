@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\Master\CategoryController;
+use App\Http\Controllers\Api\Master\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
@@ -43,6 +44,8 @@ Route::group(['prefix' => 'master', 'middleware' => 'auth:sanctum'], function ()
 {
     Route::resource('category', CategoryController::class)
         ->middleware("method_and_permission:index@read category|store@create category|show@read category|destroy@delete category|update@update category");
+    Route::resource('product', ProductController::class)
+        ->middleware("method_and_permission:index@read product|store@create product|show@read product|destroy@delete product|update@update product");
 });
 
 Route::get('/', function ()

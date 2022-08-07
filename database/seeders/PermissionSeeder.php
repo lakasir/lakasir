@@ -42,7 +42,10 @@ class PermissionSeeder extends Seeder
                 'permissions' => [
                     'category' => [
                         'c', 'r', 'u', 'd'
-                    ]
+                    ],
+                    'product' => [
+                        'c', 'r', 'u', 'd'
+                    ],
                 ]
             ]
         ];
