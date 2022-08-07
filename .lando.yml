@@ -2,7 +2,9 @@ name: lakasir
 recipe: laravel
 services:
   appserver:
-    xdebug: true
+    xdebug: false
+  database:
+    portforward: 3305
 config:
   via: nginx
   php: '8.1'
