@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\Master\CategoryController;
+use App\Http\Controllers\Api\Master\MemberController;
 use App\Http\Controllers\Api\Master\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -46,6 +47,8 @@ Route::group(['prefix' => 'master', 'middleware' => 'auth:sanctum'], function ()
         ->middleware("method_and_permission:index@read category|store@create category|show@read category|destroy@delete category|update@update category");
     Route::resource('product', ProductController::class)
         ->middleware("method_and_permission:index@read product|store@create product|show@read product|destroy@delete product|update@update product");
+    Route::resource('member', MemberController::class)
+        ->middleware("method_and_permission:index@read member|store@create member|show@read member|destroy@delete member|update@update member");
 });
 
 Route::get('/', function ()
