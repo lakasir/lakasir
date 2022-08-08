@@ -50,6 +50,11 @@ Route::group(['prefix' => 'master', 'middleware' => 'auth:sanctum'], function ()
     Route::resource('member', MemberController::class)
         ->middleware("method_and_permission:index@read member|store@create member|show@read member|destroy@delete member|update@update member");
 });
+Route::group(['prefix' => 'transaction', 'middleware' => 'auth:sanctum'], function ()
+{
+    Route::resource('selling', CategoryController::class)
+        ->middleware("method_and_permission:index@read selling|store@create selling|show@read selling|destroy@delete selling|update@update selling");
+});
 
 Route::get('/', function ()
 {
