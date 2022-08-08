@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\Master\CategoryController;
 use App\Http\Controllers\Api\Master\MemberController;
 use App\Http\Controllers\Api\Master\ProductController;
+use App\Http\Controllers\Api\Transaction\SellingController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
@@ -52,7 +53,7 @@ Route::group(['prefix' => 'master', 'middleware' => 'auth:sanctum'], function ()
 });
 Route::group(['prefix' => 'transaction', 'middleware' => 'auth:sanctum'], function ()
 {
-    Route::resource('selling', CategoryController::class)
+    Route::resource('selling', SellingController::class)
         ->middleware("method_and_permission:index@read selling|store@create selling|show@read selling|destroy@delete selling|update@update selling");
 });
 
