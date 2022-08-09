@@ -49,6 +49,9 @@ class PermissionSeeder extends Seeder
                     'member' => [
                         'c', 'r', 'u', 'd'
                     ],
+                    'selling' => [
+                        'c', 'r', 'u', 'd'
+                    ],
                 ]
             ]
         ];
