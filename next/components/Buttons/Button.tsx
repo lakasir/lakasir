@@ -1,4 +1,4 @@
-import { classNames } from "@/utils/helpers";
+import { classNames } from "../../utils/helpers";
 
 export interface ButtonProps {
   children: string | string[] | JSX.Element[] | JSX.Element;
@@ -10,7 +10,7 @@ export function Button(props: ButtonProps): JSX.Element {
     <button
       className={classNames(
         props.className,
-        "inline-flex items-center border border-transparent shadow-sm text-sm leading-4 font-medium rounded-md text-white bg-lakasir-primary outline-none focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-lakasir-primary"
+        "my-3 items-center border border-transparent shadow-sm text-sm leading-4 font-medium rounded-md text-white bg-lakasir-primary outline-none focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-lakasir-primary"
       )}
     >
       {props.children}

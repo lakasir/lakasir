@@ -1,13 +1,13 @@
-import { classNames } from "@/utils/helpers";
 import { ExclamationCircleIcon } from "@heroicons/react/solid";
 import { FocusEventHandler } from "react";
+import { classNames } from "../../utils/helpers";
 
 export interface InputProps {
   label?: string | JSX.Element;
   name: string;
   placeholder?: string;
   className?: string;
-  type: "text" | "number" | "date";
+  type: "text" | "number" | "date" | "password" | "checkbox";
   prepend?: string | JSX.Element;
   append?: string | JSX.Element;
   error?: string;
@@ -18,12 +18,16 @@ export interface InputProps {
 export function Input(props: InputProps): JSX.Element {
   return (
     <div>
-      <label
-        htmlFor={`id-input-${props.name}`}
-        className="block text-sm font-medium text-gray-700"
-      >
-        {props.label}
-      </label>
+      {props.label ? (
+        <label
+          htmlFor={`id-input-${props.name}`}
+          className="block text-sm font-medium text-gray-700"
+        >
+          {props.label}
+        </label>
+      ) : (
+        ""
+      )}
       <div className="mt-1 relative rounded-md shadow-sm">
         {props.prepend}
         <input
@@ -35,9 +39,7 @@ export function Input(props: InputProps): JSX.Element {
           className={classNames(
             props.className,
             "p-3 transition ease-in-out border-2 shadow-sm block w-full sm:text-sm rounded-lg",
-            props.error
-              ? "text-red-900 border-red-300 placeholder-red-300 focus:outline-none focus:ring-red-500 focus:border-red-500"
-              : "border-gray-300 focus:outline-none focus:border-2 focus:ring-lakasir-primary focus:border-lakasir-primary"
+            "border-gray-300 focus:outline-none focus:border-2 focus:ring-lakasir-primary focus:border-lakasir-primary"
           )}
           placeholder={props.placeholder}
         />
