@@ -1,5 +1,5 @@
-import { classNames } from "@/utils/helpers";
 import { ExclamationCircleIcon } from "@heroicons/react/solid";
+import { classNames } from "../../utils/helpers";
 
 export interface IOptionSelect {
   label: string | number | undefined | JSX.Element;
@@ -32,13 +32,10 @@ export function Select(props: SelectProps): JSX.Element {
         <select
           name={props.name}
           id={`id-input-${props.name}`}
-          value={props.value}
           className={classNames(
             props.className,
             "p-3 transition ease-in-out border-2 shadow-sm block w-full sm:text-sm rounded-lg bg-transparent",
-            props.error
-              ? "text-red-900 border-red-300 placeholder-red-300 focus:outline-none focus:ring-red-500 focus:border-red-500"
-              : "border-gray-300 focus:outline-none focus:border-2 focus:ring-lakasir-primary focus:border-lakasir-primary"
+            "border-gray-300 focus:outline-none focus:border-2 focus:ring-lakasir-primary focus:border-lakasir-primary"
           )}
           placeholder={props.placeholder}
         >

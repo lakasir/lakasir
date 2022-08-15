@@ -1,4 +1,4 @@
-import { useLayoutEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 export interface ICheckbox {
   label?: string | JSX.Element;
@@ -13,10 +13,18 @@ export interface ICheckbox {
 
 const Checkbox = (props: ICheckbox) => {
   const [checked, setChecked] = useState(false);
-  useLayoutEffect(() => {
-    // const checkbox = document.getElementById(`id-input-${props.name}`);
-    // setChecked(checkbox?.getAttribute("value") ? true : false);
-  });
+  useEffect(() => {
+    const checkbox = document.querySelector(
+      `input[type=checkbox]#id-input-${props.name}`
+    );
+    if (checkbox != undefined) {
+      if (checkbox?.getAttribute("value")?.toString() == "true" ? true : false as boolean) {
+        setChecked(true);
+      } else {
+        setChecked(false);
+      }
+    }
+  }, []);
   return (
     <div className="relative flex items-start my-1">
       <div className="flex items-center h-5">

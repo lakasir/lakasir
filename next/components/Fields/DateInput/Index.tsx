@@ -1,9 +1,7 @@
-import { classNames } from "@/utils/helpers";
 import { Dialog, Transition } from "@headlessui/react";
 import { CalendarIcon, XIcon } from "@heroicons/react/solid";
 import { Fragment, useState } from "react";
-import Input from "@/components/Fields/Input";
-import Calendar from "./Calendar";
+import Input from "../Input";
 
 export interface DateInputProps {
   label?: string | JSX.Element;
@@ -86,7 +84,6 @@ export function DateInput(props: DateInputProps): JSX.Element {
                         </Dialog.Title>
                       </div>
                       <div className="relative mt-6 flex-1 px-4 sm:px-6">
-                        <Calendar />
                       </div>
                     </div>
                   </Dialog.Panel>
