@@ -1,6 +1,10 @@
 import { ExclamationCircleIcon } from "@heroicons/react/solid";
 import { FocusEventHandler } from "react";
-import { classNames } from "../../utils/helpers";
+import { classNames } from "../../../utils/helpers";
+
+interface ExtendProps {
+  errorIcon?: boolean;
+}
 
 export interface InputProps {
   label?: string | JSX.Element;
@@ -13,6 +17,7 @@ export interface InputProps {
   error?: string;
   value?: string | number | readonly string[] | undefined;
   onFocus?: FocusEventHandler<HTMLInputElement> | undefined;
+  disable?: ExtendProps;
 }
 
 export function Input(props: InputProps): JSX.Element {
@@ -28,7 +33,7 @@ export function Input(props: InputProps): JSX.Element {
       ) : (
         ""
       )}
-      <div className="mt-1 relative rounded-md shadow-sm">
+      <div className="flex mt-1 relative rounded-md shadow-sm">
         {props.prepend}
         <input
           onFocus={props.onFocus}
@@ -39,17 +44,25 @@ export function Input(props: InputProps): JSX.Element {
           className={classNames(
             props.className,
             "p-3 transition ease-in-out border-2 shadow-sm block w-full sm:text-sm rounded-lg",
-            "border-gray-300 focus:outline-none focus:border-2 focus:ring-lakasir-primary focus:border-lakasir-primary"
+            props.error
+              ? "border-red-300 focus:outline-none focus:border-2 focus:ring-red-300 focus:border-red-500"
+              : "border-gray-300 focus:outline-none focus:border-2 focus:ring-lakasir-primary focus:border-lakasir-primary"
           )}
           placeholder={props.placeholder}
         />
         {props.error ? (
-          <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-            <ExclamationCircleIcon
-              className="h-5 w-5 text-red-500"
-              aria-hidden="true"
-            />
-          </div>
+          <>
+            {!props.disable?.errorIcon ? (
+              <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                <ExclamationCircleIcon
+                  className="h-5 w-5 text-red-500"
+                  aria-hidden="true"
+                />
+              </div>
+            ) : (
+              ""
+            )}
+          </>
         ) : (
           props.append
         )}

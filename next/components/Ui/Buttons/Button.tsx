@@ -1,4 +1,4 @@
-import { classNames } from "../../utils/helpers";
+import { classNames } from "../../../utils/helpers";
 
 export interface ButtonProps {
   children: string | string[] | JSX.Element[] | JSX.Element;
