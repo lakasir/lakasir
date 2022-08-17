@@ -33,7 +33,7 @@ const Checkbox = (props: ICheckbox) => {
           name={props.name}
           id={`id-input-${props.name}`}
           checked={checked}
-          className="focus:ring-lakasir-primary h-4 w-4 text-indigo-600 border-gray-300 rounded"
+          className="focus:ring-lakasir-primary h-4 w-4 border-lakasir-primary text-lakasir-primary"
           onChange={(e) => {
             if (e.target.checked) {
               setChecked(true);

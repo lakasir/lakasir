@@ -68,7 +68,7 @@ export function Input(props: InputProps): JSX.Element {
         )}
       </div>
       {props.error ? (
-        <p className="mt-1 text-sm text-red-600" id="email-error">
+        <p className="mt-1 text-sm text-red-600" id={`${props.name}-error`}>
           {props.error}
         </p>
       ) : (

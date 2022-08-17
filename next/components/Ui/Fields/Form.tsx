@@ -4,6 +4,7 @@ export interface IForm {
   onSubmit: (e: FormEvent, values: any) => void;
   children: () => JSX.Element;
   method?: string;
+  className?: string;
   initialValue: any;
 }
 
@@ -56,6 +57,7 @@ const Form = (props: IForm): JSX.Element => {
   return (
     <div>
       <form
+        className={props.className}
         id="form__lakasir"
         method={props.method ?? "post"}
         onSubmit={(e) => {
