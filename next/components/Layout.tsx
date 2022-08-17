@@ -1,60 +1,26 @@
-import React, { ReactText, useEffect } from "react";
-import { defineCustomElements as ionDefineCustomElements } from "@ionic/core/loader";
-/* Core CSS required for Ionic components to work properly */
-import "@ionic/core/css/core.css";
-
-import { JSX as LocalJSX } from "@ionic/core";
-import { JSX as IoniconsJSX } from "ionicons";
-import { HTMLAttributes } from "react";
-
-type ToReact<T> = {
-  [P in keyof T]?: T[P] &
-    Omit<HTMLAttributes<Element>, "className"> & {
-      class?: string;
-      key?: ReactText;
-    };
-};
-
-declare global {
-  export namespace JSX {
-    interface IntrinsicElements
-      extends ToReact<
-        LocalJSX.IntrinsicElements & IoniconsJSX.IntrinsicElements
-      > {
-      key?: string;
-    }
-  }
+import Head from "next/head";
+interface ILayoutInterface {
+  children: JSX.Element;
 }
 
-export interface LayoutProps {
-  children: JSX.Element[] | string;
-  title?: string;
-  footer?: JSX.Element | string;
-  className?: string;
-}
-
-export function Layout(props: LayoutProps): JSX.Element {
-  useEffect(() => {
-    ionDefineCustomElements(window);
-  });
+const Layout = (props: ILayoutInterface) => {
   return (
-    <ion-app>
-      <ion-header translucent>
-        {props.title ? (
-          <ion-toolbar>
-            <ion-title>{props.footer}</ion-title>
-          </ion-toolbar>
-        ) : (
-          ""
-        )}
-      </ion-header>
-
-      <ion-content fullscreen>
-        <div className={props.className}>{props.children}</div>
-      </ion-content>
-      <ion-footer class="z-40">{props.footer ?? ""}</ion-footer>
-    </ion-app>
+    <>
+      <Head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700;1,900&display=swap"
+          rel="stylesheet"
+        />
+      </Head>
+      <body>{props.children}</body>
+    </>
   );
-}
+};
 
 export default Layout;
