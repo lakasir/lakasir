@@ -60,7 +60,7 @@ export function Input(props: InputProps): JSX.Element {
                 />
               </div>
             ) : (
-              ""
+              props.append
             )}
           </>
         ) : (
