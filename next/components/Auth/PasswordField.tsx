@@ -1,4 +1,4 @@
-import { EyeIcon, EyeOffIcon } from "@heroicons/react/solid";
+import { EyeIcon, EyeOffIcon } from "@heroicons/react/outline";
 import { useEffect, useState } from "react";
 import Input from "../Ui/Fields/Input";
 
@@ -15,7 +15,7 @@ const PasswordField = () => {
       <Input
         name={"password"}
         type={"password"}
-        label="Password"
+        label={<>Password<span className="text-red-500">*</span></>}
         className="pr-12"
         disable={{ errorIcon: true }}
         error="Error"
@@ -25,9 +25,9 @@ const PasswordField = () => {
             onClick={clickedEye}
           >
             {eyeOpen ? (
-              <EyeIcon onClick={clickedEye} />
+              <EyeIcon className="text-gray-500" onClick={clickedEye} />
             ) : (
-              <EyeOffIcon onClick={clickedEye} />
+              <EyeOffIcon className="text-gray-500" onClick={clickedEye} />
             )}
           </div>
         }
