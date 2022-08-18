@@ -1,11 +1,12 @@
 import type { NextPage } from "next";
+import Link from "next/link";
 import { FormEvent } from "react";
 import PasswordField from "../../components/Auth/PasswordField";
-import Layout from "../../components/Layout";
-import { Button } from "../../components/Ui/Buttons/Button";
+import Button from "../../components/Ui/Buttons/Button";
 import Checkbox from "../../components/Ui/Fields/Checkbox";
 import Form from "../../components/Ui/Fields/Form";
 import Input from "../../components/Ui/Fields/Input";
+import Layout from "../../components/Ui/Layout";
 
 const Login: NextPage = () => {
   const loginSubmit = (e: FormEvent, values: any) => {
@@ -50,6 +51,19 @@ const Login: NextPage = () => {
               </>
             )}
           </Form>
+          <div>
+            <Link href="/auth/forgot-password">
+              <a className="text-lakasir-primary font-medium flex justify-center text-center mb-7">
+                Forgot the password?
+              </a>
+            </Link>
+            <p className="font-medium text-center">
+              Dont have an account?{" "}
+              <Link href="/auth/register">
+                <a className="text-lakasir-primary">Sign up</a>
+              </Link>
+            </p>
+          </div>
         </div>
       </div>
     </Layout>
