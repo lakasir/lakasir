@@ -1,6 +1,7 @@
 import Head from "next/head";
 interface ILayoutInterface {
   children: JSX.Element;
+  title?: string;
 }
 
 const Layout = (props: ILayoutInterface) => {
@@ -18,7 +19,14 @@ const Layout = (props: ILayoutInterface) => {
           rel="stylesheet"
         />
       </Head>
-      {props.children}
+      {props.title ? (
+        <div className="flex justify-center items-center max-h-14 h-[52px] font-semibold text-xl">
+          {props.title}
+        </div>
+      ) : (
+        ""
+      )}
+      <div className="mx-auto w-11/12">{props.children}</div>
     </>
   );
 };

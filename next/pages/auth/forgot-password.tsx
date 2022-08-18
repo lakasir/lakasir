@@ -6,45 +6,43 @@ import Layout from "../../components/Ui/Layout";
 
 const ForgotPassword: NextPage = () => {
   return (
-    <Layout>
-      <div className="mx-auto w-11/12">
-        <div className="grid gap-16">
-          <p className="flex justify-center items-end h-56 text-[32px] font-semibold">
-            Forgot Password
-          </p>
-          <Form
-            className="space-y-5"
-            initialValue={{
-              password: "",
-              confirm_password: "",
-            }}
-            onSubmit={() => console.log("ok")}
-          >
-            {() => (
-              <>
-                <PasswordField
-                  label={
-                    <>
-                      Password<span className="text-red-500">*</span>
-                    </>
-                  }
-                  name={"password"}
-                />
-                <PasswordField
-                  label={
-                    <>
-                      Confirm Password<span className="text-red-500">*</span>
-                    </>
-                  }
-                  name={"confirm_password"}
-                />
-                <Button className="w-full py-4">Confirm</Button>
-              </>
-            )}
-          </Form>
-        </div>
+    <div className="mx-auto w-11/12">
+      <div className="grid gap-16">
+        <p className="flex justify-center items-end h-56 text-[32px] font-semibold">
+          Forgot Password
+        </p>
+        <Form
+          className="space-y-5"
+          initialValue={{
+            password: "",
+            confirm_password: "",
+          }}
+          onSubmit={() => console.log("ok")}
+        >
+          {() => (
+            <>
+              <PasswordField
+                label={
+                  <>
+                    Password<span className="text-red-500">*</span>
+                  </>
+                }
+                name={"password"}
+              />
+              <PasswordField
+                label={
+                  <>
+                    Confirm Password<span className="text-red-500">*</span>
+                  </>
+                }
+                name={"confirm_password"}
+              />
+              <Button className="w-full py-4">Confirm</Button>
+            </>
+          )}
+        </Form>
       </div>
-    </Layout>
+    </div>
   );
 };
 
