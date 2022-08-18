@@ -37,7 +37,14 @@ const Login: NextPage = () => {
                     </>
                   }
                 />
-                <PasswordField />
+                <PasswordField
+                  label={
+                    <>
+                      Password<span className="text-red-500">*</span>
+                    </>
+                  }
+                  name={"password"}
+                />
                 <Checkbox name={"remember_me"} label={"Remember Me"} />
                 <Button className="w-full py-4">Sign in</Button>
               </>

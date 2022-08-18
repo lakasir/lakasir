@@ -2,7 +2,12 @@ import { EyeIcon, EyeOffIcon } from "@heroicons/react/outline";
 import { useEffect, useState } from "react";
 import Input from "../Ui/Fields/Input";
 
-const PasswordField = () => {
+interface IPasswordInterface {
+  label: string | JSX.Element;
+  name: string;
+}
+
+const PasswordField = (props: IPasswordInterface) => {
   const [eyeOpen, setEyeOpen] = useState(false);
   const clickedEye = () => {
     const input = document.querySelector("#id-input-password");
@@ -13,9 +18,9 @@ const PasswordField = () => {
   return (
     <>
       <Input
-        name={"password"}
+        name={props.name}
         type={"password"}
-        label={<>Password<span className="text-red-500">*</span></>}
+        label={props.label}
         className="pr-12"
         disable={{ errorIcon: true }}
         error="Error"

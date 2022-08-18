@@ -18,7 +18,7 @@ const Layout = (props: ILayoutInterface) => {
           rel="stylesheet"
         />
       </Head>
-      <body>{props.children}</body>
+      {props.children}
     </>
   );
 };
