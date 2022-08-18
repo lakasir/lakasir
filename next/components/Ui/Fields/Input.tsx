@@ -20,7 +20,7 @@ export interface InputProps {
   disable?: ExtendProps;
 }
 
-export function Input(props: InputProps): JSX.Element {
+function Input(props: InputProps): JSX.Element {
   return (
     <div>
       {props.label ? (

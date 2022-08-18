@@ -5,7 +5,7 @@ export interface ButtonProps {
   className?: string;
 }
 
-export function Button(props: ButtonProps): JSX.Element {
+function Button(props: ButtonProps): JSX.Element {
   return (
     <button
       className={classNames(
