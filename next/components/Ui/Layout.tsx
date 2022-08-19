@@ -24,19 +24,20 @@ const Layout = (props: ILayoutInterface) => {
         />
       </Head>
       {props.title || props.back ? (
-        <div className="flex items-center max-h-14 h-[52px] font-semibold text-xl mx-auto w-11/12">
+        <div className="flex items-center max-h-14 h-14 font-semibold py-8 text-xl mx-auto w-full top-0 fixed z-50 bg-gray-100-c drop-shadow-2xl-c shadow-black-c">
           {props.back ? (
-            <span className="cursor-pointer" onClick={() => router.back()}>
+            <span className="cursor-pointer ml-2 h-5 w-5" onClick={() => router.back()}>
               <ArrowLeftIcon className="h-5 w-5" />
             </span>
           ) : (
             ""
           )}
-          <p className="text-center w-full mr-4">{props.title}</p>
+          <p className="text-center w-full mr-8">{props.title}</p>
         </div>
       ) : (
         ""
       )}
+      <div className="h-20 w-20"></div>
       <div className="mx-auto w-11/12">{props.children}</div>
     </>
   );

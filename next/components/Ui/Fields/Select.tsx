@@ -1,5 +1,5 @@
 import { ExclamationCircleIcon } from "@heroicons/react/solid";
-import { classNames } from "../../utils/helpers";
+import { classNames } from "../../../utils/helpers";
 
 export interface IOptionSelect {
   label: string | number | undefined | JSX.Element;

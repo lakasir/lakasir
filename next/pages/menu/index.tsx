@@ -52,7 +52,7 @@ const menu: IMenuInterface[] = [
 const Menu: NextPage = () => {
   return (
     <Layout title="Menu">
-      <div className="py-9 space-y-8">
+      <div className="py-3 space-y-8">
         {menu.map((m, index) => (
           <Link href={m.href} key={index}>
             <a className="block">

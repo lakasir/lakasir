@@ -58,13 +58,97 @@ const product: IMenuInterface[] = [
       />
     ),
   },
+  {
+    label: "Product A",
+    description: "100 stock",
+    image: (
+      <img
+        src={"./../assets/products/product-image.jpg"}
+        width="100%"
+        height="100%"
+        className="rounded-lg"
+      />
+    ),
+  },
+  {
+    label: "Product A",
+    description: "100 stock",
+    image: (
+      <img
+        src={"./../assets/products/product-image.jpg"}
+        width="100%"
+        height="100%"
+        className="rounded-lg"
+      />
+    ),
+  },
+  {
+    label: "Product A",
+    description: "100 stock",
+    image: (
+      <img
+        src={"./../assets/products/product-image.jpg"}
+        width="100%"
+        height="100%"
+        className="rounded-lg"
+      />
+    ),
+  },
+  {
+    label: "Product A",
+    description: "100 stock",
+    image: (
+      <img
+        src={"./../assets/products/product-image.jpg"}
+        width="100%"
+        height="100%"
+        className="rounded-lg"
+      />
+    ),
+  },
+  {
+    label: "Product A",
+    description: "100 stock",
+    image: (
+      <img
+        src={"./../assets/products/product-image.jpg"}
+        width="100%"
+        height="100%"
+        className="rounded-lg"
+      />
+    ),
+  },
+  {
+    label: "Product A",
+    description: "100 stock",
+    image: (
+      <img
+        src={"./../assets/products/product-image.jpg"}
+        width="100%"
+        height="100%"
+        className="rounded-lg"
+      />
+    ),
+  },
+  {
+    label: "Product A",
+    description: "100 stock",
+    image: (
+      <img
+        src={"./../assets/products/product-image.jpg"}
+        width="100%"
+        height="100%"
+        className="rounded-lg"
+      />
+    ),
+  },
 ];
 
 const Product: NextPage = () => {
   return (
     <Layout title="Product" back={true}>
       <div>
-        <div className="py-9 space-y-8 mb-12">
+        <div className="py-3 space-y-8 mb-24">
           <a className="block relative">
             <div className="w-full h-24 rounded-lg overflow-hidden cursor-pointer">
               <div className="bg-lakasir-primary rounded-lg w-[91px] h-[93px] absolute flex items-center justify-center overflow-hidden">
@@ -157,9 +241,11 @@ const Product: NextPage = () => {
               />
             </Button>
           </div>
+          <Link href={"/menu/product/add"}>
           <Button className="w-4/5 py-4 rounded-xl drop-shadow-2xl text-lg font-semibold h-14">
-            Add Product
+          Add Product
           </Button>
+          </Link>
         </div>
       </div>
     </Layout>
