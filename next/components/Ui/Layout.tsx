@@ -26,7 +26,10 @@ const Layout = (props: ILayoutInterface) => {
       {props.title || props.back ? (
         <div className="flex items-center max-h-14 h-14 font-semibold py-8 text-xl mx-auto w-full top-0 fixed z-50 bg-gray-100-c drop-shadow-2xl-c shadow-black-c">
           {props.back ? (
-            <span className="cursor-pointer ml-2 h-5 w-5" onClick={() => router.back()}>
+            <span
+              className="cursor-pointer ml-2 h-5 w-5"
+              onClick={() => router.back()}
+            >
               <ArrowLeftIcon className="h-5 w-5" />
             </span>
           ) : (

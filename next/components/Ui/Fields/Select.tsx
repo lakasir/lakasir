@@ -6,6 +6,10 @@ export interface IOptionSelect {
   value: string | number | undefined;
 }
 
+interface ExtendProps {
+  errorIcon?: boolean;
+}
+
 export interface SelectProps {
   label?: string | JSX.Element;
   name: string;
@@ -16,18 +20,23 @@ export interface SelectProps {
   error?: string;
   value?: string | number | undefined;
   options?: IOptionSelect[];
+  disable?: ExtendProps;
 }
 
 export function Select(props: SelectProps): JSX.Element {
   return (
     <div>
-      <label
-        htmlFor={`id-input-${props.name}`}
-        className="block text-sm font-medium text-gray-700"
-      >
-        {props.label}
-      </label>
-      <div className="mt-1 rounded-md shadow-sm">
+      {props.label ? (
+        <label
+          htmlFor={`id-input-${props.name}`}
+          className="block text-sm font-medium text-gray-700"
+        >
+          {props.label}
+        </label>
+      ) : (
+        ""
+      )}
+      <div className="flex mt-1 rounded-md shadow-sm">
         {props.prepend}
         <select
           name={props.name}
@@ -46,12 +55,18 @@ export function Select(props: SelectProps): JSX.Element {
           ))}
         </select>
         {props.error ? (
-          <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-            <ExclamationCircleIcon
-              className="h-5 w-5 text-red-500"
-              aria-hidden="true"
-            />
-          </div>
+          <>
+            {!props.disable?.errorIcon ? (
+              <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                <ExclamationCircleIcon
+                  className="h-5 w-5 text-red-500"
+                  aria-hidden="true"
+                />
+              </div>
+            ) : (
+              props.append
+            )}
+          </>
         ) : (
           props.append
         )}

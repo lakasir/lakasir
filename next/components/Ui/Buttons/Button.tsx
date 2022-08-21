@@ -6,7 +6,7 @@ export interface ButtonProps {
   onClick?: () => void;
 }
 
-function Button(props: ButtonProps): JSX.Element {
+const Button = (props: ButtonProps): JSX.Element => {
   return (
     <button
       onClick={props.onClick}

@@ -1,4 +1,5 @@
 import { NextPage } from "next";
+import Link from "next/link";
 import Button from "../../../components/Ui/Buttons/Button";
 import Form from "../../../components/Ui/Fields/Form";
 import Input from "../../../components/Ui/Fields/Input";
@@ -18,27 +19,42 @@ const AddProduct: NextPage = () => {
             initial_price: "",
             selling_price: "",
             type: "",
-            unit: ""
+            unit: "",
           }}
           onSubmit={() => console.log("ok")}
         >
           {() => (
             <>
-              <Input
-                name={"email"}
-                type={"text"}
-                label={
-                  <>
-                    Name<span className="text-red-500">*</span>
-                  </>
-                }
-              />
+              <div className="flex justify-between">
+                <div className="w-36 h-36 bg-transparent border-[10px] border-lakasir-primary rounded-[20px] flex justify-center items-center cursor-pointer">
+                  <img src={"./../../assets/icons/Image.svg"} />
+                </div>
+                <Input
+                  name={"email"}
+                  type={"text"}
+                  label={
+                    <>
+                      Name<span className="text-red-500">*</span>
+                    </>
+                  }
+                />
+              </div>
               <Select
                 name={"category"}
                 label={
                   <>
                     Category<span className="text-red-500">*</span>
                   </>
+                }
+                className="rounded-r-none border-r-0"
+                append={
+                  <Link href={"/menu/category"} className="block">
+                    <a
+                      className="bg-gray-100 border-2 border-gray-200 rounded-r-lg w-1/5 flex justify-center items-center cursor-pointer"
+                    >
+                      <img src="./../../assets/icons/Plus.svg" />
+                    </a>
+                  </Link>
                 }
               />
               <Input
