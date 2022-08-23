@@ -2,6 +2,7 @@ import { NextPage } from "next";
 import Link from "next/link";
 import { useState } from "react";
 import Button from "../../../components/Ui/Buttons/Button";
+import FloatingActionButton from "../../../components/Ui/Buttons/FAB";
 import Input from "../../../components/Ui/Fields/Input";
 import Layout from "../../../components/Ui/Layout";
 
@@ -171,78 +172,21 @@ const Product: NextPage = () => {
               </Link>
             ))}
           </div>
-          <div className="flex justify-between items-end fixed bottom-0 w-11/12 right-4">
-            <div>
-              {show.option ? (
-                <div id="action-option">
-                  <Button
-                    className="w-14 py-4 rounded-full flex justify-center items-center drop-shadow-2xl h-14 bg-red-500 mb-5"
-                    onClick={() => setShow({ search: !show.search })}
-                  >
-                    <img
-                      src={"./../assets/icons/Search.svg"}
-                      width="30"
-                      height="30"
-                    />
-                  </Button>
-                  <Button
-                    className="w-14 py-4 rounded-full flex justify-center items-center drop-shadow-2xl h-14 bg-red-500 mb-5"
-                    onClick={() => console.log("ok")}
-                  >
-                    <img
-                      src={"./../assets/icons/Diversity.svg"}
-                      width="30"
-                      height="30"
-                    />
-                  </Button>
-                  <Button
-                    className="w-14 py-4 rounded-full flex justify-center items-center drop-shadow-2xl h-14 bg-red-500 mb-5"
-                    onClick={() => console.log("ok")}
-                  >
-                    <img
-                      src={"./../assets/icons/Add to Collection.svg"}
-                      width="30"
-                      height="30"
-                    />
-                  </Button>
-                  <Button
-                    className="w-14 py-4 rounded-full flex justify-center items-center drop-shadow-2xl h-14 bg-red-500 mb-5"
-                    onClick={() => {
-                      document
-                        .querySelectorAll("#action-detail")
-                        .forEach((e: Element) => {
-                          e.setAttribute("href", "");
-                        });
-                      setShow({ delete: !show.delete });
-                    }}
-                  >
-                    <img
-                      src={"./../assets/icons/Delete.svg"}
-                      width="30"
-                      height="30"
-                    />
-                  </Button>
-                </div>
-              ) : (
-                ""
-              )}
-              <Button
-                className="w-14 py-4 rounded-xl flex justify-center items-center drop-shadow-2xl h-14"
-                onClick={() => setShow({ option: !show.option })}
-              >
-                <img
-                  src={"./../assets/icons/Single Choice.svg"}
-                  width="30"
-                  height="30"
-                />
-              </Button>
-            </div>
-            <Link href={"/menu/product/add"}>
-              <Button className="w-4/5 py-4 rounded-xl drop-shadow-2xl text-lg font-semibold h-14">
-                Add Product
-              </Button>
-            </Link>
-          </div>
+          <FloatingActionButton
+            options={[
+              {
+                label: "Search",
+                icon: (
+                  <img
+                    src={"./../assets/icons/Search.svg"}
+                    width="30"
+                    height="30"
+                  />
+                ),
+                onClick: () => {},
+              },
+            ]}
+          />
         </div>
         {show.search ? (
           <div
