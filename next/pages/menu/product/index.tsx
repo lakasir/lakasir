@@ -1,7 +1,6 @@
 import { NextPage } from "next";
 import Link from "next/link";
 import { useState } from "react";
-import Button from "../../../components/Ui/Buttons/Button";
 import FloatingActionButton from "../../../components/Ui/Buttons/FAB";
 import Input from "../../../components/Ui/Fields/Input";
 import Layout from "../../../components/Ui/Layout";
@@ -173,6 +172,8 @@ const Product: NextPage = () => {
             ))}
           </div>
           <FloatingActionButton
+            title="Add Product"
+            action="/menu/product/add"
             options={[
               {
                 label: "Search",
@@ -183,7 +184,40 @@ const Product: NextPage = () => {
                     height="30"
                   />
                 ),
+                onClick: () => setShow({ search: !show.search }),
+              },
+              {
+                label: "Category",
+                icon: (
+                  <img
+                    src={"./../assets/icons/Diversity.svg"}
+                    width="30"
+                    height="30"
+                  />
+                ),
                 onClick: () => {},
+              },
+              {
+                label: "Stock",
+                icon: (
+                  <img
+                    src={"./../assets/icons/Add to Collection.svg"}
+                    width="30"
+                    height="30"
+                  />
+                ),
+                onClick: () => {},
+              },
+              {
+                label: "Delete",
+                icon: (
+                  <img
+                    src={"./../assets/icons/Delete.svg"}
+                    width="30"
+                    height="30"
+                  />
+                ),
+                onClick: () => setShow({delete: !show.delete}),
               },
             ]}
           />
