@@ -1,5 +1,6 @@
 import { NextPage } from "next";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { useState } from "react";
 import FloatingActionButton from "../../../components/Ui/Buttons/FAB";
 import Input from "../../../components/Ui/Fields/Input";
@@ -68,6 +69,8 @@ const Product: NextPage = () => {
     search: false,
     confirm: false,
   });
+
+  const router = useRouter();
 
   return (
     <Layout title="Product" back={true}>
@@ -196,7 +199,7 @@ const Product: NextPage = () => {
                     height="30"
                   />
                 ),
-                onClick: () => {},
+                onClick: () => router.push("/menu/category"),
               },
               {
                 label: "Stock",
@@ -218,7 +221,6 @@ const Product: NextPage = () => {
                     height="30"
                   />
                 ),
-                confirmable: true,
                 onClick: () => setShow({delete: !show.delete}),
               },
             ]}
