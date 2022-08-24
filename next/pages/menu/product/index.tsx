@@ -174,6 +174,7 @@ const Product: NextPage = () => {
           <FloatingActionButton
             title="Add Product"
             action="/menu/product/add"
+            dismissable
             options={[
               {
                 label: "Search",
@@ -217,6 +218,7 @@ const Product: NextPage = () => {
                     height="30"
                   />
                 ),
+                confirmable: true,
                 onClick: () => setShow({delete: !show.delete}),
               },
             ]}

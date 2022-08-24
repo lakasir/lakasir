@@ -14,6 +14,7 @@ interface IFloatingActionButtonInterface {
   options: IOptionAction[];
   title: string;
   action: string;
+  dismissable?: boolean;
 }
 
 const FloatingActionButton = (props: IFloatingActionButtonInterface) => {
@@ -31,21 +32,24 @@ const FloatingActionButton = (props: IFloatingActionButtonInterface) => {
                 <div className="w-1/6">
                   <Button
                     className="w-14 rounded-full flex justify-center items-center drop-shadow-2xl h-14 bg-red-500 my-0"
-                    onClick={
-                      !el.confirmable
-                        ? el.onClick
-                        : () => {
-                            const labelEl = document.querySelector(
-                              `#label-${index}`
-                            );
-                            labelEl?.classList.add("hidden");
+                    onClick={() => {
+                      if (!el.confirmable) {
+                        el.onClick();
+                        if (props.dismissable) {
+                          setShow({ option: !show.option });
+                        }
+                      } else {
+                        const labelEl = document.querySelector(
+                          `#label-${index}`
+                        );
+                        labelEl?.classList.add("hidden");
 
-                            const confirmEl = document.querySelector(
-                              `#confirm-${index}`
-                            );
-                            confirmEl?.classList.remove("hidden");
-                          }
-                    }
+                        const confirmEl = document.querySelector(
+                          `#confirm-${index}`
+                        );
+                        confirmEl?.classList.remove("hidden");
+                      }
+                    }}
                   >
                     {el.icon}
                   </Button>
@@ -67,25 +71,30 @@ const FloatingActionButton = (props: IFloatingActionButtonInterface) => {
                             `#confirm-${index}`
                           );
                           confirmEl?.classList.add("hidden");
-                            const labelEl = document.querySelector(
-                              `#label-${index}`
-                            );
-                            labelEl?.classList.remove("hidden");
+                          const labelEl = document.querySelector(
+                            `#label-${index}`
+                          );
+                          labelEl?.classList.remove("hidden");
+                          el.onClick();
+                          if (props.dismissable) {
+                            setShow({ option: !show.option });
+                          }
                         }}
                       >
                         Confirm!
                       </Button>
-                      <Button className="w-1/2 h-12 my-0 rounded-xl bg-gray-100 text-black drop-shadow-md"
+                      <Button
+                        className="w-1/2 h-12 my-0 rounded-xl bg-gray-100 text-black drop-shadow-md"
                         onClick={() => {
                           alert("Canceled");
                           const confirmEl = document.querySelector(
                             `#confirm-${index}`
                           );
                           confirmEl?.classList.add("hidden");
-                            const labelEl = document.querySelector(
-                              `#label-${index}`
-                            );
-                            labelEl?.classList.remove("hidden");
+                          const labelEl = document.querySelector(
+                            `#label-${index}`
+                          );
+                          labelEl?.classList.remove("hidden");
                         }}
                       >
                         Cancel

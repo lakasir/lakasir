@@ -31,8 +31,8 @@ const FormProduct = (props: IFormProductInterface) => {
       {() => (
         <>
           <div className="flex justify-between">
-            <div className="w-36 h-36 bg-transparent border-[10px] border-lakasir-primary rounded-[20px] flex justify-center items-center cursor-pointer">
-              <Image src={"/assets/icons/Image.svg"} width={"100%"} height={"100%"}/>
+            <div className="w-28 h-28 bg-transparent border-[10px] border-lakasir-primary rounded-[20px] flex justify-center items-center cursor-pointer">
+              <Image src={"/assets/icons/Image.svg"} width={"50%"} height={"50%"}/>
             </div>
             <Input
               name={"email"}

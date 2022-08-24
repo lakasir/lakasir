@@ -66,6 +66,7 @@ const Detail: NextPage = () => {
         <FloatingActionButton
           action={`/menu/product/edit/${id}`}
           title="Edit Product"
+          dismissable
           options={[
             {
               label: "Edit Property",
@@ -87,7 +88,7 @@ const Detail: NextPage = () => {
                   height={30}
                 />
               ),
-              onClick: () => {},
+              onClick: () => {console.log("OK")},
             },
             {
               label: "Delete",
@@ -98,7 +99,8 @@ const Detail: NextPage = () => {
                   height={30}
                 />
               ),
-              onClick: () => {},
+              confirmable: true,
+              onClick: () => {console.log("OK")},
             },
           ]}
         />
