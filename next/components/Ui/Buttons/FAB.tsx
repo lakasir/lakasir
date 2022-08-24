@@ -13,8 +13,9 @@ interface IOptionAction {
 interface IFloatingActionButtonInterface {
   options: IOptionAction[];
   title: string;
-  action: string;
   dismissable?: boolean;
+  action?: string;
+  onClick?: () => void;
 }
 
 const FloatingActionButton = (props: IFloatingActionButtonInterface) => {
@@ -123,11 +124,25 @@ const FloatingActionButton = (props: IFloatingActionButtonInterface) => {
           </Button>
         </div>
       </div>
-      <Link href={props.action}>
-        <Button className="w-4/5 py-4 rounded-xl drop-shadow-2xl text-lg font-semibold h-14 absolute right-0">
+      {props.onClick ? (
+        <Button
+          className="w-4/5 py-4 rounded-xl drop-shadow-2xl text-lg font-semibold h-14 absolute right-0"
+          onClick={props.onClick}
+        >
           {props.title}
         </Button>
-      </Link>
+      ) : (
+        ""
+      )}
+      {props.action ? (
+        <Link href={props.action}>
+          <Button className="w-4/5 py-4 rounded-xl drop-shadow-2xl text-lg font-semibold h-14 absolute right-0">
+            {props.title}
+          </Button>
+        </Link>
+      ) : (
+        ""
+      )}
     </div>
   );
 };
