@@ -4,6 +4,7 @@ export interface IForm {
   onSubmit: (e: FormEvent, values: any) => void;
   children: () => JSX.Element;
   method?: string;
+  id?: string;
   className?: string;
   initialValue: any;
 }
@@ -69,7 +70,7 @@ const Form = (props: IForm): JSX.Element => {
               const name = input[i].getAttribute("name") ?? "";
               const value = input[i].value;
               if (input[i].getAttribute("type") == "checkbox") {
-                values[name] = input[i].checked
+                values[name] = input[i].checked;
               } else {
                 values[name] = value;
               }
