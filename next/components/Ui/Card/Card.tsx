@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { classNames } from "../../../utils/helpers";
 
 interface ClassName {
@@ -12,15 +13,25 @@ interface ICardInterface {
   image?: JSX.Element;
   label: string;
   description?: string;
+  sub_description?: string;
   action?: JSX.Element;
   id?: number;
   class?: ClassName;
+  disable?: ActionAble;
+}
+
+interface ActionAble {
+  confirmable: boolean;
 }
 
 const Card = (props: ICardInterface) => {
+  const [disable, setDisable] = useState<ActionAble>({
+    confirmable: false,
+  });
+
   return (
     <div className="block relative" id="action-detail">
-      {props.confirmable ? (
+      {props.confirmable && !disable.confirmable ? (
         <div
           className={classNames(
             "w-full rounded-lg overflow-hidden cursor-pointer hidden"
@@ -36,6 +47,9 @@ const Card = (props: ICardInterface) => {
               document
                 .querySelector(`#action-confirm-${props.id}`)
                 ?.classList.add("hidden");
+              document
+                .querySelector(`#item-list-${props.id}`)
+                ?.classList.remove("hidden");
 
               if (props.confirmable != undefined) {
                 props.confirmable();
@@ -83,7 +97,8 @@ const Card = (props: ICardInterface) => {
           {props.image ? <div className="w-1/2 h-[93px] mr-7"></div> : ""}
           <div className="items-center w-full">
             <p className="text-xl">{props.label}</p>
-            <p className="font-light text-sm">{props.description}</p>
+            <p className="font-extralight text-sm">{props.description}</p>
+            <p className="font-light text-sm">{props.sub_description}</p>
           </div>
           <div
             className="w-1/2 h-full"
@@ -94,9 +109,15 @@ const Card = (props: ICardInterface) => {
               document
                 .querySelector(`#action-confirm-${props.id}`)
                 ?.classList.add("flex");
-              document
-                .querySelector(`#item-list-${props.id}`)
-                ?.classList.add("hidden");
+              if (!props.disable?.confirmable) {
+                document
+                  .querySelector(`#item-list-${props.id}`)
+                  ?.classList.add("hidden");
+              }
+
+              if (props.disable?.confirmable) {
+                setDisable({ confirmable: true });
+              }
             }}
           >
             {props.action ? props.action : ""}
