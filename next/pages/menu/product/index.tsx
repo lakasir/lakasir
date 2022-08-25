@@ -3,13 +3,15 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import FloatingActionButton from "../../../components/Ui/Buttons/FAB";
+import Card from "../../../components/Ui/Card/Card";
+import CardLink from "../../../components/Ui/Card/CardLink";
 import Input from "../../../components/Ui/Fields/Input";
 import Layout from "../../../components/Ui/Layout";
 
 interface IMenuInterface {
   label: string;
   description: string;
-  image: string | JSX.Element;
+  image: JSX.Element;
   id: number;
 }
 
@@ -79,98 +81,36 @@ const Product: NextPage = () => {
           <div className="py-3 space-y-8 mb-24">
             {product.map((m, index) => (
               <Link href={`/menu/product/${m.id}`} key={index}>
-                <a
-                  className="block relative"
-                  id="action-detail"
-                  onClick={(e) => {
+                <CardLink
+                  onClick={(e: React.MouseEvent<HTMLAnchorElement>) => {
                     if (show.delete) e.preventDefault();
                   }}
                 >
-                  <div
-                    className="w-full h-24 rounded-lg overflow-hidden cursor-pointer hidden"
-                    id={`delete-confirm-${m.id}`}
-                  >
-                    <div
-                      className="w-1/2 flex items-center justify-center my-auto text-2xl font-semibold bg-red-600 h-full text-white"
-                      onClick={() => {
-                        document
-                          .querySelector(`#delete-confirm-${m.id}`)
-                          ?.classList.remove("flex");
-                        document
-                          .querySelector(`#delete-confirm-${m.id}`)
-                          ?.classList.add("hidden");
-                      }}
-                    >
-                      Confirm!
-                    </div>
-                    <div
-                      className="w-1/2 flex items-center justify-center my-auto text-2xl font-semibold h-full bg-gray-200"
-                      id={`cancel-delete${m.id}`}
-                      onClick={() => {
-                        document
-                          .querySelector(`#delete-confirm-${m.id}`)
-                          ?.classList.remove("flex");
-                        document
-                          .querySelector(`#delete-confirm-${m.id}`)
-                          ?.classList.add("hidden");
-                        document
-                          .querySelector(`#product-list-${m.id}`)
-                          ?.classList.remove("hidden");
-                      }}
-                    >
-                      Cancel!
-                    </div>
-                  </div>
-                  <div
-                    className="w-full h-24 rounded-lg overflow-hidden cursor-pointer"
-                    id={`product-list-${m.id}`}
-                  >
-                    <div className="bg-lakasir-primary rounded-lg w-[91px] h-[93px] absolute flex items-center justify-center overflow-hidden">
-                      <img
-                        src={"./../assets/products/product-image.jpg"}
-                        width="100%"
-                        height="100%"
-                        className="rounded-lg"
-                      />
-                    </div>
-                    <div className="flex">
-                      <div className="bg-lakasir-primary rounded-lg w-[91px] h-[93px]"></div>
-                      <div className="w-3/4 flex">
-                        <div className="items-center ml-7 mt-5">
-                          <p className="text-xl">{m.label}</p>
-                          <p className="font-light text-sm">{m.description}</p>
-                        </div>
-                      </div>
-                      {show.delete ? (
+                  <Card
+                    label={m.label}
+                    description={m.description}
+                    image={m.image}
+                    class={{ confirmable: { confirm: "py-7", cancel: "py-7" } }}
+                    confirmable={() => alert("CONFIRMED")}
+                    action={
+                      show.delete ? (
                         <div
-                          className="mr-auto"
+                          className="bg-gray-200 flex justify-center items-center rounded-r-lg h-[93px]"
                           id="action-delete"
-                          onClick={() => {
-                            document
-                              .querySelector(`#delete-confirm-${m.id}`)
-                              ?.classList.remove("hidden");
-                            document
-                              .querySelector(`#delete-confirm-${m.id}`)
-                              ?.classList.add("flex");
-                            document
-                              .querySelector(`#product-list-${m.id}`)
-                              ?.classList.add("hidden");
-                          }}
                         >
-                          <div className="absolute right-0 w-1/4 h-[93px] bg-gray-200 flex justify-center items-center rounded-r-lg">
-                            <img
-                              src={"./../assets/icons/Red Delete.svg"}
-                              width="50"
-                              height="50"
-                            />
-                          </div>
+                          <img
+                            src={"./../assets/icons/Red Delete.svg"}
+                            width="50"
+                            height="50"
+                          />
                         </div>
                       ) : (
-                        ""
-                      )}
-                    </div>
-                  </div>
-                </a>
+                        <></>
+                      )
+                    }
+                    id={m.id}
+                  />
+                </CardLink>
               </Link>
             ))}
           </div>
@@ -221,7 +161,7 @@ const Product: NextPage = () => {
                     height="30"
                   />
                 ),
-                onClick: () => setShow({delete: !show.delete}),
+                onClick: () => setShow({ delete: !show.delete }),
               },
             ]}
           />

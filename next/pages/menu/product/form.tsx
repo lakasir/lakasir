@@ -35,7 +35,7 @@ const FormProduct = (props: IFormProductInterface) => {
               <Image src={"/assets/icons/Image.svg"} width={"50%"} height={"50%"}/>
             </div>
             <Input
-              name={"email"}
+              name={"name"}
               type={"text"}
               label={
                 <>
