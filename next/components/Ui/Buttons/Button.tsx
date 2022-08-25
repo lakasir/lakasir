@@ -3,7 +3,7 @@ import { classNames } from "../../../utils/helpers";
 export interface ButtonProps {
   children: string | string[] | JSX.Element[] | JSX.Element;
   className?: string;
-  onClick?: () => void;
+  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 const Button = (props: ButtonProps): JSX.Element => {
