@@ -1,10 +1,14 @@
 import { ArrowLeftIcon } from "@heroicons/react/solid";
 import Head from "next/head";
 import { useRouter } from "next/router";
+import { classNames } from "../../utils/helpers";
 interface ILayoutInterface {
   children: JSX.Element;
   title?: string;
   back?: boolean;
+  background?: string;
+  textColor?: string;
+  className?: string;
 }
 
 const Layout = (props: ILayoutInterface) => {
@@ -24,7 +28,13 @@ const Layout = (props: ILayoutInterface) => {
         />
       </Head>
       {props.title || props.back ? (
-        <div className="flex items-center max-h-14 h-14 font-semibold py-8 text-xl mx-auto w-full top-0 fixed z-50 bg-gray-100-c drop-shadow-2xl-c shadow-black-c">
+        <div
+          className={classNames(
+            `text-${props.textColor}`,
+            `bg-${props.background}`,
+            "flex items-center max-h-14 h-14 font-semibold py-8 text-xl mx-auto w-full top-0 fixed z-50 bg-gray-100-c drop-shadow-2xl-c shadow-black-c"
+          )}
+        >
           {props.back ? (
             <span
               className="cursor-pointer ml-2 h-5 w-5"
@@ -41,7 +51,7 @@ const Layout = (props: ILayoutInterface) => {
         ""
       )}
       <div className="h-20 w-20"></div>
-      <div className="mx-auto w-11/12">{props.children}</div>
+      <div className={classNames("mx-auto w-11/12")}>{props.children}</div>
     </>
   );
 };
