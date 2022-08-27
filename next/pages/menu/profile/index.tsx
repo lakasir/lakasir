@@ -12,15 +12,24 @@ const Profile: NextPage = () => {
       background="[#FF6600]"
       textColor="white"
       append={
-        <div className="w-screen h-96 bg-lakasir-primary flex justify-center items-center">
-          <div className="w-40 h-40 bg-white rounded-full flex items-center justify-center ml-8">
-            <UserIcon className="text-gray-300 w-24 h-24" />
+        <div>
+          <div className="w-screen h-96 bg-lakasir-primary flex justify-center items-center">
+            <div>
+              <div className="w-40 h-40 bg-white rounded-full flex items-center justify-center">
+                <UserIcon className="text-gray-300 w-24 h-24" />
+              </div>
+              <p className="text-center mt-5 text-2xl text-white font-semibold">
+                Profile Name
+              </p>
+            </div>
+            <Link href="/menu/profile/edit">
+              <a className="relative -top-10 left-3">
+                <div className="absolute">
+                  <PencilIcon className="text-white w-7 h-7" />
+                </div>
+              </a>
+            </Link>
           </div>
-          <Link href="/menu/profile/edit">
-            <a>
-              <PencilIcon className="text-white w-7 h-7 ml-3" />
-            </a>
-          </Link>
         </div>
       }
     >
