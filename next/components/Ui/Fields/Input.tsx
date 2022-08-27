@@ -11,13 +11,15 @@ export interface InputProps {
   name: string;
   placeholder?: string;
   className?: string;
-  type: "text" | "number" | "date" | "password" | "checkbox";
+  type: "text" | "number" | "date" | "password" | "checkbox" | "textarea";
   prepend?: string | JSX.Element;
   append?: string | JSX.Element;
   error?: string;
   value?: string | number | readonly string[] | undefined;
   onFocus?: FocusEventHandler<HTMLInputElement> | undefined;
   disable?: ExtendProps;
+  rows?: number;
+  cols?: number;
 }
 
 function Input(props: InputProps): JSX.Element {
@@ -35,21 +37,39 @@ function Input(props: InputProps): JSX.Element {
       )}
       <div className="flex mt-1 relative rounded-md shadow-sm">
         {props.prepend}
-        <input
-          onFocus={props.onFocus}
-          type={props.type}
-          name={props.name}
-          id={`id-input-${props.name}`}
-          value={props.value}
-          className={classNames(
-            props.className,
-            "p-3 transition ease-in-out border-2 shadow-sm block w-full sm:text-sm rounded-lg",
-            props.error
-              ? "border-red-300 focus:outline-none focus:border-2 focus:ring-red-300 focus:border-red-500"
-              : "border-gray-300 focus:outline-none focus:border-2 focus:ring-lakasir-primary focus:border-lakasir-primary"
-          )}
-          placeholder={props.placeholder}
-        />
+        {props.type == "textarea" ? (
+          <textarea
+            onFocus={(props.onFocus as FocusEventHandler)}
+            name={props.name}
+            id={`id-input-${props.name}`}
+            className={classNames(
+              props.className,
+              "p-3 transition ease-in-out border-2 shadow-sm block w-full sm:text-sm rounded-lg",
+              props.error
+                ? "border-red-300 focus:outline-none focus:border-2 focus:ring-red-300 focus:border-red-500"
+                : "border-gray-300 focus:outline-none focus:border-2 focus:ring-lakasir-primary focus:border-lakasir-primary"
+            )}
+            placeholder={props.placeholder}
+            rows={props.rows}
+            cols={props.cols}
+          >{props.value}</textarea>
+        ) : (
+          <input
+            onFocus={props.onFocus}
+            type={props.type}
+            name={props.name}
+            id={`id-input-${props.name}`}
+            value={props.value}
+            className={classNames(
+              props.className,
+              "p-3 transition ease-in-out border-2 shadow-sm block w-full sm:text-sm rounded-lg",
+              props.error
+                ? "border-red-300 focus:outline-none focus:border-2 focus:ring-red-300 focus:border-red-500"
+                : "border-gray-300 focus:outline-none focus:border-2 focus:ring-lakasir-primary focus:border-lakasir-primary"
+            )}
+            placeholder={props.placeholder}
+          />
+        )}
         {props.error ? (
           <>
             {!props.disable?.errorIcon ? (
