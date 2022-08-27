@@ -11,10 +11,9 @@ const Profile: NextPage = () => {
       back
       background="[#FF6600]"
       textColor="white"
-    >
-      <>
-        <div className="w-screen h-96 bg-lakasir-primary flex justify-center items-center -ml-[17px]">
-          <div className="w-40 h-40 bg-white rounded-full flex items-center justify-center ml-9">
+      append={
+        <div className="w-screen h-96 bg-lakasir-primary flex justify-center items-center">
+          <div className="w-40 h-40 bg-white rounded-full flex items-center justify-center ml-8">
             <UserIcon className="text-gray-300 w-24 h-24" />
           </div>
           <Link href="/menu/profile/edit">
@@ -23,11 +22,40 @@ const Profile: NextPage = () => {
             </a>
           </Link>
         </div>
-        <div>
+      }
+    >
+      <>
+        <div className="my-7 space-y-5">
           <ul>
             <li>Name</li>
-            <li>Profile Name</li>
+            <li className="font-semibold">Profile Name</li>
           </ul>
+          <ul>
+            <li>Role User</li>
+            <li className="font-semibold">Admin</li>
+          </ul>
+          <ul>
+            <li>Email</li>
+            <li className="font-semibold">profilenam@mail.com</li>
+          </ul>
+          <ul>
+            <li>Phone</li>
+            <li className="font-semibold">0009999238</li>
+          </ul>
+          <ul>
+            <li>Address</li>
+            <li className="font-semibold">
+              Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
+            </li>
+          </ul>
+          <ul>
+            <li>Language</li>
+            <li className="font-semibold">English</li>
+          </ul>
+          <hr className="border-2" />
+          <div className="text-lakasir-primary font-semibold text-lg text-center">
+            Logout
+          </div>
         </div>
       </>
     </Layout>
