@@ -9,6 +9,7 @@ interface ILayoutInterface {
   background?: string;
   textColor?: string;
   className?: string;
+  append?: JSX.Element;
 }
 
 const Layout = (props: ILayoutInterface) => {
@@ -50,7 +51,7 @@ const Layout = (props: ILayoutInterface) => {
       ) : (
         ""
       )}
-      <div className="h-20 w-20"></div>
+      {props.append ? props.append : <div className="h-20 w-20"></div>}
       <div className={classNames("mx-auto w-11/12")}>{props.children}</div>
     </>
   );
