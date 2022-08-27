@@ -2,103 +2,44 @@
 
 namespace App\Models;
 
-use App\DataTables\UserTable;
-use App\Traits\HasLaTable;
-use Illuminate\Contracts\Container\BindingResolutionException;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Passport\HasApiTokens;
+use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasRoles;
-    use Notifiable;
-    use HasLaTable;
-    use HasApiTokens;
-
-    protected $latable = UserTable::class;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles;
 
     /**
      * The attributes that are mass assignable.
      *
-     * @var array
+     * @var array<int, string>
      */
     protected $fillable = [
-        'username', 'email', 'password',
+        'name',
+        'email',
+        'password',
     ];
 
     /**
-     * The attributes that should be hidden for arrays.
+     * The attributes that should be hidden for serialization.
      *
-     * @var array
+     * @var array<int, string>
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password',
+        'remember_token',
     ];
 
     /**
-     * The attributes that should be cast to native types.
+     * The attributes that should be cast.
      *
-     * @var array
+     * @var array<string, string>
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
-
-    public function profile()
-    {
-        return $this->hasOne(Profile::class);
-    }
-
-    public function purchasings()
-    {
-        return $this->hasMany(Purchasing::class);
-    }
-
-    public function getLocalizationAttribute()
-    {
-        return optional($this->profile ?? 'en')->lang ?? 'en';
-    }
-
-    public function adminlte_image()
-    {
-        if (!auth()->user()->profile) {
-            return config('setting.profile.image_empty');
-        }
-        return auth()->user()->profile->media->first() ? media(auth()->user()->profile->media->first()) : config('setting.profile.image_empty');
-    }
-
-    public function adminlte_desc()
-    {
-        return auth()->user()->username;
-    }
-
-    public function adminlte_profile_url()
-    {
-        return 'profile.index';
-    }
-
-    /**
-     * check is Owner
-     *
-     * @return bool
-     */
-    public function getIsOwnerAttribute(): bool
-    {
-        return $this->getRoleNames()->first() == 'owner';
-    }
-
-    /**
-     * @return array
-     * @throws BindingResolutionException
-     */
-    public function showColumns(): array
-    {
-        return [
-            'email' => [
-                'label' => trans('app.user.column.email'),
-            ],
-        ];
-    }
 }
