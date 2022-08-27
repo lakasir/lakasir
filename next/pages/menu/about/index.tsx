@@ -22,7 +22,7 @@ const About: NextPage = () => {
                 Shop Name
               </p>
             </div>
-            <Link href="/menu/profile/edit">
+            <Link href="/menu/about/edit">
               <a className="relative -top-10 left-3">
                 <div className="absolute">
                   <PencilIcon className="text-white w-7 h-7" />
