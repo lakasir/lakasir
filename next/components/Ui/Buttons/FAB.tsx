@@ -12,7 +12,7 @@ interface IOptionAction {
 
 interface IFloatingActionButtonInterface {
   options: IOptionAction[];
-  title: string;
+  title?: string | JSX.Element;
   dismissable?: boolean;
   action?: string;
   onClick?: () => void;

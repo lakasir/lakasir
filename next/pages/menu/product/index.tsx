@@ -7,10 +7,12 @@ import Card from "../../../components/Ui/Card/Card";
 import CardLink from "../../../components/Ui/Card/CardLink";
 import Input from "../../../components/Ui/Fields/Input";
 import Layout from "../../../components/Ui/Layout";
+import Modal from "../../../components/Ui/Modals";
 
 interface IMenuInterface {
   label: string;
   description: string;
+  sub_description: string;
   image: JSX.Element;
   id: number;
 }
@@ -20,6 +22,7 @@ const product: IMenuInterface[] = [
     id: 1,
     label: "Product A",
     description: "100 stock",
+    sub_description: "Rp. 5.000,00 - Rp. 5.200,00",
     image: (
       <img
         src={"./../assets/products/product-image.jpg"}
@@ -33,6 +36,7 @@ const product: IMenuInterface[] = [
     id: 2,
     label: "Product A",
     description: "100 stock",
+    sub_description: "Rp. 5.000,00 - Rp. 5.200,00",
     image: (
       <img
         src={"./../assets/products/product-image.jpg"}
@@ -46,6 +50,7 @@ const product: IMenuInterface[] = [
     id: 3,
     label: "Product A",
     description: "100 stock",
+    sub_description: "Rp. 5.000,00 - Rp. 5.200,00",
     image: (
       <img
         src={"./../assets/products/product-image.jpg"}
@@ -62,6 +67,7 @@ interface ShowActionInterface {
   option?: boolean;
   search?: boolean;
   confirm?: boolean;
+  stock?: boolean;
 }
 
 const Product: NextPage = () => {
@@ -70,6 +76,7 @@ const Product: NextPage = () => {
     option: false,
     search: false,
     confirm: false,
+    stock: false,
   });
 
   const router = useRouter();
@@ -89,6 +96,7 @@ const Product: NextPage = () => {
                   <Card
                     label={m.label}
                     description={m.description}
+                    sub_description={m.sub_description}
                     image={m.image}
                     class={{ confirmable: { confirm: "py-7", cancel: "py-7" } }}
                     confirmable={() => alert("CONFIRMED")}
@@ -150,7 +158,7 @@ const Product: NextPage = () => {
                     height="30"
                   />
                 ),
-                onClick: () => {},
+                onClick: () => router.push("/menu/product/stock"),
               },
               {
                 label: "Delete",
@@ -166,39 +174,23 @@ const Product: NextPage = () => {
             ]}
           />
         </div>
-        {show.search ? (
-          <div
-            className="z-50 top-0 left-0 fixed h-screen w-screen bg-black opacity-90"
-            id="filter-search"
-          >
-            <div
-              className="flex justify-center items-center h-full"
-              onClick={(e) => {
-                if (!(e.target as Element).matches("input")) {
-                  setShow({ search: false });
-                }
-              }}
-            >
-              <div className="w-11/12 mx-auto">
-                <Input
-                  name={"Search"}
-                  type={"text"}
-                  className="rounded-r-none border-r-0"
-                  append={
-                    <div
-                      className="bg-gray-100 rounded-r-lg w-1/5 flex justify-center items-center cursor-pointer border-2 border-gray-300"
-                      onClick={() => alert("ok")}
-                    >
-                      <img src="./../assets/icons/Search-Red.svg" />
-                    </div>
-                  }
-                />
-              </div>
-            </div>
+        <Modal open={show.search != undefined ? show.search : false} onClose={setShow}>
+          <div className="w-11/12 mx-auto">
+            <Input
+              name={"Search"}
+              type={"text"}
+              className="rounded-r-none border-r-0"
+              append={
+                <div
+                  className="bg-gray-100 rounded-r-lg w-1/5 flex justify-center items-center cursor-pointer border-2 border-gray-300"
+                  onClick={() => alert("ok")}
+                >
+                  <img src="./../assets/icons/Search-Red.svg" />
+                </div>
+              }
+            />
           </div>
-        ) : (
-          ""
-        )}
+        </Modal>
       </div>
     </Layout>
   );

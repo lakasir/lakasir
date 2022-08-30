@@ -11,22 +11,22 @@ interface IMenuInterface {
 
 const menu: IMenuInterface[] = [
   {
-    label: "Product",
+    label: "Cashier",
     description: "",
     icon: <img src={"./../assets/icons/Unpacking.svg"} width="50" height="50"/>,
-    href: "/transaction/product",
+    href: "/menu/transaction/cashier",
   },
   {
     label: "Service",
     description: "",
     icon: <img src={"./../assets/icons/Service.svg"} width="50" height="50"/>,
-    href: "/transaction/service",
+    href: "/menu/transaction/service",
   },
 ];
 const Transaction: NextPage = () => {
   return (
     <Layout title="Transaction" back={true}>
-      <div className="py-9 space-y-8">
+      <div className="py-3 space-y-8">
         {menu.map((m, index) => (
           <Link href={m.href} key={index}>
             <a className="block">

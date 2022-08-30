@@ -4,8 +4,9 @@ import { useRouter } from "next/router";
 import { classNames } from "../../utils/helpers";
 interface ILayoutInterface {
   children: JSX.Element;
-  title?: string;
+  title?: string | JSX.Element;
   back?: boolean;
+  onClick?: () => void;
   background?: string;
   textColor?: string;
   className?: string;
@@ -39,7 +40,7 @@ const Layout = (props: ILayoutInterface) => {
           {props.back ? (
             <span
               className="cursor-pointer ml-2 h-5 w-5"
-              onClick={() => router.back()}
+              onClick={() => props.onClick ? props.onClick() : router.back()}
             >
               <ArrowLeftIcon className="h-5 w-5" />
             </span>

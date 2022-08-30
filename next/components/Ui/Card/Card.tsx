@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { MouseEventHandler, useState } from "react";
 import { classNames } from "../../../utils/helpers";
 
 interface ClassName {
@@ -10,6 +10,7 @@ interface ClassName {
 
 interface ICardInterface {
   confirmable?: () => void;
+  onClick?: (e: MouseEventHandler<HTMLDivElement>) => void;
   image?: JSX.Element;
   label: string;
   description?: string;
@@ -83,6 +84,7 @@ const Card = (props: ICardInterface) => {
         ""
       )}
       <div
+        onClick={props.onClick}
         className="w-full rounded-lg overflow-hidden cursor-pointer"
         id={`item-list-${props.id}`}
       >

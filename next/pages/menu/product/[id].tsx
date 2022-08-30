@@ -1,11 +1,15 @@
 import { NextPage } from "next";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import { useState } from "react";
+import StockModal from "../../../components/Product/Stock/Modal";
 import FloatingActionButton from "../../../components/Ui/Buttons/FAB";
+import Modal from "../../../components/Ui/Modals";
 
 const Detail: NextPage = () => {
   const router = useRouter();
   const { id } = router.query;
+  const [openModal, setOpenModal] = useState(false);
 
   return (
     <div className="h-screen absolute">
@@ -62,6 +66,9 @@ const Detail: NextPage = () => {
           </div>
         </div>
       </div>
+        <Modal onClose={setOpenModal} open={openModal}>
+          <StockModal id={(id != undefined ? +id : undefined)} />
+        </Modal>
       <div className="w-11/12 mx-auto">
         <FloatingActionButton
           action={`/menu/product/edit/${id}`}
@@ -88,7 +95,7 @@ const Detail: NextPage = () => {
                   height={30}
                 />
               ),
-              onClick: () => {console.log("OK")},
+              onClick: () => setOpenModal(true),
             },
             {
               label: "Delete",
