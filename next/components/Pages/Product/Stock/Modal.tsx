@@ -1,9 +1,7 @@
+import { Button } from "@/ui/Buttons";
+import { Checkbox, Form, Input } from "@/ui/Fields";
 import Image from "next/image";
 import Link from "next/link";
-import Button from "../../Ui/Buttons/Button";
-import Checkbox from "../../Ui/Fields/Checkbox";
-import Form from "../../Ui/Fields/Form";
-import Input from "../../Ui/Fields/Input";
 
 interface IStockModalInterface {
   id?: number;

@@ -1,10 +1,10 @@
+import StockModal from "@/components/Product/Stock/Modal";
 import { Card } from "@/ui/Card";
 import { Layout } from "@/ui/Layout";
 import { Modal } from "@/ui/Modals";
 import { NextPage } from "next";
 import Image from "next/image";
 import { useState } from "react";
-import StockModal from "../../../../components/Product/Stock/Modal";
 
 interface IMenuInterface {
   label: string;

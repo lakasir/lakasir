@@ -1,6 +1,6 @@
+import { Input } from "@/ui/Fields";
 import { EyeIcon, EyeOffIcon } from "@heroicons/react/outline";
 import { useEffect, useState } from "react";
-import Input from "../Ui/Fields/Input";
 
 interface IPasswordInterface {
   label: string | JSX.Element;
