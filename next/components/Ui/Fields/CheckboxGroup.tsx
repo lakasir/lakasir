@@ -1,5 +1,3 @@
-import Checkbox from "./Checkbox";
-
 interface ICheckboxOption {
   label: string;
   value: string | number;
@@ -24,4 +22,4 @@ const CheckboxGroup = (props: ICheckboxInterface) => {
   );
 };
 
-export default CheckboxGroup;
+export { CheckboxGroup };

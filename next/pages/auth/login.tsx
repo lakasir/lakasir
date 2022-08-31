@@ -1,16 +1,16 @@
+import PasswordField from "@/components/Auth/PasswordField";
+import { Button } from "@/ui/Buttons";
+import { Checkbox, Form, Input } from "@/ui/Fields";
+import { Layout } from "@/ui/Layout";
 import type { NextPage } from "next";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { FormEvent } from "react";
-import PasswordField from "../../components/Auth/PasswordField";
-import Button from "../../components/Ui/Buttons/Button";
-import Checkbox from "../../components/Ui/Fields/Checkbox";
-import Form from "../../components/Ui/Fields/Form";
-import Input from "../../components/Ui/Fields/Input";
-import Layout from "../../components/Ui/Layout";
 
 const Login: NextPage = () => {
+  const router = useRouter();
   const loginSubmit = (e: FormEvent, values: any) => {
-    console.log(values);
+    router.push("/menu")
   };
   return (
     <Layout nosavearea>

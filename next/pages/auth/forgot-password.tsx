@@ -1,8 +1,8 @@
+import PasswordField from "@/components/Auth/PasswordField";
+import { Button } from "@/ui/Buttons";
+import { Form } from "@/ui/Fields";
+import { Layout } from "@/ui/Layout";
 import { NextPage } from "next";
-import PasswordField from "../../components/Auth/PasswordField";
-import Button from "../../components/Ui/Buttons/Button";
-import Form from "../../components/Ui/Fields/Form";
-import Layout from "../../components/Ui/Layout";
 
 const ForgotPassword: NextPage = () => {
   return (

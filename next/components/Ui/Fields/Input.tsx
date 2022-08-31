@@ -22,7 +22,7 @@ export interface InputProps {
   cols?: number;
 }
 
-function Input(props: InputProps): JSX.Element {
+const Input = (props: InputProps): JSX.Element => {
   return (
     <div>
       {props.label ? (
@@ -98,4 +98,4 @@ function Input(props: InputProps): JSX.Element {
   );
 }
 
-export default Input;
+export { Input };

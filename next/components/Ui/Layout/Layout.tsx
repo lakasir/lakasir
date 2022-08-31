@@ -1,7 +1,7 @@
 import { ArrowLeftIcon } from "@heroicons/react/solid";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { classNames } from "../../utils/helpers";
+import { classNames } from "../../../utils/helpers";
 interface ILayoutInterface {
   children: JSX.Element;
   title?: string | JSX.Element;
@@ -16,7 +16,6 @@ interface ILayoutInterface {
 
 const Layout = (props: ILayoutInterface) => {
   const router = useRouter();
-
   return (
     <>
       <Head>
@@ -60,4 +59,4 @@ const Layout = (props: ILayoutInterface) => {
   );
 };
 
-export default Layout;
+export { Layout }

@@ -10,4 +10,4 @@ const CardLink = (props: ICardLinkInterface) => {
   );
 };
 
-export default CardLink;
+export { CardLink };

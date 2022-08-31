@@ -1,9 +1,5 @@
-import Image from "next/image";
-import Link from "next/link";
-import Button from "../../../components/Ui/Buttons/Button";
-import Form from "../../../components/Ui/Fields/Form";
-import Input from "../../../components/Ui/Fields/Input";
-import { Select } from "../../../components/Ui/Fields/Select";
+import { Button } from "@/ui/Buttons";
+import { Form, Input } from "@/ui/Fields";
 
 interface IFormMemberInterface {
   form?: MemberData;

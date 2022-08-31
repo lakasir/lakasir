@@ -93,4 +93,4 @@ const Form = (props: IForm): JSX.Element => {
   );
 };
 
-export default Form;
+export { Form };

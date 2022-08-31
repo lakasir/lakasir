@@ -1,10 +1,10 @@
+import { FloatingActionButton } from "@/ui/Buttons";
+import { Modal } from "@/ui/Modals";
 import { NextPage } from "next";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import StockModal from "../../../components/Product/Stock/Modal";
-import FloatingActionButton from "../../../components/Ui/Buttons/FAB";
-import Modal from "../../../components/Ui/Modals";
 
 const Detail: NextPage = () => {
   const router = useRouter();

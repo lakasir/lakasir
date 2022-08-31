@@ -1,13 +1,12 @@
+import { FloatingActionButton } from "@/ui/Buttons";
+import { Card, CardLink } from "@/ui/Card";
+import { Input } from "@/ui/Fields";
+import { Layout } from "@/ui/Layout";
+import { Modal } from "@/ui/Modals";
 import { NextPage } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import FloatingActionButton from "../../../components/Ui/Buttons/FAB";
-import Card from "../../../components/Ui/Card/Card";
-import CardLink from "../../../components/Ui/Card/CardLink";
-import Input from "../../../components/Ui/Fields/Input";
-import Layout from "../../../components/Ui/Layout";
-import Modal from "../../../components/Ui/Modals";
 
 interface IMenuInterface {
   label: string;
@@ -174,7 +173,10 @@ const Product: NextPage = () => {
             ]}
           />
         </div>
-        <Modal open={show.search != undefined ? show.search : false} onClose={setShow}>
+        <Modal
+          open={show.search != undefined ? show.search : false}
+          onClose={(status) => setShow({ search: status })}
+        >
           <div className="w-11/12 mx-auto">
             <Input
               name={"Search"}

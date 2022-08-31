@@ -1,11 +1,9 @@
+import { Button } from "@/ui/Buttons";
+import { Checkbox, Form, Input } from "@/ui/Fields";
+import { Layout } from "@/ui/Layout";
 import { NextPage } from "next";
 import Link from "next/link";
 import PasswordField from "../../components/Auth/PasswordField";
-import Button from "../../components/Ui/Buttons/Button";
-import Checkbox from "../../components/Ui/Fields/Checkbox";
-import Form from "../../components/Ui/Fields/Form";
-import Input from "../../components/Ui/Fields/Input";
-import Layout from "../../components/Ui/Layout";
 
 const Register: NextPage = () => {
   return (

@@ -1,16 +1,13 @@
+import { Button } from "@/ui/Buttons";
+import { Card } from "@/ui/Card";
+import { Layout } from "@/ui/Layout";
+import { Modal } from "@/ui/Modals";
 import { TrashIcon } from "@heroicons/react/outline";
 import { NextPage } from "next";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import StockModal from "../../../../components/Product/Stock/Modal";
-import Button from "../../../../components/Ui/Buttons/Button";
-import Card from "../../../../components/Ui/Card/Card";
-import Checkbox from "../../../../components/Ui/Fields/Checkbox";
-import Form from "../../../../components/Ui/Fields/Form";
-import Input from "../../../../components/Ui/Fields/Input";
-import Layout from "../../../../components/Ui/Layout";
-import Modal from "../../../../components/Ui/Modals";
 
 interface IMenuInterface {
   label: string;
@@ -80,7 +77,7 @@ const StockHistory: NextPage = () => {
                 </div>
                 <TrashIcon className="w-7 h-7 text-red-500 place-self-center" />
               </div>
-              <hr className="border-[1.5px] rounded-lg"/>
+              <hr className="border-[1.5px] rounded-lg" />
             </div>
             <div>
               <div className="flex justify-between">
@@ -90,7 +87,7 @@ const StockHistory: NextPage = () => {
                 </div>
                 <TrashIcon className="w-7 h-7 text-red-500 place-self-center" />
               </div>
-              <hr className="border-[1.5px] rounded-lg"/>
+              <hr className="border-[1.5px] rounded-lg" />
             </div>
             <div>
               <div className="flex justify-between">
@@ -100,7 +97,7 @@ const StockHistory: NextPage = () => {
                 </div>
                 <TrashIcon className="w-7 h-7 text-red-500 place-self-center" />
               </div>
-              <hr className="border-[1.5px] rounded-lg"/>
+              <hr className="border-[1.5px] rounded-lg" />
             </div>
             <div>
               <div className="flex justify-between">
@@ -110,11 +107,14 @@ const StockHistory: NextPage = () => {
                 </div>
                 <TrashIcon className="w-7 h-7 text-red-500 place-self-center" />
               </div>
-              <hr className="border-[1.5px] rounded-lg"/>
+              <hr className="border-[1.5px] rounded-lg" />
             </div>
           </div>
         </div>
-        <Modal onClose={setShow} open={show.stock}>
+        <Modal
+          onClose={(status) => setShow({ stock: status })}
+          open={show.stock}
+        >
           <StockModal />
         </Modal>
       </div>

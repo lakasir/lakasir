@@ -1,11 +1,10 @@
+import { FloatingActionButton } from "@/ui/Buttons";
+import { Card } from "@/ui/Card";
+import { Form, Input } from "@/ui/Fields";
+import { Layout } from "@/ui/Layout";
 import { NextPage } from "next";
 import Image from "next/image";
 import { useState } from "react";
-import FloatingActionButton from "../../../components/Ui/Buttons/FAB";
-import Card from "../../../components/Ui/Card/Card";
-import Form from "../../../components/Ui/Fields/Form";
-import Input from "../../../components/Ui/Fields/Input";
-import Layout from "../../../components/Ui/Layout";
 
 interface IMenuInterface {
   label: string;

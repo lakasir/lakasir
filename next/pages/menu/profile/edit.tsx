@@ -1,10 +1,8 @@
+import { Button } from "@/ui/Buttons";
+import { Form, Input, Select } from "@/ui/Fields";
+import { Layout } from "@/ui/Layout";
 import { NextPage } from "next";
-import Layout from "../../../components/Ui/Layout";
 import Image from "next/image";
-import Button from "../../../components/Ui/Buttons/Button";
-import Form from "../../../components/Ui/Fields/Form";
-import Input from "../../../components/Ui/Fields/Input";
-import { Select } from "../../../components/Ui/Fields/Select";
 
 const EditProfile: NextPage = () => {
   return (
