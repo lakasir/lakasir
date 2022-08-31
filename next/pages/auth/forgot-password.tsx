@@ -6,7 +6,7 @@ import Layout from "../../components/Ui/Layout";
 
 const ForgotPassword: NextPage = () => {
   return (
-    <div className="mx-auto w-11/12">
+    <Layout nosavearea>
       <div className="grid gap-16">
         <p className="flex justify-center items-end h-56 text-[32px] font-semibold">
           Forgot Password
@@ -42,7 +42,7 @@ const ForgotPassword: NextPage = () => {
           )}
         </Form>
       </div>
-    </div>
+    </Layout>
   );
 };
 

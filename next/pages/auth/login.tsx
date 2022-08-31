@@ -13,7 +13,7 @@ const Login: NextPage = () => {
     console.log(values);
   };
   return (
-    <Layout>
+    <Layout nosavearea>
       <div className="grid gap-16">
         <p className="flex justify-center items-end h-56 text-[32px] font-semibold">
           Sign In <span className="ml-2 text-lakasir-primary"> LAKASIR</span>

@@ -9,7 +9,7 @@ import Layout from "../../components/Ui/Layout";
 
 const Register: NextPage = () => {
   return (
-    <Layout>
+    <Layout nosavearea>
       <div className="grid gap-12">
         <p className="flex justify-center items-end h-40 text-[32px] font-semibold">
           Sign Up <span className="ml-2 text-lakasir-primary"> LAKASIR</span>
