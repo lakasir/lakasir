@@ -49,7 +49,7 @@ export const useAuth = () => {
       if (!registerData.success) {
         throw new Error(registerData.message);
       }
-      toast.success('Register success and verify your email');
+      toast.success(registerData.message);
       router.push("/auth/login");
     } catch (e) {
       if (e instanceof AxiosError) {
