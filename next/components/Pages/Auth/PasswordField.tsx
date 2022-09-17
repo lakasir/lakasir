@@ -11,7 +11,7 @@ interface IPasswordInterface {
 const PasswordField = (props: IPasswordInterface) => {
   const [eyeOpen, setEyeOpen] = useState(false);
   const clickedEye = () => {
-    const input = document.querySelector("#id-input-password");
+    const input = document.querySelector(`#id-input-${props.name}`) as HTMLInputElement;
     input?.setAttribute("type", eyeOpen ? "password" : "text");
     setEyeOpen(!eyeOpen);
   };

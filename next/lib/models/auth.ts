@@ -3,7 +3,7 @@ export type IFormLoginRequest = {
   password: string;
 }
 
-export type ILogiResponse = {
+export type ILoginResponse = {
   token: string;
   id: number;
   name: string;
@@ -21,4 +21,22 @@ export type IFormRegisterRequest = {
 }
 
 export type IRegisterResponse = {
+}
+
+export type IFormForgotPasswordRequest = {
+  email: string;
+}
+
+export type IForgotPasswordResponse = {
+}
+
+export type IFormResetPasswordRequest = {
+  email: string;
+  password: string;
+  password_confirmation: string;
+  token: string;
+}
+
+export type IResetPasswordResponse = {
+
 }
