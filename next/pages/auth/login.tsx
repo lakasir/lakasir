@@ -35,7 +35,7 @@ const Login: NextPage = () => {
         <Form
           className="space-y-5"
           initialValue={{
-            email: "admin@lakasir.com",
+            email: "",
             password: "",
             remember: true,
           }}
