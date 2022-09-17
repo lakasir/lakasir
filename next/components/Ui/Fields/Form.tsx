@@ -35,7 +35,6 @@ const Form = (props: IForm): JSX.Element => {
         onSubmit={(e) => {
           e.preventDefault();
           const formValues = Object.fromEntries(new FormData(e.target as HTMLFormElement));
-          console.log(formValues);
           setDefaultFormValue(formValues);
           props.onSubmit(e, formValues);
         }}

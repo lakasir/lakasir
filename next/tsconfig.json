@@ -17,7 +17,11 @@
     "baseUrl": ".",
     "paths": {
         "@/ui/*": ["components/Ui/*"],
-        "@/components/*": ["components/Pages/*"]
+        "@/components/*": ["components/Pages/*"],
+        "@/api/*": ["lib/api/*"],
+        "@/hooks/*": ["lib/hooks/*"],
+        "@/models/*": ["lib/models/*"],
+        "@/utils/*": ["lib/utils/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
