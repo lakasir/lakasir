@@ -7,14 +7,27 @@ import { Checkbox, Form, Input } from "@/ui/Fields";
 import { Layout } from "@/ui/Layout";
 import { NextPage } from "next";
 import Link from "next/link";
-import { FormEvent } from "react";
+import { FormEvent, useState } from "react";
 
+
+interface IErorrRegisterResponse {
+  name?: string;
+  email?: string;
+  password?: string;
+  password_confirmation?: string;
+}
 
 const Register: NextPage = () => {
   const { register } = useAuth();
+  const [errors, setErrors] = useState<IErorrRegisterResponse>({});
   const submitRegister = async (_: FormEvent, values: IFormRegisterRequest) => {
     register(values, (error: ErrorResponse) => {
-      console.log(error);
+      setErrors({
+        name: error.errors.name ? error.errors.name[0] : "",
+        email: error.errors.email ? error.errors.email[0] : "",
+        password: error.errors.password ? error.errors.password[0] : "",
+        password_confirmation: error.errors.password_confirmation ? error.errors.password_confirmation[0] : "",
+      });
     })
   }
   return (
@@ -36,6 +49,7 @@ const Register: NextPage = () => {
           {() => (
             <>
               <Input
+                error={errors.name}
                 name={"name"}
                 type={"text"}
                 label={
@@ -45,6 +59,7 @@ const Register: NextPage = () => {
                 }
               />
               <Input
+                error={errors.email}
                 name={"email"}
                 type={"text"}
                 label={
@@ -54,6 +69,7 @@ const Register: NextPage = () => {
                 }
               />
               <PasswordField
+                error={errors.password}
                 label={
                   <>
                     Password<span className="text-red-500">*</span>
@@ -62,6 +78,7 @@ const Register: NextPage = () => {
                 name={"password"}
               />
               <PasswordField
+                error={errors.password_confirmation}
                 label={
                   <>
                     Confirm Password<span className="text-red-500">*</span>
