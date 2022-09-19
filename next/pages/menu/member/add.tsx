@@ -6,7 +6,12 @@ const AddMember: NextPage = () => {
   return (
     <Layout title="Add Member" back={true}>
       <div className="py-3">
-      <FormMember />
+      <FormMember form={{
+        name: "",
+        email: "",
+        code: "",
+        address: "",
+      }} />
       </div>
     </Layout>
   );

@@ -35,7 +35,8 @@ const Layout = (props: ILayoutInterface) => {
           className={classNames(
             `text-${props.textColor}`,
             `bg-${props.background}`,
-            "flex items-center max-h-14 h-14 font-semibold py-8 text-xl mx-auto w-full top-0 fixed z-50 bg-gray-100-c drop-shadow-2xl-c shadow-black-c"
+            "flex items-center max-h-14 h-14 font-semibold py-8 text-xl mx-auto w-full top-0 fixed z-50",
+            props.append ?  "" : "drop-shadow-md shadow-black bg-white"
           )}
         >
           {props.back ? (

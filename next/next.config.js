@@ -5,6 +5,8 @@ const { parsed: localEnv } = require('dotenv').config({
   allowEmptyValues: false,
 });
 
+console.log(localEnv);
+
 const nextConfig = {
   env: {
     ...localEnv,

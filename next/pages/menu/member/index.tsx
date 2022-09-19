@@ -1,10 +1,13 @@
+import { useMember } from "@/hooks/member";
+import { IMemberResponse } from "@/models/member";
+import { Response } from "@/models/response";
 import { FloatingActionButton } from "@/ui/Buttons";
 import { Card, CardLink } from "@/ui/Card";
 import { Input } from "@/ui/Fields";
 import { Layout } from "@/ui/Layout";
 import { NextPage } from "next";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface IMenuInterface {
   label: string;
@@ -30,6 +33,18 @@ interface ShowActionInterface {
 }
 
 const Category: NextPage = () => {
+  const { getMember } = useMember();
+  const [memberData, setMemberData] = useState<IMemberResponse[]>([]);
+
+  useEffect(() => {
+    getMember().then((response) => {
+      if (response) {
+        const responseData = response as Response<IMemberResponse[]>;
+        setMemberData(responseData.data);
+      }
+    });
+  }, [memberData]);
+
   const [show, setShow] = useState<ShowActionInterface>({
     delete: false,
     add: false,
@@ -41,7 +56,7 @@ const Category: NextPage = () => {
     <Layout title="Member" back>
       <>
         <div className="py-3 space-y-2 mb-24">
-          {member.map((el, index) => (
+          {memberData.map((el, index) => (
             <Link href={`/menu/member/edit/${el.id}`} key={index}>
               <CardLink
                 onClick={(e: React.MouseEvent<HTMLAnchorElement>) => {
@@ -49,9 +64,9 @@ const Category: NextPage = () => {
                 }}
               >
                 <Card
-                  label={el.label}
-                  description={el.description}
-                  sub_description={el.sub_description}
+                  label={el.name}
+                  description={el.name}
+                  sub_description={el.code}
                   confirmable={() => {
                     if (show.delete) {
                       alert("confirm deleted");

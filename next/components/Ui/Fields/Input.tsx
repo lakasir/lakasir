@@ -1,5 +1,5 @@
 import { ExclamationCircleIcon } from "@heroicons/react/solid";
-import { FocusEventHandler } from "react";
+import { FocusEventHandler, useEffect } from "react";
 import { classNames } from "../../../utils/helpers";
 
 interface ExtendProps {
@@ -39,20 +39,22 @@ const Input = (props: InputProps): JSX.Element => {
         {props.prepend}
         {props.type == "textarea" ? (
           <textarea
-            onFocus={(props.onFocus as FocusEventHandler)}
+            onFocus={props.onFocus as FocusEventHandler}
             name={props.name}
             id={`id-input-${props.name}`}
             className={classNames(
               props.className,
               "p-3 transition ease-in-out border-2 shadow-sm block w-full sm:text-sm rounded-lg",
               props.error
-                ? "border-red-300 focus:outline-none focus:border-2 focus:ring-red-300 focus:border-red-500"
+                ? `border-red-300 focus:outline-none focus:border-2 focus:ring-red-300 focus:border-red-500 animate-shake`
                 : "border-gray-300 focus:outline-none focus:border-2 focus:ring-lakasir-primary focus:border-lakasir-primary"
             )}
             placeholder={props.placeholder}
             rows={props.rows}
             cols={props.cols}
-          >{props.value}</textarea>
+          >
+            {props.value}
+          </textarea>
         ) : (
           <input
             onFocus={props.onFocus}
@@ -64,7 +66,7 @@ const Input = (props: InputProps): JSX.Element => {
               props.className,
               "p-3 transition ease-in-out border-2 shadow-sm block w-full sm:text-sm rounded-lg",
               props.error
-                ? "border-red-300 focus:outline-none focus:border-2 focus:ring-red-300 focus:border-red-500"
+                ? `border-red-300 focus:outline-none focus:border-2 focus:ring-red-300 focus:border-red-500 animate-shake`
                 : "border-gray-300 focus:outline-none focus:border-2 focus:ring-lakasir-primary focus:border-lakasir-primary"
             )}
             placeholder={props.placeholder}
@@ -96,6 +98,6 @@ const Input = (props: InputProps): JSX.Element => {
       )}
     </div>
   );
-}
+};
 
 export { Input };

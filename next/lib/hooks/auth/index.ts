@@ -32,7 +32,7 @@ export const useAuth = () => {
           message: "",
           errors: {},
         });
-        toast.error(error.response?.data.message || 'Login failed');
+        toast.error('Login failed');
       }
     }
     toast.dismiss(toastId);
@@ -58,7 +58,7 @@ export const useAuth = () => {
           message: "",
           errors: {},
         });
-        toast.error(error.response?.data.message || 'Register failed');
+        toast.error('Register failed');
       }
     }
     toast.dismiss(toastId);
@@ -83,7 +83,7 @@ export const useAuth = () => {
           message: "",
           errors: {},
         });
-        toast.error(error.response?.data.message || 'Send email failed');
+        toast.error('Send email failed');
       }
     }
     toast.dismiss(toastId);
@@ -109,7 +109,7 @@ export const useAuth = () => {
           message: "",
           errors: {},
         });
-        toast.error(error.response?.data.message || 'Reset password failed');
+        toast.error('Reset password failed');
       }
     }
     toast.dismiss(toastId);

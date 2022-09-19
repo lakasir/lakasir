@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useLayoutEffect } from "react";
+import { FormEvent, useEffect, useLayoutEffect, useRef, useState } from "react";
 
 export interface IForm {
   onSubmit: (e: FormEvent, values: any) => void;
@@ -14,17 +14,30 @@ const setDefaultFormValue = (initialValue: any) => {
   // set default value for form element via dom formElement object
   formElement?.querySelectorAll("input").forEach((input) => {
     if (["radio", "checkbox"].includes(input.type)) {
-      input.checked = initialValue[input.name];
+      if (initialValue[input.name] === undefined) {
+        input.checked = false;
+      } else {
+        input.checked = initialValue[input.name];
+      }
     } else {
-      input.value = initialValue[input.name];
+      if (initialValue[input.name] === undefined) {
+        input.value = "";
+      } else {
+        input.value = initialValue[input.name];
+      }
     }
   });
 };
 
 const Form = (props: IForm): JSX.Element => {
+  const [values, setValues] = useState<any>();
   useLayoutEffect(() => {
-    setDefaultFormValue(props.initialValue);
-  }, []);
+    if (values == undefined) {
+      setDefaultFormValue(props.initialValue);
+    } else {
+      setDefaultFormValue(values);
+    }
+  });
 
   return (
     <div>
@@ -34,9 +47,12 @@ const Form = (props: IForm): JSX.Element => {
         method={props.method ?? "post"}
         onSubmit={(e) => {
           e.preventDefault();
-          const formValues = Object.fromEntries(new FormData(e.target as HTMLFormElement));
-          setDefaultFormValue(formValues);
+          const formValues = Object.fromEntries(
+            new FormData(e.target as HTMLFormElement)
+          );
           props.onSubmit(e, formValues);
+          setValues(formValues);
+          // setDefaultFormValue(formValues);
         }}
       >
         {props.children()}

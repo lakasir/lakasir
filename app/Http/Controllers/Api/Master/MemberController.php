@@ -49,7 +49,7 @@ class MemberController extends Controller
     {
         return [
             "name" => ["required", "min:3"],
-            "email" => [Rule::unique("members")->ignore($member->id)]
+            "email" => [Rule::unique("members")->ignore($member->id), "nullable", "email"],
         ];
     }
 }
