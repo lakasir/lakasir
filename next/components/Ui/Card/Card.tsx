@@ -130,4 +130,4 @@ const Card = (props: ICardInterface) => {
   );
 };
 
-export default Card;
+export { Card };

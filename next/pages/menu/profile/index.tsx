@@ -1,10 +1,12 @@
+import { Layout } from "@/ui/Layout";
 import { PencilIcon } from "@heroicons/react/outline";
 import { UserIcon } from "@heroicons/react/solid";
 import { NextPage } from "next";
 import Link from "next/link";
-import Layout from "../../../components/Ui/Layout";
+import { useRouter } from "next/router";
 
 const Profile: NextPage = () => {
+  const router = useRouter();
   return (
     <Layout
       title="Profile"
@@ -62,7 +64,7 @@ const Profile: NextPage = () => {
             <li className="font-semibold">English</li>
           </ul>
           <hr className="border-2" />
-          <div className="text-lakasir-primary font-semibold text-lg text-center">
+          <div className="text-lakasir-primary font-semibold text-lg text-center cursor-pointer" onClick={() => router.push('/auth/login')}>
             Logout
           </div>
         </div>

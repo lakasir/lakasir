@@ -1,6 +1,6 @@
+import { Layout } from "@/ui/Layout";
 import { NextPage } from "next";
 import Link from "next/link";
-import Layout from "../../../components/Ui/Layout";
 
 interface IMenuInterface {
   label: string;

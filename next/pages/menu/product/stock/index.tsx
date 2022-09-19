@@ -1,10 +1,10 @@
+import StockModal from "@/components/Product/Stock/Modal";
+import { Card } from "@/ui/Card";
+import { Layout } from "@/ui/Layout";
+import { Modal } from "@/ui/Modals";
 import { NextPage } from "next";
 import Image from "next/image";
 import { useState } from "react";
-import StockModal from "../../../../components/Product/Stock/Modal";
-import Card from "../../../../components/Ui/Card/Card";
-import Layout from "../../../../components/Ui/Layout";
-import Modal from "../../../../components/Ui/Modals";
 
 interface IMenuInterface {
   label: string;
@@ -92,7 +92,7 @@ const StockManagemenet: NextPage = () => {
             ))}
           </div>
         </div>
-        <Modal onClose={setShow} open={show.stock}>
+        <Modal onClose={(status) => setShow({ stock: status })} open={show.stock}>
           <StockModal id={id} />
         </Modal>
       </div>

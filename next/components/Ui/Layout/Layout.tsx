@@ -1,7 +1,7 @@
 import { ArrowLeftIcon } from "@heroicons/react/solid";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { classNames } from "../../utils/helpers";
+import { classNames } from "../../../utils/helpers";
 interface ILayoutInterface {
   children: JSX.Element;
   title?: string | JSX.Element;
@@ -11,6 +11,7 @@ interface ILayoutInterface {
   textColor?: string;
   className?: string;
   append?: JSX.Element;
+  nosavearea?: boolean;
 }
 
 const Layout = (props: ILayoutInterface) => {
@@ -52,10 +53,10 @@ const Layout = (props: ILayoutInterface) => {
       ) : (
         ""
       )}
-      {props.append ? props.append : <div className="h-20 w-20"></div>}
+      {props.append ? props.append : (!props.nosavearea ? (<div className="h-20 w-20"></div>) : <></>)}
       <div className={classNames("mx-auto w-11/12")}>{props.children}</div>
     </>
   );
 };
 
-export default Layout;
+export { Layout }

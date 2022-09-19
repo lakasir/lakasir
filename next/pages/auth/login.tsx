@@ -1,19 +1,33 @@
+import PasswordField from "@/components/Auth/PasswordField";
+import { useAuth } from "@/hooks/auth";
+import { IFormLoginRequest } from "@/models/auth";
+import { ErrorResponse } from "@/models/response";
+import { Button } from "@/ui/Buttons";
+import { Checkbox, Form, Input } from "@/ui/Fields";
+import { Layout } from "@/ui/Layout";
 import type { NextPage } from "next";
 import Link from "next/link";
-import { FormEvent } from "react";
-import PasswordField from "../../components/Auth/PasswordField";
-import Button from "../../components/Ui/Buttons/Button";
-import Checkbox from "../../components/Ui/Fields/Checkbox";
-import Form from "../../components/Ui/Fields/Form";
-import Input from "../../components/Ui/Fields/Input";
-import Layout from "../../components/Ui/Layout";
+import { FormEvent, useEffect, useState } from "react";
+
+interface IErorrLoginResponse {
+  email?: string;
+  password?: string;
+}
 
 const Login: NextPage = () => {
-  const loginSubmit = (e: FormEvent, values: any) => {
-    console.log(values);
+  const { login } = useAuth();
+  const [errors, setErrors] = useState<IErorrLoginResponse>({});
+  const loginSubmit = (_: FormEvent, values: IFormLoginRequest) => {
+    login(values, (error: ErrorResponse) => {
+      setErrors({
+        email: error.errors.email ? error.errors.email[0] : "",
+        password: error.errors.password ? error.errors.password[0] : "",
+      });
+    });
   };
+  useEffect(() => {}, [errors]);
   return (
-    <Layout>
+    <Layout nosavearea>
       <div className="grid gap-16">
         <p className="flex justify-center items-end h-56 text-[32px] font-semibold">
           Sign In <span className="ml-2 text-lakasir-primary"> LAKASIR</span>
@@ -21,8 +35,9 @@ const Login: NextPage = () => {
         <Form
           className="space-y-5"
           initialValue={{
-            email: "sheenazien08@gmail.com",
+            email: "",
             password: "",
+            remember: true,
           }}
           onSubmit={loginSubmit}
         >
@@ -31,6 +46,7 @@ const Login: NextPage = () => {
               <Input
                 name={"email"}
                 type={"text"}
+                error={errors.email}
                 label={
                   <>
                     Username or Email<span className="text-red-500">*</span>
@@ -38,6 +54,7 @@ const Login: NextPage = () => {
                 }
               />
               <PasswordField
+                error={errors.password}
                 label={
                   <>
                     Password<span className="text-red-500">*</span>
@@ -45,7 +62,7 @@ const Login: NextPage = () => {
                 }
                 name={"password"}
               />
-              <Checkbox name={"remember_me"} label={"Remember Me"} />
+              <Checkbox name={"remember"} label={"Remember Me"} />
               <Button className="w-full py-4">Sign in</Button>
             </>
           )}

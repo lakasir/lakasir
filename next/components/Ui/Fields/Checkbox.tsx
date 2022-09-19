@@ -18,7 +18,11 @@ const Checkbox = (props: ICheckbox) => {
       `input[type=checkbox]#id-input-${props.name}`
     );
     if (checkbox != undefined) {
-      if (checkbox?.getAttribute("value")?.toString() == "true" ? true : false as boolean) {
+      if (
+        checkbox?.getAttribute("value")?.toString() == "true"
+          ? true
+          : (false as boolean)
+      ) {
         setChecked(true);
       } else {
         setChecked(false);
@@ -66,4 +70,4 @@ const Checkbox = (props: ICheckbox) => {
   );
 };
 
-export default Checkbox;
+export { Checkbox };

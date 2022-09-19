@@ -1,12 +1,28 @@
+import { useAuth } from "@/hooks/auth";
+import { IFormForgotPasswordRequest } from "@/models/auth";
+import { ErrorResponse } from "@/models/response";
+import { Button } from "@/ui/Buttons";
+import { Form, Input } from "@/ui/Fields";
+import { Layout } from "@/ui/Layout";
 import { NextPage } from "next";
-import PasswordField from "../../components/Auth/PasswordField";
-import Button from "../../components/Ui/Buttons/Button";
-import Form from "../../components/Ui/Fields/Form";
-import Layout from "../../components/Ui/Layout";
+import { FormEvent, useState } from "react";
+
+interface IErrorForgotPasswordResponse {
+  email?: string;
+}
 
 const ForgotPassword: NextPage = () => {
+  const { forgotPassword } = useAuth();
+  const [errors, setErrors] = useState<IErrorForgotPasswordResponse>({});
+  const forgotPasswordSubmit = (_: FormEvent, values: IFormForgotPasswordRequest) => {
+    forgotPassword(values, (error: ErrorResponse) => {
+      setErrors({
+        email: error.errors.email ? error.errors.email[0] : "",
+      });
+    });
+  }
   return (
-    <div className="mx-auto w-11/12">
+    <Layout nosavearea>
       <div className="grid gap-16">
         <p className="flex justify-center items-end h-56 text-[32px] font-semibold">
           Forgot Password
@@ -14,35 +30,19 @@ const ForgotPassword: NextPage = () => {
         <Form
           className="space-y-5"
           initialValue={{
-            password: "",
-            confirm_password: "",
+            email: "",
           }}
-          onSubmit={() => console.log("ok")}
+          onSubmit={forgotPasswordSubmit}
         >
           {() => (
             <>
-              <PasswordField
-                label={
-                  <>
-                    Password<span className="text-red-500">*</span>
-                  </>
-                }
-                name={"password"}
-              />
-              <PasswordField
-                label={
-                  <>
-                    Confirm Password<span className="text-red-500">*</span>
-                  </>
-                }
-                name={"confirm_password"}
-              />
-              <Button className="w-full py-4">Confirm</Button>
+              <Input name="email" type="text" label="Email" error={errors.email}/>
+              <Button className="w-full py-4">Sent to Email</Button>
             </>
           )}
         </Form>
       </div>
-    </div>
+    </Layout>
   );
 };
 

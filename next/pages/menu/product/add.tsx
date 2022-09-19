@@ -1,5 +1,5 @@
+import { Layout } from "@/ui/Layout";
 import { NextPage } from "next";
-import Layout from "../../../components/Ui/Layout";
 import FormProduct from "./form";
 
 const AddProduct: NextPage = () => {

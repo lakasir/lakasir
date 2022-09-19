@@ -1,8 +1,7 @@
+import { Layout } from "@/ui/Layout";
 import { PencilIcon, ShoppingBagIcon } from "@heroicons/react/outline";
-import { UserIcon } from "@heroicons/react/solid";
 import { NextPage } from "next";
 import Link from "next/link";
-import Layout from "../../../components/Ui/Layout";
 
 const About: NextPage = () => {
   return (

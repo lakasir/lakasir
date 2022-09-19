@@ -23,7 +23,7 @@ export interface SelectProps {
   disable?: ExtendProps;
 }
 
-export function Select(props: SelectProps): JSX.Element {
+const Select = (props: SelectProps): JSX.Element => {
   return (
     <div>
       {props.label ? (
@@ -82,4 +82,4 @@ export function Select(props: SelectProps): JSX.Element {
   );
 }
 
-export default Select;
+export { Select };

@@ -1,5 +1,5 @@
+import { Layout } from "@/ui/Layout";
 import { NextPage } from "next";
-import Layout from "../../../../components/Ui/Layout";
 import FormMember from "../form";
 
 const EditMember: NextPage = () => {

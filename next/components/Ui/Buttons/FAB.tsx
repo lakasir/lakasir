@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import Button from "./Button";
+import { Button } from ".";
 
 interface IOptionAction {
   label: string;
@@ -147,4 +147,4 @@ const FloatingActionButton = (props: IFloatingActionButtonInterface) => {
   );
 };
 
-export default FloatingActionButton;
+export { FloatingActionButton };

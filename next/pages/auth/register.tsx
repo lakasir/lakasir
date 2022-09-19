@@ -1,15 +1,37 @@
+import PasswordField from "@/components/Auth/PasswordField";
+import { useAuth } from "@/hooks/auth";
+import { IFormRegisterRequest } from "@/models/auth";
+import { ErrorResponse } from "@/models/response";
+import { Button } from "@/ui/Buttons";
+import { Checkbox, Form, Input } from "@/ui/Fields";
+import { Layout } from "@/ui/Layout";
 import { NextPage } from "next";
 import Link from "next/link";
-import PasswordField from "../../components/Auth/PasswordField";
-import Button from "../../components/Ui/Buttons/Button";
-import Checkbox from "../../components/Ui/Fields/Checkbox";
-import Form from "../../components/Ui/Fields/Form";
-import Input from "../../components/Ui/Fields/Input";
-import Layout from "../../components/Ui/Layout";
+import { FormEvent, useState } from "react";
+
+
+interface IErorrRegisterResponse {
+  name?: string;
+  email?: string;
+  password?: string;
+  password_confirmation?: string;
+}
 
 const Register: NextPage = () => {
+  const { register } = useAuth();
+  const [errors, setErrors] = useState<IErorrRegisterResponse>({});
+  const submitRegister = async (_: FormEvent, values: IFormRegisterRequest) => {
+    register(values, (error: ErrorResponse) => {
+      setErrors({
+        name: error.errors.name ? error.errors.name[0] : "",
+        email: error.errors.email ? error.errors.email[0] : "",
+        password: error.errors.password ? error.errors.password[0] : "",
+        password_confirmation: error.errors.password_confirmation ? error.errors.password_confirmation[0] : "",
+      });
+    })
+  }
   return (
-    <Layout>
+    <Layout nosavearea>
       <div className="grid gap-12">
         <p className="flex justify-center items-end h-40 text-[32px] font-semibold">
           Sign Up <span className="ml-2 text-lakasir-primary"> LAKASIR</span>
@@ -17,17 +39,18 @@ const Register: NextPage = () => {
         <Form
           className="space-y-5"
           initialValue={{
-            full_name: "",
+            name: "",
             email: "",
             password: "",
-            confirm_password: "",
+            password_confirmation: "",
           }}
-          onSubmit={() => console.log("ok")}
+          onSubmit={submitRegister}
         >
           {() => (
             <>
               <Input
-                name={"full_name"}
+                error={errors.name}
+                name={"name"}
                 type={"text"}
                 label={
                   <>
@@ -36,6 +59,7 @@ const Register: NextPage = () => {
                 }
               />
               <Input
+                error={errors.email}
                 name={"email"}
                 type={"text"}
                 label={
@@ -45,6 +69,7 @@ const Register: NextPage = () => {
                 }
               />
               <PasswordField
+                error={errors.password}
                 label={
                   <>
                     Password<span className="text-red-500">*</span>
@@ -53,12 +78,13 @@ const Register: NextPage = () => {
                 name={"password"}
               />
               <PasswordField
+                error={errors.password_confirmation}
                 label={
                   <>
                     Confirm Password<span className="text-red-500">*</span>
                   </>
                 }
-                name={"confirm_password"}
+                name={"password_confirmation"}
               />
               <Checkbox
                 name={"remember_me"}

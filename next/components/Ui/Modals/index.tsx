@@ -26,4 +26,4 @@ const Modal = (props: IModalInterface) => {
   );
 };
 
-export default Modal;
+export { Modal };
