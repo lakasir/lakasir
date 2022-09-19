@@ -20,9 +20,9 @@ interface IMenuInterface {
 const product: IMenuInterface[] = [
   {
     id: 1,
-    label: "Product A",
+    label: "Pizza",
     description: "100 stock",
-    sub_description: "Rp. 5.000,00 - Rp. 5.200,00",
+    sub_description: "Rp. 10.000,00 - Rp. 12.000,00",
     image: (
       <img
         src={"./../assets/products/product-image.jpg"}
@@ -34,12 +34,12 @@ const product: IMenuInterface[] = [
   },
   {
     id: 2,
-    label: "Product A",
-    description: "100 stock",
-    sub_description: "Rp. 5.000,00 - Rp. 5.200,00",
+    label: "Fried Chicken",
+    description: "- stock",
+    sub_description: "Rp. 25.000,00 - Rp. 28.000,00",
     image: (
       <img
-        src={"./../assets/products/product-image.jpg"}
+        src={"./../assets/products/KFC.jpg"}
         width="100%"
         height="100%"
         className="rounded-lg"
@@ -48,12 +48,12 @@ const product: IMenuInterface[] = [
   },
   {
     id: 3,
-    label: "Product A",
-    description: "100 stock",
-    sub_description: "Rp. 5.000,00 - Rp. 5.200,00",
+    label: "Tiramisu Cofee",
+    description: "- stock",
+    sub_description: "Rp. 20.000,00 - Rp. 22.000,00",
     image: (
       <img
-        src={"./../assets/products/product-image.jpg"}
+        src={"./../assets/products/cofee.jpg"}
         width="100%"
         height="100%"
         className="rounded-lg"

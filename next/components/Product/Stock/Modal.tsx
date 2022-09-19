@@ -20,7 +20,7 @@ const StockModal = (props: IStockModalInterface) => {
           <div className="flex justify-between my-4">
             <div className="flex gap-x-2">
               <Image
-                src={"/assets/products/product-image.jpg"}
+                src={"/assets/products/KFC.jpg"}
                 width="60px"
                 height="60px"
                 className="rounded-full"
@@ -30,12 +30,15 @@ const StockModal = (props: IStockModalInterface) => {
                 <p className="font-light">Stock 200</p>
               </div>
             </div>
-            <p className="my-auto">Rp. 5.000,00</p>
+            <p className="my-auto">Rp. 20.000</p>
           </div>
         </div>
         <div>
           <Form
-            initialValue={{}}
+          initialValue={{
+            date: "2022-09-01",
+            initial_price: "20000"
+          }}
             onSubmit={() => console.log("OK")}
             className="space-y-5"
           >
@@ -53,21 +56,21 @@ const StockModal = (props: IStockModalInterface) => {
                   )}
                 </div>
                 <Input
-                  name={"full_name"}
-                  type={"text"}
+                  name={"date"}
+                  type={"date"}
                   label={
                     <>
-                      Full Name<span className="text-red-500">*</span>
+                      Date<span className="text-red-500">*</span>
                     </>
                   }
                 />
                 <div className="flex justify-between gap-x-5">
                   <Input
-                    name={"full_name"}
-                    type={"text"}
+                    name={"initial_price"}
+                    type={"number"}
                     label={
                       <>
-                        Full Name<span className="text-red-500">*</span>
+                        Initial Price<span className="text-red-500">*</span>
                       </>
                     }
                   />
@@ -76,7 +79,7 @@ const StockModal = (props: IStockModalInterface) => {
                     type={"text"}
                     label={
                       <>
-                        Full Name<span className="text-red-500">*</span>
+                        Stock<span className="text-red-500">*</span>
                       </>
                     }
                   />

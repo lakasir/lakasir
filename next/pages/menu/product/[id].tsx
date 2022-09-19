@@ -15,7 +15,7 @@ const Detail: NextPage = () => {
     <div className="h-screen absolute">
       <div className="w-screen h-72 overflow-hidden">
         <Image
-          src={"/assets/products/product-image.jpg"}
+          src={"/assets/products/kfc.jpg"}
           layout="responsive"
           width={"100%"}
           height={"100%"}
@@ -26,11 +26,11 @@ const Detail: NextPage = () => {
         <div className="grid gap-y-12">
           <div className="flex justify-between">
             <div>
-              <p className="text-2xl">Product Name</p>
+              <p className="text-2xl">Fried Chicken</p>
               <p className="text-sm font-light">Stock 200</p>
             </div>
             <p className="text-sm font-light place-self-center">
-              Rp. 50.000,00
+              Rp. 22.000
             </p>
           </div>
           <div>
@@ -44,7 +44,7 @@ const Detail: NextPage = () => {
               <tbody className="leading-[1.75]">
                 <tr>
                   <td>Initial Price</td>
-                  <td>Rp. 50.000,00</td>
+                  <td>Rp. 20.000</td>
                 </tr>
                 <tr>
                   <td>Type</td>
