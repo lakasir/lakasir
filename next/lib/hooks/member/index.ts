@@ -11,9 +11,10 @@ import { useRouter } from "next/router";
 import { useRef } from "react";
 import toast from "react-hot-toast";
 
+
 export const useMember = () => {
-  const router = useRouter();
   const dataFetchedRef = useRef(false);
+  const router = useRouter();
   const {
     getMemberAction,
     createMemberAction,
@@ -109,10 +110,27 @@ export const useMember = () => {
     }
   };
 
+  const deleteMember = async (id: number): Promise<Response<null>> => {
+    const toastId = toast.loading("Deleting member...");
+    try {
+      const response = await deleteMemberAction(id);
+      if (response instanceof AxiosError) {
+        throw response;
+      }
+    } catch (e) {
+      toast.error("Deleting member failed", { id: toastId });
+      throw e;
+    }
+    toast.success("Delete member success", { id: toastId });
+    return {} as Response<null>;
+  };
+
+
   return {
     getMember,
     createMember,
     getDetailMember,
     updateMember,
+    deleteMember,
   };
 };
