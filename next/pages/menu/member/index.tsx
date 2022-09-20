@@ -2,11 +2,12 @@ import { useMember } from "@/hooks/member";
 import { IMemberResponse } from "@/models/member";
 import { Response } from "@/models/response";
 import { FloatingActionButton } from "@/ui/Buttons";
-import { Card, CardLink } from "@/ui/Card";
+import { Card } from "@/ui/Card";
 import { Input } from "@/ui/Fields";
 import { Layout } from "@/ui/Layout";
+import { PencilIcon, TrashIcon } from "@heroicons/react/solid";
 import { NextPage } from "next";
-import Link from "next/link";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
 interface IMenuInterface {
@@ -16,15 +17,6 @@ interface IMenuInterface {
   id: number;
 }
 
-const member: IMenuInterface[] = [
-  {
-    id: 1,
-    label: "Member A",
-    description: "Description",
-    sub_description: "Sub Description",
-  },
-];
-
 interface ShowActionInterface {
   delete?: boolean;
   add?: boolean;
@@ -33,17 +25,26 @@ interface ShowActionInterface {
 }
 
 const Category: NextPage = () => {
-  const { getMember } = useMember();
+  const { getMember, deleteMember } = useMember();
   const [memberData, setMemberData] = useState<IMemberResponse[]>([]);
-
-  useEffect(() => {
+  const router = useRouter();
+  const loadData = () => {
     getMember().then((response) => {
       if (response) {
         const responseData = response as Response<IMemberResponse[]>;
         setMemberData(responseData.data);
       }
     });
+  };
+
+  useEffect(() => {
+    loadData();
   }, [memberData]);
+  // remove memberData by id member from array
+  const removeMember = (id: number) => {
+    const newMemberData = memberData.filter((member) => member.id !== id);
+    setMemberData(newMemberData);
+  };
 
   const [show, setShow] = useState<ShowActionInterface>({
     delete: false,
@@ -51,53 +52,48 @@ const Category: NextPage = () => {
     search: false,
     edit: false,
   });
-
   return (
     <Layout title="Member" back>
       <>
         <div className="py-3 space-y-2 mb-24">
+          {memberData.length === 0 ? (
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+              No Data
+            </div>
+          ) : (
+            <> </>
+          )}
           {memberData.map((el, index) => (
-            <Link href={`/menu/member/edit/${el.id}`} key={index}>
-              <CardLink
-                onClick={(e: React.MouseEvent<HTMLAnchorElement>) => {
-                  if (show.delete) e.preventDefault();
-                }}
-              >
-                <Card
-                  label={el.name}
-                  description={el.name}
-                  sub_description={el.code}
-                  confirmable={() => {
-                    if (show.delete) {
-                      alert("confirm deleted");
+            <Card
+              key={index}
+              onClick={() => {
+                router.push(`/menu/member/edit/${el.id}`);
+              }}
+              label={el.name}
+              description={el.name}
+              sub_description={el.code}
+              id={el.id}
+              action={[
+                {
+                  icon: <TrashIcon className="w-5 h-5" />,
+                  label: "Delete",
+                  confirmable: (confirm) => {
+                    if (confirm) {
+                      deleteMember(el.id).then((_) => {
+                        removeMember(el.id);
+                      });
                     }
-                    if (show.edit) {
-                      alert("confirm edit");
-                    }
-                  }}
-                  class={{ confirmable: { confirm: "py-5", cancel: "py-5" } }}
-                  id={el.id}
-                  action={
-                    <>
-                      {show.delete ? (
-                        <div
-                          className="bg-gray-200 flex justify-center items-center rounded-r-lg w-3/4 ml-auto h-[67px]"
-                          id="action-delete"
-                        >
-                          <img
-                            src={"./../assets/icons/Red Delete.svg"}
-                            width="50"
-                            height="50"
-                          />
-                        </div>
-                      ) : (
-                        ""
-                      )}
-                    </>
-                  }
-                />
-              </CardLink>
-            </Link>
+                  },
+                },
+                {
+                  icon: <PencilIcon className="w-5 h-5" />,
+                  label: "Edit",
+                  onClick: () => {
+                    router.push(`/menu/member/edit/${el.id}`);
+                  },
+                },
+              ]}
+            />
           ))}
         </div>
         <FloatingActionButton
@@ -115,17 +111,6 @@ const Category: NextPage = () => {
                 />
               ),
               onClick: () => setShow({ search: !show.search }),
-            },
-            {
-              label: "Delete",
-              icon: (
-                <img
-                  src={"./../assets/icons/Delete.svg"}
-                  width="30"
-                  height="30"
-                />
-              ),
-              onClick: () => setShow({ delete: !show.delete }),
             },
           ]}
         />
