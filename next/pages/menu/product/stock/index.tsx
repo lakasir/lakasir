@@ -82,7 +82,6 @@ const StockManagemenet: NextPage = () => {
                 description={m.description}
                 sub_description={m.sub_description}
                 image={m.image}
-                class={{ confirmable: { confirm: "py-7", cancel: "py-7" } }}
                 id={m.id}
                 onClick={() => {
                   setShow({ stock: true });

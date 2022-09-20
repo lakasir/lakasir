@@ -12,7 +12,7 @@ interface IMenuInterface {
   label: string;
   description: string;
   sub_description: string;
-  image: JSX.Element;
+  image: JSX.Element | string;
   id: number;
 }
 
@@ -84,41 +84,16 @@ const Product: NextPage = () => {
     <Layout title="Product" back={true}>
       <div>
         <div>
-          <div className="py-3 space-y-8 mb-24">
+          <div className="py-3 space-y-4 mb-24">
             {product.map((m, index) => (
-              <Link href={`/menu/product/${m.id}`} key={index}>
-                <CardLink
-                  onClick={(e: React.MouseEvent<HTMLAnchorElement>) => {
-                    if (show.delete) e.preventDefault();
-                  }}
-                >
-                  <Card
-                    label={m.label}
-                    description={m.description}
-                    sub_description={m.sub_description}
-                    image={m.image}
-                    class={{ confirmable: { confirm: "py-7", cancel: "py-7" } }}
-                    confirmable={() => alert("CONFIRMED")}
-                    action={
-                      show.delete ? (
-                        <div
-                          className="bg-gray-200 flex justify-center items-center rounded-r-lg h-[93px]"
-                          id="action-delete"
-                        >
-                          <img
-                            src={"./../assets/icons/Red Delete.svg"}
-                            width="50"
-                            height="50"
-                          />
-                        </div>
-                      ) : (
-                        <></>
-                      )
-                    }
-                    id={m.id}
-                  />
-                </CardLink>
-              </Link>
+              <Card
+                label={m.label}
+                description={m.description}
+                sub_description={m.sub_description}
+                image={m.image}
+                confirmable={() => alert("CONFIRMED")}
+                id={m.id}
+              />
             ))}
           </div>
           <FloatingActionButton
