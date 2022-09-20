@@ -10,13 +10,6 @@ import { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
-interface IMenuInterface {
-  label: string;
-  description: string;
-  sub_description: string;
-  id: number;
-}
-
 interface ShowActionInterface {
   delete?: boolean;
   add?: boolean;
@@ -53,7 +46,7 @@ const Category: NextPage = () => {
     edit: false,
   });
   return (
-    <Layout title="Member" back>
+    <Layout title="Member" back onClick={() => router.push("/menu")}>
       <>
         <div className="py-3 space-y-2 mb-24">
           {memberData.length === 0 ? (
