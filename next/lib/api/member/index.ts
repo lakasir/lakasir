@@ -78,7 +78,7 @@ export const useMemberApi = () => {
     }
   };
 
-  const deleteMemberAction = async (): Promise<
+  const deleteMemberAction = async (id: number): Promise<
     Response<IMemberFormResponse> | Error
   > => {
     try {
@@ -86,7 +86,7 @@ export const useMemberApi = () => {
         .get("/sanctum/csrf-cookie")
         .then(async () => {
           const response = await axios.delete<Response<IMemberFormResponse>>(
-            "/api/master/member"
+            `/api/master/member/${id}`
           );
           return response.data;
         })
