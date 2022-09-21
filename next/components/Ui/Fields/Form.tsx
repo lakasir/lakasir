@@ -27,6 +27,14 @@ const setDefaultFormValue = (initialValue: any) => {
       }
     }
   });
+  // set default value for form element via dom formElement object
+  formElement?.querySelectorAll("textarea").forEach((textarea) => {
+    if (initialValue[textarea.name] === undefined) {
+      textarea.innerHTML = "";
+    } else {
+      textarea.innerHTML = initialValue[textarea.name];
+    }
+  })
 };
 
 const Form = (props: IForm): JSX.Element => {

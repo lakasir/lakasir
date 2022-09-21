@@ -30,9 +30,9 @@ const FloatingActionButton = (props: IFloatingActionButtonInterface) => {
           <div id="action-option" className="space-y-6 mb-6 w-full">
             {props.options.map((el, index) => (
               <div className="flex justify-start items-center" key={index}>
-                <div className="w-1/6">
+                <div className="w-1/6 rounded-full overflow-hidden">
                   <Button
-                    className="w-14 rounded-full flex justify-center items-center drop-shadow-2xl h-14 bg-red-500 my-0"
+                    className="w-full rounded-full flex justify-center items-center drop-shadow-2xl h-14 bg-red-500 my-0"
                     onClick={() => {
                       if (!el.confirmable) {
                         el.onClick();
@@ -111,22 +111,20 @@ const FloatingActionButton = (props: IFloatingActionButtonInterface) => {
         ) : (
           ""
         )}
-        <div>
           <Button
-            className="w-14 py-4 rounded-xl flex justify-center items-center drop-shadow-2xl h-14"
+            className="w-14 py-4 rounded-md flex justify-center items-center drop-shadow-2xl h-14"
             onClick={() => setShow({ option: !show.option })}
           >
             <Image
-              src="/assets/icons/Single Choice.svg"
-              width={30}
-              height={30}
-            />
-          </Button>
-        </div>
+            src="/assets/icons/Single Choice.svg"
+            width={30}
+          height={30}
+          />
+            </Button>
       </div>
       {props.onClick ? (
         <Button
-          className="w-4/5 py-4 rounded-xl drop-shadow-2xl text-lg font-semibold h-14 absolute right-0"
+          className="w-4/5 py-4 rounded-md drop-shadow-2xl text-lg font-semibold h-14 absolute right-0"
           onClick={props.onClick}
         >
           {props.title}
@@ -136,7 +134,7 @@ const FloatingActionButton = (props: IFloatingActionButtonInterface) => {
       )}
       {props.action ? (
         <Link href={props.action}>
-          <Button className="w-4/5 py-4 rounded-xl drop-shadow-2xl text-lg font-semibold h-14 absolute right-0">
+          <Button className="w-4/5 py-4 rounded-md drop-shadow-2xl text-lg font-semibold h-14 absolute right-0">
             {props.title}
           </Button>
         </Link>

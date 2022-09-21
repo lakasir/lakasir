@@ -55,7 +55,7 @@ const Layout = (props: ILayoutInterface) => {
         ""
       )}
       {props.append ? props.append : (!props.nosavearea ? (<div className="h-20 w-20"></div>) : <></>)}
-      <div className={classNames("mx-auto w-11/12")}>{props.children}</div>
+      <div className={classNames("mx-auto w-11/12", props.className)}>{props.children}</div>
     </>
   );
 };
