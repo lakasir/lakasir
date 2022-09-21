@@ -9,7 +9,6 @@ interface IActionOption {
 }
 
 interface ICardInterface {
-  confirmable?: () => void;
   onClick?: (e: MouseEventHandler<HTMLDivElement>) => void;
   image?: JSX.Element;
   label: string;
@@ -29,6 +28,35 @@ const Card = (props: ICardInterface) => {
   });
   return (
     <>
+      <Modal onClose={(status) => setShow({ stock: status })} open={show.stock}>
+        <div className="w-11/12 mx-auto bg-white pb-4 p-2 rounded-md">
+          <p className="text-center text-lg py-2 w-full border-b-2 border-b-gray-300">
+            Action
+          </p>
+          <div className="flex flex-col justify-center items-center gap-y-2">
+            {props.action?.map((item, index) => (
+              <li
+                key={index}
+                className="w-full cursor-pointer flex items-center justify-between bg-white px-2.5 py-0.5 text-sm font-medium leading-5 text-gray-700 shadow-sm hover:bg-gray-50"
+                onClick={() => {
+                  if (item.onClick) {
+                    item.onClick();
+                  } else if (item.confirmable) {
+                    const confirm = window.confirm("would you sure this action?");
+                    item.confirmable(confirm);
+                  } else {
+                    throw new Error("Action not found");
+                  }
+                  setShow({ stock: false });
+                }}
+              >
+                <div>{item.label}</div>
+                <div>{item.icon ? item.icon : ""}</div>
+              </li>
+            ))}
+          </div>
+        </div>
+      </Modal>
       <div className="flex" id="action-detail">
         <div
           className="w-full rounded-lg overflow-hidden cursor-pointer"
@@ -65,35 +93,6 @@ const Card = (props: ICardInterface) => {
           ""
         )}
       </div>
-      <Modal onClose={(status) => setShow({ stock: status })} open={show.stock}>
-        <div className="w-11/12 mx-auto bg-white pb-4">
-          <p className="text-center text-lg py-2 w-full border-2 border-l-none border-t-none border-r-none border-b-2 border-b-gray-300">
-            Action
-          </p>
-          <div className="flex flex-col justify-center items-center gap-y-2">
-            {props.action?.map((item, index) => (
-              <li
-                key={index}
-                className="w-full cursor-pointer flex items-center justify-between bg-white px-2.5 py-0.5 text-sm font-medium leading-5 text-gray-700 shadow-sm hover:bg-gray-50"
-                onClick={() => {
-                  if (item.onClick) {
-                    item.onClick();
-                  } else if (item.confirmable) {
-                    const confirm = window.confirm("would you sure this action?");
-                    item.confirmable(confirm);
-                  } else {
-                    throw new Error("Action not found");
-                  }
-                  setShow({ stock: false });
-                }}
-              >
-                <div>{item.label}</div>
-                <div>{item.icon ? item.icon : ""}</div>
-              </li>
-            ))}
-          </div>
-        </div>
-      </Modal>
     </>
   );
 };
