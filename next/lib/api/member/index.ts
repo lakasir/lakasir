@@ -41,8 +41,6 @@ export const useMemberApi = () => {
           return error;
         });
     } catch (error) {
-      console.log("Ini Error");
-      console.log((error as AxiosError<ErrorResponse>).response);
       throw error as ErrorResponse;
     }
   };
