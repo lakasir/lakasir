@@ -40,11 +40,6 @@ const Category: NextPage = () => {
     loadData();
   }, [categoryData, errors]);
 
-  const removeCategory = (id: number) => {
-    const newCategoryData = categoryData.filter((member) => member.id !== id);
-    setCategoryData(newCategoryData);
-  };
-
   const handleCreateOrUpdateCategory = async (
     _: FormEvent,
     values: ICategoryFormRequest
@@ -92,7 +87,7 @@ const Category: NextPage = () => {
                   confirmable: async (confirm) => {
                     if (confirm) {
                       await deleteCategory(el.id);
-                      removeCategory(el.id);
+                      loadData();
                     }
                   },
                 },

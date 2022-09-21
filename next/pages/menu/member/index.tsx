@@ -34,11 +34,6 @@ const Category: NextPage = () => {
     loadData();
   }, [memberData]);
 
-  const removeMember = (id: number) => {
-    const newMemberData = memberData.filter((member) => member.id !== id);
-    setMemberData(newMemberData);
-  };
-
   const [show, setShow] = useState<ShowActionInterface>({
     delete: false,
     add: false,
@@ -70,11 +65,10 @@ const Category: NextPage = () => {
                 {
                   icon: <TrashIcon className="w-5 h-5" />,
                   label: "Delete",
-                  confirmable: (confirm) => {
+                  confirmable: async (confirm) => {
                     if (confirm) {
-                      deleteMember(el.id).then((_) => {
-                        removeMember(el.id);
-                      });
+                      await deleteMember(el.id);
+                      loadData();
                     }
                   },
                 },
