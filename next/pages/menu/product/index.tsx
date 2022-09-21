@@ -81,7 +81,7 @@ const Product: NextPage = () => {
   const router = useRouter();
 
   return (
-    <Layout title="Product" back={true}>
+    <Layout title="Product" back onClick={() => router.push("/menu")}>
       <div>
         <div>
           <div className="py-3 space-y-4 mb-24">

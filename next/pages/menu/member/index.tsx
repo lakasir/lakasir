@@ -33,7 +33,7 @@ const Category: NextPage = () => {
   useEffect(() => {
     loadData();
   }, [memberData]);
-  // remove memberData by id member from array
+
   const removeMember = (id: number) => {
     const newMemberData = memberData.filter((member) => member.id !== id);
     setMemberData(newMemberData);

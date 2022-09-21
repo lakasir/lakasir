@@ -1,122 +1,161 @@
-import { FloatingActionButton } from "@/ui/Buttons";
+import { useCategory } from "@/hooks/category";
+import { ICategoryFormRequest, ICategoryResponse } from "@/models/category";
+import { Response } from "@/models/response";
+import { Button, FloatingActionButton } from "@/ui/Buttons";
 import { Card } from "@/ui/Card";
 import { Form, Input } from "@/ui/Fields";
 import { Layout } from "@/ui/Layout";
+import { Modal } from "@/ui/Modals";
+import { PencilIcon, SearchIcon, TrashIcon } from "@heroicons/react/solid";
 import { NextPage } from "next";
-import Image from "next/image";
-import { useState } from "react";
-
-interface IMenuInterface {
-  label: string;
-  id: number;
-}
-
-const category: IMenuInterface[] = [
-  {
-    id: 1,
-    label: "Product A",
-  },
-];
-
-interface ShowActionInterface {
-  delete?: boolean;
-  add?: boolean;
-}
+import { useRouter } from "next/router";
+import { FormEvent, useEffect, useState } from "react";
 
 const Category: NextPage = () => {
-  const [show, setShow] = useState<ShowActionInterface>({
-    delete: false,
-    add: false,
+  const router = useRouter();
+  const [errors, setErrors] = useState({
+    name: "",
   });
+  const [show, setShow] = useState({
+    addOrEdit: false,
+    search: false,
+  });
+  const [category, setCategory] = useState({
+    name: "",
+    id: 0,
+  });
+  const [categoryData, setCategoryData] = useState<ICategoryResponse[]>([]);
+  const { getCategory, createCategory, deleteCategory, getDetailCategory, updateCategory } =
+    useCategory();
+  const loadData = () => {
+    getCategory().then((response) => {
+      if (response) {
+        const responseData = response as Response<ICategoryResponse[]>;
+        setCategoryData(responseData.data);
+      }
+    });
+  };
+
+  useEffect(() => {
+    loadData();
+  }, [categoryData, errors]);
+
+  const removeCategory = (id: number) => {
+    const newCategoryData = categoryData.filter((member) => member.id !== id);
+    setCategoryData(newCategoryData);
+  };
+
+  const handleCreateOrUpdateCategory = async (
+    _: FormEvent,
+    values: ICategoryFormRequest
+  ) => {
+    setErrors({ name: "" });
+    if (category.id === 0) {
+      await createCategory(values, (errors) => {
+        setErrors({
+          name: errors.errors.name ? errors.errors.name[0] : "",
+        });
+      });
+    } else {
+      await updateCategory(category.id, values, (errors) => {
+        console.log(errors);
+        setErrors({
+          name: errors.errors.name ? errors.errors.name[0] : "",
+        });
+      });
+    }
+    setCategory({ name: "", id: 0 });
+    setShow({ ...show, addOrEdit: false });
+    loadData();
+  };
 
   return (
-    <Layout title="Category" back>
+    <Layout title="Category" back onClick={() => router.push("/menu/product")}>
       <>
-        <div className="py-3 space-y-2 mb-24">
-          {category.map((el, index) => (
+        <div className="py-3 space-y-4 mb-24">
+          {categoryData.length === 0 ? (
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+              No Data
+            </div>
+          ) : (
+            <> </>
+          )}
+          {categoryData.map((el, index) => (
             <Card
               key={index}
-              label={el.label}
-              confirmable={() => alert("confirmed")}
-              class={{
-                confirmable: { confirm: "py-1", cancel: "py-1" },
-              }}
+              label={el.name}
               id={el.id}
-              action={
-                show.delete ? (
-                  <div
-                    className="bg-gray-200 flex justify-center items-center rounded-r-lg w-1/2 ml-auto h-10"
-                    id="action-delete"
-                  >
-                    <img
-                      src={"./../assets/icons/Red Delete.svg"}
-                      width="30"
-                      height="30"
-                    />
-                  </div>
-                ) : (
-                  <></>
-                )
-              }
+              action={[
+                {
+                  icon: <TrashIcon className="w-5 h-5" />,
+                  label: "Delete",
+                  confirmable: async (confirm) => {
+                    if (confirm) {
+                      await deleteCategory(el.id);
+                      removeCategory(el.id);
+                    }
+                  },
+                },
+                {
+                  icon: <PencilIcon className="w-5 h-5" />,
+                  label: "Edit",
+                  onClick: async () => {
+                    const detail = await getDetailCategory(el.id);
+                    setCategory({
+                      name: detail.data.name,
+                      id: detail.data.id,
+                    });
+                    setShow({ ...show, addOrEdit: true });
+                  },
+                },
+              ]}
             />
           ))}
-          <Form
-            onSubmit={(e, values) => console.log(values)}
-            className="hidden"
-            initialValue={{ name: "" }}
-          >
-            {() => (
-              <>
-                <Input
-                  name={"name"}
-                  type={"text"}
-                  className="rounded-r-none"
-                  label={
-                    <>
-                      Name<span className="text-red-500">*</span>
-                    </>
-                  }
-                  append={
-                    <button
-                      type="submit"
-                      className="w-1/5 rounded-r-lg bg-gray-200 flex justify-center items-center"
-                    >
-                      <Image
-                        src="/assets/icons/Save.svg"
-                        width={30}
-                        height={30}
-                      />
-                    </button>
-                  }
-                />
-              </>
-            )}
-          </Form>
         </div>
-        <FloatingActionButton
-          title={show.add ? "Cancel" : "Add Category"}
-          dismissable
-          onClick={() => {
-            if (!show.add) {
-              document
-                .querySelector("#form__lakasir")
-                ?.classList.remove("hidden");
-            } else {
-              document.querySelector("#form__lakasir")?.classList.add("hidden");
-            }
-            setShow({ add: !show.add, delete: show.delete });
+        <Modal
+          onClose={(status) => {
+            setShow({ ...show, addOrEdit: status });
+            setCategory({ name: "", id: 0 });
           }}
+          open={show.addOrEdit}
+        >
+          <div className="w-11/12 mx-auto bg-white pb-4 p-2 rounded-md">
+            <p className="text-center text-lg py-2 w-full border-b-2 border-b-gray-300">
+              {category.id === 0 ? "Add Category" : "Edit Category"}
+            </p>
+            <Form
+              onSubmit={handleCreateOrUpdateCategory}
+              initialValue={{ name: category.name }}
+            >
+              {() => (
+                <>
+                  <Input
+                    name={"name"}
+                    type={"text"}
+                    error={errors.name}
+                    label={
+                      <>
+                        Name<span className="text-red-500">*</span>
+                      </>
+                    }
+                  />
+                  <Button className="w-full py-4">Submit Category</Button>
+                </>
+              )}
+            </Form>
+          </div>
+        </Modal>
+        <FloatingActionButton
+          title="Add Category"
+          dismissable
+          onClick={() => setShow({ ...show, addOrEdit: true })}
           options={[
             {
-              label: "Delete",
+              label: "Search",
               icon: (
-                <img
-                  src={"./../assets/icons/Delete.svg"}
-                  width="30"
-                  height="30"
-                />
+                <SearchIcon className="w-7 h-7 text-white" aria-hidden="true" />
               ),
-              onClick: () => setShow({ delete: !show.delete, add: show.add }),
+              onClick: () => alert("Search"),
             },
           ]}
         />
