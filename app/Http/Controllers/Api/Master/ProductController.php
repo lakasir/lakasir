@@ -28,7 +28,7 @@ class ProductController extends Controller
 
     public function show(Product $product)
     {
-        return $this->success($product);
+        return $this->success($product->load('category'));
     }
 
     public function update(Request $request, Product $product)
