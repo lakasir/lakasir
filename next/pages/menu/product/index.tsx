@@ -1,65 +1,16 @@
+import { useProduct } from "@/hooks/product";
+import { IProductResponse } from "@/models/product";
+import { Response } from "@/models/response";
 import { FloatingActionButton } from "@/ui/Buttons";
-import { Card, CardLink } from "@/ui/Card";
+import { Card } from "@/ui/Card";
 import { Input } from "@/ui/Fields";
 import { Layout } from "@/ui/Layout";
 import { Modal } from "@/ui/Modals";
+import { formatPrice } from "@/utils/helpers";
+import { PencilIcon, TrashIcon } from "@heroicons/react/solid";
 import { NextPage } from "next";
-import Link from "next/link";
 import { useRouter } from "next/router";
-import { useState } from "react";
-
-interface IMenuInterface {
-  label: string;
-  description: string;
-  sub_description: string;
-  image: JSX.Element | string;
-  id: number;
-}
-
-const product: IMenuInterface[] = [
-  {
-    id: 1,
-    label: "Pizza",
-    description: "100 stock",
-    sub_description: "Rp. 10.000,00 - Rp. 12.000,00",
-    image: (
-      <img
-        src={"./../assets/products/product-image.jpg"}
-        width="100%"
-        height="100%"
-        className="rounded-lg"
-      />
-    ),
-  },
-  {
-    id: 2,
-    label: "Fried Chicken",
-    description: "- stock",
-    sub_description: "Rp. 25.000,00 - Rp. 28.000,00",
-    image: (
-      <img
-        src={"./../assets/products/KFC.jpg"}
-        width="100%"
-        height="100%"
-        className="rounded-lg"
-      />
-    ),
-  },
-  {
-    id: 3,
-    label: "Tiramisu Cofee",
-    description: "- stock",
-    sub_description: "Rp. 20.000,00 - Rp. 22.000,00",
-    image: (
-      <img
-        src={"./../assets/products/cofee.jpg"}
-        width="100%"
-        height="100%"
-        className="rounded-lg"
-      />
-    ),
-  },
-];
+import { useEffect, useState } from "react";
 
 interface ShowActionInterface {
   delete?: boolean;
@@ -70,6 +21,8 @@ interface ShowActionInterface {
 }
 
 const Product: NextPage = () => {
+  const { getProduct, deleteProduct } = useProduct();
+  const [productData, setProductData] = useState<IProductResponse[]>([]);
   const [show, setShow] = useState<ShowActionInterface>({
     delete: false,
     option: false,
@@ -77,6 +30,17 @@ const Product: NextPage = () => {
     confirm: false,
     stock: false,
   });
+  const loadData = async () => {
+    const response = await getProduct();
+    if (response) {
+      const responseData = response as Response<IProductResponse[]>;
+      setProductData(responseData.data);
+    }
+  };
+
+  useEffect(() => {
+    loadData();
+  }, [productData]);
 
   const router = useRouter();
 
@@ -85,14 +49,45 @@ const Product: NextPage = () => {
       <div>
         <div>
           <div className="py-3 space-y-4 mb-24">
-            {product.map((m, index) => (
+            {productData.map((m, index) => (
               <Card
-                label={m.label}
-                description={m.description}
-                sub_description={m.sub_description}
-                image={m.image}
-                confirmable={() => alert("CONFIRMED")}
+                onClick={() => {
+                  router.push(`/menu/product/${m.id}`);
+                }}
+                key={index}
+                label={m.name}
+                description={`${m.stock} stock`}
+                sub_description={`${formatPrice(
+                  m.initial_price
+                )} - ${formatPrice(m.selling_price)}`}
+                image={
+                  <img
+                    src={"./../assets/products/product-image.jpg"}
+                    width="100%"
+                    height="100%"
+                    className="rounded-lg"
+                  />
+                }
                 id={m.id}
+                action={[
+                  {
+                    icon: <TrashIcon className="w-5 h-5" />,
+                    label: "Delete",
+                    confirmable: async (confirm) => {
+                      if (confirm) {
+                        await deleteProduct(m.id);
+                        loadData();
+                      }
+                    },
+                  },
+                  {
+                    icon: <PencilIcon className="w-5 h-5" />,
+                    label: "Edit",
+                    onClick: () => {
+                      alert("edit");
+                    },
+                  },
+                ]}
               />
             ))}
           </div>
@@ -133,17 +128,6 @@ const Product: NextPage = () => {
                   />
                 ),
                 onClick: () => router.push("/menu/product/stock"),
-              },
-              {
-                label: "Delete",
-                icon: (
-                  <img
-                    src={"./../assets/icons/Delete.svg"}
-                    width="30"
-                    height="30"
-                  />
-                ),
-                onClick: () => setShow({ delete: !show.delete }),
               },
             ]}
           />

@@ -54,6 +54,7 @@ export const useMember = () => {
       const responseDetail = response as Response<IMemberFormResponse>;
       toast.success("Creating member success", { id: toastId });
       router.push("/menu/member");
+      dataFetchedRef.current = false;
       return responseDetail;
     } catch (e) {
       const error = e as AxiosError<ErrorResponse>;
@@ -97,6 +98,7 @@ export const useMember = () => {
       const responseDetail = response as Response<IMemberFormResponse>;
       toast.success("Update member success", { id: toastId });
       router.push("/menu/member");
+      dataFetchedRef.current = false;
       return responseDetail;
     } catch (e) {
       const error = e as AxiosError<ErrorResponse>;
@@ -114,6 +116,7 @@ export const useMember = () => {
     const toastId = toast.loading("Deleting member...");
     try {
       const response = await deleteMemberAction(id);
+      dataFetchedRef.current = false;
       if (response instanceof AxiosError) {
         throw response;
       }
