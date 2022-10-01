@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\Master\CategoryController;
 use App\Http\Controllers\Api\Master\MemberController;
 use App\Http\Controllers\Api\Master\ProductController;
 use App\Http\Controllers\Api\Transaction\SellingController;
+use App\Http\Controllers\Api\UploadController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
@@ -39,6 +40,11 @@ Route::group(['prefix' => 'auth'], function ()
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
         ->middleware('auth')
         ->name('logout');
+});
+
+Route::group(['prefix' => 'temp', 'middleware' => 'auth:sanctum'], function ()
+{
+    Route::post('upload', UploadController::class);
 });
 
 Route::group(['prefix' => 'master', 'middleware' => 'auth:sanctum'], function ()
