@@ -41,6 +41,9 @@ class Controller extends BaseController
      */
     public function fail($data, $message = "", $code = 500): JsonResponse
     {
+        if (is_string($code)) {
+            $code = 500;
+        }
         if ($code == 200) {
             throw new Exception("Code should not have 200");
         }
