@@ -19,7 +19,8 @@ const setDefaultFormValue = (initialValue: any) => {
       } else {
         input.checked = initialValue[input.name];
       }
-    } else if(input.type == "file") {
+    } else if(input.classList.value.split(" ").includes("file-inputs")) {
+      // console.log(input.name, initialValue);
     } else {
       if (initialValue[input.name] === undefined) {
         input.value = "";

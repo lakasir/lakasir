@@ -92,7 +92,7 @@ const FilePicker = (props: IFilePickerInterface) => {
             key={i}
             type="text"
             name={`${props.name}[${i}]`}
-            className="hidden"
+            className="hidden file-inputs"
             value={res}
           />
         ))

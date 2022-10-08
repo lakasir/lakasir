@@ -41,7 +41,7 @@ class Controller extends BaseController
      */
     public function fail($data, $message = "", $code = 500): JsonResponse
     {
-        if (is_string($code)) {
+        if (is_string($code) || $code == 0) {
             $code = 500;
         }
         if ($code == 200) {

@@ -1,7 +1,10 @@
 import { useCategory } from "@/hooks/category";
 import { useProduct } from "@/hooks/product";
 import { ICategoryResponse } from "@/models/category";
-import { IProductFormErrorResponse } from "@/models/product";
+import {
+  IProductFormErrorResponse,
+  IProductFormRequest,
+} from "@/models/product";
 import { Response } from "@/models/response";
 import { Button } from "@/ui/Buttons";
 import { Form, Input, Select } from "@/ui/Fields";
@@ -15,6 +18,7 @@ interface IFormProductInterface {
 }
 
 interface ProductData {
+  images?: string[];
   name?: string;
   category?: number;
   stock?: number;
@@ -46,7 +50,7 @@ const FormProduct = (props: IFormProductInterface) => {
     formData.append("file", file);
     promise("/api/temp/upload", formData)
       .then((res) => {
-        setValue(res.data.url);
+        setValue(res.data.name);
       })
       .catch((err) => {
         console.log(err);
@@ -72,7 +76,28 @@ const FormProduct = (props: IFormProductInterface) => {
         ...props.form,
       }}
       onSubmit={(_: FormEvent, values: any) => {
-        createProduct(values, (errors) => {
+        let resultForm: IProductFormRequest = {
+          images: [{name: ""}],
+          name: "",
+          category: 0,
+          stock: 0,
+          initial_price: 0,
+          selling_price: 0,
+          type: "",
+          unit: "",
+        };
+        let i = 0;
+        for (const key in values) {
+          if (key == `images.name[${i}]`) {
+            resultForm.images[i] = {
+              name: values[key],
+            };
+            i++;
+          } else {
+            resultForm[key] = values[key]
+          }
+        }
+        createProduct(resultForm, (errors) => {
           setErrors({
             category: errors.errors.category ? errors.errors.category[0] : "",
             name: errors.errors.name ? errors.errors.name[0] : "",
@@ -94,7 +119,7 @@ const FormProduct = (props: IFormProductInterface) => {
           <FilePicker
             multiple
             accept="image/*"
-            name="images"
+            name="images.name"
             label={"Upload Image"}
             uploadingFiles={uploadingFiles}
           />

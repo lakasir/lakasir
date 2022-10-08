@@ -14,7 +14,12 @@ export type IProductResponse = {
   updated_at: string;
 };
 
+type IProductFormImage = {
+  name: string;
+}
+
 export type IProductFormRequest = {
+  images: IProductFormImage[];
   name: string;
   category: number;
   stock: number;
