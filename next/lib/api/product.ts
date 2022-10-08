@@ -1,6 +1,6 @@
 import {
   IProductResponse,
-  IproductFormRequest,
+  IProductFormRequest,
   IProductFormResponse,
 } from '@/models/product';
 import { ErrorResponse, Response } from "@/models/response";
@@ -29,6 +29,18 @@ export const useProductApi = () => {
     }
   }
 
+  const createProductAction = async (data: IProductFormRequest): Promise<Response<IProductFormResponse>> => {
+    try {
+      const response = await axios.post<Response<IProductFormResponse>>(
+        "/api/master/product",
+        data
+      );
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   const deleteProductAction = async (id: number): Promise<Response<IProductFormResponse> | Error> => {
     try {
       return axios.get("/sanctum/csrf-cookie").then(async () => {
@@ -46,5 +58,6 @@ export const useProductApi = () => {
     getProductAction,
     deleteProductAction,
     getDetailProductAction,
+    createProductAction,
   }
 }

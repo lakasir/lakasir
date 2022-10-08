@@ -44,7 +44,9 @@ const Select = (props: SelectProps): JSX.Element => {
           className={classNames(
             props.className,
             "p-3 transition ease-in-out border-2 shadow-sm block w-full sm:text-sm rounded-lg bg-transparent",
-            "border-gray-300 focus:outline-none focus:border-2 focus:ring-lakasir-primary focus:border-lakasir-primary"
+            props.error
+              ? `border-red-300 focus:outline-none focus:border-2 focus:ring-red-300 focus:border-red-500 animate-shake`
+              : "border-gray-300 focus:outline-none focus:border-2 focus:ring-lakasir-primary focus:border-lakasir-primary"
           )}
           placeholder={props.placeholder}
         >
@@ -54,22 +56,19 @@ const Select = (props: SelectProps): JSX.Element => {
             </option>
           ))}
         </select>
-        {props.error ? (
+        {props.error && (
           <>
-            {!props.disable?.errorIcon ? (
-              <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+            <div className="relative">
+              <div className="absolute top-4 right-0 pr-3 flex items-center pointer-events-none">
                 <ExclamationCircleIcon
                   className="h-5 w-5 text-red-500"
                   aria-hidden="true"
                 />
               </div>
-            ) : (
-              props.append
-            )}
+            </div>
           </>
-        ) : (
-          props.append
         )}
+        {props.append}
       </div>
       {props.error ? (
         <p className="mt-1 text-sm text-red-600" id="email-error">
@@ -80,6 +79,6 @@ const Select = (props: SelectProps): JSX.Element => {
       )}
     </div>
   );
-}
+};
 
 export { Select };

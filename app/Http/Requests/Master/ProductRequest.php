@@ -79,7 +79,7 @@ class ProductRequest extends FormRequest
     {
         if (!is_null($this->images()) && count($this->images()) > 0) {
             $images = [];
-            foreach ($this->images() as $key => $image) {
+            foreach ($this->images() as $image) {
                 $tmp = Storage::disk('tmp');
                 if (!$tmp->exists($image['name'])) {
                     throw new Exception("file in temp dir is not found");

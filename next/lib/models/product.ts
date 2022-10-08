@@ -14,7 +14,7 @@ export type IProductResponse = {
   updated_at: string;
 };
 
-export type IproductFormRequest = {
+export type IProductFormRequest = {
   name: string;
   category: number;
   stock: number;
@@ -26,3 +26,14 @@ export type IproductFormRequest = {
 
 export type IProductFormResponse = {
 }
+
+export type IProductFormErrorResponse = {
+  name: string;
+  category: string;
+  stock: string;
+  initial_price: string;
+  selling_price: string;
+  type: string;
+  unit: string;
+};
+

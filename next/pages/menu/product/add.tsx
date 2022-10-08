@@ -4,7 +4,7 @@ import FormProduct from "./form";
 
 const AddProduct: NextPage = () => {
   return (
-    <Layout title="Add Product" back={true}>
+    <Layout title="Example File Picker" back={true}>
       <div className="py-3">
       <FormProduct />
       </div>

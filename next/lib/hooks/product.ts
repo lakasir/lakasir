@@ -1,20 +1,30 @@
 import { useProductApi } from "@/api/product";
 import {
   IProductResponse,
-  IproductFormRequest,
+  IProductFormRequest,
   IProductFormResponse,
 } from "@/models/product";
 import { ErrorResponse, Response } from "@/models/response";
-import axios from "@/utils/axios";
 import { AxiosError } from "axios";
+import { useRouter } from "next/router";
 import { useRef } from "react";
 import toast from "react-hot-toast";
 
-export const useProduct = () => {
-  const { getProductAction, deleteProductAction, getDetailProductAction } = useProductApi();
-  const dataFetchRef = useRef(false);
+type ErrorHanlder = (error: ErrorResponse) => void;
 
-  const getProduct = async (): Promise<Response<IProductResponse[]> | boolean> => {
+export const useProduct = () => {
+  const {
+    getProductAction,
+    deleteProductAction,
+    getDetailProductAction,
+    createProductAction,
+  } = useProductApi();
+  const dataFetchRef = useRef(false);
+  const router = useRouter();
+
+  const getProduct = async (): Promise<
+    Response<IProductResponse[]> | boolean
+  > => {
     if (dataFetchRef.current) return false;
     dataFetchRef.current = true;
     const toastId = toast.loading("Get product...");
@@ -28,7 +38,9 @@ export const useProduct = () => {
     }
   };
 
-  const getDetailProduct = async (id: number): Promise<Response<IProductResponse> | boolean> => {
+  const getDetailProduct = async (
+    id: number
+  ): Promise<Response<IProductResponse> | boolean> => {
     if (dataFetchRef.current) return false;
     dataFetchRef.current = true;
     const toastId = toast.loading("Get detail product...");
@@ -39,6 +51,40 @@ export const useProduct = () => {
     } catch (error) {
       toast.error("Failed to get detail product", { id: toastId });
       throw error;
+    }
+  };
+
+  const createProduct = async (
+    data: IProductFormRequest,
+    setErrors: ErrorHanlder
+  ): Promise<Response<IProductFormResponse> | boolean> => {
+    if (dataFetchRef.current) return false;
+    dataFetchRef.current = true;
+    const toastId = toast.loading("Create product...");
+    try {
+      const response = await createProductAction(data);
+      toast.dismiss(toastId);
+      dataFetchRef.current = false;
+      router.push("/menu/product");
+      return response;
+    } catch (error) {
+      dataFetchRef.current = false;
+      toast.error("Failed to create product", { id: toastId });
+      const axiosError = error as AxiosError<ErrorResponse>;
+      if (axiosError.response?.data && axiosError.response?.status === 422) {
+        setErrors(
+          axiosError.response?.data || {
+            message: "",
+            errors: {},
+          }
+        );
+      } else {
+        setErrors({
+          message: axiosError.message || "Failed to create product",
+          errors: {},
+        });
+      }
+      return {} as Response<IProductFormResponse>;
     }
   };
 
@@ -58,5 +104,6 @@ export const useProduct = () => {
     getProduct,
     getDetailProduct,
     deleteProduct,
+    createProduct,
   };
 };
