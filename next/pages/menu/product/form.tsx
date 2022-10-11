@@ -14,18 +14,19 @@ import Link from "next/link";
 import { FormEvent, useEffect, useState } from "react";
 
 interface IFormProductInterface {
-  form?: ProductData;
+  form?: FormProductData;
+  id?: number;
 }
 
-interface ProductData {
+export interface FormProductData {
   images?: string[];
   name?: string;
   category?: number;
   stock?: number;
   initial_price?: number;
   selling_price?: number;
-  type?: number;
-  unit?: number;
+  type?: string;
+  unit?: string;
 }
 
 type ResponseFileUploaded = {
@@ -36,8 +37,8 @@ type ResponseFileUploaded = {
 const FormProduct = (props: IFormProductInterface) => {
   const { createProduct } = useProduct();
   const { getCategory } = useCategory();
-  const [categories, setCategories] = useState<ICategoryResponse[]>([]);
-  const [errors, setErrors] = useState<IProductFormErrorResponse>();
+  const [ categories, setCategories ] = useState<ICategoryResponse[]>([]);
+  const [ errors, setErrors ] = useState<IProductFormErrorResponse>();
   const uploadingFiles = (
     file: File,
     promise: (
@@ -114,12 +115,13 @@ const FormProduct = (props: IFormProductInterface) => {
         });
       }}
     >
-      {() => (
+      {(initialValue: FormProductData) => (
         <>
           <FilePicker
             multiple
             accept="image/*"
             name="images.name"
+            value={initialValue.images}
             label={"Upload Image"}
             uploadingFiles={uploadingFiles}
           />
@@ -193,7 +195,7 @@ const FormProduct = (props: IFormProductInterface) => {
             }
             options={[
               { value: "product", label: "Product" },
-              { value: "product", label: "Service" },
+              { value: "service", label: "Service" },
             ]}
           />
           <Input

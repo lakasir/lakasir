@@ -2,7 +2,7 @@ import { FormEvent, useEffect, useLayoutEffect, useRef, useState } from "react";
 
 export interface IForm {
   onSubmit: (e: FormEvent, values: any) => void;
-  children: () => JSX.Element;
+  children: (initialValue?: any) => JSX.Element;
   method?: string;
   id?: string;
   className?: string;
@@ -19,8 +19,8 @@ const setDefaultFormValue = (initialValue: any) => {
       } else {
         input.checked = initialValue[input.name];
       }
-    } else if(input.classList.value.split(" ").includes("file-inputs")) {
-      // console.log(input.name, initialValue);
+    } else if(input.classList.value.split(" ").includes("file-inputs") || input.type === "file") {
+      // console.log(JSON.parse(input.getAttribute('data-props') ?? ""));
     } else {
       if (initialValue[input.name] === undefined) {
         input.value = "";
@@ -37,6 +37,14 @@ const setDefaultFormValue = (initialValue: any) => {
       textarea.innerHTML = initialValue[textarea.name];
     }
   })
+
+  formElement?.querySelectorAll("select").forEach((select) => {
+    if (initialValue[select.name] === undefined) {
+      select.value = "";
+    } else {
+      select.value = initialValue[select.name];
+    }
+  });
 };
 
 const Form = (props: IForm): JSX.Element => {
@@ -65,7 +73,7 @@ const Form = (props: IForm): JSX.Element => {
           // setDefaultFormValue(formValues);
         }}
       >
-        {props.children()}
+        {props.children(props.initialValue)}
       </form>
     </div>
   );

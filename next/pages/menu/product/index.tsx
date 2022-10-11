@@ -84,7 +84,7 @@ const Product: NextPage = () => {
                     icon: <PencilIcon className="w-5 h-5" />,
                     label: "Edit",
                     onClick: () => {
-                      alert("edit");
+                      router.push(`/menu/product/edit/${m.id}`);
                     },
                   },
                 ]}
