@@ -5,7 +5,7 @@ import {
   IProductFormErrorResponse,
   IProductFormRequest,
 } from "@/models/product";
-import { Response } from "@/models/response";
+import { ErrorResponse, Response } from "@/models/response";
 import { Button } from "@/ui/Buttons";
 import { Form, Input, Select } from "@/ui/Fields";
 import { FilePicker } from "@/ui/Fields/File";
@@ -35,10 +35,10 @@ type ResponseFileUploaded = {
 };
 
 const FormProduct = (props: IFormProductInterface) => {
-  const { createProduct } = useProduct();
+  const { createProduct, updateProduct } = useProduct();
   const { getCategory } = useCategory();
-  const [ categories, setCategories ] = useState<ICategoryResponse[]>([]);
-  const [ errors, setErrors ] = useState<IProductFormErrorResponse>();
+  const [categories, setCategories] = useState<ICategoryResponse[]>([]);
+  const [errors, setErrors] = useState<IProductFormErrorResponse>();
   const uploadingFiles = (
     file: File,
     promise: (
@@ -66,6 +66,51 @@ const FormProduct = (props: IFormProductInterface) => {
     }
   };
 
+  const errorHandle = (errors: ErrorResponse) => {
+    setErrors({
+      category: errors.errors.category ? errors.errors.category[0] : "",
+      name: errors.errors.name ? errors.errors.name[0] : "",
+      stock: errors.errors.stock ? errors.errors.stock[0] : "",
+      initial_price: errors.errors.initial_price
+        ? errors.errors.initial_price[0]
+        : "",
+      selling_price: errors.errors.selling_price
+        ? errors.errors.selling_price[0]
+        : "",
+      unit: errors.errors.unit ? errors.errors.unit[0] : "",
+      type: errors.errors.type ? errors.errors.type[0] : "",
+    });
+  };
+
+  const formSubmit = async (_: FormEvent, values: IProductFormRequest) => {
+    let resultForm: IProductFormRequest = {
+      images: [{ name: "" }],
+      name: "",
+      category: 0,
+      stock: 0,
+      initial_price: 0,
+      selling_price: 0,
+      type: "",
+      unit: "",
+    };
+    let i = 0;
+    for (const key in values) {
+      if (key == `images.name[${i}]`) {
+        resultForm.images[i] = {
+          name: values[key],
+        };
+        i++;
+      } else {
+        resultForm[key] = values[key];
+      }
+    }
+    if (props.id) {
+      updateProduct(props.id, resultForm, errorHandle);
+    } else {
+      createProduct(resultForm, errorHandle);
+    }
+  };
+
   useEffect(() => {
     getCategories();
   }, [errors]);
@@ -76,44 +121,7 @@ const FormProduct = (props: IFormProductInterface) => {
       initialValue={{
         ...props.form,
       }}
-      onSubmit={(_: FormEvent, values: any) => {
-        let resultForm: IProductFormRequest = {
-          images: [{name: ""}],
-          name: "",
-          category: 0,
-          stock: 0,
-          initial_price: 0,
-          selling_price: 0,
-          type: "",
-          unit: "",
-        };
-        let i = 0;
-        for (const key in values) {
-          if (key == `images.name[${i}]`) {
-            resultForm.images[i] = {
-              name: values[key],
-            };
-            i++;
-          } else {
-            resultForm[key] = values[key]
-          }
-        }
-        createProduct(resultForm, (errors) => {
-          setErrors({
-            category: errors.errors.category ? errors.errors.category[0] : "",
-            name: errors.errors.name ? errors.errors.name[0] : "",
-            stock: errors.errors.stock ? errors.errors.stock[0] : "",
-            initial_price: errors.errors.initial_price
-              ? errors.errors.initial_price[0]
-              : "",
-            selling_price: errors.errors.selling_price
-              ? errors.errors.selling_price[0]
-              : "",
-            unit: errors.errors.unit ? errors.errors.unit[0] : "",
-            type: errors.errors.type ? errors.errors.type[0] : "",
-          });
-        });
-      }}
+      onSubmit={formSubmit}
     >
       {(initialValue: FormProductData) => (
         <>

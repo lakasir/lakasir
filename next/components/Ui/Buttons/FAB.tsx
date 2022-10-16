@@ -67,7 +67,6 @@ const FloatingActionButton = (props: IFloatingActionButtonInterface) => {
                       <Button
                         className="w-1/2 h-12 my-0 rounded-xl bg-red-600 drop-shadow-md"
                         onClick={() => {
-                          alert("Confirmed!");
                           const confirmEl = document.querySelector(
                             `#confirm-${index}`
                           );
@@ -87,7 +86,6 @@ const FloatingActionButton = (props: IFloatingActionButtonInterface) => {
                       <Button
                         className="w-1/2 h-12 my-0 rounded-xl bg-gray-100 text-black drop-shadow-md"
                         onClick={() => {
-                          alert("Canceled");
                           const confirmEl = document.querySelector(
                             `#confirm-${index}`
                           );

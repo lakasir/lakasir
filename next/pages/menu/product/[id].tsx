@@ -29,6 +29,7 @@ const Detail: NextPage = () => {
     }
   }, [product, id]);
   const [openModal, setOpenModal] = useState(false);
+  console.log(product?.images);
 
   return (
     <Layout nosavearea className="w-full mx-0">
@@ -128,7 +129,7 @@ const Detail: NextPage = () => {
                 ),
                 confirmable: true,
                 onClick: () => {
-                  console.log("OK");
+                  console.log("delete");
                 },
               },
             ]}

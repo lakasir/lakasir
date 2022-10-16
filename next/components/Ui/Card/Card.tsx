@@ -64,7 +64,7 @@ const Card = (props: ICardInterface) => {
         >
           <div className="flex items-center" onClick={props.onClick}>
             {props.image ? (
-              <div className="bg-lakasir-primary w-1/5 rounded-lg mr-2 flex justify-center items-center">
+              <div className="bg-lakasir-primary w-1/5 rounded-lg mr-2 flex justify-center items-center h-16 overflow-hidden">
                 {props.image}
               </div>
             ) : (

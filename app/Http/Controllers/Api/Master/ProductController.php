@@ -12,7 +12,7 @@ class ProductController extends Controller
 {
     public function index(Request $request)
     {
-        return $this->success(Product::filter($request)->get());
+        return $this->success(Product::with('images:name,url,id,product_id')->filter($request)->get());
     }
 
     public function store(ProductRequest $request)
@@ -27,7 +27,7 @@ class ProductController extends Controller
 
     public function show(Product $product)
     {
-        return $this->success($product->load('category'));
+        return $this->success($product->load('category', 'images'));
     }
 
     public function update(ProductRequest $request)

@@ -8,6 +8,9 @@ const { parsed: localEnv } = require('dotenv').config({
 console.log(localEnv);
 
 const nextConfig = {
+  images: {
+    domains: [localEnv.APP_URL.replace(/(^\w+:|^)\/\//, '')],
+  },
   env: {
     ...localEnv,
   },

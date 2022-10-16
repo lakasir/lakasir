@@ -1,7 +1,17 @@
 import { ICategoryResponse } from "./category";
 
+export type IProductImage = {
+  id: number;
+  product_id: number;
+  name: string;
+  url: string;
+  created_at: string;
+  updated_at: string;
+};
+
 export type IProductResponse = {
   id: number;
+  images: IProductImage[];
   category_id: number;
   name: string;
   stock: number;

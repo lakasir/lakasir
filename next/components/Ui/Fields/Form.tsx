@@ -11,7 +11,6 @@ export interface IForm {
 
 const setDefaultFormValue = (initialValue: any) => {
   const formElement = document.getElementById("form__lakasir");
-  // set default value for form element via dom formElement object
   formElement?.querySelectorAll("input").forEach((input) => {
     if (["radio", "checkbox"].includes(input.type)) {
       if (initialValue[input.name] === undefined) {
@@ -29,7 +28,6 @@ const setDefaultFormValue = (initialValue: any) => {
       }
     }
   });
-  // set default value for form element via dom formElement object
   formElement?.querySelectorAll("textarea").forEach((textarea) => {
     if (initialValue[textarea.name] === undefined) {
       textarea.innerHTML = "";

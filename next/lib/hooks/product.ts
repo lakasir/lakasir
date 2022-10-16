@@ -17,6 +17,7 @@ export const useProduct = () => {
     getProductAction,
     deleteProductAction,
     getDetailProductAction,
+    updateProductAction,
     createProductAction,
   } = useProductApi();
   const dataFetchRef = useRef(false);
@@ -49,8 +50,44 @@ export const useProduct = () => {
       toast.dismiss(toastId);
       return response;
     } catch (error) {
+      dataFetchRef.current = false;
       toast.error("Failed to get detail product", { id: toastId });
       throw error;
+    }
+  };
+
+  const updateProduct = async (
+    id: number,
+    data: IProductFormRequest,
+    setErrors: ErrorHanlder
+  ): Promise<Response<IProductFormResponse> | boolean> => {
+    if (dataFetchRef.current) return false;
+    dataFetchRef.current = true;
+    const toastId = toast.loading("Update product...");
+    try {
+      const response = await updateProductAction(id, data);
+      toast.dismiss(toastId);
+      dataFetchRef.current = false;
+      router.push("/menu/product");
+      return response;
+    } catch (error) {
+      dataFetchRef.current = false;
+      toast.error("Failed to update product", { id: toastId });
+      const axiosError = error as AxiosError<ErrorResponse>;
+      if (axiosError.response?.data && axiosError.response?.status === 422) {
+        setErrors(
+          axiosError.response?.data || {
+            message: "",
+            errors: {},
+          }
+        );
+      } else {
+        setErrors({
+          message: axiosError.message || "Failed to update product",
+          errors: {},
+        });
+      }
+      return {} as Response<IProductFormResponse>;
     }
   };
 
@@ -104,6 +141,7 @@ export const useProduct = () => {
     getProduct,
     getDetailProduct,
     deleteProduct,
+    updateProduct,
     createProduct,
   };
 };

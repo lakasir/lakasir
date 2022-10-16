@@ -3,7 +3,7 @@ import {
   IProductFormRequest,
   IProductFormResponse,
 } from '@/models/product';
-import { ErrorResponse, Response } from "@/models/response";
+import { Response } from "@/models/response";
 import axios from "@/utils/axios";
 
 export const useProductApi = () => {
@@ -22,6 +22,18 @@ export const useProductApi = () => {
     try {
       const response = await axios.get<Response<IProductResponse>>(
         `/api/master/product/${id}`
+      );
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  const updateProductAction = async (id: number, data: IProductFormRequest): Promise<Response<IProductFormResponse>> => {
+    try {
+      const response = await axios.put<Response<IProductFormResponse>>(
+        `/api/master/product/${id}`,
+        data
       );
       return response.data;
     } catch (error) {
@@ -58,6 +70,7 @@ export const useProductApi = () => {
     getProductAction,
     deleteProductAction,
     getDetailProductAction,
+    updateProductAction,
     createProductAction,
   }
 }

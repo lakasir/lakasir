@@ -7,6 +7,7 @@ import { Input } from "@/ui/Fields";
 import { Layout } from "@/ui/Layout";
 import { Modal } from "@/ui/Modals";
 import { formatPrice } from "@/utils/helpers";
+import { CameraIcon } from "@heroicons/react/outline";
 import { PencilIcon, TrashIcon } from "@heroicons/react/solid";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
@@ -41,6 +42,7 @@ const Product: NextPage = () => {
   useEffect(() => {
     loadData();
   }, [productData]);
+  console.log(productData);
 
   const router = useRouter();
 
@@ -61,12 +63,17 @@ const Product: NextPage = () => {
                   m.initial_price
                 )} - ${formatPrice(m.selling_price)}`}
                 image={
-                  <img
-                    src={"./../assets/products/product-image.jpg"}
-                    width="100%"
-                    height="100%"
-                    className="rounded-lg"
-                  />
+                  <div className="flex-shrink-0">
+                    {m.images.length > 0 ? (
+                        <img
+                        src={m.images[0].url}
+                        width="100%"
+                        height="100%"
+                        />
+                    ) : (
+                      <CameraIcon className="h-10 w-10 text-white" />
+                    )}
+                  </div>
                 }
                 id={m.id}
                 action={[
@@ -81,7 +88,7 @@ const Product: NextPage = () => {
                     },
                   },
                   {
-                    icon: <PencilIcon className="w-5 h-5" />,
+                    icon: <PencilIcon className="w-5 h-5 space-x-0" />,
                     label: "Edit",
                     onClick: () => {
                       router.push(`/menu/product/edit/${m.id}`);
