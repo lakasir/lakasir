@@ -4,6 +4,7 @@ import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { Modal } from "../Modals";
 import axios from "@/utils/axios";
 import toast from "react-hot-toast";
+import { TrashIcon } from "@heroicons/react/outline";
 
 interface IFilePickerInterface {
   name: string;
@@ -16,12 +17,13 @@ interface IFilePickerInterface {
     promise: (url: string, formData: FormData) => any,
     setValue: (value: string) => void
   ) => void;
+  value?: string[] | string;
 }
 
 interface FilesPickerProps {
   fileName: string;
-  fileType: string;
-  fileSize: number;
+  fileType?: string;
+  fileSize?: number;
   filePreview: string;
 }
 
@@ -54,7 +56,26 @@ const FilePicker = (props: IFilePickerInterface) => {
       setResult("");
     }
   };
-  useEffect(() => {}, [result, results]);
+
+  useEffect(() => {
+    if (props.multiple) {
+      if (props.value) {
+        const newResults = props.value as string[];
+        setResults(newResults);
+        const newFilesList = newResults.map((result) => {
+          return {
+            fileName: result.split("/").pop(),
+            filePreview: result,
+          };
+        });
+        setFilesList([...newFilesList, ...filesList]);
+      }
+    } else {
+      if (props.value) {
+        setResult(props.value as string);
+      }
+    }
+  }, [props.value]);
 
   return (
     <>
@@ -80,7 +101,9 @@ const FilePicker = (props: IFilePickerInterface) => {
                 }
               }}
             >
-              Delete
+              <div className="flex gap-x-1">
+                <TrashIcon className="h-5 w-5 my-auto" /> Delete
+              </div>
             </button>
           </div>
         </div>
@@ -106,7 +129,10 @@ const FilePicker = (props: IFilePickerInterface) => {
       )}
       <input
         type="file"
+        data-props={JSON.stringify(props)}
+        className="hidden file-input"
         accept={props.accept}
+        // name={props.name}
         ref={fileInput}
         onChange={(e) => {
           if (fileInput.current) {
@@ -116,12 +142,15 @@ const FilePicker = (props: IFilePickerInterface) => {
               // convert size to mb
               // create file preview if the file is not images
               const fileSize = current.files[0].size / 1024 / 1024;
-              setFilesList([...filesList, {
-                fileName: current.files[0].name,
-                fileType: current.files[0].type,
-                fileSize: current.files[0].size,
-                filePreview: URL.createObjectURL(current.files[0]),
-              }]);
+              setFilesList([
+                ...filesList,
+                {
+                  fileName: current.files[0].name,
+                  fileType: current.files[0].type,
+                  fileSize: current.files[0].size,
+                  filePreview: URL.createObjectURL(current.files[0]),
+                },
+              ]);
               if (props.uploadingFiles != undefined) {
                 props.uploadingFiles(
                   current.files[0],
@@ -189,7 +218,7 @@ const FilePicker = (props: IFilePickerInterface) => {
           {props.multiple
             ? filesList.map((file, index) => (
                 <div className="flex my-2" key={index}>
-                  <Image
+                  <img
                     height={50}
                     width={50}
                     className="w-10 h-auto text-lakasir-primary mr-5 cursor-pointer rounded-md"
@@ -219,15 +248,12 @@ const FilePicker = (props: IFilePickerInterface) => {
                         x
                       </p>
                     </div>
-                    {/* <div className="h-2 w-11/12 rounded-xl bg-white">
-                  <div className={`h-full w-[50%] rounded-xl bg-lakasir-primary`}></div>
-                </div> */}
                   </div>
                 </div>
               ))
             : filesList.length > 0 && (
                 <div className="flex my-2">
-                  <Image
+                  <img
                     height={50}
                     width={50}
                     className="w-10 h-auto text-lakasir-primary mr-5 cursor-pointer rounded-md"

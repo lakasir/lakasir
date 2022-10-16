@@ -20,6 +20,7 @@ class UploadController extends Controller
         return $this->success([
             'name' => $name,
             'url' => Storage::disk('tmp')->url($name),
+            'original_name' => $request->file('file')->getClientOriginalName(),
         ]);
     }
 }

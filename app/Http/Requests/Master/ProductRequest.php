@@ -77,10 +77,18 @@ class ProductRequest extends FormRequest
 
     private function uploadImage(Product $product)
     {
+        $existingIds = [];
+        $existingImages = $product->images->pluck('url')->toArray();
         if (!is_null($this->images()) && count($this->images()) > 0) {
             $images = [];
             foreach ($this->images() as $image) {
+                if (in_array($image['name'], $existingImages)) {
+                    $existingIds[] = ProductImage::where('url', $image['name'])->first()->id;
+                    continue;
+                }
                 $tmp = Storage::disk('tmp');
+                $size = $tmp->size($image['name']);
+                $type = $tmp->mimeType($image['name']);
                 if (!$tmp->exists($image['name'])) {
                     throw new Exception("file in temp dir is not found");
                 }
@@ -90,10 +98,13 @@ class ProductRequest extends FormRequest
                 $images[] = [
                     "product_id" => $product->id,
                     "name" => $image['name'],
+                    "size" => $size,
+                    "type" => $type,
                     "url" => $destinationPath->url($image['name']),
                     "created_at" => now(),
                 ];
             }
+            ProductImage::where('product_id', $product->id)->whereNotIn('id', $existingIds)->delete();
             ProductImage::insert($images);
         }
     }
