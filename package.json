@@ -27,7 +27,7 @@
         "datatables.net-buttons-bs4": "^1.6.2",
         "es6-promise": "^4.2.8",
         "jquery-ujs": "^1.2.2",
-        "npm": "^6.14.8",
+        "npm": "^9.4.1",
         "production": "0.0.2",
         "run": "^1.4.0",
         "vue": "^2.6.12",
