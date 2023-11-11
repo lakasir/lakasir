@@ -10,4 +10,14 @@ use Stancl\Tenancy\Database\Concerns\HasDomains;
 class Tenant extends BaseTenant implements TenantWithDatabase
 {
     use HasDatabase, HasDomains;
+
+    // hide from array
+    protected $hidden = [
+        'tenancy_db_profile_password',
+    ];
+
+    public function user()
+    {
+        return $this->hasOne(TenantUser::class);
+    }
 }

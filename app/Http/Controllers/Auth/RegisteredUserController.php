@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Http\Requests\Auth\RegisterRequest;
 
 class RegisteredUserController extends Controller
 {
@@ -15,7 +15,20 @@ class RegisteredUserController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request)
+    public function store(RegisterRequest $request)
     {
+        $tenant = $request->register();
+        if ($tenant) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Success!',
+                'data' => $tenant,
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed!',
+        ]);
     }
 }

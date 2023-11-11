@@ -186,6 +186,7 @@ return [
         '--force' => true, // This needs to be true to run migrations in production.
         '--path' => [database_path('migrations/tenant')],
         '--realpath' => true,
+        '--seed' => true,
     ],
 
     /**
@@ -193,6 +194,6 @@ return [
      */
     'seeder_parameters' => [
         '--class' => 'DatabaseSeeder', // root seeder class
-        // '--force' => true,
+        '--force' => true,
     ],
 ];
