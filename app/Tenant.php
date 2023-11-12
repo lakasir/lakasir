@@ -11,7 +11,6 @@ class Tenant extends BaseTenant implements TenantWithDatabase
 {
     use HasDatabase, HasDomains;
 
-    // hide from array
     protected $hidden = [
         'tenancy_db_profile_password',
     ];

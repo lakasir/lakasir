@@ -33,6 +33,7 @@ class RegisterRequest extends FormRequest
     public function register(): Tenant
     {
         try {
+            /** @var Tenant */
             $tenant = Tenant::create([
                 'id' => $this->name,
                 'tenancy_db_name' => 'lakasir_' . $this->name,
@@ -49,9 +50,11 @@ class RegisterRequest extends FormRequest
                 'password' => bcrypt($this->password),
             ]);
 
+            $tenant->user->notify(new \App\Notifications\DomainCreated());
+            
             return $tenant;
-        } catch (Exception $e) {
-            throw ValidationException::withMessages([$e->getMessage()]);
+        } catch (ValidationException $e) {
+            throw $e;
         }
     }
 }
