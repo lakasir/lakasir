@@ -2,6 +2,9 @@
 
 namespace App\Services;
 
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\Paginator;
+
 class ApiResponseService
 {
     private $data;
@@ -30,21 +33,82 @@ class ApiResponseService
 
     public function present(): array
     {
+        // fix the paginate, why paginate is not working when using Laravel Resource
+        if ($this->data && $this->data?->resource instanceof Paginator) {
+            $this->setPaginator($this->data);
+        } else if ($this->data && $this->data?->resource instanceof LengthAwarePaginator) {
+            $this->setLengthAwarePaginator($this->data);
+        }
+
         $response = [
             'success' => true,
             'data' => $this->data,
             'message' => $this->message
         ];
+
         if ($this->code != 200) {
             $response['success'] = false;
         }
+
         if ($this->message == "") {
             unset($response['message']);
         }
+
         if (!$this->data) {
             unset($response['data']);
         }
 
         return response()->json($response, $this->code)->getData(true);
+    }
+
+    private function setPaginator($data): self
+    {
+        $resource = $this->data->resource;
+
+        $data = [
+            'data' => $resource->items(),
+            'links' => [
+                'first' => $resource->url(1),
+                'prev' => $resource->previousPageUrl(),
+                'next' => $resource->nextPageUrl(),
+            ],
+            'meta' => [
+                'current_page' => $resource->currentPage(),
+                'from' => $resource->firstItem(),
+                'path' => $resource->resolveCurrentPath(),
+                'per_page' => $resource->perPage(),
+                'to' => $resource->lastItem(),
+            ],
+        ];
+        $this->data = $data;
+
+        return $this;
+    }
+
+    private function setLengthAwarePaginator(): self
+    {
+        $resource = $this->data->resource;
+
+        $data = [
+            'data' => $resource->items(),
+            'links' => [
+                'first' => $resource->url(1),
+                'last' => $resource->url($resource->lastPage()),
+                'prev' => $resource->previousPageUrl(),
+                'next' => $resource->nextPageUrl(),
+            ],
+            'meta' => [
+                'current_page' => $resource->currentPage(),
+                'from' => $resource->firstItem(),
+                'last_page' => $resource->lastPage(),
+                'path' => $resource->resolveCurrentPath(),
+                'per_page' => $resource->perPage(),
+                'to' => $resource->lastItem(),
+                'total' => $resource->total(),
+            ],
+        ];
+        $this->data = $data;
+
+        return $this;
     }
 }

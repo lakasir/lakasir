@@ -69,8 +69,14 @@ Route::middleware([
             Route::delete('/{category}', [CategoryController::class, 'destroy'])->can('delete category');
         });
 
-        Route::resource('product', ProductController::class)
-            ->middleware("method_and_permission:index@read product|store@create product|show@read product|destroy@delete product|update@update product");
+        Route::group(['prefix' => '/product'], function () {
+            Route::get('/', [ProductController::class, 'index'])->can('read product');
+            Route::post('/', [ProductController::class, 'store'])->can('create product');
+            Route::get('/{product}', [ProductController::class, 'show'])->can('read product');
+            Route::put('/{product}', [ProductController::class, 'update'])->can('update product');
+            Route::delete('/{product}', [ProductController::class, 'destroy'])->can('delete product');
+        });
+
         Route::resource('member', MemberController::class)
             ->middleware("method_and_permission:index@read member|store@create member|show@read member|destroy@delete member|update@update member");
     });

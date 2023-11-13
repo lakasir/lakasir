@@ -4,40 +4,50 @@ namespace App\Http\Controllers\Api\Tenants\Master;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Tenants\Master\ProductRequest;
+use App\Http\Resources\ProductCollection;
 use App\Models\Product;
-use Illuminate\Http\Request;
+use Spatie\QueryBuilder\QueryBuilder;
 
 /** @package App\Http\Controllers\Api\Master */
 class ProductController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
-        return $this->success(Product::with('images:name,url,id,product_id')->filter($request)->get());
+        $products = QueryBuilder::for(Product::class)
+            ->allowedFilters(['name', 'category_id', 'price', 'type'])
+            ->allowedIncludes(['category', 'images'])
+            ->simplePaginate();
+
+        return $this->buildResponse()
+            ->setData(new ProductCollection($products))
+            ->present();
     }
 
     public function store(ProductRequest $request)
     {
-        try {
-            $request->created();
-            return $this->success([], "success creating items");
-        } catch (\Exception $e) {
-            return $this->fail([], $e->getMessage(), $e->getCode());
-        }
+        $request->created();
+
+        return $this->buildResponse()
+            ->setMessage("success creating items")
+            ->present();
     }
 
     public function show(Product $product)
     {
-        return $this->success($product->load('category', 'images'));
+        $product = new ProductCollection($product);
+
+        return $this->buildResponse()
+            ->setData($product)
+            ->present();
     }
 
     public function update(ProductRequest $request)
     {
-        try {
-            $request->updated();
-            return $this->success([], "success updating items");
-        } catch (\Exception $e) {
-            return $this->fail([], $e->getMessage(), $e->getCode());
-        }
+        $request->updated();
+
+        return $this->buildResponse()
+            ->setMessage("success updating items")
+            ->present();
     }
 
     public function destroy(Product $product, ProductRequest $request)
@@ -45,6 +55,8 @@ class ProductController extends Controller
         $request->deleteImages();
         $product->delete();
 
-        return $this->success([], "success deleting items");
+        return $this->buildResponse()
+            ->setMessage("success deleting items")
+            ->present();
     }
 }

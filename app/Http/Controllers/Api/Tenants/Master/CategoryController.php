@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Tenants\Master;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\CategoryCollection;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Spatie\QueryBuilder\QueryBuilder;
@@ -16,7 +17,7 @@ class CategoryController extends Controller
             ->get();
 
         return $this->buildResponse()
-            ->setData($categories)
+            ->setData(new CategoryCollection($categories))
             ->present();
     }
 
