@@ -61,8 +61,14 @@ Route::middleware([
     });
 
     Route::group(['prefix' => 'master', 'middleware' => 'auth:sanctum'], function () {
-        Route::resource('category', CategoryController::class)
-            ->middleware("method_and_permission:index@read category|store@create category|show@read category|destroy@delete category|update@update category");
+        Route::group(['prefix' => '/category'], function () {
+            Route::get('/', [CategoryController::class, 'index'])->can('read category');
+            Route::post('/', [CategoryController::class, 'store'])->can('create category');
+            Route::get('/{category}', [CategoryController::class, 'show'])->can('read category');
+            Route::put('/{category}', [CategoryController::class, 'update'])->can('update category');
+            Route::delete('/{category}', [CategoryController::class, 'destroy'])->can('delete category');
+        });
+
         Route::resource('product', ProductController::class)
             ->middleware("method_and_permission:index@read product|store@create product|show@read product|destroy@delete product|update@update product");
         Route::resource('member', MemberController::class)

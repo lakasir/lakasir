@@ -5,12 +5,19 @@ namespace App\Http\Controllers\Api\Tenants\Master;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class CategoryController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
-        return $this->success(Category::filter($request)->get());
+        $categories = QueryBuilder::for(Category::class)
+            ->allowedFilters(['name'])
+            ->get();
+
+        return $this->buildResponse()
+            ->setData($categories)
+            ->present();
     }
 
     public function store(Request $request)
@@ -22,12 +29,16 @@ class CategoryController extends Controller
         $category->fill($request->all());
         $category->save();
 
-        return $this->success([], "success creating items");
+        return $this->buildResponse()
+            ->setMessage('success creating category')
+            ->present();
     }
 
     public function show(Category $category)
     {
-        return $this->success($category);
+        return $this->buildResponse()
+            ->setData($category)
+            ->present();
     }
 
     public function update(Request $request, Category $category)
@@ -38,13 +49,17 @@ class CategoryController extends Controller
         $category->fill($request->all());
         $category->update();
 
-        return $this->success([], "success updating items");
+        return $this->buildResponse()
+            ->setMessage('success updating category')
+            ->present();
     }
 
     public function destroy(Category $category)
     {
         $category->delete();
 
-        return $this->success([], "success deleting items");
+        return $this->buildResponse()
+            ->setMessage('success deleting category')
+            ->present();
     }
 }

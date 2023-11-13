@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\ApiResponseService;
 use Exception;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Database\Eloquent\Collection;
@@ -16,13 +17,7 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    /**
-     * @param array | Collection $data
-     * @param string $message
-     * @return JsonResponse
-     * @throws BindingResolutionException
-     */
-    public function success($data, $message = ""): JsonResponse
+    protected function success($data, $message = ""): JsonResponse
     {
         return response()->json([
             'success' => true,
@@ -31,15 +26,7 @@ class Controller extends BaseController
         ], 200);
     }
 
-    /**
-     * @param array | Collection $data
-     * @param string $message
-     * @param int $code
-     * @return JsonResponse
-     * @throws Exception
-     * @throws BindingResolutionException
-     */
-    public function fail($data, $message = "", $code = 500): JsonResponse
+    protected function fail($data, $message = "", $code = 500): JsonResponse
     {
         if (is_string($code) || $code == 0) {
             $code = 500;
@@ -52,5 +39,15 @@ class Controller extends BaseController
             'data' => $data,
             'message' => $message
         ], $code);
+    }
+
+    protected function notFound($message = ""): JsonResponse
+    {
+        return $this->fail([], $message, 404);
+    }
+
+    public function buildResponse(): ApiResponseService
+    {
+        return new ApiResponseService();
     }
 }
