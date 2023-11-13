@@ -38,7 +38,7 @@ class CategoryController extends Controller
     public function show(Category $category)
     {
         return $this->buildResponse()
-            ->setData($category)
+            ->setData(new CategoryCollection($category))
             ->present();
     }
 
