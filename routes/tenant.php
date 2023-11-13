@@ -9,14 +9,25 @@ use App\Http\Controllers\Api\Tenants\Transaction\SellingController;
 use App\Http\Controllers\Api\Tenants\UploadController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
-use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\VerifyEmailController;
+use App\Http\Livewire\ResetPassword;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 
+
+Route::middleware([
+    'web',
+    InitializeTenancyByDomain::class,
+    PreventAccessFromCentralDomains::class,
+])
+->group(function () {
+    Route::get('/reset-password/{token}', ResetPassword::class)
+            ->middleware('guest')
+            ->name('reset-password.index');
+});
 
 Route::middleware([
     'api',
@@ -32,10 +43,6 @@ Route::middleware([
         Route::post('/forgot-password', [PasswordResetLinkController::class, 'store'])
             ->middleware('guest')
             ->name('password.email');
-
-        Route::post('/reset-password', [NewPasswordController::class, 'store'])
-            ->middleware('guest')
-            ->name('password.update');
 
         Route::get('/verify-email/{id}/{hash}', [VerifyEmailController::class, '__invoke'])
             ->name('verification.verify');

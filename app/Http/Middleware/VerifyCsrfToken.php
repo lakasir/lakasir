@@ -13,5 +13,6 @@ class VerifyCsrfToken extends Middleware
      */
     protected $except = [
         // 'localhost:3000/*',
+        'livewire/*',
     ];
 }

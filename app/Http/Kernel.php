@@ -3,6 +3,7 @@
 namespace App\Http;
 
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
+use Stancl\Tenancy\Features\UniversalRoutes;
 
 class Kernel extends HttpKernel
 {
@@ -43,6 +44,9 @@ class Kernel extends HttpKernel
             \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
             'throttle:api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+        ],
+        'universal' => [
+            UniversalRoutes::class,
         ],
     ];
 

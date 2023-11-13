@@ -11,6 +11,7 @@
         "laravel/framework": "^9.11",
         "laravel/sanctum": "^2.14.1",
         "laravel/tinker": "^2.7",
+        "livewire/livewire": "^2.12",
         "spatie/laravel-permission": "^5.5",
         "stancl/tenancy": "^3.6"
     },
