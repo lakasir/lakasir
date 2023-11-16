@@ -4,11 +4,11 @@
 /storage/*.key
 /storage/debugbar
 /vendor
-/public/vendor
 /public/js/
 /public/css/
 /public/app/
 /nginx/*.log
+/packages
 tags
 .env
 .env.backup

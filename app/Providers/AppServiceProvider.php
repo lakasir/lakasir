@@ -2,10 +2,8 @@
 
 namespace App\Providers;
 
-use App\Helpers\Response;
-use Illuminate\Contracts\Events\Dispatcher;
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Database\Query\Builder;
+use Illuminate\Http\Request;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -25,38 +23,35 @@ class AppServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot(Dispatcher $events)
+    public function boot()
     {
-        if (!file_exists(base_path('.env'))) {
-            copy(base_path('.env.example'), base_path('.env'));
-        }
-        if (!env('APP_KEY')) {
-            Artisan::call('key:generate');
-        }
+        Builder::macro('filter', function (Request $request)
+        {
+            /* WIP:  <07-08-22, sheenazien8> */
+            $columns = $request->filters;
+            $query = $this;
+            if ($columns) {
+                foreach ($columns as $filterColumn) {
+                    $column = $filterColumn['column'];
 
-        \Spatie\Flash\Flash::levels([
-            'success' => 'alert-success',
-            'warning' => 'alert-warning',
-            'error' => 'alert-danger',
-        ]);
+                    if ($filterColumn['condition'] == "equals") {
+                        $condition = "=";
+                    } else {
+                        $condition = $filterColumn['condition'];
+                    }
+                    if ($filterColumn['condition'] == "like") {
+                        $value = "%". $filterColumn['value'] . "%";
+                    } else {
+                        $value = $filterColumn['value'];
+                    }
+                    if (!$value) {
+                        return $this;
+                    }
+                    $query = optional($this)->where($column, $condition, $value);
+                }
+            }
 
-        /**
-         * FIXME: create error custome message foR extend falidation <sheenazien8 2020-06-29>
-         *
-         */
-
-        Validator::extend('confirmation', function ($attribute, $value, $parameters, $validator) {
-            $keyConfirmed = explode('_', request()->key)[0];
-
-            return $value == request()->{$keyConfirmed};
+            return $columns ? $query : $this;
         });
-
-        $this->app->bind('ResponseHelper', function () {
-            return new Response();
-        });
-
-        if (app()->environment() == 'testing') {
-            app('debugbar')->disable();
-        }
     }
 }
