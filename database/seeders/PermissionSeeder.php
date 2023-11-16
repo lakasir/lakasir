@@ -32,6 +32,8 @@ class PermissionSeeder extends Seeder
         if ('mysql' == config('database.default')) {
             DB::statement('SET FOREIGN_KEY_CHECKS=1');
         }
+
+        User::first()->assignRole(Role::admin);
     }
 
     private function crudRolePermission(): array
