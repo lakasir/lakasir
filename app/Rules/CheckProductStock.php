@@ -2,7 +2,7 @@
 
 namespace App\Rules;
 
-use App\Models\Product;
+use App\Models\Tenants\Product;
 use Illuminate\Contracts\Validation\DataAwareRule;
 use Illuminate\Contracts\Validation\Rule;
 

@@ -17,7 +17,7 @@ return [
     |
     */
 
-    'class_namespace' => 'App\\Http\\Livewire',
+    'class_namespace' => 'App\\Livewire',
 
     /*
     |--------------------------------------------------------------------------
@@ -41,7 +41,7 @@ return [
     |
     */
 
-    'layout' => 'layout',
+    'layout' => 'livewire.components.layout', 
 
     /*
     |--------------------------------------------------------------------------

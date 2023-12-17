@@ -2,8 +2,8 @@
 
 namespace App\Providers;
 
-use App\Models\Member;
-use App\Models\Selling;
+use App\Models\Tenants\Member;
+use App\Models\Tenants\Selling;
 use App\Observers\MemberObserver;
 use App\Observers\SellingObserver;
 use Illuminate\Auth\Events\Registered;

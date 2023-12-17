@@ -6,11 +6,12 @@
     "license": "MIT",
     "require": {
         "php": "^8.1",
+        "filament/filament": "^3.1",
         "guzzlehttp/guzzle": "^7.2",
         "laravel/framework": "^10.0",
         "laravel/sanctum": "^3.2",
         "laravel/tinker": "^2.7",
-        "livewire/livewire": "^2.12",
+        "livewire/livewire": "^3.0",
         "spatie/laravel-permission": "^5.5",
         "spatie/laravel-query-builder": "^5.6",
         "stancl/tenancy": "^3.6"
@@ -39,7 +40,8 @@
     "scripts": {
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
-            "@php artisan package:discover --ansi"
+            "@php artisan package:discover --ansi",
+            "@php artisan filament:upgrade"
         ],
         "post-update-cmd": [
             "@php artisan vendor:publish --tag=laravel-assets --ansi --force"

@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api\Tenants\Master;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CategoryCollection;
-use App\Models\Category;
+use App\Models\Tenants\Category;
 use Illuminate\Http\Request;
 use Spatie\QueryBuilder\QueryBuilder;
 

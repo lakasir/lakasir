@@ -1,13 +1,13 @@
 <?php
 
-namespace Database\Factories;
+namespace Database\Factories\Tenants;
 
-use App\Models\Category;
-use App\Models\Product;
+use App\Models\Tenants\Category;
+use App\Models\Tenants\Product;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Product>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Tenants\Product>
  */
 class ProductFactory extends Factory
 {

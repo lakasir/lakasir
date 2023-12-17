@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Api\Tenants\Transaction;
 
 use App\Http\Controllers\Controller;
-use App\Models\Member;
-use App\Models\Selling;
+use App\Models\Tenants\Member;
+use App\Models\Tenants\Selling;
 use App\Rules\CheckProductStock;
 use App\Rules\ShouldSameWithSellingDetail;
 use Exception;

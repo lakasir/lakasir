@@ -5,13 +5,14 @@ declare(strict_types=1);
 use App\Http\Controllers\Api\Tenants\Master\CategoryController;
 use App\Http\Controllers\Api\Tenants\Master\MemberController;
 use App\Http\Controllers\Api\Tenants\Master\ProductController;
+use App\Http\Controllers\Api\Tenants\Master\Product\StockController;
 use App\Http\Controllers\Api\Tenants\Transaction\SellingController;
 use App\Http\Controllers\Api\Tenants\UploadController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\VerifyEmailController;
-use App\Http\Livewire\ResetPassword;
+use App\Livewire\ResetPassword;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
@@ -75,6 +76,8 @@ Route::middleware([
             Route::get('/{product}', [ProductController::class, 'show'])->can('read product');
             Route::put('/{product}', [ProductController::class, 'update'])->can('update product');
             Route::delete('/{product}', [ProductController::class, 'destroy'])->can('delete product');
+            Route::get('/{product}/stock', [StockController::class, 'index'])->can('read product stock');
+            Route::post('/{product}/stock', [StockController::class, 'store'])->can('create product stock');
         });
 
         Route::resource('member', MemberController::class)

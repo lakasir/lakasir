@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api\Tenants\Master;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Tenants\Master\ProductRequest;
 use App\Http\Resources\ProductCollection;
-use App\Models\Product;
+use App\Models\Tenants\Product;
 use Spatie\QueryBuilder\QueryBuilder;
 
 /** @package App\Http\Controllers\Api\Master */

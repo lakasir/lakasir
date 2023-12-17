@@ -2,11 +2,11 @@
 
 namespace App\Http\Requests\Tenants\Master;
 
-use App\Models\Category;
+use App\Models\Tenants\Category;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
-use App\Models\Product;
-use App\Models\ProductImage;
+use App\Models\Tenants\Product;
+use App\Models\Tenants\ProductImage;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;

@@ -34,9 +34,9 @@ class ApiResponseService
     public function present(): array
     {
         // fix the paginate, why paginate is not working when using Laravel Resource
-        if ($this->data && $this->data?->resource instanceof Paginator) {
+        if ($this->data instanceof Paginator || isset($this->data->resource) && $this->data?->resource instanceof Paginator) {
             $this->setPaginator($this->data);
-        } else if ($this->data && $this->data?->resource instanceof LengthAwarePaginator) {
+        } else if ($this->data instanceof LengthAwarePaginator || isset($this->data->resource) && $this->data?->resource instanceof LengthAwarePaginator) {
             $this->setLengthAwarePaginator($this->data);
         }
 
@@ -63,7 +63,7 @@ class ApiResponseService
 
     private function setPaginator($data): self
     {
-        $resource = $this->data->resource;
+        $resource = isset($this->data->resource) ? $this->data->resource : $this->data;
 
         $data = [
             'data' => $resource->items(),
@@ -87,7 +87,7 @@ class ApiResponseService
 
     private function setLengthAwarePaginator(): self
     {
-        $resource = $this->data->resource;
+        $resource = isset($this->data->resource) ? $this->data->resource : $this->data;
 
         $data = [
             'data' => $resource->items(),

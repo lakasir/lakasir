@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api\Tenants\Master;
 
 use App\Http\Controllers\Controller;
-use App\Models\Member;
+use App\Models\Tenants\Member;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
