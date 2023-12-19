@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Tenant;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -25,6 +26,9 @@ class AdminPanelProvider extends PanelProvider
         return $panel
             ->default()
             ->id('admin')
+            ->authGuard('admin')
+            ->domain('admin.' . config('tenancy.central_domains')[0])
+            ->spa()
             ->path('admin')
             ->login()
             ->colors([

@@ -5,7 +5,7 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 
 Route::group(['prefix' => 'domain'], function ()
 {
-    Route::post('/register', [RegisteredUserController::class, 'store'])
+    Route::post('/register', RegisteredUserController::class)
         ->name('register');
 });
 

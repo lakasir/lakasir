@@ -41,7 +41,7 @@ return [
     |
     */
 
-    'layout' => 'livewire.components.layout', 
+    'layout' => 'livewire.components.layout',
 
     /*
     |--------------------------------------------------------------------------
@@ -85,6 +85,7 @@ return [
 
     'middleware_group' => [
         'web',
+        'universal',
         InitializeTenancyByDomain::class,
     ],
 

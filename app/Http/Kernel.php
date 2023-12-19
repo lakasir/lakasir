@@ -46,7 +46,7 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
         'universal' => [
-            UniversalRoutes::class,
+            // UniversalRoutes::class,
         ],
     ];
 

@@ -15,7 +15,7 @@ class RegisteredUserController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(RegisterRequest $request)
+    public function __invoke(RegisterRequest $request)
     {
         $tenant = $request->register();
         if ($tenant) {

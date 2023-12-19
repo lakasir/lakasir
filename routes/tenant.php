@@ -37,6 +37,12 @@ Route::middleware([
 ])
 ->prefix('api')
 ->group(function () {
+    Route::get('check', function () {
+        return response()->json([
+            'tenant' => tenant('id'),
+            'tenant_email' => tenant()->tenancy_db_profile_email,
+        ]);
+    });
     Route::group(['prefix' => 'auth'], function () {
         Route::post('/login', [AuthenticatedSessionController::class, 'store'])
             ->name('login');
