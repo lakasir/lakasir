@@ -155,7 +155,10 @@ return [
     |
     */
 
-    'domain' => env('SESSION_DOMAIN'),
+    'domain' => env(
+        'SESSION_DOMAIN',
+        Str::after(env('APP_URL'), 'https://')
+    ),
 
     /*
     |--------------------------------------------------------------------------

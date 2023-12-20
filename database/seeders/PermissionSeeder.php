@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use App\Constants\Role;
-use App\Models\User;
+use App\Models\Tenants\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -32,6 +32,8 @@ class PermissionSeeder extends Seeder
         if ('mysql' == config('database.default')) {
             DB::statement('SET FOREIGN_KEY_CHECKS=1');
         }
+
+        User::first()->assignRole(Role::admin);
     }
 
     private function crudRolePermission(): array
@@ -44,6 +46,9 @@ class PermissionSeeder extends Seeder
                         'c', 'r', 'u', 'd'
                     ],
                     'product' => [
+                        'c', 'r', 'u', 'd'
+                    ],
+                    'product stock' => [
                         'c', 'r', 'u', 'd'
                     ],
                     'member' => [

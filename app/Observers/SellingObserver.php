@@ -2,8 +2,8 @@
 
 namespace App\Observers;
 
-use App\Models\Selling;
-use App\Models\SellingDetail;
+use App\Models\Tenants\Selling;
+use App\Models\Tenants\SellingDetail;
 use Illuminate\Contracts\Validation\DataAwareRule;
 use Illuminate\Support\Str;
 

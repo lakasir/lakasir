@@ -2,7 +2,7 @@
 
 namespace App\Observers;
 
-use App\Models\Member;
+use App\Models\Tenants\Member;
 use Illuminate\Support\Str;
 
 class MemberObserver
