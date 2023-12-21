@@ -16,16 +16,23 @@ class RegisterRequest extends FormRequest
      */
     public function rules()
     {
-        $this->merge([
-            'domain' => strtolower($this->domain) . '.' . config('tenancy.central_domains')[0],
-        ]);
+        $domain = explode('.', $this->domain);
+        if (count($domain) > 2) {
+            $this->merge([
+                'name' => strtolower($domain[0]),
+                'domain' => strtolower($this->domain),
+            ]);
+        } else {
+            $this->merge([
+                'name' => strtolower($this->domain),
+                'domain' => strtolower($this->domain) . '.' . config('tenancy.central_domains')[0],
+            ]);
+        }
 
         return [
-            'name' => ['required', 'string', 'max:255', 'unique:domains,id', 'regex:/^[a-z0-9]+(?:-[a-z0-9]+)*$/'],
             'domain' => ['required', 'string', 'max:255', 'unique:domains', 'regex:/^[a-z0-9]+(?:-[a-z0-9]+)*\.' . config('tenancy.central_domains')[0] . '$/'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:tenant_users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'full_name' => ['required', 'string', 'max:255'],
         ];
     }
 
@@ -37,7 +44,7 @@ class RegisterRequest extends FormRequest
             $tenant = Tenant::create([
                 'id' => $this->name,
                 'tenancy_db_name' => 'lakasir_' . $this->name,
-                'tenancy_db_profile_full_name' => $this->full_name,
+                'tenancy_db_profile_full_name' => $this->full_name ?? $this->name,
                 'tenancy_db_profile_email' => $this->email,
                 'tenancy_db_profile_password' => bcrypt($this->password),
             ]);
@@ -45,7 +52,7 @@ class RegisterRequest extends FormRequest
                 'domain' => $this->domain,
             ]);
             $tenant->user()->create([
-                'full_name' => $this->full_name,
+                'full_name' => $this->full_name ?? $this->name,
                 'email' => $this->email,
                 'password' => bcrypt($this->password),
             ]);
