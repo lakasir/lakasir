@@ -12,7 +12,9 @@ class StockController extends Controller
 {
     public function index(Product $product)
     {
-        $stocks = $product->stocks()->simplePaginate();
+        $stocks = $product->stocks()
+        ->orderByDesc('created_at')
+        ->simplePaginate();
 
         return $this->buildResponse()
             ->setData($stocks)

@@ -14,6 +14,7 @@ class CategoryController extends Controller
     {
         $categories = QueryBuilder::for(Category::class)
             ->allowedFilters(['name'])
+            ->orderByDesc('created_at')
             ->get();
 
         return $this->buildResponse()

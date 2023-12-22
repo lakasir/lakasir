@@ -16,6 +16,7 @@ class ProductController extends Controller
         $products = QueryBuilder::for(Product::class)
             ->allowedFilters(['name', 'category_id', 'price', 'type'])
             ->allowedIncludes(['category', 'images'])
+            ->orderByDesc('created_at')
             ->simplePaginate();
 
         return $this->buildResponse()

@@ -17,7 +17,9 @@ class SellingController extends Controller
 {
     public function index(Request $request)
     {
-        return $this->success(Selling::filter($request)->get());
+        return $this->success(Selling::filter($request)
+            ->orderByDesc('created_at')
+            ->get());
     }
 
     public function store(Request $request)

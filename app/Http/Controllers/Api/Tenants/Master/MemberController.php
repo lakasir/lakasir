@@ -11,7 +11,9 @@ class MemberController extends Controller
 {
     public function index(Request $request)
     {
-        return $this->success(Member::filter($request)->get());
+        return $this->success(Member::filter($request)
+            ->orderByDesc('created_at')
+            ->get());
     }
 
     public function store(Request $request)
