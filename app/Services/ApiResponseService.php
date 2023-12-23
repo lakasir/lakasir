@@ -13,6 +13,8 @@ class ApiResponseService
 
     private $code = 200;
 
+    private $assoc = false;
+
     public function setData($data): self
     {
         $this->data = $data;
@@ -31,7 +33,13 @@ class ApiResponseService
         return $this;
     }
 
-    public function present(): array
+    public function setAssoc($assoc): self
+    {
+        $this->assoc = $assoc;
+        return $this;
+    }
+
+    public function present()
     {
         // fix the paginate, why paginate is not working when using Laravel Resource
         if ($this->data instanceof Paginator || isset($this->data->resource) && $this->data?->resource instanceof Paginator) {
@@ -58,7 +66,7 @@ class ApiResponseService
             unset($response['data']);
         }
 
-        return response()->json($response, $this->code)->getData(true);
+        return response()->json($response, $this->code);
     }
 
     private function setPaginator($data): self

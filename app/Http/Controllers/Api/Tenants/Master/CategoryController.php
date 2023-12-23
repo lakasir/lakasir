@@ -58,6 +58,12 @@ class CategoryController extends Controller
 
     public function destroy(Category $category)
     {
+        if ($category->products()->count() > 0) {
+            return $this->buildResponse()
+                ->setCode(400)
+                ->setMessage('category has products')
+                ->present();
+        }
         $category->delete();
 
         return $this->buildResponse()
