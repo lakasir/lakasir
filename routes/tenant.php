@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\Api\Tenants\AboutController;
 use App\Http\Controllers\Api\Tenants\Master\CategoryController;
 use App\Http\Controllers\Api\Tenants\Master\MemberController;
 use App\Http\Controllers\Api\Tenants\Master\ProductController;
@@ -97,6 +98,13 @@ Route::middleware([
 
         Route::resource('member', MemberController::class)
             ->middleware("method_and_permission:index@read member|store@create member|show@read member|destroy@delete member|update@update member");
+    });
+
+    Route::group(['prefix' => 'about', 'middleware' => 'auth:sanctum'], function () {
+        Route::get('/', [AboutController::class, 'index'])
+            ->name('about');
+        Route::put('/', [AboutController::class, 'update'])
+            ->name('about.update');
     });
 
     Route::group(['prefix' => 'transaction', 'middleware' => 'auth:sanctum'], function () {

@@ -44,17 +44,18 @@ class RegisterRequest extends FormRequest
             $tenant = Tenant::create([
                 'id' => $this->name,
                 'tenancy_db_name' => 'lakasir_' . $this->name,
-                'tenancy_db_profile_full_name' => $this->full_name ?? $this->name,
-                'tenancy_db_profile_email' => $this->email,
-                'tenancy_db_profile_password' => bcrypt($this->password),
             ]);
             $tenant->domains()->create([
                 'domain' => $this->domain,
             ]);
             $tenant->user()->create([
-                'full_name' => $this->full_name ?? $this->name,
                 'email' => $this->email,
                 'password' => bcrypt($this->password),
+            ]);
+
+            $tenant->user->about()->create([
+                'shop_name' => $this->full_name,
+                'business_type' => 'retail',
             ]);
 
             $tenant->user->notify(new \App\Notifications\DomainCreated());
