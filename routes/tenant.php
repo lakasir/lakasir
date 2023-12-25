@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\Tenants\Master\CategoryController;
 use App\Http\Controllers\Api\Tenants\Master\MemberController;
 use App\Http\Controllers\Api\Tenants\Master\ProductController;
 use App\Http\Controllers\Api\Tenants\Master\Product\StockController;
+use App\Http\Controllers\Api\Tenants\ProfileController;
 use App\Http\Controllers\Api\Tenants\Transaction\SellingController;
 use App\Http\Controllers\Api\Tenants\UploadController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
@@ -61,6 +62,14 @@ Route::middleware([
         Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
             ->middleware('auth')
             ->name('logout');
+
+        Route::get('/me', [ProfileController::class, 'index'])
+            ->middleware('auth:sanctum')
+            ->name('me');
+
+        Route::put('/me', [ProfileController::class, 'update'])
+            ->middleware('auth:sanctum')
+            ->name('profile.update');
     });
 
     Route::group(['prefix' => 'temp', 'middleware' => 'auth:sanctum'], function () {
