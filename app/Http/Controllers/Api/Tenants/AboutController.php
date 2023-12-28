@@ -23,11 +23,16 @@ class AboutController extends Controller
             'shop_name' => ['nullable', 'string'],
             'shop_location' => ['nullable', 'string'],
             'business_type' => ['nullable', 'string', 'in:retail,wholesale'],
+            'owner_name' => ['nullable', 'string'],
         ]);
 
         $about = tenant()->user->about()->updateOrCreate([
             'tenant_user_id' => tenant()->user->id,
         ], $request->only('shop_name', 'shop_location', 'business_type'));
+
+        tenant()->user->update([
+            'full_name' => $request->owner_name,
+        ]);
 
         if ($request->filled('photo_url') && $request->photo_url !== $about->photo) {
             /** @var \App\Models\Tenants\UploadedFile $tmpFile */
