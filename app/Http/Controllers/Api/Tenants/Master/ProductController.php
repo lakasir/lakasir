@@ -20,7 +20,7 @@ class ProductController extends Controller
             ->simplePaginate();
 
         return $this->buildResponse()
-            ->setData(new ProductCollection($products))
+            ->setData(ProductCollection::collection($products))
             ->present();
     }
 

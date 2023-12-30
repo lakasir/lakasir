@@ -27,7 +27,7 @@ class Product extends Model
     public function heroImages(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $value ? Str::of($value)->explode(',') : null,
+            get: fn ($value) => $value ? Str::of($value)->explode(',') : [],
             set: fn ($value) => $value ? Arr::join($value, ',') : null
         );
     }
