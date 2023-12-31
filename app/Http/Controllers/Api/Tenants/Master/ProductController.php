@@ -14,7 +14,7 @@ class ProductController extends Controller
     public function index()
     {
         $products = QueryBuilder::for(Product::class)
-            ->allowedFilters(['name', 'category_id', 'price', 'type'])
+            ->allowedFilters(['name', 'category_id', 'sellingPrice', 'initialPrice', 'type', 'category.name', 'unit'])
             ->allowedIncludes(['category', 'images'])
             ->orderByDesc('created_at')
             ->simplePaginate();

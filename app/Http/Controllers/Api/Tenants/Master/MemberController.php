@@ -6,14 +6,18 @@ use App\Http\Controllers\Controller;
 use App\Models\Tenants\Member;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class MemberController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
-        return $this->success(Member::filter($request)
+        $members = QueryBuilder::for(Member::class)
+            ->allowedFilters(['name', 'email'])
             ->orderByDesc('created_at')
-            ->get());
+            ->get();
+
+        return $this->success($members);
     }
 
     public function store(Request $request)

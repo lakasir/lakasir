@@ -31,12 +31,6 @@ class ApiResponseService
         return $this;
     }
 
-    public function setAssoc($assoc): self
-    {
-        $this->assoc = $assoc;
-        return $this;
-    }
-
     public function present()
     {
         if ($this->data instanceof Paginator || isset($this->data->resource) && $this->data?->resource instanceof Paginator) {

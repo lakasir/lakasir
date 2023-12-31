@@ -42,6 +42,8 @@ class Stock extends Model
     {
         if ($this->stock == 0) {
             return 0;
+        } else {
+            return $value;
         }
     }
 }

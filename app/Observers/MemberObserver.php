@@ -3,15 +3,21 @@
 namespace App\Observers;
 
 use App\Models\Tenants\Member;
-use Illuminate\Support\Str;
 
 class MemberObserver
 {
     public function creating(Member $member)
     {
-        /* TODO: fixing the iteration code <10-08-22, sheenazien8> */
         $members = Member::all();
         $lastCount = $members->count();
-        $member->code = "CUS" . Str::of($lastCount + 1)->padLeft(4, 0)->value();
+        $lastMember = Member::orderBy('code', 'desc')->first();
+        if ($lastMember) {
+            $lastCount = (int)substr($lastMember->code, 3);
+        } else {
+            $lastCount = 0;
+        }
+
+        // Generate the new customer code
+        $member->code = "CUS" . str_pad($lastCount + 1, 4, '0', STR_PAD_LEFT);
     }
 }

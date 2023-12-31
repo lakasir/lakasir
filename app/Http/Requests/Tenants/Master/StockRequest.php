@@ -23,18 +23,19 @@ class StockRequest extends FormRequest
             $this->request->set("date", now()->format("Y-m-d"));
         }
 
+        if (!$this->request->get("selling_price")) {
+            $this->request->set("selling_price", $this->route("product")->selling_price);
+        }
+
+        if (!$this->request->get("initial_price")) {
+            $this->request->set("initial_price", $this->route("product")->initial_price);
+        }
+
         return [
             "type" => [Rule::in(["in", "out"])],
             "stock" => ["required"],
-            "selling_price" => [
-                Rule::requiredIf(function () {
-                    if (!$this->request->get('initial_price') || $this->request->get('initial_price') == 0) {
-                        return false;
-                    }
-                    return true;
-                }),
-                "gte:initial_price"
-            ]
+            "initial_price" => ["numeric", "nullable", "lte:selling_price"],
+            "selling_price" => ["numeric", "nullable", "gte:initial_price"],
         ];
     }
 

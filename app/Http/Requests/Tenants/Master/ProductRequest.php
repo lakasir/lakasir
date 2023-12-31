@@ -79,7 +79,7 @@ class ProductRequest extends FormRequest
     private function uploadImage(Product $product): void
     {
         $heroImages = [];
-        if ($this->filled('hero_images_url')) {
+        if ($this->filled('hero_images_url') && $this->hero_images_url != $product->hero_images[0]) {
             $tmp = UploadedFile::whereIn('url', Str::of($this->hero_images_url)->explode(','))->get();
             /** @var UploadedFile $item */
             foreach ($tmp as $item) {
