@@ -2,6 +2,7 @@
 
 namespace App\Models\Tenants;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -36,6 +37,11 @@ class Stock extends Model
     public function scopeOut($query)
     {
         return $query->where('type', 'out');
+    }
+
+    public function scopeLatestIn()
+    {
+        return $this->where('type', 'in')->latest()->first();
     }
 
     public function getInitialPriceAttribute($value)

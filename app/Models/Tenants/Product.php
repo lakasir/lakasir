@@ -24,11 +24,57 @@ class Product extends Model
         return $this->hasMany(Stock::class);
     }
 
+    public function stock(): Attribute
+    {
+        return Attribute::make(
+            get: function ($value) {
+                $stock = $this->stocks()
+                    ->in()
+                    ->sum('stock');
+                if ($stock == 0) {
+                    return $value;
+                }
+                return $stock + $value;
+            },
+            set: fn ($value) => $value
+        );
+    }
+
+    public function initialPrice(): Attribute
+    {
+        return Attribute::make(
+            get: function ($value) {
+                $stock = $this->stocks()
+                    ->latestIn();
+                if ($stock == null) {
+                    return $value;
+                }
+                return $stock->initial_price;
+            },
+            set: fn ($value) => $value
+        );
+    }
+
+    public function sellingPrice(): Attribute
+    {
+        return Attribute::make(
+            get: function ($value) {
+                $stock = $this->stocks()
+                    ->latestIn();
+                if ($stock == null) {
+                    return $value;
+                }
+                return $stock->selling_price;
+            },
+            set: fn ($value) => $value
+        );
+    }
+
     public function heroImages(): Attribute
     {
         return Attribute::make(
             get: fn ($value) => $value ? Str::of($value)->explode(',') : [],
-            set: fn ($value) => $value ? Arr::join($value, ',') : null
+            set: fn ($value) => $value ? Arr::join(is_array($value) ? $value : $value->toArray(), ',') : null
         );
     }
 }

@@ -28,4 +28,13 @@ class StockController extends Controller
             ->setMessage('success creating stock for ' . $product->name)
             ->present();
     }
+
+    public function destroy(Product $product)
+    {
+        $product->stocks()->delete();
+
+        return $this->buildResponse()
+            ->setMessage('success deleting stock for ' . $product->name)
+            ->present();
+    }
 }

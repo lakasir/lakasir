@@ -35,6 +35,7 @@ class ProductController extends Controller
 
     public function show(Product $product)
     {
+        $product->load(['category', 'stocks']);
         $product = new ProductCollection($product);
 
         return $this->buildResponse()

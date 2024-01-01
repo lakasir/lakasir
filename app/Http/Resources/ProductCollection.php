@@ -19,6 +19,7 @@ class ProductCollection extends JsonResource
             'unit' => $this->unit,
             'stock' => $this->stock,
             'hero_images' => $this->hero_images,
+            'stocks' => $this->whenLoaded('stocks'),
         ];
     }
 }

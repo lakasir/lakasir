@@ -34,13 +34,31 @@ class StockRequest extends FormRequest
         return [
             "type" => [Rule::in(["in", "out"])],
             "stock" => ["required"],
-            "initial_price" => ["numeric", "nullable", "lte:selling_price"],
-            "selling_price" => ["numeric", "nullable", "gte:initial_price"],
+            "initial_price" => ["numeric", "nullable", "lte:selling_price", function ($attribute, $value, $fail) {
+                if ($this->request->get("type") == "out") {
+                    $fail("$attribute is not allowed for out type");
+                    return false;
+                }
+
+                return true;
+            }],
+            "selling_price" => ["numeric", "nullable", "gte:initial_price", function ($attribute, $value, $fail) {
+                if ($this->request->get("type") == "out") {
+                    $fail("$attribute is not allowed for out type");
+                    return false;
+                }
+
+                return true;
+            }],
         ];
     }
 
     public function store(): void
     {
+        if ($this->request->get("type") == "out") {
+            $this->request->remove("initial_price");
+            $this->request->remove("selling_price");
+        }
         $stock = new Stock();
         $stock->fill($this->request->all());
         $stock->product()->associate($this->route("product"));

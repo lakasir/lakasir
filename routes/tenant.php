@@ -94,6 +94,7 @@ Route::middleware([
             Route::delete('/{product}', [ProductController::class, 'destroy'])->can('delete product');
             Route::get('/{product}/stock', [StockController::class, 'index'])->can('read product stock');
             Route::post('/{product}/stock', [StockController::class, 'store'])->can('create product stock');
+            Route::delete('/{product}/stock/{stock}', [StockController::class, 'destroy'])->can('delete product stock');
         });
 
         Route::resource('member', MemberController::class)
