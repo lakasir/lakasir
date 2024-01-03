@@ -9,7 +9,7 @@ class Selling extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
+    protected $guarded = ["friend_price"];
 
     public function sellingDetails()
     {

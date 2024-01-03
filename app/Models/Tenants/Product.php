@@ -46,10 +46,10 @@ class Product extends Model
             get: function ($value) {
                 $stock = $this->stocks()
                     ->latestIn();
-                if ($stock == null) {
+                if ($stock?->first() == null) {
                     return $value;
                 }
-                return $stock->initial_price;
+                return $stock->first()->initial_price;
             },
             set: fn ($value) => $value
         );
@@ -61,10 +61,10 @@ class Product extends Model
             get: function ($value) {
                 $stock = $this->stocks()
                     ->latestIn();
-                if ($stock == null) {
+                if ($stock?->first() == null) {
                     return $value;
                 }
-                return $stock->selling_price;
+                return $stock->first()->selling_price;
             },
             set: fn ($value) => $value
         );

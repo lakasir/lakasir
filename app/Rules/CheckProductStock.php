@@ -3,10 +3,12 @@
 namespace App\Rules;
 
 use App\Models\Tenants\Product;
+use Closure;
 use Illuminate\Contracts\Validation\DataAwareRule;
-use Illuminate\Contracts\Validation\Rule;
+use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Support\Str;
 
-class CheckProductStock implements Rule, DataAwareRule
+class CheckProductStock implements ValidationRule, DataAwareRule
 {
     /**
      * All of the data under validation.
@@ -22,14 +24,14 @@ class CheckProductStock implements Rule, DataAwareRule
      */
     protected $index;
 
-    /**
-     * Create a new rule instance.
-     *
-     * @return void
-     */
-    public function __construct($index)
+    public function validate(string $attribute, mixed $value, Closure $fail): void 
     {
-        $this->index = $index;
+        $index = Str::of($attribute)->explode('.')[1];
+        $bool = Product::find($this->data['products'][$index]['product_id'])->stock <= $value;
+
+        if ($bool) {
+            $fail($this->message());
+        }
     }
 
     public function setData($data)
@@ -37,20 +39,6 @@ class CheckProductStock implements Rule, DataAwareRule
         $this->data = $data;
 
         return $this;
-    }
-
-    /**
-     * Determine if the validation rule passes.
-     *
-     * @param  string  $attribute
-     * @param  mixed  $value
-     * @return bool
-     */
-    public function passes($attribute, $value)
-    {
-        $bool = Product::find($this->data['products'][$this->index]['product_id'])->stock <= $value;
-
-        return !$bool;
     }
 
     /**

@@ -2,11 +2,11 @@
 
 namespace App\Rules;
 
-use Illuminate\Contracts\Validation\Rule;
-use Illuminate\Support\Arr;
+use Closure;
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Support\Str;
 
-class ShouldSameWithSellingDetail implements Rule
+class ShouldSameWithSellingDetail implements ValidationRule
 {
     private $message;
 
@@ -22,14 +22,7 @@ class ShouldSameWithSellingDetail implements Rule
         $this->equals = $equals;
     }
 
-    /**
-     * Determine if the validation rule passes.
-     *
-     * @param  string  $attribute
-     * @param  mixed  $value
-     * @return bool
-     */
-    public function passes($attribute, $value)
+    public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         $this->message = Str::of($attribute)->replace("_", " ")->ucfirst();
         $products = request()->products;
@@ -38,10 +31,10 @@ class ShouldSameWithSellingDetail implements Rule
             $totals += $product[$this->equals];
         }
         if ($value != $totals) {
-            return false;
+            $fail($this->message());
+            return;
         }
-        return true;
-    }
+   }
 
     /**
      * Get the validation error message.

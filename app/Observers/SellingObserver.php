@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+use App\Models\Tenants\Product;
 use App\Models\Tenants\Selling;
 use App\Models\Tenants\SellingDetail;
 use Illuminate\Contracts\Validation\DataAwareRule;
@@ -31,12 +32,35 @@ class SellingObserver extends AbstractObserver implements DataAwareRule
 
     public function created(Selling $selling)
     {
-        foreach ($this->data['products'] as $product) {
+        foreach ($this->data['products'] as $productRequest) {
+            $product = Product::find($productRequest['product_id']);
+            $this->fifo($product, $productRequest['qty']);
+            if (!$this->data['friend_price']) {
+                $productRequest['price'] = $product->selling_price;
+            }
             $sellingDetail = new SellingDetail();
-            $sellingDetail->fill($product);
+            $sellingDetail->fill($productRequest);
             $selling->sellingDetails()->save($sellingDetail);
             $sellingDetail->save();
         }
     }
 
+    private function fifo(Product $product, $qty)
+    {
+        $lastStock = $product->stocks()->latestIn()->first();
+        if ($lastStock) {
+            if ($lastStock->stock < $qty) {
+                $qty = $qty - $lastStock->stock;
+                $lastStock->stock = 0;
+                $lastStock->save();
+                $this->fifo($product, $qty);
+            } else {
+                $lastStock->stock = $lastStock->stock - $qty;
+                $lastStock->save();
+            }
+        } else {
+            $product->stock = $product->stock - $qty;
+            $product->save();
+        }
+    }
 }

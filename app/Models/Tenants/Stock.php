@@ -41,7 +41,9 @@ class Stock extends Model
 
     public function scopeLatestIn()
     {
-        return $this->where('type', 'in')->latest()->first();
+        return $this->where('type', 'in')
+            ->where('stock', '>', 0)
+            ->latest();
     }
 
     public function getInitialPriceAttribute($value)

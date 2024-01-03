@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Tenants\Master\StockRequest;
 use App\Http\Resources\StockCollection;
 use App\Models\Tenants\Product;
+use App\Models\Tenants\Stock;
 
 class StockController extends Controller
 {
@@ -29,9 +30,9 @@ class StockController extends Controller
             ->present();
     }
 
-    public function destroy(Product $product)
+    public function destroy(Product $product, Stock $stock) 
     {
-        $product->stocks()->delete();
+        $stock->delete();
 
         return $this->buildResponse()
             ->setMessage('success deleting stock for ' . $product->name)

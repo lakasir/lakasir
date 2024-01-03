@@ -109,8 +109,13 @@ Route::middleware([
     });
 
     Route::group(['prefix' => 'transaction', 'middleware' => 'auth:sanctum'], function () {
-        Route::resource('selling', SellingController::class)
-            ->middleware("method_and_permission:index@read selling|store@create selling|show@read selling|destroy@delete selling|update@update selling");
+        Route::get('/selling', [SellingController::class, 'index'])->can('read selling');
+        Route::post('/selling', [SellingController::class, 'store'])->can('create selling');
+        Route::get('/selling/{selling}', [SellingController::class, 'show'])->can('read selling');
+        // Route::put('/selling/{selling}', [SellingController::class, 'update'])->can('update selling');
+        // Route::delete('/selling/{selling}', [SellingController::class, 'destroy'])->can('delete selling');
+        // Route::resource('selling', SellingController::class)
+        //     ->middleware("method_and_permission:index@read selling|store@create selling|show@read selling|destroy@delete selling|update@update selling");
     });
 
     Route::get('/', function () {
