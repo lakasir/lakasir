@@ -21,10 +21,10 @@
         "fakerphp/faker": "^1.9.1",
         "laravel/breeze": "^1.9",
         "laravel/sail": "^1.0.1",
-        "mockery/mockery": "^1.4.4",
+        "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^7.0",
-        "pestphp/pest": "^2.0",
-        "pestphp/pest-plugin-laravel": "^2.0",
+        "pestphp/pest": "^2.30",
+        "pestphp/pest-plugin-laravel": "^2.2",
         "spatie/laravel-ignition": "^2.0"
     },
     "autoload": {
