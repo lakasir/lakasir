@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\Tenants\Member;
+use App\Models\Tenants\PaymentMethod;
 use App\Models\Tenants\Product;
 use App\Models\Tenants\Selling;
 use App\Rules\CheckProductStock;
@@ -47,6 +48,12 @@ class TransactionSellingStoreRequest extends FormRequest
         } else {
             $this->merge([
                 "money_change" => $this->payed_money - $this->total_price,
+            ]);
+        }
+
+        if (!$this->payment_method_id) {
+            $this->merge([
+                "payment_method_id" => PaymentMethod::where("name", "Cash")->first()->id
             ]);
         }
 

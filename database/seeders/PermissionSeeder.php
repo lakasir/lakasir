@@ -20,7 +20,7 @@ class PermissionSeeder extends Seeder
      */
     public function run()
     {
-        if ('mysql' == config('database.default')) {
+        if ('tenant' == config('database.default')) {
             DB::statement('SET FOREIGN_KEY_CHECKS=0');
         }
         DB::table('permissions')->truncate();
@@ -29,7 +29,7 @@ class PermissionSeeder extends Seeder
 
         $permissions = $this->getPermissions();
         $permissions->each(fn ($roles, $index) => $this->savePermission($index, $roles));
-        if ('mysql' == config('database.default')) {
+        if ('tenant' == config('database.default')) {
             DB::statement('SET FOREIGN_KEY_CHECKS=1');
         }
 
@@ -55,6 +55,9 @@ class PermissionSeeder extends Seeder
                         'c', 'r', 'u', 'd'
                     ],
                     'selling' => [
+                        'c', 'r', 'u', 'd'
+                    ],
+                    'payment method' => [
                         'c', 'r', 'u', 'd'
                     ],
                 ]

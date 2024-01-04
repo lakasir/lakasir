@@ -14,6 +14,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\VerifyEmailController;
+use App\Http\Controllers\Tenants\PaymentMethodController;
 use App\Livewire\ResetPassword;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -99,6 +100,10 @@ Route::middleware([
 
         Route::resource('member', MemberController::class)
             ->middleware("method_and_permission:index@read member|store@create member|show@read member|destroy@delete member|update@update member");
+
+        Route::group(['prefix' => 'payment-method', 'middleware' => 'auth:sanctum'], function () {
+            Route::get('/', [PaymentMethodController::class, 'index'])->can('read payment method');
+        });
     });
 
     Route::group(['prefix' => 'about', 'middleware' => 'auth:sanctum'], function () {
@@ -112,11 +117,8 @@ Route::middleware([
         Route::get('/selling', [SellingController::class, 'index'])->can('read selling');
         Route::post('/selling', [SellingController::class, 'store'])->can('create selling');
         Route::get('/selling/{selling}', [SellingController::class, 'show'])->can('read selling');
-        // Route::put('/selling/{selling}', [SellingController::class, 'update'])->can('update selling');
-        // Route::delete('/selling/{selling}', [SellingController::class, 'destroy'])->can('delete selling');
-        // Route::resource('selling', SellingController::class)
-        //     ->middleware("method_and_permission:index@read selling|store@create selling|show@read selling|destroy@delete selling|update@update selling");
     });
+
 
     Route::get('/', function () {
         return ['Laravel' => app()->version()];
