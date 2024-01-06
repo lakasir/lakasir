@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Tenants\Transaction;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TransactionSellingStoreRequest;
+use App\Http\Resources\SellingCollection;
 use App\Models\Tenants\Selling;
 use Illuminate\Http\Request;
 use Spatie\QueryBuilder\QueryBuilder;
@@ -26,11 +27,12 @@ class SellingController extends Controller
                 'updated_at',
                 'sellingDetails.product_id',
             ])
+            ->with(['member', 'paymentMethod', 'sellingDetails'])
             ->defaultSort('-created_at')
             ->simplePaginate($request->get('per_page', 10));
 
         return $this->buildResponse()
-            ->setData($sellings)
+            ->setData(SellingCollection::collection($sellings))
             ->setMessage('success get sellings')
             ->present();
     }

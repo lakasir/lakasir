@@ -15,4 +15,14 @@ class Selling extends Model
     {
         return $this->hasMany(SellingDetail::class);
     }
+
+    public function paymentMethod()
+    {
+        return $this->belongsTo(PaymentMethod::class);
+    }
+
+    public function member()
+    {
+        return $this->belongsTo(Member::class);
+    }
 }
