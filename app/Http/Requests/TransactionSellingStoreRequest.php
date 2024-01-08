@@ -31,7 +31,7 @@ class TransactionSellingStoreRequest extends FormRequest
     {
         if (!$this->friend_price) {
             $total_price = 0;
-            Product::whereIn("id", collect($this->products)->pluck("product_id"))->chunk(100, 
+            Product::whereIn("id", collect($this->products)->pluck("product_id"))->chunk(100,
                 function ($products) use (&$total_price) {
                 foreach ($products as $product) {
                     $total_price += $product->selling_price * collect($this->products)

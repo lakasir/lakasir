@@ -47,7 +47,7 @@ class SellingObserver extends AbstractObserver implements DataAwareRule
 
     private function fifo(Product $product, $qty)
     {
-        $lastStock = $product->stocks()->latestIn()->first();
+        $lastStock = $product->stockLatestIn()->first();
         if ($lastStock) {
             if ($lastStock->stock < $qty) {
                 $qty = $qty - $lastStock->stock;

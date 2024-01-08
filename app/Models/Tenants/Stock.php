@@ -43,15 +43,6 @@ class Stock extends Model
     {
         return $this->where('type', 'in')
             ->where('stock', '>', 0)
-            ->latest();
-    }
-
-    public function getInitialPriceAttribute($value)
-    {
-        if ($this->stock == 0) {
-            return 0;
-        } else {
-            return $value;
-        }
+            ->where('date', '<=', now());
     }
 }

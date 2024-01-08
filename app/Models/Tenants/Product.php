@@ -24,16 +24,21 @@ class Product extends Model
         return $this->hasMany(Stock::class);
     }
 
+    public function scopeStockLatestIn()
+    {
+        return $this
+                ->stocks()
+                ->where('type', 'in')
+                ->where('stock', '>', 0)
+                ->orderByDesc('date');
+    }
+
     public function stock(): Attribute
     {
         return Attribute::make(
             get: function ($value) {
-                $stock = $this->stocks()
-                    ->in()
+                $stock = $this->stockLatestIn()
                     ->sum('stock');
-                if ($stock == 0) {
-                    return $value;
-                }
                 return $stock + $value;
             },
             set: fn ($value) => $value
@@ -44,8 +49,7 @@ class Product extends Model
     {
         return Attribute::make(
             get: function ($value) {
-                $stock = $this->stocks()
-                    ->latestIn();
+                $stock = $this->stockLatestIn();
                 if ($stock?->first() == null) {
                     return $value;
                 }
@@ -59,8 +63,7 @@ class Product extends Model
     {
         return Attribute::make(
             get: function ($value) {
-                $stock = $this->stocks()
-                    ->latestIn();
+                $stock = $this->stockLatestIn();
                 if ($stock?->first() == null) {
                     return $value;
                 }
