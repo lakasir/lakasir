@@ -41,11 +41,18 @@ class SellingController extends Controller
     {
         $request->store();
 
-        return $this->success([], "success creating items");
+        return $this->buildResponse()
+            ->setMessage('success create selling')
+            ->present();
     }
 
     public function show(Selling $selling)
     {
-        return $this->success($selling);
+        $selling->load(['member', 'paymentMethod', 'sellingDetails']);
+
+        return $this->buildResponse()
+            ->setData(new SellingCollection($selling))
+            ->setMessage('success get selling')
+            ->present();
     }
 }
