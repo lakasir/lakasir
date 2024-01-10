@@ -27,7 +27,7 @@ class SellingController extends Controller
                 'updated_at',
                 'sellingDetails.product_id',
             ])
-            ->with(['member', 'paymentMethod', 'sellingDetails'])
+            ->with(['member', 'paymentMethod', 'sellingDetails.product'])
             ->defaultSort('-created_at')
             ->simplePaginate($request->get('per_page', 10));
 
