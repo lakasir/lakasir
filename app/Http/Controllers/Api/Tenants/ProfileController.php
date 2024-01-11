@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Tenants;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ProfileResource;
+use App\Models\Tenants\Setting;
 use App\Models\Tenants\UploadedFile;
 use Exception;
 use Illuminate\Http\Request;
@@ -43,7 +44,7 @@ class ProfileController extends Controller
             ]);
             $profile = $user->profile()->updateOrCreate([
                 'user_id' => $user->id,
-            ], $request->only('phone', 'address', 'locale'));
+            ], $request->only('phone', 'address'));
 
             if ($request->filled('photo_url') && $request->photo_url !== $profile->photo) {
                 /** @var \App\Models\Tenants\UploadedFile $tmpFile */
@@ -53,6 +54,7 @@ class ProfileController extends Controller
                     'photo' => $url,
                 ]);
             }
+            Setting::set('locale', $request->locale ?? 'en');
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();

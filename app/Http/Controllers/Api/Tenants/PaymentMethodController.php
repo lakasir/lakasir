@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Tenants;
+namespace App\Http\Controllers\Api\Tenants;
 
 use App\Http\Controllers\Controller;
 use App\Models\Tenants\PaymentMethod;
