@@ -33,6 +33,7 @@ class RegisterRequest extends FormRequest
             'domain' => ['required', 'string', 'max:255', 'unique:domains', 'regex:/^[a-z0-9]+(?:-[a-z0-9]+)*\.' . config('tenancy.central_domains')[0] . '$/'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:tenant_users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'business_type' => ['required', 'in:retail,wholesale,fnb,fashion,pharmacy,other'],
         ];
     }
 
@@ -55,7 +56,7 @@ class RegisterRequest extends FormRequest
 
             $tenant->user->about()->create([
                 'shop_name' => $this->full_name,
-                'business_type' => 'retail',
+                'business_type' => $this->business_type,
             ]);
 
             $tenant->user->notify(new \App\Notifications\DomainCreated());

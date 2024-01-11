@@ -30,7 +30,7 @@ class Product extends Model
                 ->stocks()
                 ->where('type', 'in')
                 ->where('stock', '>', 0)
-                ->orderByDesc('date');
+                ->orderBy('date');
     }
 
     public function stock(): Attribute
