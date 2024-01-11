@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Tenants\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -22,7 +23,7 @@ class AboutResource extends JsonResource
             'shop_location' => $this?->shop_location ?? '',
             'owner_name' => $this?->tenantUser?->full_name ?? '',
             'business_type' => $this?->business_type ?? '',
-            'currency' => $this?->currency ?? '',
+            'currency' => Setting::get('currency') ?? 'IDR',
             'photo_url' => $this?->photo ?? '',
         ];
     }
