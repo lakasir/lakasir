@@ -16,7 +16,8 @@ class Stock extends Model
         'initial_price',
         'selling_price',
         'type',
-        'date'
+        'date',
+        'init_stock',
     ];
 
     public function product(): BelongsTo

@@ -60,6 +60,7 @@ class StockRequest extends FormRequest
             $this->request->remove("selling_price");
         }
         $stock = new Stock();
+        $this->request->set("init_stock", $this->get("stock"));
         $stock->fill($this->request->all());
         $stock->product()->associate($this->route("product"));
         $stock->save();

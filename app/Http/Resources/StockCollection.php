@@ -18,6 +18,7 @@ class StockCollection extends JsonResource
             'id' => $this->id,
             'product' => $this->product->name,
             'stock' => $this->stock,
+            'init_stock' => $this->init_stock,
             'initial_price' => $this->initial_price,
             'selling_price' => $this->selling_price,
             'type' => $this->type,
