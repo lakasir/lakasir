@@ -34,9 +34,11 @@ class SellingObserver extends AbstractObserver implements DataAwareRule
     {
         foreach ($this->data['products'] as $productRequest) {
             $product = Product::find($productRequest['product_id']);
-            $this->fifo($product, $productRequest['qty']);
+            if (!$product->is_non_stock) {
+                $this->fifo($product, $productRequest['qty']);
+            }
             if (!$this->data['friend_price']) {
-                $productRequest['price'] = $product->selling_price;
+                $productRequest['price'] = $product->selling_price * $productRequest['qty'];
             }
             $sellingDetail = new SellingDetail();
             $sellingDetail->fill($productRequest);

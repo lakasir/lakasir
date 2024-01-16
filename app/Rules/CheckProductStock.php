@@ -27,7 +27,14 @@ class CheckProductStock implements ValidationRule, DataAwareRule
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         $index = Str::of($attribute)->explode('.')[1];
-        $bool = Product::find($this->data['products'][$index]['product_id'])?->stock < $value;
+        $product = Product::find($this->data['products'][$index]['product_id']);
+        if (!$product) {
+            $fail('The product is not found.');
+        }
+        if ($product->is_non_stock) {
+            return;
+        }
+        $bool = $product?->stock < $value;
 
         if ($bool) {
             $fail($this->message());

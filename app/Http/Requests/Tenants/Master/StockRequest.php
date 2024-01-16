@@ -5,6 +5,7 @@ namespace App\Http\Requests\Tenants\Master;
 use App\Models\Tenants\Stock;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 
 class StockRequest extends FormRequest
 {
@@ -15,6 +16,13 @@ class StockRequest extends FormRequest
 
     public function rules(): array
     {
+        $product = $this->route("product");
+        if ($product->is_non_stock) {
+            throw ValidationException::withMessages([
+                "product" => "product is not non stock",
+            ]);
+        }
+
         if ($this->request->get("type") == null) {
             $this->request->set("type", "in");
         }

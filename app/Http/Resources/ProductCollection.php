@@ -18,6 +18,7 @@ class ProductCollection extends JsonResource
             'type' => $this->type,
             'unit' => $this->unit,
             'stock' => $this->stock,
+            'is_non_stock' => (bool) $this->is_non_stock,
             'hero_images' => $this->hero_images,
             'stocks' => $this->whenLoaded('stocks'),
         ];

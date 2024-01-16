@@ -75,8 +75,10 @@ class TransactionSellingStoreRequest extends FormRequest
             DB::beginTransaction();
             $selling = new Selling();
             $selling->fill(
-                $this->merge(['member_id' => Member::find($this->member_id)])
-                    ->except('products')
+                $this->merge([
+                    'member_id' => Member::findOrFail($this->member_id)->id,
+                ])
+                ->except('products')
             );
             $selling->save();
             DB::commit();

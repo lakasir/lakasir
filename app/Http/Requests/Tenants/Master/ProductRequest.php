@@ -23,14 +23,20 @@ class ProductRequest extends FormRequest
     public function rules(): array
     {
         if($this->method() == 'DELETE') return [];
+        if ($this->is_non_stock) {
+            $this->merge([
+                "stock" => 0,
+            ]);
+        }
         return [
             "name" => ["required", "min:3"],
             "category" => ["required"],
-            "stock" => ["numeric", "required", "min:0"],
+            "stock" => ["numeric", Rule::requiredIf(!$this->is_non_stock)],
             "initial_price" => ["numeric", "required", "lte:selling_price"],
             "selling_price" => ["numeric", "required", "gte:initial_price"],
             "type" => [Rule::in("product", "service"), "required"],
             "hero_images_url" => ["string"],
+            "is_non_stock" => ["boolean", "required"],
         ];
     }
 
