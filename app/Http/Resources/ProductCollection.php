@@ -20,6 +20,8 @@ class ProductCollection extends JsonResource
             'stock' => $this->stock,
             'is_non_stock' => (bool) $this->is_non_stock,
             'hero_images' => $this->hero_images,
+            'sku' => $this->sku,
+            'barcode' => $this->barcode,
             'stocks' => $this->whenLoaded('stocks'),
         ];
     }

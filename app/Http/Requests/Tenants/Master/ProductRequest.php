@@ -28,7 +28,25 @@ class ProductRequest extends FormRequest
                 "stock" => 0,
             ]);
         }
+
+        if ($this->method() == 'PUT') {
+            $product = Product::findorfail($this->route('product'));
+            $this->merge([
+                "sku" => $this->filled('sku') ? $this->sku : $product->sku,
+                "barcode" => $this->filled('barcode') ? $this->barcode : $product->barcode,
+                "name" => $this->filled('name') ? $this->name : $product->name,
+                "category" => $this->filled('category') ? $this->category : $product->category_id,
+                "stock" => $this->filled('stock') ? $this->stock : $product->stock,
+                "initial_price" => $this->filled('initial_price') ? $this->initial_price : $product->initial_price,
+                "selling_price" => $this->filled('selling_price') ? $this->selling_price : $product->selling_price,
+                "type" => $this->filled('type') ? $this->type : $product->type,
+                "hero_images_url" => $this->filled('hero_images_url') ? $this->hero_images_url : $product->hero_images[0] ?? '',
+                "is_non_stock" => $this->filled('is_non_stock') ? $this->is_non_stock : $product->is_non_stock,
+            ]);
+        }
         return [
+            "sku" => ["required", "min:3", Rule::unique(Product::class)->ignore($this->route('product'))],
+            "barcode" => ["nullable", "min:3", Rule::unique(Product::class)->ignore($this->route('product'))],
             "name" => ["required", "min:3"],
             "category" => ["required"],
             "stock" => ["numeric", Rule::requiredIf(!$this->is_non_stock)],
