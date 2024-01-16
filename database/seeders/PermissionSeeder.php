@@ -60,6 +60,9 @@ class PermissionSeeder extends Seeder
                     'payment method' => [
                         'c', 'r', 'u', 'd'
                     ],
+                    'cash drawer' => [
+                        'open', 'r', 'close'
+                    ],
                 ]
             ]
         ];
@@ -86,6 +89,7 @@ class PermissionSeeder extends Seeder
                         $action =  "delete $feature";
                         break;
                     default:
+                        $action =  "$crud[$i] $feature";
                         break;
                     }
                     $normalize[$action] = $permissions['role'];

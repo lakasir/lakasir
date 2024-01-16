@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\Tenants\Master\ProductController;
 use App\Http\Controllers\Api\Tenants\Master\Product\StockController;
 use App\Http\Controllers\Api\Tenants\PaymentMethodController;
 use App\Http\Controllers\Api\Tenants\ProfileController;
+use App\Http\Controllers\Api\Tenants\Transaction\CashDrawerController;
 use App\Http\Controllers\Api\Tenants\Transaction\SellingController;
 use App\Http\Controllers\Api\Tenants\UploadController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
@@ -104,6 +105,7 @@ Route::middleware([
         Route::group(['prefix' => 'payment-method', 'middleware' => 'auth:sanctum'], function () {
             Route::get('/', [PaymentMethodController::class, 'index'])->can('read payment method');
         });
+
     });
 
     Route::group(['prefix' => 'about', 'middleware' => 'auth:sanctum'], function () {
@@ -117,6 +119,11 @@ Route::middleware([
         Route::get('/selling', [SellingController::class, 'index'])->can('read selling');
         Route::post('/selling', [SellingController::class, 'store'])->can('create selling');
         Route::get('/selling/{selling}', [SellingController::class, 'show'])->can('read selling');
+        Route::group(['prefix' => 'cash-drawer', 'middleware' => 'auth:sanctum'], function () {
+            Route::get('/', [CashDrawerController::class, 'show'])->can('read cash drawer');
+            Route::post('/', [CashDrawerController::class, 'store'])->can('open cash drawer');
+            Route::post('/close', [CashDrawerController::class, 'close'])->can('close cash drawer');
+        });
     });
 
 

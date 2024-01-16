@@ -2,31 +2,35 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Tenants\CashDrawer;
 use App\Models\Tenants\Member;
 use App\Models\Tenants\PaymentMethod;
 use App\Models\Tenants\Product;
 use App\Models\Tenants\Selling;
+use App\Models\Tenants\Setting;
 use App\Rules\CheckProductStock;
 use App\Rules\ShouldSameWithSellingDetail;
 use Exception;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 class TransactionSellingStoreRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
+        if(Setting::get('cash_drawer_enabled', false)) {
+            $lastOpenedCashDrawer = CashDrawer::lastOpened()->first();
+            if (!$lastOpenedCashDrawer) {
+                throw ValidationException::withMessages([
+                    'cash_drawer' => 'Cash drawer is not opened',
+                ]);
+            }
+        }
+
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
         if (!$this->friend_price) {
