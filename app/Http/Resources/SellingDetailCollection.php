@@ -7,13 +7,19 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class SellingDetailCollection extends JsonResource
 {
-    /**
-     * Transform the resource collection into an array.
-     *
-     * @return array<int|string, mixed>
-     */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            'id' => $this->id,
+            'selling_id' => $this->selling_id,
+            'product_id' => $this->product_id,
+            'qty' => $this->qty,
+            'price' => $this->price,
+            'total_price' => $this->total_price,
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
+            // 'selling' => $this->whenLoaded('selling'),
+            'product' => new ProductCollection($this->whenLoaded('product')),
+        ];
     }
 }

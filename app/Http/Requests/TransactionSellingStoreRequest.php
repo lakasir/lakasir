@@ -61,6 +61,7 @@ class TransactionSellingStoreRequest extends FormRequest
             ]);
         }
 
+
         return [
             "payed_money" => ["required", "gte:total_price"],
             "total_price" => ["required_if:friend_price,true", "numeric"],
@@ -80,7 +81,7 @@ class TransactionSellingStoreRequest extends FormRequest
             $selling = new Selling();
             $selling->fill(
                 $this->merge([
-                    'member_id' => Member::findOrFail($this->member_id)->id,
+                    'member_id' => $this->member_id ? Member::findOrFail($this->member_id)->id : null,
                 ])
                 ->except('products')
             );

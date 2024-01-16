@@ -126,6 +126,13 @@ Route::middleware([
         });
     });
 
+    Route::get('setting/{key}', [App\Http\Controllers\Api\Tenants\SettingController::class, 'show'])
+        ->middleware('auth:sanctum')
+        ->name('setting.show');
+    Route::post('setting', [App\Http\Controllers\Api\Tenants\SettingController::class, 'store'])
+        ->middleware('auth:sanctum')
+        ->name('setting.store');
+
 
     Route::get('/', function () {
         return ['Laravel' => app()->version()];
