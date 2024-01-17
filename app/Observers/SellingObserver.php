@@ -2,9 +2,11 @@
 
 namespace App\Observers;
 
+use App\Models\Tenants\CashDrawer;
 use App\Models\Tenants\Product;
 use App\Models\Tenants\Selling;
 use App\Models\Tenants\SellingDetail;
+use App\Models\Tenants\Setting;
 use Illuminate\Contracts\Validation\DataAwareRule;
 use Illuminate\Support\Str;
 
@@ -28,6 +30,9 @@ class SellingObserver extends AbstractObserver implements DataAwareRule
         /* TODO: fixing the iteration code <10-08-22, sheenazien8> */
         $selling->code = "SELL" . Str::of($lastCount + 1)->padLeft(4, 0)->value();
         $selling->money_changes = $selling->payed_money - $selling->total_price;
+        if (Setting::get('cash_drawer_enabled', false)) {
+            $selling->cash_drawer_id = CashDrawer::lastOpened()->first()->id;
+        }
     }
 
     public function created(Selling $selling)

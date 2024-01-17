@@ -24,10 +24,21 @@ class SettingController extends Controller
 
     public function show(string $key)
     {
-        if (!in_array($key, ['currency', 'locale', 'methode_price', 'cash_drawer_enabled'])) {
+        if (!in_array($key, ['currency', 'locale', 'methode_price', 'cash_drawer_enabled', 'all'])) {
             return $this->buildResponse()
                 ->setMessage('key not found')
                 ->setCode(404)
+                ->present();
+        }
+
+        if ($key === 'all') {
+            return $this->buildResponse()
+                ->setData([
+                    'currency' => Setting::get('currency', 'IDR'),
+                    'locale' => Setting::get('locale', 'en'),
+                    'methode_price' => Setting::get('methode_price', 'normal'),
+                    'cash_drawer_enabled' => (bool) Setting::get('cash_drawer_enabled', false),
+                ])
                 ->present();
         }
 
