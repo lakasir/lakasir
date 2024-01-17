@@ -35,10 +35,14 @@ class TransactionSellingStoreRequest extends FormRequest
     {
         if (!$this->friend_price) {
             $total_price = 0;
+            $total_net_price = 0;
             Product::whereIn("id", collect($this->products)->pluck("product_id"))->chunk(100,
-                function ($products) use (&$total_price) {
+                function ($products) use (&$total_price, &$total_net_price) {
                 foreach ($products as $product) {
                     $total_price += $product->selling_price * collect($this->products)
+                            ->where("product_id", $product->id)
+                            ->sum("qty");
+                    $total_net_price += $product->initial_price * collect($this->products)
                             ->where("product_id", $product->id)
                             ->sum("qty");
                 }
@@ -46,6 +50,7 @@ class TransactionSellingStoreRequest extends FormRequest
             $total_qty = collect($this->products)->sum("qty");
             $this->merge([
                 "total_price" => $total_price,
+                "total_net_price" => $total_net_price,
                 "total_qty" => $total_qty,
                 "money_change" => $this->payed_money - $total_price,
             ]);

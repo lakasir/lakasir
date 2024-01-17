@@ -44,6 +44,7 @@ class SellingObserver extends AbstractObserver implements DataAwareRule
             }
             if (!$this->data['friend_price']) {
                 $productRequest['price'] = $product->selling_price * $productRequest['qty'];
+                $productRequest['net_price'] = $product->initial_price * $productRequest['qty'];
             }
             $sellingDetail = new SellingDetail();
             $sellingDetail->fill($productRequest);
