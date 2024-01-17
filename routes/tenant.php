@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\Tenants\Master\Product\StockController;
 use App\Http\Controllers\Api\Tenants\PaymentMethodController;
 use App\Http\Controllers\Api\Tenants\ProfileController;
 use App\Http\Controllers\Api\Tenants\Transaction\CashDrawerController;
+use App\Http\Controllers\Api\Tenants\Transaction\DashboardController;
 use App\Http\Controllers\Api\Tenants\Transaction\SellingController;
 use App\Http\Controllers\Api\Tenants\UploadController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
@@ -116,6 +117,13 @@ Route::middleware([
     });
 
     Route::group(['prefix' => 'transaction', 'middleware' => 'auth:sanctum'], function () {
+        Route::get('/dashboard/total-revenue', [DashboardController::class, 'totalRevenue'])
+            ->name('transaction.dashboard.total-revenue');
+        Route::get('/dashboard/total-gross-profit', [DashboardController::class, 'totalGrossProfit'])
+            ->name('transaction.dashboard.total-gross-profit');
+        Route::get('/dashboard/total-sales', [DashboardController::class, 'totalSales'])
+            ->name('transaction.dashboard.total-sales');
+
         Route::get('/selling', [SellingController::class, 'index'])->can('read selling');
         Route::post('/selling', [SellingController::class, 'store'])->can('create selling');
         Route::get('/selling/{selling}', [SellingController::class, 'show'])->can('read selling');
