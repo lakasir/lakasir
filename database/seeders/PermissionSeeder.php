@@ -63,6 +63,9 @@ class PermissionSeeder extends Seeder
                     'cash drawer' => [
                         'open', 'r', 'close'
                     ],
+                    'using setting enable secure initial price' => [
+                        'r'
+                    ],
                 ]
             ]
         ];

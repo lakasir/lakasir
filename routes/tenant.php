@@ -9,6 +9,9 @@ use App\Http\Controllers\Api\Tenants\Master\ProductController;
 use App\Http\Controllers\Api\Tenants\Master\Product\StockController;
 use App\Http\Controllers\Api\Tenants\PaymentMethodController;
 use App\Http\Controllers\Api\Tenants\ProfileController;
+// use App\Http\Controllers\Api\Tenants\Reports\CashierReportController;
+use App\Http\Controllers\Api\Tenants\Reports\SellingReportController;
+use App\Http\Controllers\Api\Tenants\Settings\SecureInitialPriceController;
 use App\Http\Controllers\Api\Tenants\Transaction\CashDrawerController;
 use App\Http\Controllers\Api\Tenants\Transaction\DashboardController;
 use App\Http\Controllers\Api\Tenants\Transaction\SellingController;
@@ -134,6 +137,7 @@ Route::middleware([
         });
     });
 
+    // @TODO: this is should be using can permission
     Route::get('setting/{key}', [App\Http\Controllers\Api\Tenants\SettingController::class, 'show'])
         ->middleware('auth:sanctum')
         ->name('setting.show');
@@ -141,6 +145,23 @@ Route::middleware([
         ->middleware('auth:sanctum')
         ->name('setting.store');
 
+    Route::post('setting/secure-initial-price', [SecureInitialPriceController::class, 'store'])
+        ->middleware('auth:sanctum')
+        ->name('setting.secure-initial-price.store')
+        ->can('read using setting enable secure initial price');
+    Route::post('setting/secure-initial-price/verify', [SecureInitialPriceController::class, 'verify'])
+        ->middleware('auth:sanctum')
+        ->name('setting.secure-initial-price.verify')
+        ->can('read using setting enable secure initial price');
+
+    Route::group(['prefix' => 'report', 'middleware' => 'auth:sanctum'], function () {
+        // Route::post('/cashier', CashierReportController::class)
+        //     ->can('generate cashier report');
+        // Route::post('/selling', SellingReportController::class)
+        //     ->can('generate selling report');
+        // Route::post('/product', [App\Http\Controllers\Api\Tenants\Report\ProductReportController::class, 'index'])
+        //     ->can('generate product report');
+    });
 
     Route::get('/', function () {
         return ['Laravel' => app()->version()];
