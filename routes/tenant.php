@@ -149,6 +149,7 @@ Route::middleware([
         ->middleware('auth:sanctum')
         ->name('setting.secure-initial-price.store')
         ->can('read using setting enable secure initial price');
+
     Route::post('setting/secure-initial-price/verify', [SecureInitialPriceController::class, 'verify'])
         ->middleware('auth:sanctum')
         ->name('setting.secure-initial-price.verify')
