@@ -66,6 +66,15 @@ class PermissionSeeder extends Seeder
                     'using setting enable secure initial price' => [
                         'r'
                     ],
+                    'cashier report' => [
+                        'generate',
+                    ],
+                    'selling report' => [
+                        'generate',
+                    ],
+                    'product report' => [
+                        'generate',
+                    ],
                 ]
             ]
         ];

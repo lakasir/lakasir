@@ -24,12 +24,12 @@ class FillSellingMissingValue extends Command
             $selling->sellingDetails->each(function ($sellingDetail) use (&$total_net_price) {
                 $net_price = $sellingDetail->product->initial_price * $sellingDetail->qty;
                 $sellingDetail->update([
-                    'net_price' => $net_price,
+                    'cost' => $net_price,
                 ]);
                 $total_net_price += $net_price;
             });
             $selling->update([
-                'total_net_price' => $total_net_price,
+                'total_cost' => $total_net_price,
             ]);
         });
     }

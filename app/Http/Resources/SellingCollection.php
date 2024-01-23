@@ -16,6 +16,7 @@ class SellingCollection extends JsonResource
             'payed_money' => $this->payed_money,
             'money_changes' => $this->money_changes,
             'total_price' => $this->total_price,
+            'total_cost' => $this->total_cost,
             'friend_price' => $this->friend_price,
             'tax' => $this->tax,
             'total_qty' => $this->total_qty,
