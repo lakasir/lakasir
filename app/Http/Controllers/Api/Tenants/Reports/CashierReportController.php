@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Tenants\Reports;
 
 use App\Http\Controllers\Controller;
 use App\Models\Tenants\Selling;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -59,8 +60,8 @@ class CashierReportController extends Controller
             ];
         }
 
-        return $this->buildResponse()
-            ->setData($reports)
-            ->present();
+        $pdf = Pdf::loadView('reports.cashier', compact('reports'));
+
+        return $pdf->download('cashier-report.pdf');
     }
 }
