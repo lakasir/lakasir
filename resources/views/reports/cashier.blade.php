@@ -97,11 +97,14 @@
         </tbody>
     </table>
     @endforeach
-    <div class="total-section">
-        <p>Total pendapatan kotor: <b>{{ $footer['total_gross_profit'] }}</b></p>
-        <p>Total biaya: <b>{{ $footer['total_cost'] }}</b></p>
-        <p>Total pendapatan bersih: <b>{{ $footer['total_net_profit'] }}</b></p>
-    </div>
+    <table>
+      <tr>
+        <td colspan="4">Grand Total</td>
+        <td class="number"><b>{{ $footer['total_cost'] }}</b></td>
+        <td class="number"><b>{{ $footer['total_gross_profit'] }}</b></td>
+        <td class="number"><b>{{ $footer['total_net_profit'] }}</b></td>
+      </tr>
+    </table>
 </body>
 </html>
 

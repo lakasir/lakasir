@@ -77,6 +77,10 @@ class CashierReportController extends Controller
 
         $pdf = Pdf::loadView('reports.cashier', compact('reports', 'footer', 'header'))
             ->setPaper('a4', 'landscape');
+        $pdf->output();
+        $domPdf = $pdf->getDomPDF();
+        $canvas = $domPdf->get_canvas();
+        $canvas->page_text(720, 570, 'Halaman {PAGE_NUM} dari {PAGE_COUNT}', null, 10, [0, 0, 0]);
 
         return $pdf->download('cashier-report.pdf');
     }

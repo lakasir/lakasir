@@ -8,7 +8,7 @@ use Illuminate\Contracts\Validation\DataAwareRule;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Support\Str;
 
-class CheckProductStock implements ValidationRule, DataAwareRule
+class CheckProductStock implements DataAwareRule, ValidationRule
 {
     /**
      * All of the data under validation.
@@ -28,8 +28,10 @@ class CheckProductStock implements ValidationRule, DataAwareRule
     {
         $index = Str::of($attribute)->explode('.')[1];
         $product = Product::find($this->data['products'][$index]['product_id']);
-        if (!$product) {
+        if (! $product) {
             $fail('The product is not found.');
+
+            return;
         }
         if ($product->is_non_stock) {
             return;
