@@ -47,12 +47,14 @@ class TransactionSellingStoreRequest extends FormRequest
                             ->sum('qty');
                     }
                 });
+            $total_price = ($tax_price = $total_price * $this->tax / 100) + $total_price;
             $total_qty = collect($this->products)->sum('qty');
             $this->merge([
                 'total_price' => $total_price,
                 'total_cost' => $total_net_price,
                 'total_qty' => $total_qty,
                 'money_change' => $this->payed_money - $total_price,
+                'tax_price' => $tax_price,
             ]);
         } else {
             $this->merge([
