@@ -81,7 +81,6 @@ class DashboardController extends Controller
         $totalSales = Selling::where('created_at', '>=', $dateRange['startDate'])
             ->where('created_at', '<=', $dateRange['endDate'])
             ->count();
-        dd($totalSales, $dateRange['startDate'], $dateRange['endDate']);
         $previousData = $this->calculatePercentageChange(
             $dateRange['startDate'],
             $filterType,
