@@ -9,7 +9,7 @@ class Selling extends Model
 {
     use HasFactory;
 
-    protected $guarded = ["friend_price"];
+    protected $guarded = ['friend_price'];
 
     public function sellingDetails()
     {
@@ -24,5 +24,10 @@ class Selling extends Model
     public function member()
     {
         return $this->belongsTo(Member::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

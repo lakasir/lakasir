@@ -12,31 +12,32 @@ class DashboardController extends Controller
     public function totalRevenue(Request $request)
     {
         $filterType = $request->filter_type;
-        $dateRange = $this->getDateRange($filterType);
+        $timezone = $request->timezone;
+        $dateRange = $this->getDateRange($filterType, $timezone);
 
         $totalPrice = Selling::where('created_at', '>=', $dateRange['startDate'])
             ->where('created_at', '<=', $dateRange['endDate'])
             ->sum('total_price');
-        $totalNetPrice = Selling::where('created_at', '>=', $dateRange['startDate'])
+        $totalCost = Selling::where('created_at', '>=', $dateRange['startDate'])
             ->where('created_at', '<=', $dateRange['endDate'])
-            ->sum('total_net_price');
-        $totalRevenue = $totalPrice - $totalNetPrice;
+            ->sum('total_cost');
+        $totalNetPrice = $totalPrice - $totalCost;
 
         $previousData = $this->calculatePercentageChange(
             $dateRange['startDate'],
             $filterType,
-            $totalRevenue,
+            $totalNetPrice,
             function (Carbon $previous, Carbon $currentDate) {
                 return Selling::where('created_at', '>=', $previous)
                     ->where('created_at', '<=', $currentDate)
                     ->sum('total_price') - Selling::where('created_at', '>=', $previous)
                     ->where('created_at', '<=', $currentDate)
-                    ->sum('total_net_price');
+                    ->sum('total_cost');
             });
 
         return $this->buildResponse()
             ->setData([
-                'total_revenue' => $totalRevenue,
+                'total_revenue' => $totalNetPrice,
                 'total_prevous_revenue' => $previousData['previous'],
                 'percentage_change' => intval($previousData['percentage']),
             ])
@@ -46,7 +47,8 @@ class DashboardController extends Controller
     public function totalGrossProfit(Request $request)
     {
         $filterType = $request->filter_type;
-        $dateRange = $this->getDateRange($filterType);
+        $timezone = $request->timezone;
+        $dateRange = $this->getDateRange($filterType, $timezone);
 
         $totalGrossProfit = Selling::where('created_at', '>=', $dateRange['startDate'])
             ->where('created_at', '<=', $dateRange['endDate'])
@@ -60,7 +62,6 @@ class DashboardController extends Controller
                     ->where('created_at', '<=', $currentDate)
                     ->sum('total_price');
             });
-        
 
         return $this->buildResponse()
             ->setData([
@@ -74,7 +75,8 @@ class DashboardController extends Controller
     public function totalSales(Request $request)
     {
         $filterType = $request->filter_type;
-        $dateRange = $this->getDateRange($filterType);
+        $timezone = $request->timezone;
+        $dateRange = $this->getDateRange($filterType, $timezone);
 
         $totalSales = Selling::where('created_at', '>=', $dateRange['startDate'])
             ->where('created_at', '<=', $dateRange['endDate'])
@@ -88,7 +90,6 @@ class DashboardController extends Controller
                     ->where('created_at', '<=', $currentDate)
                     ->count();
             });
-        
 
         return $this->buildResponse()
             ->setData([
@@ -124,8 +125,8 @@ class DashboardController extends Controller
                 $previousDate = Carbon::parse($currentDate)->subYears(2);
                 break;
             default:
-            $previousDate = Carbon::parse($currentDate)->subDay();
-            break;
+                $previousDate = Carbon::parse($currentDate)->subDay();
+                break;
         }
 
         $previous = $callbackQuery($previousDate, $currentDate);
@@ -136,7 +137,7 @@ class DashboardController extends Controller
         ];
     }
 
-    private function getDateRange(?string $filteryType)
+    private function getDateRange(?string $filteryType, ?string $timezone)
     {
         switch ($filteryType) {
             case 'yesterday':
@@ -168,14 +169,14 @@ class DashboardController extends Controller
                 $endDate = now()->subYear()->endOfYear();
                 break;
             default:
-            $startDate = now()->startOfDay();
-            $endDate = now()->endOfDay();
-            break;
+                $startDate = now()->startOfDay();
+                $endDate = now()->endOfDay();
+                break;
         }
 
         return [
-            'startDate' => $startDate->setTimezone('Asia/Jakarta'),
-            'endDate' => $endDate->setTimezone('Asia/Jakarta'),
+            'startDate' => $startDate->setTimezone($timezone),
+            'endDate' => $endDate->setTimezone($timezone),
         ];
     }
 }

@@ -19,9 +19,9 @@ class TransactionSellingStoreRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        if(Setting::get('cash_drawer_enabled', false)) {
+        if (Setting::get('cash_drawer_enabled', false)) {
             $lastOpenedCashDrawer = CashDrawer::lastOpened()->first();
-            if (!$lastOpenedCashDrawer) {
+            if (! $lastOpenedCashDrawer) {
                 throw ValidationException::withMessages([
                     'cash_drawer' => 'Cash drawer is not opened',
                 ]);
@@ -33,49 +33,50 @@ class TransactionSellingStoreRequest extends FormRequest
 
     public function rules(): array
     {
-        if (!$this->friend_price) {
+        if (! $this->friend_price) {
             $total_price = 0;
             $total_net_price = 0;
-            Product::whereIn("id", collect($this->products)->pluck("product_id"))->chunk(100,
+            Product::whereIn('id', collect($this->products)->pluck('product_id'))->chunk(100,
                 function ($products) use (&$total_price, &$total_net_price) {
-                foreach ($products as $product) {
-                    $total_price += $product->selling_price * collect($this->products)
-                            ->where("product_id", $product->id)
-                            ->sum("qty");
-                    $total_net_price += $product->initial_price * collect($this->products)
-                            ->where("product_id", $product->id)
-                            ->sum("qty");
-                }
-            });
-            $total_qty = collect($this->products)->sum("qty");
+                    foreach ($products as $product) {
+                        $total_price += $product->selling_price * collect($this->products)
+                            ->where('product_id', $product->id)
+                            ->sum('qty');
+                        $total_net_price += $product->initial_price * collect($this->products)
+                            ->where('product_id', $product->id)
+                            ->sum('qty');
+                    }
+                });
+            $total_price = ($tax_price = $total_price * $this->tax / 100) + $total_price;
+            $total_qty = collect($this->products)->sum('qty');
             $this->merge([
-                "total_price" => $total_price,
-                "total_net_price" => $total_net_price,
-                "total_qty" => $total_qty,
-                "money_change" => $this->payed_money - $total_price,
+                'total_price' => $total_price,
+                'total_cost' => $total_net_price,
+                'total_qty' => $total_qty,
+                'money_change' => $this->payed_money - $total_price,
+                'tax_price' => $tax_price,
             ]);
         } else {
             $this->merge([
-                "money_change" => $this->payed_money - $this->total_price,
+                'money_change' => $this->payed_money - $this->total_price,
             ]);
         }
 
-        if (!$this->payment_method_id) {
+        if (! $this->payment_method_id) {
             $this->merge([
-                "payment_method_id" => PaymentMethod::where("name", "Cash")->first()->id
+                'payment_method_id' => PaymentMethod::where('name', 'Cash')->first()->id,
             ]);
         }
-
 
         return [
-            "payed_money" => ["required", "gte:total_price"],
-            "total_price" => ["required_if:friend_price,true", "numeric"],
-            "total_qty" => ["required_if:friend_price,true", "numeric", new ShouldSameWithSellingDetail("qty")],
-            "friend_price" => ["required", "boolean"],
-            "products" => ["array"],
-            "products.*.product_id" => ["required", "exists:products,id"],
-            "products.*.price" => ["required_if:friend_price,true", "numeric"],
-            "products.*.qty" => ["required", "numeric", "min:1", new CheckProductStock],
+            'payed_money' => ['required', 'gte:total_price'],
+            'total_price' => ['required_if:friend_price,true', 'numeric'],
+            'total_qty' => ['required_if:friend_price,true', 'numeric', new ShouldSameWithSellingDetail('qty')],
+            'friend_price' => ['required', 'boolean'],
+            'products' => ['array'],
+            'products.*.product_id' => ['required', 'exists:products,id'],
+            'products.*.price' => ['required_if:friend_price,true', 'numeric'],
+            'products.*.qty' => ['required', 'numeric', 'min:1', new CheckProductStock],
         ];
     }
 
@@ -88,7 +89,7 @@ class TransactionSellingStoreRequest extends FormRequest
                 $this->merge([
                     'member_id' => $this->member_id ? Member::findOrFail($this->member_id)->id : null,
                 ])
-                ->except('products')
+                    ->except('products')
             );
             $selling->save();
             DB::commit();

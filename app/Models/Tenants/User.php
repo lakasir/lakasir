@@ -3,6 +3,7 @@
 namespace App\Models\Tenants;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -11,7 +12,7 @@ use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRoles;
+    use HasApiTokens, HasFactory, HasRoles, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -51,5 +52,15 @@ class User extends Authenticatable
     public function secureInitialPrice(): HasOne
     {
         return $this->hasOne(SecureInitialPrice::class);
+    }
+
+    public function cashDrawer(): HasOne
+    {
+        return $this->hasOne(CashDrawer::class);
+    }
+
+    public function sellings(): HasMany
+    {
+        return $this->hasMany(Selling::class);
     }
 }

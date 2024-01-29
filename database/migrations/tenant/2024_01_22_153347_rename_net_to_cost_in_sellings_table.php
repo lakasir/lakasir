@@ -11,10 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('selling_details', function (Blueprint $table) {
-            $table->after('price', function (Blueprint $table) {
-                $table->double('net_price')->nullable();
-            });
+        Schema::table('sellings', function (Blueprint $table) {
+            $table->renameColumn('total_net_price', 'total_cost');
         });
     }
 
@@ -23,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('selling_details', function (Blueprint $table) {
-            $table->dropColumn('net_price');
+        Schema::table('sellings', function (Blueprint $table) {
+            $table->renameColumn('total_cost', 'total_net_price');
         });
     }
 };

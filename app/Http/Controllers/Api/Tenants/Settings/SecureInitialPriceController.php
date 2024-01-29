@@ -20,12 +20,43 @@ class SecureInitialPriceController extends Controller
         }
 
         $this->validate($request, [
+            'old_password' => ['nullable', 'string'],
             'password' => ['required', 'string', 'confirmed'],
         ]);
 
-        SecureInitialPrice::create([
+        if ($request->filled('old_password')) {
+            if (!auth()->user()->secureInitialPrice) {
+                return $this->buildResponse()
+                    ->setMessage('secure initial price password has not been set')
+                    ->setCode(403)
+                    ->present();
+            }
+
+            if (!Hash::check($request->old_password, auth()->user()->secureInitialPrice->password)) {
+                return $this->buildResponse()
+                    ->setMessage('old password is not valid')
+                    ->setCode(403)
+                    ->present();
+            }
+
+            auth()->user()->secureInitialPrice->update([
+                'password' => bcrypt($request->password),
+            ]);
+
+            return $this->buildResponse()
+                ->setMessage('secure initial price password has been updated')
+                ->present();
+        }
+
+        if (auth()->user()->secureInitialPrice) {
+            return $this->buildResponse()
+                ->setMessage('secure initial price password has already been set')
+                ->setCode(403)
+                ->present();
+        }
+
+        auth()->user()->secureInitialPrice()->create([
             'password' => bcrypt($request->password),
-            'user_id' => auth()->user()->id,
         ]);
 
         return $this->buildResponse()
@@ -46,16 +77,17 @@ class SecureInitialPriceController extends Controller
             'password' => ['required', 'string'],
         ]);
 
-        $secureInitialPrice = SecureInitialPrice::where('user_id', auth()->user()->id)->first();
+        $user_id = $request->user_id ?? auth()->user()->id;
 
-        if (!$secureInitialPrice) {
-            return $this->buildResponse()
-                ->setMessage('secure initial price password has not been set')
-                ->setCode(403)
-                ->present();
+        $secureInitialPrice = SecureInitialPrice::where('user_id', $user_id)->first();
+
+        if ($secureInitialPrice) {
+            $checkMethod = Hash::check($request->password, $secureInitialPrice->password);
         }
 
-        if (!Hash::check($request->password, $secureInitialPrice->password)) {
+        $checkMethod = Hash::check($request->password, auth()->user()->password);
+
+        if (!$checkMethod) {
             return $this->buildResponse()
                 ->setMessage('secure initial price password is not valid')
                 ->setCode(403)
@@ -64,36 +96,6 @@ class SecureInitialPriceController extends Controller
 
         return $this->buildResponse()
             ->setMessage('secure initial price password is valid')
-            ->present();
-    }
-
-    public function update(Request $request)
-    {
-        if (!Setting::get('secure_initial_price_enabled', false)) {
-            return $this->buildResponse()
-                ->setMessage('secure initial price is not enabled')
-                ->setCode(403)
-                ->present();
-        }
-
-        $this->validate($request, [
-            'old_password' => ['required', 'string'],
-            'password' => ['required', 'string', 'confirmed'],
-        ]);
-
-        if (!Hash::check($request->old_password, auth()->user()->secureInitialPrice->password)) {
-            return $this->buildResponse()
-                ->setMessage('old password is not valid')
-                ->setCode(403)
-                ->present();
-        }
-
-        auth()->user()->secureInitialPrice->update([
-            'password' => bcrypt($request->password),
-        ]);
-
-        return $this->buildResponse()
-            ->setMessage('secure initial price password has been updated')
             ->present();
     }
 }
