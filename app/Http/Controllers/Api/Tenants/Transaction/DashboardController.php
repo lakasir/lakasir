@@ -12,7 +12,8 @@ class DashboardController extends Controller
     public function totalRevenue(Request $request)
     {
         $filterType = $request->filter_type;
-        $dateRange = $this->getDateRange($filterType);
+        $timezone = $request->timezone;
+        $dateRange = $this->getDateRange($filterType, $timezone);
 
         $totalPrice = Selling::where('created_at', '>=', $dateRange['startDate'])
             ->where('created_at', '<=', $dateRange['endDate'])
@@ -46,7 +47,8 @@ class DashboardController extends Controller
     public function totalGrossProfit(Request $request)
     {
         $filterType = $request->filter_type;
-        $dateRange = $this->getDateRange($filterType);
+        $timezone = $request->timezone;
+        $dateRange = $this->getDateRange($filterType, $timezone);
 
         $totalGrossProfit = Selling::where('created_at', '>=', $dateRange['startDate'])
             ->where('created_at', '<=', $dateRange['endDate'])
@@ -73,7 +75,8 @@ class DashboardController extends Controller
     public function totalSales(Request $request)
     {
         $filterType = $request->filter_type;
-        $dateRange = $this->getDateRange($filterType);
+        $timezone = $request->timezone;
+        $dateRange = $this->getDateRange($filterType, $timezone);
 
         $totalSales = Selling::where('created_at', '>=', $dateRange['startDate'])
             ->where('created_at', '<=', $dateRange['endDate'])
@@ -134,7 +137,7 @@ class DashboardController extends Controller
         ];
     }
 
-    private function getDateRange(?string $filteryType)
+    private function getDateRange(?string $filteryType, ?string $timezone)
     {
         switch ($filteryType) {
             case 'yesterday':
@@ -172,8 +175,8 @@ class DashboardController extends Controller
         }
 
         return [
-            'startDate' => $startDate,
-            'endDate' => $endDate,
+            'startDate' => $startDate->setTimezone($timezone),
+            'endDate' => $endDate->setTimezone($timezone),
         ];
     }
 }
