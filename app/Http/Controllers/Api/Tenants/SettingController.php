@@ -22,7 +22,30 @@ class SettingController extends Controller
                     'cash_drawer_enabled',
                     'secure_initial_price_enabled',
                     'secure_initial_price_using_pin',
-                ])],
+                    'default_tax',
+                ]),
+                function ($attribute, $value, $fail) use ($request) {
+                    if ($value == 'default_tax') {
+                        if (! is_numeric($request->value)) {
+                            $fail('The '.$attribute.' should be numeric.');
+
+                            return;
+                        }
+                        if ($request->value < 0 || $request->value > 100) {
+                            $fail('The '.$attribute.' should be between 0 and 100.');
+
+                            return;
+                        }
+                    }
+                    if (in_array($value, ['cash_drawer_enabled', 'secure_initial_price_enabled', 'secure_initial_price_using_pin'])) {
+                        if (! is_bool($request->value)) {
+                            $fail('The '.$attribute.' should be boolean.');
+
+                            return;
+                        }
+                    }
+                },
+            ],
             'value' => ['required'],
         ]);
 
@@ -35,14 +58,15 @@ class SettingController extends Controller
 
     public function show(string $key)
     {
-        if (!in_array($key, [
+        if (! in_array($key, [
             'currency',
             'locale',
             'methode_price',
             'cash_drawer_enabled',
             'secure_initial_price_enabled',
             'secure_initial_price_using_pin',
-            'all'
+            'default_tax',
+            'all',
         ])) {
             return $this->buildResponse()
                 ->setMessage('key not found')
@@ -59,6 +83,7 @@ class SettingController extends Controller
                     'cash_drawer_enabled' => (bool) Setting::get('cash_drawer_enabled', false),
                     'secure_initial_price_enabled' => (bool) Setting::get('secure_initial_price_enabled', false),
                     'secure_initial_price_using_pin' => (bool) Setting::get('secure_initial_price_using_pin', false),
+                    'default_tax' => (float) Setting::get('default_tax', 0),
                 ])
                 ->present();
         }
