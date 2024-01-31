@@ -1,4 +1,11 @@
 name: unit-test
+env:
+  DB_CONNECTION: testing
+  DB_DATABASE: ${{ secrets.DB_DATABASE }}
+  DB_PORT: 3306
+  DB_USERNAME: ${{ secrets.DB_USERNAME }}
+  DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+  DB_HOST: mysql-host
 on:
   push:
     branches:
@@ -21,8 +28,10 @@ jobs:
         ports:
           - 3306:3306
         env:
-          MYSQL_DATABASE: ${{ secrets.DB_DATABASE }}
-          MYSQL_ROOT_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          MYSQL_DATABASE: ${{ env.DB_DATABASE }}
+          MYSQL_USER: ${{ env.DB_USERNAME }}
+          MYSQL_PASSWORD: ${{ env.DB_PASSWORD }}
+          MYSQL_ROOT_PASSWORD: ${{ env.DB_PASSWORD }}
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
     steps:
       - name: Checkout
