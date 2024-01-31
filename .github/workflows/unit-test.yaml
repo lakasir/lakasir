@@ -42,12 +42,12 @@ jobs:
           php -r "file_exists('.env') || copy('.env.ci', '.env');"
           php artisan key:generate
 
-#       - name: Setup database and Run Unit Test
-#         env:
-#           DB_CONNECTION: mysql
-#           DB_DATABASE: ${{ secrets.DB_DATABASE }}
-#           DB_PORT: 3306
-#           DB_USER: ${{ secrets.DB_USERNAME }}
-#           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-#         run: |
-#           vendor/phpunit/phpunit/phpunit
+      - name: Setup database and Run Unit Test
+        env:
+          DB_CONNECTION: mysql
+          DB_DATABASE: ${{ secrets.DB_DATABASE }}
+          DB_PORT: 3306
+          DB_USER: ${{ secrets.DB_USERNAME }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+        run: |
+          vendor/bin/pest
