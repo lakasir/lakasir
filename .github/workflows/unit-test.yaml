@@ -5,7 +5,7 @@ env:
   DB_PORT: 3306
   DB_USERNAME: ${{ secrets.DB_USERNAME }}
   DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-  DB_HOST: mysql-host
+  DB_HOST: mysql
 on:
   push:
     branches:
