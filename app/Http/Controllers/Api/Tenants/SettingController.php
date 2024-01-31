@@ -79,7 +79,7 @@ class SettingController extends Controller
                 ->setData([
                     'currency' => Setting::get('currency', 'IDR'),
                     'locale' => Setting::get('locale', 'en'),
-                    'methode_price' => Setting::get('methode_price', 'normal'),
+                    'methode_price' => Setting::get('methode_price', 'fifo'),
                     'cash_drawer_enabled' => (bool) Setting::get('cash_drawer_enabled', false),
                     'secure_initial_price_enabled' => (bool) Setting::get('secure_initial_price_enabled', false),
                     'secure_initial_price_using_pin' => (bool) Setting::get('secure_initial_price_using_pin', false),

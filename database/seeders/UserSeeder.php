@@ -19,7 +19,8 @@ class UserSeeder extends Seeder
     {
         // get database connection
         $dbName = DB::connection()->getDatabaseName();
-        $tenant = Tenant::find(Str::after($dbName, 'lakasir_'));
+        $tenant = Tenant::find(Str::after($dbName, 'lakasir_')) ?? tenant();
+
         User::create([
             'email' => $tenant->user->email,
             'password' => $tenant->user->password,

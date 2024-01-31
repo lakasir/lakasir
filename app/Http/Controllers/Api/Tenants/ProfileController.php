@@ -24,8 +24,8 @@ class ProfileController extends Controller
     {
         $this->validate($request, [
             'name' => ['nullable', 'string'],
-            'email' => ['nullable', 'email', 'unique:users,email,' . auth()->id()],
-            'phone' => ['nullable', 'string', "digits_between:10,13"],
+            'email' => ['nullable', 'email', 'unique:users,email,'.auth()->id()],
+            'phone' => ['nullable', 'string', 'digits_between:10,13'],
             'address' => ['nullable', 'string'],
             'locale' => ['nullable', 'string'],
             'photo_url' => ['nullable', 'string', 'url', 'regex:/^(http)?s?:?(\/\/[^\']*\.(?:png|jpg|jpeg|gif|png|svg))$/'],
