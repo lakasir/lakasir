@@ -21,4 +21,9 @@ class TenantUser extends Model
     {
         return $this->belongsTo(Tenant::class);
     }
+
+    public function about()
+    {
+        return $this->hasOne(About::class);
+    }
 }

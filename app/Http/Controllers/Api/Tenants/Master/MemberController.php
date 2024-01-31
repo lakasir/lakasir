@@ -6,12 +6,18 @@ use App\Http\Controllers\Controller;
 use App\Models\Tenants\Member;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class MemberController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
-        return $this->success(Member::filter($request)->get());
+        $members = QueryBuilder::for(Member::class)
+            ->allowedFilters(['name', 'email'])
+            ->orderByDesc('created_at')
+            ->get();
+
+        return $this->success($members);
     }
 
     public function store(Request $request)
@@ -49,7 +55,7 @@ class MemberController extends Controller
     {
         return [
             "name" => ["required", "min:3"],
-            "email" => [Rule::unique("members")->ignore($member->id), "nullable", "email"],
+            "email" => [Rule::unique("members")->ignore($member->id), "nullable"],
         ];
     }
 }

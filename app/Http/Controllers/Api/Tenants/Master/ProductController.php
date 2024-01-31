@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Api\Tenants\Master;
 
 use App\Http\Controllers\Controller;
+use App\Http\Filters\SearchFields;
 use App\Http\Requests\Tenants\Master\ProductRequest;
 use App\Http\Resources\ProductCollection;
 use App\Models\Tenants\Product;
+use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
 /** @package App\Http\Controllers\Api\Master */
@@ -14,12 +16,22 @@ class ProductController extends Controller
     public function index()
     {
         $products = QueryBuilder::for(Product::class)
-            ->allowedFilters(['name', 'category_id', 'price', 'type'])
+            ->allowedFilters([
+                'name',
+                'category_id',
+                'sellingPrice',
+                'initialPrice',
+                'type',
+                'category.name',
+                'unit',
+                AllowedFilter::custom('global', new SearchFields, 'name,sku,barcode'),
+            ])
             ->allowedIncludes(['category', 'images'])
+            ->orderByDesc('created_at')
             ->simplePaginate();
 
         return $this->buildResponse()
-            ->setData(new ProductCollection($products))
+            ->setData(ProductCollection::collection($products))
             ->present();
     }
 
@@ -34,6 +46,7 @@ class ProductController extends Controller
 
     public function show(Product $product)
     {
+        $product->load(['category', 'stocks']);
         $product = new ProductCollection($product);
 
         return $this->buildResponse()

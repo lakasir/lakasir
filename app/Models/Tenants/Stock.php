@@ -2,6 +2,7 @@
 
 namespace App\Models\Tenants;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -15,7 +16,8 @@ class Stock extends Model
         'initial_price',
         'selling_price',
         'type',
-        'date'
+        'date',
+        'init_stock',
     ];
 
     public function product(): BelongsTo
@@ -38,10 +40,10 @@ class Stock extends Model
         return $query->where('type', 'out');
     }
 
-    public function getInitialPriceAttribute($value)
+    public function scopeLatestIn()
     {
-        if ($this->stock == 0) {
-            return 0;
-        }
+        return $this->where('type', 'in')
+            ->where('stock', '>', 0)
+            ->where('date', '<=', now());
     }
 }

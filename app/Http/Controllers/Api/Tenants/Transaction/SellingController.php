@@ -3,71 +3,56 @@
 namespace App\Http\Controllers\Api\Tenants\Transaction;
 
 use App\Http\Controllers\Controller;
-use App\Models\Tenants\Member;
+use App\Http\Requests\TransactionSellingStoreRequest;
+use App\Http\Resources\SellingCollection;
 use App\Models\Tenants\Selling;
-use App\Rules\CheckProductStock;
-use App\Rules\ShouldSameWithSellingDetail;
-use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
-use Illuminate\Validation\Rule;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class SellingController extends Controller
 {
     public function index(Request $request)
     {
-        return $this->success(Selling::filter($request)->get());
+        $sellings = QueryBuilder::for(Selling::class)
+            ->allowedFilters([
+                'code',
+                'member_id',
+                'date',
+                'code',
+                'payed_money',
+                'money_changes',
+                'total_price',
+                'total_qty',
+                'created_at',
+                'updated_at',
+                'sellingDetails.product_id',
+            ])
+            ->with(['member', 'paymentMethod', 'sellingDetails.product'])
+            ->defaultSort('-created_at')
+            ->simplePaginate($request->get('per_page', 10));
+
+        return $this->buildResponse()
+            ->setData(SellingCollection::collection($sellings))
+            ->setMessage('success get sellings')
+            ->present();
     }
 
-    public function store(Request $request)
+    public function store(TransactionSellingStoreRequest $request)
     {
-        $this->validate($request, $this->rules());
-        try {
-            DB::beginTransaction();
-            $selling = new Selling();
-            $selling->fill(
-                $request->merge(['member_id' => Member::find($request->member_id)])
-                    ->except('products')
-            );
-            $selling->save();
-            DB::commit();
-            return $this->success([], "success creating items");
-        } catch (Exception $e) {
-            DB::rollBack();
-            return $this->fail([], $e->getMessage());
-        }
+        $request->store();
+
+        return $this->buildResponse()
+            ->setMessage('success create selling')
+            ->present();
     }
 
     public function show(Selling $selling)
     {
-        return $this->success($selling);
-    }
+        $selling->load(['member', 'paymentMethod', 'sellingDetails']);
 
-    public function update(Request $request, Selling $selling)
-    {
-        $this->validate($request, $this->rules());
-    }
-
-    public function destroy(Selling $selling)
-    {
-    }
-
-    private function rules(): array
-    {
-        return [
-            "payed_money" => ["required", "gte:total_price"],
-            "total_price" => ["required", "lte:payed_money", new ShouldSameWithSellingDetail("price")],
-            "total_qty" => ["required", new ShouldSameWithSellingDetail("qty")],
-            "products" => ["array"],
-            "products.*.product_id" => ["required"],
-            "products.*.price" => ["required", "numeric"],
-            "products.*.qty" => ["required", "numeric", "min:1", Rule::forEach(function ($value, $attribute) {
-                $index = Str::of($attribute)->explode(".")->values()[1];
-                return [
-                    new CheckProductStock($index)
-                ];
-            })],
-        ];
+        return $this->buildResponse()
+            ->setData(new SellingCollection($selling))
+            ->setMessage('success get selling')
+            ->present();
     }
 }

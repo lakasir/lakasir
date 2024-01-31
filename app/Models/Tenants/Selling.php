@@ -9,10 +9,25 @@ class Selling extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
+    protected $guarded = ['friend_price'];
 
     public function sellingDetails()
     {
         return $this->hasMany(SellingDetail::class);
+    }
+
+    public function paymentMethod()
+    {
+        return $this->belongsTo(PaymentMethod::class);
+    }
+
+    public function member()
+    {
+        return $this->belongsTo(Member::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

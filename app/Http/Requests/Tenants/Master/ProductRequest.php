@@ -7,9 +7,11 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use App\Models\Tenants\Product;
 use App\Models\Tenants\ProductImage;
+use App\Models\Tenants\UploadedFile;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class ProductRequest extends FormRequest
 {
@@ -21,15 +23,38 @@ class ProductRequest extends FormRequest
     public function rules(): array
     {
         if($this->method() == 'DELETE') return [];
+        if ($this->is_non_stock) {
+            $this->merge([
+                "stock" => 0,
+            ]);
+        }
+
+        if ($this->method() == 'PUT') {
+            $product = Product::findorfail($this->route('product'));
+            $this->merge([
+                "sku" => $this->filled('sku') ? $this->sku : $product->sku,
+                "barcode" => $this->filled('barcode') ? $this->barcode : $product->barcode,
+                "name" => $this->filled('name') ? $this->name : $product->name,
+                "category" => $this->filled('category') ? $this->category : $product->category_id,
+                "stock" => $this->filled('stock') ? $this->stock : $product->stock,
+                "initial_price" => $this->filled('initial_price') ? $this->initial_price : $product->initial_price,
+                "selling_price" => $this->filled('selling_price') ? $this->selling_price : $product->selling_price,
+                "type" => $this->filled('type') ? $this->type : $product->type,
+                "hero_images_url" => $this->filled('hero_images_url') ? $this->hero_images_url : $product->hero_images[0] ?? '',
+                "is_non_stock" => $this->filled('is_non_stock') ? $this->is_non_stock : $product->is_non_stock,
+            ]);
+        }
         return [
+            "sku" => ["required", "min:3", Rule::unique(Product::class)->ignore($this->route('product'))],
+            "barcode" => ["nullable", "min:3", Rule::unique(Product::class)->ignore($this->route('product'))],
             "name" => ["required", "min:3"],
             "category" => ["required"],
-            "stock" => ["numeric", "required", "min:0"],
+            "stock" => ["numeric", Rule::requiredIf(!$this->is_non_stock)],
             "initial_price" => ["numeric", "required", "lte:selling_price"],
             "selling_price" => ["numeric", "required", "gte:initial_price"],
             "type" => [Rule::in("product", "service"), "required"],
-            "images" => ["array"],
-            "images.name" => ["string"],
+            "hero_images_url" => ["string"],
+            "is_non_stock" => ["boolean", "required"],
         ];
     }
 
@@ -77,35 +102,21 @@ class ProductRequest extends FormRequest
 
     private function uploadImage(Product $product): void
     {
-        $existingIds = [];
-        $existingImages = $product->images->pluck('url')->toArray();
-        if (!is_null($this->images()) && count($this->images()) > 0) {
-            $images = [];
-            foreach ($this->images() as $image) {
-                if (in_array($image['name'], $existingImages)) {
-                    $existingIds[] = ProductImage::where('url', $image['name'])->first()->id;
-                    continue;
-                }
-                $tmp = Storage::disk('tmp');
-                $size = $tmp->size($image['name']);
-                $type = $tmp->mimeType($image['name']);
-                if (!$tmp->exists($image['name'])) {
-                    throw new Exception("file in temp dir is not found");
-                }
-                $pathSource = $tmp->path($image['name']);
-                $destinationPath = Storage::disk('public');
-                $destinationPath->putFileAs('', $pathSource, $image['name']);
-                $images[] = [
-                    "product_id" => $product->id,
-                    "name" => $image['name'],
-                    "size" => $size,
-                    "type" => $type,
-                    "url" => $destinationPath->url($image['name']),
-                    "created_at" => now(),
-                ];
+        $heroImages = [];
+        if ($this->filled('hero_images_url') && $this->hero_images_url != ($product->hero_images[0] ?? '')) {
+            $tmp = UploadedFile::whereIn('url', Str::of($this->hero_images_url)->explode(','))->get();
+            /** @var UploadedFile $item */
+            foreach ($tmp as $item) {
+                $url = $item->moveToPuplic('product');
+                $heroImages[] = $url;
             }
-            ProductImage::where('product_id', $product->id)->whereNotIn('id', $existingIds)->delete();
-            ProductImage::insert($images);
+            foreach ($product->hero_images as $image) {
+                /** @var UploadedFile $uploadedFile */
+                $uploadedFile = UploadedFile::where('url', $image)->first();
+                $uploadedFile->deleteFromPublic('product');
+            }
+            $product->hero_images = $heroImages;
+            $product->save();
         }
     }
 
