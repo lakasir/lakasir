@@ -42,7 +42,7 @@ class SellingObserver extends AbstractObserver implements DataAwareRule
         foreach ($this->data['products'] as $productRequest) {
             $product = Product::find($productRequest['product_id']);
             if (! $product->is_non_stock) {
-                $this->fifo($product, $productRequest['qty']);
+                $this->reduceStock($product, $productRequest['qty']);
             }
             if (! $this->data['friend_price']) {
                 $productRequest['price'] = $product->selling_price * $productRequest['qty'];
@@ -55,7 +55,7 @@ class SellingObserver extends AbstractObserver implements DataAwareRule
         }
     }
 
-    private function fifo(Product $product, $qty)
+    private function reduceStock(Product $product, $qty)
     {
         $lastStock = $product->stockLatestIn()->first();
         if ($lastStock) {
@@ -63,7 +63,7 @@ class SellingObserver extends AbstractObserver implements DataAwareRule
                 $qty = $qty - $lastStock->stock;
                 $lastStock->stock = 0;
                 $lastStock->save();
-                $this->fifo($product, $qty);
+                $this->reduceStock($product, $qty);
             } else {
                 $lastStock->stock = $lastStock->stock - $qty;
                 $lastStock->save();

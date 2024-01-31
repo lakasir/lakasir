@@ -18,7 +18,7 @@ class SettingController extends Controller
                 Rule::in([
                     'currency',
                     'locale',
-                    'methode_price',
+                    'selling_method',
                     'cash_drawer_enabled',
                     'secure_initial_price_enabled',
                     'secure_initial_price_using_pin',
@@ -44,6 +44,13 @@ class SettingController extends Controller
                             return;
                         }
                     }
+                    if ($value == 'selling_method') {
+                        if (! in_array($request->value, ['fifo', 'lifo', 'normal'])) {
+                            $fail('The '.$attribute.' should be fifo or lifo.');
+
+                            return;
+                        }
+                    }
                 },
             ],
             'value' => ['required'],
@@ -61,7 +68,7 @@ class SettingController extends Controller
         if (! in_array($key, [
             'currency',
             'locale',
-            'methode_price',
+            'selling_method',
             'cash_drawer_enabled',
             'secure_initial_price_enabled',
             'secure_initial_price_using_pin',
@@ -79,7 +86,7 @@ class SettingController extends Controller
                 ->setData([
                     'currency' => Setting::get('currency', 'IDR'),
                     'locale' => Setting::get('locale', 'en'),
-                    'methode_price' => Setting::get('methode_price', 'fifo'),
+                    'selling_method' => Setting::get('selling_method', 'fifo'),
                     'cash_drawer_enabled' => (bool) Setting::get('cash_drawer_enabled', false),
                     'secure_initial_price_enabled' => (bool) Setting::get('secure_initial_price_enabled', false),
                     'secure_initial_price_using_pin' => (bool) Setting::get('secure_initial_price_using_pin', false),

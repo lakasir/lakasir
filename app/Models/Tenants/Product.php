@@ -2,11 +2,12 @@
 
 namespace App\Models\Tenants;
 
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 
 class Product extends Model
 {
@@ -26,11 +27,20 @@ class Product extends Model
 
     public function scopeStockLatestIn()
     {
+        $usingFifoPrice = Setting::get('selling_method', 'fifo') == 'fifo';
+        $usingNormalPrice = Setting::get('selling_method', 'fifo') == 'normal';
+        $usingLifoPrice = Setting::get('selling_method', 'fifo') == 'lifo';
+
         return $this
-                ->stocks()
-                ->where('type', 'in')
+            ->stocks()
+            ->where('type', 'in')
+            ->when($usingNormalPrice, fn (Builder $query) => $query->orderBy('date')->latest())
+            ->when($usingFifoPrice, fn (Builder $query) => $query
                 ->where('stock', '>', 0)
-                ->orderBy('date');
+                ->orderBy('created_at')->orderBy('date'))
+            ->when($usingLifoPrice, fn (Builder $query) => $query
+                ->where('stock', '>', 0)
+                ->orderByDesc('created_at')->orderByDesc('date'));
     }
 
     public function stock(): Attribute
@@ -39,6 +49,7 @@ class Product extends Model
             get: function ($value) {
                 $stock = $this->stockLatestIn()
                     ->sum('stock');
+
                 return $stock + $value;
             },
             set: fn ($value) => $value
@@ -53,6 +64,7 @@ class Product extends Model
                 if ($stock?->first() == null) {
                     return $value;
                 }
+
                 return $stock->first()->initial_price;
             },
             set: fn ($value) => $value
@@ -67,6 +79,7 @@ class Product extends Model
                 if ($stock?->first() == null) {
                     return $value;
                 }
+
                 return $stock->first()->selling_price;
             },
             set: fn ($value) => $value

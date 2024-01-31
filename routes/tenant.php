@@ -10,7 +10,6 @@ use App\Http\Controllers\Api\Tenants\Master\ProductController;
 use App\Http\Controllers\Api\Tenants\PaymentMethodController;
 use App\Http\Controllers\Api\Tenants\ProfileController;
 use App\Http\Controllers\Api\Tenants\Reports\CashierReportController;
-use App\Http\Controllers\Api\Tenants\Reports\SellingReportController;
 use App\Http\Controllers\Api\Tenants\Settings\SecureInitialPriceController;
 use App\Http\Controllers\Api\Tenants\Transaction\CashDrawerController;
 use App\Http\Controllers\Api\Tenants\Transaction\DashboardController;
