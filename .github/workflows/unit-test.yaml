@@ -5,6 +5,7 @@ env:
   DB_PORT: 3306
   DB_USERNAME: ${{ secrets.DB_USERNAME }}
   DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+  DB_DATABASE_TESTING: ${{ secrets.DB_DATABASE }}
   DB_HOST: "127.0.0.1"
 on:
   push:
