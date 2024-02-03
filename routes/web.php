@@ -1,15 +1,14 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Livewire\Volt\Volt;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Volt::route('/', 'pages/welcome');
 
 Route::middleware([
     'web',
 ])
     ->prefix('admin')
     ->group(function () {
-     // 
+        //
     });

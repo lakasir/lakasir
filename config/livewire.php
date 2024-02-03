@@ -41,7 +41,7 @@ return [
     |
     */
 
-    'layout' => 'livewire.components.layout',
+    'layout' => 'livewire.components.layouts.auth',
 
     /*
     |--------------------------------------------------------------------------
