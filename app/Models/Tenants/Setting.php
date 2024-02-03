@@ -4,6 +4,7 @@ namespace App\Models\Tenants;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 
 class Setting extends Model
 {
@@ -13,27 +14,28 @@ class Setting extends Model
 
     public static function get($key, $default = null)
     {
-        $setting = self::where('key', $key)->first();
+        $cacheKey = 'setting_'.$key;
 
-        if ($setting) {
-            return $setting->value;
-        }
+        // Attempt to retrieve the value from cache
+        $settingValue = Cache::remember($cacheKey, now()->addMinutes(60), function () use ($key, $default) {
+            $setting = self::where('key', $key)->first();
 
-        return $default;
+            return $setting ? $setting->value : $default;
+        });
+
+        return $settingValue;
     }
 
     public static function set($key, $value)
     {
-        $setting = self::where('key', $key)->first();
+        // Update the value in the database
+        self::updateOrCreate(
+            ['key' => $key],
+            ['value' => $value]
+        );
 
-        if ($setting) {
-            $setting->value = $value;
-            $setting->save();
-        } else {
-            self::create([
-                'key' => $key,
-                'value' => $value
-            ]);
-        }
+        // Update the value in cache
+        $cacheKey = 'setting_'.$key;
+        Cache::put($cacheKey, $value, now()->addMinutes(60));
     }
 }

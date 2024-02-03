@@ -57,7 +57,11 @@ class SellingObserver extends AbstractObserver implements DataAwareRule
 
     private function reduceStock(Product $product, $qty)
     {
-        $lastStock = $product->stockLatestIn()->first();
+        if (Setting::get('selling_method', 'fifo') == 'normal') {
+            $lastStock = $product->stocks()->where('stock', '>', 0)->orderBy('date', 'asc')->first();
+        } else {
+            $lastStock = $product->stockLatestIn()->first();
+        }
         if ($lastStock) {
             if ($lastStock->stock < $qty) {
                 $qty = $qty - $lastStock->stock;
