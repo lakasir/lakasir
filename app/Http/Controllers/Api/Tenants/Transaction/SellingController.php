@@ -39,10 +39,12 @@ class SellingController extends Controller
 
     public function store(TransactionSellingStoreRequest $request)
     {
-        $request->store();
+        $selling = $request->store();
+        $selling->load(['member', 'paymentMethod', 'sellingDetails.product']);
 
         return $this->buildResponse()
             ->setMessage('success create selling')
+            ->setData(new SellingCollection($selling))
             ->present();
     }
 

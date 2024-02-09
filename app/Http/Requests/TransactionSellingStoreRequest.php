@@ -80,7 +80,7 @@ class TransactionSellingStoreRequest extends FormRequest
         ];
     }
 
-    public function store(): void
+    public function store(): Selling
     {
         try {
             DB::beginTransaction();
@@ -93,6 +93,8 @@ class TransactionSellingStoreRequest extends FormRequest
             );
             $selling->save();
             DB::commit();
+
+            return $selling;
         } catch (Exception $e) {
             DB::rollBack();
             throw $e;
