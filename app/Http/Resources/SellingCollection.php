@@ -11,6 +11,7 @@ class SellingCollection extends JsonResource
         return [
             'id' => $this->id,
             'member_id' => $this->member_id,
+            'user_id' => $this->user_id,
             'code' => $this->code,
             'payment_method_id' => $this->payment_method_id,
             'payed_money' => $this->payed_money,
@@ -25,6 +26,7 @@ class SellingCollection extends JsonResource
             'member' => $this->whenLoaded('member'),
             'payment_method' => $this->whenLoaded('paymentMethod'),
             'selling_details' => SellingDetailCollection::collection($this->whenLoaded('sellingDetails')),
+            'cashier' => $this->whenLoaded('user'),
         ];
     }
 }
