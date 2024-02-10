@@ -19,6 +19,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\VerifyEmailController;
+use App\Http\Controllers\PrinterController;
 use App\Livewire\ResetPassword;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -160,6 +161,17 @@ Route::middleware([
             //     ->can('generate selling report');
             // Route::post('/product', [App\Http\Controllers\Api\Tenants\Report\ProductReportController::class, 'index'])
             //     ->can('generate product report');
+        });
+
+        Route::group(['prefix' => 'printer', 'middleware' => 'auth:sanctum'], function () {
+            Route::get('/', [PrinterController::class, 'index'])
+                ->can('read printer');
+            Route::post('/', [PrinterController::class, 'store'])
+                ->can('create printer');
+            Route::put('/{printer}', [PrinterController::class, 'update'])
+                ->can('update printer');
+            Route::delete('/{printer}', [PrinterController::class, 'destroy'])
+                ->can('delete printer');
         });
 
         Route::get('/', function () {
