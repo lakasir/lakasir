@@ -20,7 +20,7 @@ class PermissionSeeder extends Seeder
      */
     public function run()
     {
-        if ('tenant' == config('database.default')) {
+        if (config('database.default') == 'tenant') {
             DB::statement('SET FOREIGN_KEY_CHECKS=0');
         }
         DB::table('permissions')->truncate();
@@ -29,7 +29,7 @@ class PermissionSeeder extends Seeder
 
         $permissions = $this->getPermissions();
         $permissions->each(fn ($roles, $index) => $this->savePermission($index, $roles));
-        if ('tenant' == config('database.default')) {
+        if (config('database.default') == 'tenant') {
             DB::statement('SET FOREIGN_KEY_CHECKS=1');
         }
 
@@ -43,28 +43,31 @@ class PermissionSeeder extends Seeder
                 'role' => [Role::admin],
                 'permissions' => [
                     'category' => [
-                        'c', 'r', 'u', 'd'
+                        'c', 'r', 'u', 'd',
                     ],
                     'product' => [
-                        'c', 'r', 'u', 'd'
+                        'c', 'r', 'u', 'd',
                     ],
                     'product stock' => [
-                        'c', 'r', 'u', 'd'
+                        'c', 'r', 'u', 'd',
                     ],
                     'member' => [
-                        'c', 'r', 'u', 'd'
+                        'c', 'r', 'u', 'd',
                     ],
                     'selling' => [
-                        'c', 'r', 'u', 'd'
+                        'c', 'r', 'u', 'd',
                     ],
                     'payment method' => [
-                        'c', 'r', 'u', 'd'
+                        'c', 'r', 'u', 'd',
                     ],
                     'cash drawer' => [
-                        'open', 'r', 'close'
+                        'open', 'r', 'close',
+                    ],
+                    'printer' => [
+                        'c', 'r', 'u', 'd',
                     ],
                     'using setting enable secure initial price' => [
-                        'r'
+                        'r',
                     ],
                     'cashier report' => [
                         'generate',
@@ -75,8 +78,8 @@ class PermissionSeeder extends Seeder
                     'product report' => [
                         'generate',
                     ],
-                ]
-            ]
+                ],
+            ],
         ];
     }
 
@@ -86,23 +89,23 @@ class PermissionSeeder extends Seeder
         foreach ($this->crudRolePermission() as $permissions) {
             foreach ($permissions['permissions'] as $feature => $crud) {
                 for ($i = 0; $i < count($crud); $i++) {
-                    $action = "";
+                    $action = '';
                     switch ($crud[$i]) {
-                    case 'c':
-                        $action =  "create $feature";
-                        break;
-                    case 'r':
-                        $action =  "read $feature";
-                        break;
-                    case 'u':
-                        $action =  "update $feature";
-                        break;
-                    case 'd':
-                        $action =  "delete $feature";
-                        break;
-                    default:
-                        $action =  "$crud[$i] $feature";
-                        break;
+                        case 'c':
+                            $action = "create $feature";
+                            break;
+                        case 'r':
+                            $action = "read $feature";
+                            break;
+                        case 'u':
+                            $action = "update $feature";
+                            break;
+                        case 'd':
+                            $action = "delete $feature";
+                            break;
+                        default:
+                            $action = "$crud[$i] $feature";
+                            break;
                     }
                     $normalize[$action] = $permissions['role'];
                 }
@@ -119,10 +122,6 @@ class PermissionSeeder extends Seeder
         ]));
     }
 
-    /**
-     * @param $index
-     * @param $roles
-     */
     private function savePermission($index, $roles): void
     {
         $permission = Permission::firstOrCreate(['name' => $index]);
@@ -130,10 +129,6 @@ class PermissionSeeder extends Seeder
         collect($roles)->each(fn ($role) => $this->givePermissionToRole($role, $permission));
     }
 
-    /**
-     * @param $role
-     * @param $permission
-     */
     private function givePermissionToRole($role, $permission): void
     {
         $role = \Spatie\Permission\Models\Role::firstOrCreate(['name' => $role]);
@@ -151,4 +146,3 @@ class PermissionSeeder extends Seeder
         $user->syncRoles($role);
     }
 }
-
