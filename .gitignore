@@ -10,8 +10,8 @@
 /public/app/
 /nginx/*.log
 /packages
-/public/build/manifest.json
-/public/build/
+/public/build
+public/build
 tags
 .env
 .env.backup
