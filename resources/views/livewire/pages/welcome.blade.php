@@ -35,7 +35,7 @@ layout('livewire.components.layouts.guest');
     <div x-ref="dialog"
       class="hidden fixed z-50 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-auto bg-white rounded-md px-8 py-6 space-y-5 drop-shadow-lg">
       <!--- right Close button -->
-      <div class="w-full flex justify-end" x-on:click="$refs.overlay.classList.add('hidden'); $refs.dialog.classList.add('hidden');">
+      <div class="w-full flex justify-end cursor-pointer" x-on:click="$refs.overlay.classList.add('hidden'); $refs.dialog.classList.add('hidden');">
         <button class="text-gray-600">X</button>
       </div>
       <iframe width="1024" height="576"
