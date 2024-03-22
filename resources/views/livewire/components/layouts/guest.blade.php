@@ -18,7 +18,7 @@
     <!-- Twitter Card tags for Twitter -->
     <meta name="twitter:card" content="Lakasir - Aplikasi Point of Sale (POS) Gratis">
     <meta name="twitter:site" content="@yourtwitterhandle">
-    <meta name="twitter:title" content="Your Website Title">
+    <meta name="twitter:title" content="Lakasir - Aplikasi Point of Sale (POS) Gratis">
     <meta name="twitter:description" content="Lakasir merupakan aplikasi point of sale (POS) yang memudahkan pengelolaan bisnis Anda. unduh secara gratis">
     <meta name="twitter:image" content="{{ env('APP_URL') }}/assets/logo/image.png">
 
