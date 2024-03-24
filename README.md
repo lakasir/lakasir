@@ -2,11 +2,13 @@
 Lakasir is a Point of Sale (POS) application built using Laravel for the API, the Filament admin panel for the web application, and Flutter for the mobile application.
 
 ## Features
-Role Management: Define roles and permissions for users.
-Transaction Management: Handle sales transactions seamlessly.
-Product Management: Manage your inventory and products effectively.
-Reporting: Generate reports for insights into sales and performance.
-Simple Accounting: Basic accounting features for financial tracking.
+* **Role Management**: Define roles and permissions for users.
+* **Transaction Management**: Handle sales transactions seamlessly.
+* **Product Management**: Manage your inventory and products effectively.
+* **Simple Reporting**: Generate reports for insights into sales and performance.
+* **Simple Accounting**: Basic accounting features for financial tracking.
+* **Unit Price**: The product will have a different price base on the basic unit
+* **Friend Price**: You can sell the product with a lower price or the highest price
 
 ## Technologies Used
 * **Backend**: [Laravel](https://laravel.com)
