@@ -22,14 +22,6 @@ class AdminPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
-        // $url = request()->getHost();
-        // $domain = explode('.', $url);
-        // if (count($domain) == 2) {
-        //     $db = app(DatabaseTenancyBootstrapper::class);
-        //     $db->revert();
-        //     // set the guard to admin
-        // }
-        //
         return $panel
             ->default()
             ->id('admin')
