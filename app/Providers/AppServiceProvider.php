@@ -25,8 +25,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Builder::macro('filter', function (Request $request)
-        {
+        Builder::macro('filter', function (Request $request) {
             /* WIP:  <07-08-22, sheenazien8> */
             $columns = $request->filters;
             $query = $this;
@@ -34,17 +33,17 @@ class AppServiceProvider extends ServiceProvider
                 foreach ($columns as $filterColumn) {
                     $column = $filterColumn['column'];
 
-                    if ($filterColumn['condition'] == "equals") {
-                        $condition = "=";
+                    if ($filterColumn['condition'] == 'equals') {
+                        $condition = '=';
                     } else {
                         $condition = $filterColumn['condition'];
                     }
-                    if ($filterColumn['condition'] == "like") {
-                        $value = "%". $filterColumn['value'] . "%";
+                    if ($filterColumn['condition'] == 'like') {
+                        $value = '%'.$filterColumn['value'].'%';
                     } else {
                         $value = $filterColumn['value'];
                     }
-                    if (!$value) {
+                    if (! $value) {
                         return $this;
                     }
                     $query = optional($this)->where($column, $condition, $value);

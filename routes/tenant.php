@@ -32,6 +32,9 @@ Route::middleware([
     PreventAccessFromCentralDomains::class,
 ])
     ->group(function () {
+        Route::get('/', function () {
+            return redirect()->to('/member');
+        });
         Route::get('/reset-password/{token}', ResetPassword::class)
             ->middleware('guest')
             ->name('reset-password.index');

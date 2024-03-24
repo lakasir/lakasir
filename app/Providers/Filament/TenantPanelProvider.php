@@ -17,27 +17,25 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Stancl\Tenancy\Bootstrappers\DatabaseTenancyBootstrapper;
 
-class AdminPanelProvider extends PanelProvider
+class TenantPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
-        return $panel
-            ->default()
-            ->id('admin')
-            ->authGuard('admin')
-            ->spa()
-            ->path('/admin')
-            ->login()
+        $panel = $panel
+            ->id('tenant')
             ->colors([
                 'primary' => Color::Amber,
             ])
-            ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
-            ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
+            ->path('/member')
+            ->login()
+            ->discoverResources(in: app_path('Filament/Tenant/Resources'), for: 'App\\Filament\\Tenant\\Resources')
+            ->discoverPages(in: app_path('Filament/Tenant/Pages'), for: 'App\\Filament\\Tenant\\Pages')
             ->pages([
                 Pages\Dashboard::class,
             ])
-            ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
+            ->discoverWidgets(in: app_path('Filament/Tenant/Widgets'), for: 'App\\Filament\\Tenant\\Widgets')
             ->widgets([
                 Widgets\AccountWidget::class,
                 Widgets\FilamentInfoWidget::class,
@@ -56,5 +54,20 @@ class AdminPanelProvider extends PanelProvider
             ->authMiddleware([
                 Authenticate::class,
             ]);
+        $url = request()->getHost();
+        $domain = explode('.', $url);
+        if (count($domain) > 2) {
+            tenancy()->initialize($domain[0]);
+            $tenant = tenancy()->tenant;
+            $subdomain = $tenant?->domains?->first()?->domain;
+            $panel
+                ->domain($subdomain);
+
+            $db = app(DatabaseTenancyBootstrapper::class);
+            $db->bootstrap($tenant);
+
+        }
+
+        return $panel;
     }
 }

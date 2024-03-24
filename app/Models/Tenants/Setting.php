@@ -14,16 +14,9 @@ class Setting extends Model
 
     public static function get($key, $default = null)
     {
-        $cacheKey = 'setting_'.$key;
+        $setting = self::where('key', $key)->first();
 
-        // Attempt to retrieve the value from cache
-        $settingValue = Cache::remember($cacheKey, now()->addMinutes(60), function () use ($key, $default) {
-            $setting = self::where('key', $key)->first();
-
-            return $setting ? $setting->value : $default;
-        });
-
-        return $settingValue;
+        return $setting ? $setting->value : $default;
     }
 
     public static function set($key, $value)
