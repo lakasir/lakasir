@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Tenant\Pages\EditProfile;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -26,10 +27,13 @@ class TenantPanelProvider extends PanelProvider
         $panel = $panel
             ->id('tenant')
             ->colors([
-                'primary' => Color::Amber,
+                'primary' => Color::hex('#FF6600'),
             ])
+            ->spa()
+            ->authGuard('web')
             ->path('/member')
             ->login()
+            ->profile(EditProfile::class)
             ->discoverResources(in: app_path('Filament/Tenant/Resources'), for: 'App\\Filament\\Tenant\\Resources')
             ->discoverPages(in: app_path('Filament/Tenant/Pages'), for: 'App\\Filament\\Tenant\\Pages')
             ->pages([
@@ -54,13 +58,17 @@ class TenantPanelProvider extends PanelProvider
             ->authMiddleware([
                 Authenticate::class,
             ]);
+
         $url = request()->getHost();
         $domain = explode('.', $url);
         if (count($domain) > 2) {
             tenancy()->initialize($domain[0]);
             $tenant = tenancy()->tenant;
+            $about = $tenant?->user?->about;
             $subdomain = $tenant?->domains?->first()?->domain;
             $panel
+                ->brandName($about->shop_name ?? 'Your Brand')
+                ->brandLogo($about->photo ?? null)
                 ->domain($subdomain);
 
             $db = app(DatabaseTenancyBootstrapper::class);
