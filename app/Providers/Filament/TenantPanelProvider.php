@@ -78,7 +78,7 @@ class TenantPanelProvider extends PanelProvider
             }
             tenancy()->initialize($domain[0]);
             $about = $tenant?->user?->about;
-            $subdomain = $tenant?->domains?->first()?->domain;
+            $subdomain = $tenant?->domains()->where('domain', $url)->first()?->domain;
             $panel
                 ->brandName($about->shop_name ?? 'Your Brand')
                 ->brandLogo($about->photo ?? null)

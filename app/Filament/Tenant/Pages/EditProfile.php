@@ -50,7 +50,7 @@ class EditProfile extends AuthEditProfile
     protected function fillForm(): void
     {
         $data = $this->getUser()->with('profile')->first()->toArray();
-        $data = array_merge($data, $data['profile']);
+        $data = array_merge($data, $data['profile'] ?? []);
 
         $this->callHook('beforeFill');
 
