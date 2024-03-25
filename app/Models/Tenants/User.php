@@ -2,6 +2,7 @@
 
 namespace App\Models\Tenants;
 
+use Filament\Models\Contracts\HasAvatar;
 use Filament\Models\Contracts\HasName;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -12,7 +13,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
-class User extends Authenticatable implements HasName
+class User extends Authenticatable implements HasAvatar, HasName
 {
     use HasApiTokens, HasFactory, HasRoles, Notifiable;
 
@@ -76,13 +77,13 @@ class User extends Authenticatable implements HasName
         return $this->name ?? '';
     }
 
-    /**
-     * Get the user's full name.
-     *
-     * @return string
-     */
     public function getFullNameAttribute()
     {
         return $this->name ?? '';
+    }
+
+    public function getFilamentAvatarUrl(): ?string
+    {
+        return $this->profile?->photo ?? null;
     }
 }
