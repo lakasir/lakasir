@@ -3,6 +3,7 @@
 namespace App\Providers\Filament;
 
 use App\Filament\Tenant\Pages\EditProfile;
+use App\Tenant;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -22,6 +23,8 @@ use Stancl\Tenancy\Bootstrappers\DatabaseTenancyBootstrapper;
 
 class TenantPanelProvider extends PanelProvider
 {
+    public static $abortRequest;
+
     public function panel(Panel $panel): Panel
     {
         $panel = $panel
@@ -30,7 +33,7 @@ class TenantPanelProvider extends PanelProvider
                 'primary' => Color::hex('#FF6600'),
             ])
             ->spa()
-            ->authGuard('web')
+            ->authGuard('tenant')
             ->path('/member')
             ->login()
             ->profile(EditProfile::class)
@@ -60,10 +63,20 @@ class TenantPanelProvider extends PanelProvider
             ]);
 
         $url = request()->getHost();
-        $domain = explode('.', $url);
-        if (count($domain) > 2) {
+        if (in_array($url, config('tenancy.central_domains'))) {
+            return $panel;
+        }
+        $domain = explode('.'.config('tenancy.central_domains')[0], $url);
+        $domain = explode('.', $domain[0]);
+        if (! in_array($domain[0], ['', 'localhost', config('tenancy.central_domains')[0]])) {
+            if ($domain[0] === 'www') {
+                $domain[0] = $domain[1];
+            }
+            $tenant = Tenant::find($domain[0]);
+            if (! $tenant) {
+                abort(404);
+            }
             tenancy()->initialize($domain[0]);
-            $tenant = tenancy()->tenant;
             $about = $tenant?->user?->about;
             $subdomain = $tenant?->domains?->first()?->domain;
             $panel
