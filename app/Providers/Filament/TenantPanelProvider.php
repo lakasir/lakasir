@@ -58,13 +58,12 @@ class TenantPanelProvider extends PanelProvider
                         ...($user?->can('read product') ? ProductResource::getNavigationItems() : []),
                     ])
                     ->groups([
-                        $user->can(['read user', 'read role', 'read permission']) ?
-                            NavigationGroup::make('User')
-                                ->items([
-                                    ...($user?->can('read user') ? UserResource::getNavigationItems() : []),
-                                    ...($user?->can('read role') ? RoleResource::getNavigationItems() : []),
-                                    ...($user?->can('read permission') ? PermissionResource::getNavigationItems() : []),
-                                ]) : NavigationGroup::make(''),
+                        NavigationGroup::make('User')
+                            ->items([
+                                ...($user?->can('read user') ? UserResource::getNavigationItems() : []),
+                                ...($user?->can('read role') ? RoleResource::getNavigationItems() : []),
+                                ...($user?->can('read permission') ? PermissionResource::getNavigationItems() : []),
+                            ]),
                     ]);
 
             })

@@ -24,7 +24,6 @@ class PermissionSeeder extends Seeder
         if (config('database.default') == 'sanctum') {
             DB::statement('SET FOREIGN_KEY_CHECKS=0');
         }
-        // ModelsRole::where('guard_name', 'web')->update(['guard_name' => 'web']);
         DB::table('permissions')->truncate();
         DB::table('role_has_permissions')->truncate();
         User::get()->each(fn (User $user) => $this->assignRoleToUser($user));

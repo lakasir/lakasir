@@ -9,13 +9,18 @@ use App\Models\Tenants\Product;
 use App\Models\Tenants\User;
 use App\Policies\Tenants\CategoryPolicy;
 use App\Policies\Tenants\MemberPolicy;
+use App\Policies\Tenants\PermissionPolicy;
 use App\Policies\Tenants\ProductPolicy;
+use App\Policies\Tenants\RolePolicy;
+use App\Policies\Tenants\UserPolicy;
 use App\Tenant;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Laravel\Sanctum\Sanctum;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -33,6 +38,9 @@ class AuthServiceProvider extends ServiceProvider
         Member::class => MemberPolicy::class,
         Product::class => ProductPolicy::class,
         Category::class => CategoryPolicy::class,
+        User::class => UserPolicy::class,
+        Role::class => RolePolicy::class,
+        Permission::class => PermissionPolicy::class,
     ];
 
     public function register()
