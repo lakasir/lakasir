@@ -25,7 +25,7 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'name' => 'required'
+            'name' => 'required',
         ]);
         $category = new Category();
         $category->fill($request->all());
@@ -46,7 +46,7 @@ class CategoryController extends Controller
     public function update(Request $request, Category $category)
     {
         $this->validate($request, [
-            'name' => 'required'
+            'name' => 'required',
         ]);
         $category->fill($request->all());
         $category->update();

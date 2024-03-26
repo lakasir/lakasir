@@ -46,12 +46,12 @@ class LoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
-        if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
+        if (! Auth::guard('web')->attempt($this->only('email', 'password'), $this->boolean('remember'))) {
             $user = User::where('email', $this->email)->first();
             if ($user) {
-                if (!$user->hasVerifiedEmail()) {
+                if (! $user->hasVerifiedEmail()) {
                     throw ValidationException::withMessages([
-                        'email' => "Email is not verified, please check your email to verify your account",
+                        'email' => 'Email is not verified, please check your email to verify your account',
                     ]);
                 }
             }

@@ -12,7 +12,6 @@ class AuthenticatedSessionController extends Controller
     /**
      * Handle an incoming authentication request.
      *
-     * @param  \App\Http\Requests\Auth\LoginRequest  $request
      * @return \Illuminate\Http\Response
      */
     public function store(LoginRequest $request)
@@ -25,16 +24,16 @@ class AuthenticatedSessionController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Yay! success to login',
-            'data' => array_merge([
+            'data' => array_merge($user->toArray(), [
                 'token' => $token->plainTextToken,
-            ], $user->toArray())
+                'permissions' => $user->roles()->first()->permissions()->where('guard_name', 'sanctum')->pluck('name')->toArray(),
+            ]),
         ]);
     }
 
     /**
      * Destroy an authenticated session.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function destroy(Request $request)

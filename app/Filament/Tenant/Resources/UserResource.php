@@ -4,6 +4,7 @@ namespace App\Filament\Tenant\Resources;
 
 use App\Filament\Tenant\Resources\UserResource\Pages;
 use App\Models\Tenants\User;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -43,6 +44,9 @@ class UserResource extends Resource
                 TextInput::make('password_confirmation')
                     ->password()
                     ->label('Confirm New Password'),
+                Select::make('roles')
+                    ->label('Roles')
+                    ->relationship('roles', 'name'),
             ]);
     }
 

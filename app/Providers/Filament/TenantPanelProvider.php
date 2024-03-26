@@ -3,10 +3,20 @@
 namespace App\Providers\Filament;
 
 use App\Filament\Tenant\Pages\EditProfile;
+use App\Filament\Tenant\Pages\TenantLogin;
+use App\Filament\Tenant\Resources\CategoryResource;
+use App\Filament\Tenant\Resources\MemberResource;
+use App\Filament\Tenant\Resources\PermissionResource;
+use App\Filament\Tenant\Resources\ProductResource;
+use App\Filament\Tenant\Resources\RoleResource;
+use App\Filament\Tenant\Resources\UserResource;
 use App\Tenant;
+use Filament\Facades\Filament;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\NavigationBuilder;
+use Filament\Navigation\NavigationGroup;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
@@ -33,9 +43,31 @@ class TenantPanelProvider extends PanelProvider
                 'primary' => Color::hex('#FF6600'),
             ])
             ->spa()
-            ->authGuard('tenant')
+            ->authGuard('web')
             ->path('/member')
-            ->login()
+            ->login(TenantLogin::class)
+            ->navigation(function (NavigationBuilder $navigationBuilder) {
+                /** @var \App\Models\User $user */
+                $user = Filament::auth()->user();
+
+                return $navigationBuilder
+                    ->items([
+                        ...Pages\Dashboard::getNavigationItems(),
+                        ...($user?->can('read member') ? MemberResource::getNavigationItems() : []),
+                        ...($user?->can('read category') ? CategoryResource::getNavigationItems() : []),
+                        ...($user?->can('read product') ? ProductResource::getNavigationItems() : []),
+                    ])
+                    ->groups([
+                        $user->can(['read user', 'read role', 'read permission']) ?
+                            NavigationGroup::make('User')
+                                ->items([
+                                    ...($user?->can('read user') ? UserResource::getNavigationItems() : []),
+                                    ...($user?->can('read role') ? RoleResource::getNavigationItems() : []),
+                                    ...($user?->can('read permission') ? PermissionResource::getNavigationItems() : []),
+                                ]) : NavigationGroup::make(''),
+                    ]);
+
+            })
             ->profile(EditProfile::class)
             ->discoverResources(in: app_path('Filament/Tenant/Resources'), for: 'App\\Filament\\Tenant\\Resources')
             ->discoverPages(in: app_path('Filament/Tenant/Pages'), for: 'App\\Filament\\Tenant\\Pages')

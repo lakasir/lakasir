@@ -28,6 +28,8 @@ class EditUser extends EditRecord
                     }
 
                     $record->delete();
+
+                    return redirect($this->getResource()::getUrl());
                 }),
         ];
     }
