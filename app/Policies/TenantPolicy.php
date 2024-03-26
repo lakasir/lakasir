@@ -2,16 +2,12 @@
 
 namespace App\Policies;
 
-use App\Tenant;
-use App\Models\Admin;
-use Illuminate\Auth\Access\Response;
-
 class TenantPolicy
 {
     /**
      * Determine whether the user can view any models.
      */
-    public function viewAny(Admin $user): bool
+    public function viewAny(): bool
     {
         return true;
     }
@@ -19,7 +15,7 @@ class TenantPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(Admin $user, Tenant $tenant): bool
+    public function view(): bool
     {
         return false;
     }
@@ -27,7 +23,7 @@ class TenantPolicy
     /**
      * Determine whether the user can create models.
      */
-    public function create(Admin $user): bool
+    public function create(): bool
     {
         return false;
     }
@@ -35,7 +31,7 @@ class TenantPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(Admin $user, Tenant $tenant): bool
+    public function update(): bool
     {
         return false;
     }
@@ -43,7 +39,7 @@ class TenantPolicy
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(Admin $user, Tenant $tenant): bool
+    public function delete(): bool
     {
         return true;
     }
@@ -51,7 +47,7 @@ class TenantPolicy
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(Admin $user, Tenant $tenant): bool
+    public function restore(): bool
     {
         return false;
     }
@@ -59,7 +55,7 @@ class TenantPolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(Admin $user, Tenant $tenant): bool
+    public function forceDelete(): bool
     {
         return true;
     }

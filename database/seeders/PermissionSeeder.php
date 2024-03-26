@@ -20,7 +20,8 @@ class PermissionSeeder extends Seeder
      */
     public function run()
     {
-        if (config('database.default') == 'tenant') {
+        DB::statement('SET FOREIGN_KEY_CHECKS=0');
+        if (config('database.default') == 'sanctum') {
             DB::statement('SET FOREIGN_KEY_CHECKS=0');
         }
         DB::table('permissions')->truncate();
@@ -28,10 +29,11 @@ class PermissionSeeder extends Seeder
         User::get()->each(fn (User $user) => $this->assignRoleToUser($user));
 
         $permissions = $this->getPermissions();
-        $permissions->each(fn ($roles, $index) => $this->savePermission($index, $roles));
-        if (config('database.default') == 'tenant') {
+        $permissions->each(fn ($roles) => $this->savePermission($roles));
+        if (config('database.default') == 'sanctum') {
             DB::statement('SET FOREIGN_KEY_CHECKS=1');
         }
+        DB::statement('SET FOREIGN_KEY_CHECKS=1');
 
         User::first()->assignRole(Role::admin);
     }
@@ -42,41 +44,107 @@ class PermissionSeeder extends Seeder
             [
                 'role' => [Role::admin],
                 'permissions' => [
+                    'user' => [
+                        'permission' => [
+                            'c', 'r', 'u', 'd',
+                        ],
+                        'guard' => ['web'],
+                    ],
                     'category' => [
-                        'c', 'r', 'u', 'd',
+                        'permission' => [
+                            'c', 'r', 'u', 'd',
+                        ],
+                        'guard' => ['web', 'sanctum'],
                     ],
                     'product' => [
-                        'c', 'r', 'u', 'd',
+                        'permission' => [
+                            'c', 'r', 'u', 'd',
+                        ],
+                        'guard' => ['web', 'sanctum'],
                     ],
                     'product stock' => [
-                        'c', 'r', 'u', 'd',
+                        'permission' => [
+                            'c', 'r', 'u', 'd',
+                        ],
+                        'guard' => ['web', 'sanctum'],
                     ],
                     'member' => [
-                        'c', 'r', 'u', 'd',
+                        'permission' => [
+                            'c', 'r', 'u', 'd',
+                        ],
+                        'guard' => ['web', 'sanctum'],
                     ],
                     'selling' => [
-                        'c', 'r', 'u', 'd',
+                        'permission' => [
+                            'c', 'r', 'u', 'd',
+                        ],
+                        'guard' => ['web', 'sanctum'],
                     ],
                     'payment method' => [
-                        'c', 'r', 'u', 'd',
+                        'permission' => [
+                            'c', 'r', 'u', 'd',
+                        ],
+                        'guard' => ['web', 'sanctum'],
                     ],
                     'cash drawer' => [
-                        'open', 'r', 'close',
+                        'permission' => [
+                            'open', 'r', 'close',
+                        ],
+                        'guard' => ['web', 'sanctum'],
                     ],
                     'printer' => [
-                        'c', 'r', 'u', 'd',
+                        'permission' => [
+                            'c', 'r', 'u', 'd',
+                        ],
+                        'guard' => ['web', 'sanctum'],
                     ],
                     'using setting enable secure initial price' => [
-                        'r',
+                        'permission' => [
+                            'r',
+                        ],
+                        'guard' => ['sanctum'],
+                    ],
+                    'role' => [
+                        'permission' => [
+                            'c', 'r', 'u', 'd',
+                        ],
+                        'guard' => ['web'],
+                    ],
+                    'permission' => [
+                        'permission' => [
+                            'r',
+                        ],
+                        'guard' => ['web'],
+                    ],
+                    'web app' => [
+                        'permission' => [
+                            'access',
+                        ],
+                        'guard' => ['web'],
                     ],
                     'cashier report' => [
-                        'generate',
+                        'permission' => [
+                            'generate',
+                        ],
+                        'guard' => ['web', 'sanctum'],
                     ],
                     'selling report' => [
-                        'generate',
+                        'permission' => [
+                            'generate',
+                        ],
+                        'guard' => ['web', 'sanctum'],
                     ],
                     'product report' => [
-                        'generate',
+                        'permission' => [
+                            'generate',
+                        ],
+                        'guard' => ['web', 'sanctum'],
+                    ],
+                    'import product' => [
+                        'permission' => [
+                            '',
+                        ],
+                        'guard' => ['web'],
                     ],
                 ],
             ],
@@ -88,9 +156,10 @@ class PermissionSeeder extends Seeder
         $normalize = [];
         foreach ($this->crudRolePermission() as $permissions) {
             foreach ($permissions['permissions'] as $feature => $crud) {
-                for ($i = 0; $i < count($crud); $i++) {
+                $actions = [];
+                for ($i = 0; $i < count($crud['permission']); $i++) {
                     $action = '';
-                    switch ($crud[$i]) {
+                    switch ($crud['permission'][$i]) {
                         case 'c':
                             $action = "create $feature";
                             break;
@@ -104,10 +173,17 @@ class PermissionSeeder extends Seeder
                             $action = "delete $feature";
                             break;
                         default:
-                            $action = "$crud[$i] $feature";
+                            $action = $crud['permission'][$i]." $feature";
                             break;
                     }
-                    $normalize[$action] = $permissions['role'];
+                    $actions[$i] = $action;
+                }
+                foreach ($actions as $action) {
+                    $normalize[] = [
+                        'role' => $permissions['role'],
+                        'action' => $action,
+                        'guard' => $crud['guard'],
+                    ];
                 }
             }
         }
@@ -122,17 +198,19 @@ class PermissionSeeder extends Seeder
         ]));
     }
 
-    private function savePermission($index, $roles): void
+    private function savePermission($roles): void
     {
-        $permission = Permission::firstOrCreate(['name' => $index]);
-
-        collect($roles)->each(fn ($role) => $this->givePermissionToRole($role, $permission));
+        foreach ($roles['guard'] as $guard) {
+            $permission = Permission::firstOrCreate(['name' => $roles['action'], 'guard_name' => $guard]);
+            $this->givePermissionToRole($roles['role'], $permission);
+        }
     }
 
     private function givePermissionToRole($role, $permission): void
     {
-        $role = \Spatie\Permission\Models\Role::firstOrCreate(['name' => $role]);
-        $role->givePermissionTo($permission->name);
+        /** @var ModelsRole $role */
+        $role = ModelsRole::where('name', $role[0])->firstOrCreate(['name' => $role[0]]);
+        $role->permissions()->syncWithoutDetaching($permission);
     }
 
     /**
