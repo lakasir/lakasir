@@ -30,27 +30,40 @@ class UploadedFile extends Model
                 optional(Storage::disk('tmp'))->path($tmpFile->name), $tmpFile->name
             );
             $tmpFile->update([
-                'url' => $url = optional(Storage::disk('public'))->url($path . '/' . $tmpFile->name),
-                'path' => optional(Storage::disk('public'))->path($path . '/' . $tmpFile->name),
+                'url' => $url = optional(Storage::disk('public'))->url($path.'/'.$tmpFile->name),
+                'path' => optional(Storage::disk('public'))->path($path.'/'.$tmpFile->name),
                 'disk' => 'public',
             ]);
             if ($existingUrl) {
-                Storage::disk('public')->delete($path . '/' . $existingUrl);
+                Storage::disk('public')->delete($path.'/'.$existingUrl);
                 $this->where('name', $existingUrl)->delete();
             }
             Storage::disk('tmp')->delete($tmpFile->name);
 
             return $url;
         } else {
-            throw new Exception("file in temp dir is not found");
+            throw new Exception('file in temp dir is not found');
         }
     }
 
     public function deleteFromPublic($path): void
     {
         if ($this->disk === 'public') {
-            Storage::disk('public')->delete($path . '/' . $this->name);
+            Storage::disk('public')->delete($path.'/'.$this->name);
             $this->delete();
         }
+    }
+
+    public function deleteFromTmp(): void
+    {
+        if ($this->disk === 'tmp') {
+            Storage::disk('tmp')->delete($this->name);
+            $this->delete();
+        }
+    }
+
+    public function scopeInUrl($query, $url)
+    {
+        return $query->whereIn('url', $url);
     }
 }

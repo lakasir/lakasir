@@ -19,7 +19,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => [env('FRONTEND_URL', 'http://localhost:3000')],
+    'allowed_origins' => [env('FRONTEND_URL', 'http://localhost:3000'), 'https://toko.'.env('APP_CENTRAL_DOMAIN', 'localhost')],
 
     'allowed_origins_patterns' => [],
 
