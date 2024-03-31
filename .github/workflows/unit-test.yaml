@@ -22,10 +22,10 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php-version: [8.3]
+        php-version: [8.1]
     services:
       mysql:
-        image: mysql:8.1
+        image: mysql:5.7
         ports:
           - 3306:3306
         env:
@@ -47,7 +47,7 @@ jobs:
 
       - name: Setup laravel
         run: >
-          php -r "file_exists('.env') || copy('.env.ci', '.env');"
+          php -r "file_exists('.env') || copy('.env.example', '.env');"
           php artisan key:generate
 
       - name: Setup database and Run Unit Test
