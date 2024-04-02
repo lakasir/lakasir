@@ -23,12 +23,15 @@
     <meta name="twitter:image" content="{{ env('APP_URL') }}/assets/logo/image.png">
 
     <title>{{ config('app.name', 'Laravel') }}</title>
+    @filamentStyles
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
   </head>
   <body>
     {{ $slot }}
     @livewireScripts
+    @filamentScripts
+
   </body>
 </html>
 
