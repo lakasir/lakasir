@@ -51,4 +51,15 @@ describe('Registered User Controller', function () {
         $response->assertStatus(422);
         $response->assertJsonValidationErrors(['domain']);
     });
+
+    it('user can not create the tenant with invalid busines type', function () {
+        $data = [
+            'domain' => 'test.localhost.com',
+            'business_type' => 'test',
+        ];
+        $response = postJson('/api/domain/register', $data);
+
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors(['business_type']);
+    });
 });
