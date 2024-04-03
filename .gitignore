@@ -10,7 +10,7 @@
 /public/app/
 /nginx/*.log
 /packages
-/public/build
+/public/build/manifest.json
 public/build
 tags
 .env
