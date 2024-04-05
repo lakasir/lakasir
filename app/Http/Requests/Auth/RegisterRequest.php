@@ -6,7 +6,6 @@ use App\Enums\ShopType;
 use App\Services\RegisterTenant;
 use App\Tenant;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 
@@ -49,13 +48,6 @@ class RegisterRequest extends FormRequest
     {
         try {
             $tenant = $this->registerTenant->create($this->all());
-
-            $tenant->user->notify(new \App\Notifications\DomainCreated());
-
-            Artisan::call('tenants:seed', [
-                '--tenants' => [$tenant->id],
-                '--force' => true,
-            ]);
 
             return $tenant;
         } catch (ValidationException $e) {

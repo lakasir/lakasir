@@ -2,7 +2,9 @@
 
 namespace App\Services;
 
+use App\Notifications\DomainCreated;
 use App\Tenant;
+use Illuminate\Support\Facades\Artisan;
 
 class RegisterTenant
 {
@@ -25,6 +27,13 @@ class RegisterTenant
         $tenant->user->about()->create([
             'shop_name' => $data['full_name'] ?? null,
             'business_type' => $data['business_type'],
+        ]);
+
+        $tenant->user->notify(new DomainCreated());
+
+        Artisan::call('tenants:seed', [
+            '--tenants' => [$tenant->id],
+            '--force' => true,
         ]);
 
         return $tenant;

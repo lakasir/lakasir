@@ -7,14 +7,6 @@ use App\Http\Requests\Auth\RegisterRequest;
 
 class RegisteredUserController extends Controller
 {
-    /**
-     * Handle an incoming registration request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     *
-     * @throws \Illuminate\Validation\ValidationException
-     */
     public function __invoke(RegisterRequest $request)
     {
         $tenant = $request->register();
