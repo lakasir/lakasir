@@ -29,8 +29,9 @@ describe('Registered User Controller', function () {
 
         $response->assertStatus(200);
 
+        $tenant = Tenant::find('tokotest');
         Notification::assertSentTo(
-            [Tenant::first()->user], DomainCreated::class
+            [$tenant->user], DomainCreated::class
         );
 
         $this->assertDatabaseHas('tenants', [
@@ -39,7 +40,7 @@ describe('Registered User Controller', function () {
         $this->assertDatabaseHas('tenant_users', [
             'email' => 'test@mail.com',
         ]);
-        Tenant::first()->run(function () {
+        $tenant->run(function () {
             $this->assertDatabaseHas('users', [
                 'email' => 'test@mail.com',
             ]);

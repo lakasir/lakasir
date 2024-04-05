@@ -15,23 +15,23 @@ uses(RefreshDatabase::class);
 describe('Register Test', function () {
     beforeEach(function () {
         config(['tenancy.central_domains' => ['localhost.com']]);
-        DB::statement('DROP DATABASE IF EXISTS lakasir_tokotest');
+        DB::statement('DROP DATABASE IF EXISTS lakasir_tokotestweb');
     });
     it('user can see the register page', function () {
         get('/auth/register')
             ->assertSeeLivewire(RegisterTenantForm::class);
     });
 
-    it('user can create the tenant account', function () {
+    it('user can create the tenant account through web', function () {
         Notification::fake();
         $data = [
             'full_name' => 'test',
-            'email' => 'test@mail.com',
+            'email' => 'testweb@mail.com',
             'password' => 'password',
             'password_confirmation' => 'password',
             'shop_name' => 'test',
             'business_type' => 'fnb',
-            'domain' => 'tokotest',
+            'domain' => 'tokotestweb',
         ];
 
         livewire(RegisterTenantForm::class)
@@ -40,23 +40,24 @@ describe('Register Test', function () {
             ->assertHasNoFormErrors()
             ->assertStatus(200);
 
+        $tenant = Tenant::find('tokotestweb');
         Notification::assertSentTo(
-            [Tenant::first()->user], DomainCreated::class
+            [$tenant->user], DomainCreated::class
         );
 
         $this->assertDatabaseHas('tenants', [
-            'id' => 'tokotest',
+            'id' => 'tokotestweb',
         ]);
         $this->assertDatabaseHas('tenant_users', [
-            'email' => 'test@mail.com',
+            'email' => 'testweb@mail.com',
         ]);
-        Tenant::first()->run(function () {
+        $tenant->run(function () {
             $this->assertDatabaseHas('users', [
-                'email' => 'test@mail.com',
+                'email' => 'testweb@mail.com',
             ]);
         });
     });
 });
 afterAll(function () {
-    DB::statement('DROP DATABASE IF EXISTS lakasir_tokotest');
+    DB::statement('DROP DATABASE IF EXISTS lakasir_tokotestweb');
 });
