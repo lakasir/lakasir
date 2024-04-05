@@ -147,7 +147,7 @@ state([
 
     <main class="w-full relative">
       <div class="max-w-7xl px-10 mx-auto flex lg:flex-row flex-col py-20">
-        <div class="w-full lg:w-1/2 flex lg:justify-start justify-start md:justify-center">
+        <div class="w-full lg:w-1/2 flex lg:justify-start justify-start md:justify-center hero-title">
           <div class="lg:py-24  lg:text-left text-left md:text-center">
             <br/>
             <h1 class="mt-4 text-4xl tracking-tight font-extrabold text-gray-800 sm:mt-5 lg:text-left text-left md:text-center sm:text-6xl lg:mt-6 xl:text-7xl">
@@ -172,7 +172,7 @@ state([
             </div>
           </div>
         </div>
-        <div class="w-full lg:w-1/2 lg:flex lg:justify-center lg:max-w-none max-w-md lg:mt-0 mt-20 mx-auto relative hidden">
+        <div class="w-full lg:w-1/2 lg:flex lg:justify-center lg:max-w-none max-w-md lg:mt-0 mt-20 mx-auto relative hidden hero-phone">
           <div class="w-auto sm:w-64 absolute bottom-0 transform md:bottom-auto md:top-1/2 p-8 translate-y-16 md:translate-y-24 md:ml-16 z-10 left-0 bg-white text-gray-400 rounded-xl shadow-2xl hidden md:block">
             <div class="inline-flex absolute top-0 transform -translate-y-full bg-primary left-0  space-x-1 px-4 items-center h-9 w-auto rounded-full -mt-2">
 

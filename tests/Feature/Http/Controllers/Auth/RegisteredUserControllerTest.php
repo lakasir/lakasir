@@ -1,7 +1,10 @@
 <?php
 
+use App\Notifications\DomainCreated;
+use App\Tenant;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Notification;
 
 use function Pest\Laravel\postJson;
 
@@ -13,6 +16,8 @@ describe('Registered User Controller', function () {
         DB::statement('DROP DATABASE IF EXISTS lakasir_tokotest');
     });
     it('user can create the tenant account', function () {
+        Notification::fake();
+
         $data = [
             'domain' => 'tokotest.localhost.com',
             'email' => 'test@mail.com',
@@ -23,12 +28,23 @@ describe('Registered User Controller', function () {
         $response = postJson('/api/domain/register', $data);
 
         $response->assertStatus(200);
+
+        $tenant = Tenant::find('tokotest');
+        Notification::assertSentTo(
+            [$tenant->user], DomainCreated::class
+        );
+
         $this->assertDatabaseHas('tenants', [
             'id' => 'tokotest',
         ]);
         $this->assertDatabaseHas('tenant_users', [
             'email' => 'test@mail.com',
         ]);
+        $tenant->run(function () {
+            $this->assertDatabaseHas('users', [
+                'email' => 'test@mail.com',
+            ]);
+        });
     });
 
     it('user cannot create the tenant business_type not in list', function () {
@@ -51,4 +67,18 @@ describe('Registered User Controller', function () {
         $response->assertStatus(422);
         $response->assertJsonValidationErrors(['domain']);
     });
+
+    it('user can not create the tenant with invalid busines type', function () {
+        $data = [
+            'domain' => 'test.localhost.com',
+            'business_type' => 'test',
+        ];
+        $response = postJson('/api/domain/register', $data);
+
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors(['business_type']);
+    });
+});
+afterAll(function () {
+    DB::statement('DROP DATABASE IF EXISTS lakasir_tokotest');
 });

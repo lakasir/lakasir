@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Observers\TenantObserver;
+use App\Tenant;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\ServiceProvider;
@@ -52,5 +54,7 @@ class AppServiceProvider extends ServiceProvider
 
             return $columns ? $query : $this;
         });
+
+        Tenant::observe(TenantObserver::class);
     }
 }
