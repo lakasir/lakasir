@@ -80,6 +80,12 @@ class PermissionSeeder extends Seeder
                         ],
                         'guard' => ['web', 'sanctum'],
                     ],
+                    'selling method' => [
+                        'permission' => [
+                            'set',
+                        ],
+                        'guard' => ['web', 'sanctum'],
+                    ],
                     'payment method' => [
                         'permission' => [
                             'c', 'r', 'u', 'd',
@@ -88,7 +94,7 @@ class PermissionSeeder extends Seeder
                     ],
                     'cash drawer' => [
                         'permission' => [
-                            'open', 'r', 'close',
+                            'open', 'enable', 'close',
                         ],
                         'guard' => ['web', 'sanctum'],
                     ],
@@ -98,11 +104,17 @@ class PermissionSeeder extends Seeder
                         ],
                         'guard' => ['web', 'sanctum'],
                     ],
-                    'using setting enable secure initial price' => [
+                    'secure initial price' => [
                         'permission' => [
-                            'r',
+                            'enable', 'verify',
                         ],
                         'guard' => ['sanctum'],
+                    ],
+                    'currency' => [
+                        'permission' => [
+                            'u',
+                        ],
+                        'guard' => ['web', 'sanctum'],
                     ],
                     'role' => [
                         'permission' => [
@@ -145,6 +157,18 @@ class PermissionSeeder extends Seeder
                             '',
                         ],
                         'guard' => ['web'],
+                    ],
+                    'default tax' => [
+                        'permission' => [
+                            'set',
+                        ],
+                        'guard' => ['web', 'sanctum'],
+                    ],
+                    'about' => [
+                        'permission' => [
+                            'r', 'u',
+                        ],
+                        'guard' => ['web', 'sanctum'],
                     ],
                 ],
             ],

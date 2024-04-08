@@ -133,7 +133,7 @@ Route::middleware([
             Route::post('/selling', [SellingController::class, 'store'])->can('create selling');
             Route::get('/selling/{selling}', [SellingController::class, 'show'])->can('read selling');
             Route::group(['prefix' => 'cash-drawer', 'middleware' => 'auth:sanctum'], function () {
-                Route::get('/', [CashDrawerController::class, 'show'])->can('read cash drawer');
+                Route::get('/', [CashDrawerController::class, 'show']);
                 Route::post('/', [CashDrawerController::class, 'store'])->can('open cash drawer');
                 Route::post('/close', [CashDrawerController::class, 'close'])->can('close cash drawer');
             });
@@ -150,12 +150,12 @@ Route::middleware([
         Route::post('setting/secure-initial-price', [SecureInitialPriceController::class, 'store'])
             ->middleware('auth:sanctum')
             ->name('setting.secure-initial-price.store')
-            ->can('read using setting enable secure initial price');
+            ->can('enable secure initial price');
 
         Route::post('setting/secure-initial-price/verify', [SecureInitialPriceController::class, 'verify'])
             ->middleware('auth:sanctum')
             ->name('setting.secure-initial-price.verify')
-            ->can('read using setting enable secure initial price');
+            ->can('verify secure initial price');
 
         Route::group(['prefix' => 'report', 'middleware' => 'auth:sanctum'], function () {
             Route::post('/cashier', CashierReportController::class)
