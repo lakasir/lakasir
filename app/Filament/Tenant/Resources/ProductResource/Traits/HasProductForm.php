@@ -95,7 +95,7 @@ trait HasProductForm
     public function generateSkuFormComponent(): TextInput
     {
         return TextInput::make('sku')
-            ->required();
+            ->hint('Leave it blank to auto generate');
     }
 
     public function generateStockFormComponent(): TextInput

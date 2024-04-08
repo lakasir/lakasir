@@ -48,7 +48,7 @@ class ProductRequest extends FormRequest
         }
 
         return [
-            'sku' => ['required', 'min:3', Rule::unique(Product::class)->ignore($this->route('product'))],
+            'sku' => [Rule::unique(Product::class)->ignore($this->route('product'))],
             'barcode' => ['nullable', 'min:3', Rule::unique(Product::class)->ignore($this->route('product'))],
             'name' => ['required', 'min:3'],
             'category' => ['required'],
