@@ -51,7 +51,7 @@ class EditProduct extends EditRecord
             'name' => $this->form->getState()['original_name'][$file],
             'size' => $shouldFetchFileInformation ? $storage->size($file) : 0,
             'type' => $shouldFetchFileInformation ? $storage->mimeType($file) : null,
-            'url' => $file,
+            'url' => '/storage'.$file,
         ];
     }
 

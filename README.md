@@ -1,5 +1,17 @@
-# Lakasir
-Lakasir is a Point of Sale (POS) application built using Laravel for the API, the Filament admin panel for the web application, and Flutter for the mobile application.
+<div align="center">
+
+  <img src="https://lakasir.com/assets/logo/image.png" alt="logo" width="200" height="auto" />
+  <h1>Lakasir Web App</h1>
+
+  <p> Lakasir is a Point of Sale (POS) application built using Laravel for the API, the Filament admin panel for the web application, and Flutter for the mobile application. </p>
+  
+</div>
+
+## Requirements
+* php 8.1
+* mysql 5.7 or higher
+* php-ext.* base on laravel extenstion requirement
+
 
 ## Features
 * **Role Management**: Define roles and permissions for users.
@@ -23,53 +35,11 @@ Lakasir is a Point of Sale (POS) application built using Laravel for the API, th
    * composer install
    * cp .env.example .env
    * edit the env based on your local configuration
-   * **!IMPORTANT** APP_CENTRAL_DOMAINS=base on your local domain
-   * php artisan migrate
-   * create the merchant,
-     1. using API:
-        ```
-        POST /api/domain/register HTTP/1.1
-        Host: lakasir.test
-        Accept: application/json
-        Content-Type: application/json
-        Content-Length: 142
-        {
-            "full_name": "",
-            "domain": "",
-            "email": "",
-            "password": "",
-            "password_confirmation": "",
-            "business_type": "retail"
-        }
-      2. using tinker
-         ```PHP
-            $data = [
-                'name' => 'toko_test',
-                'domain' => 'toko_test.'.config('tenancy.central_domains')[0],
-                'email' => 'toko_test@mail.com',
-                'password' => 'password',
-                'full_name' => 'Toko Test',
-                'shop_name' => 'Toko Test',
-                'business_type' => 'Retail',
-            ];
-            $tenant = Tenant::create([
-                'id' => 'toko_test',
-                'tenancy_db_name' => 'lakasir_tenancy_toko_test',
-            ]);
-            $tenant->domains()->create([
-                'domain' => $data['domain'],
-            ]);
-            $tenant->user()->create([
-                'email' => $data['email'],
-                'password' => bcrypt($data['password']),
-            ]);
+   * php artisan migrate --seed
 
-            $tenant->user->about()->create([
-                'shop_name' => $data['shop_name'],
-                'business_type' => $data['business_type'],
-            ]);
-        3. php artisan tenants:seed
-
+## Usage
+* api: localdomain.test/api/test
+* webapp: localdomain.test/member/login
 
 ## Contributing
 

@@ -24,6 +24,7 @@ class ProfileResource extends JsonResource
             'address' => $this->profile?->address,
             'locale' => $this->profile?->locale,
             'roles' => $this->roles->first()->name,
+            'permissions' => $this->getAllPermissions()->pluck('name'),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
