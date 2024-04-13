@@ -94,20 +94,17 @@ class TenantPanelProvider extends PanelProvider
             ]);
 
         $url = request()->getHost();
-        if (in_array($url, config('tenancy.central_domains'))) {
+        if (config('tenancy.central_domains')[0] === null) {
             return $panel;
         }
-        $domain = explode('.'.config('tenancy.central_domains')[0], $url);
-        $domain = explode('.', $domain[0]);
-        if (! in_array($domain[0], ['', 'localhost', config('tenancy.central_domains')[0]])) {
-            if ($domain[0] === 'www') {
-                $domain[0] = $domain[1];
-            }
-            $tenant = Tenant::find($domain[0]);
+        $tenant = Tenant::whereHas('domains', function ($query) use ($url) {
+            $query->where('domain', $url);
+        })->first();
+        if ($tenant) {
             if (! $tenant) {
                 abort(404);
             }
-            tenancy()->initialize($domain[0]);
+            tenancy()->initialize($tenant->id);
             $about = $tenant?->user?->about;
             $subdomain = $tenant?->domains()->where('domain', $url)->first()?->domain;
             $panel

@@ -52,5 +52,11 @@ class AppServiceProvider extends ServiceProvider
 
             return $columns ? $query : $this;
         });
+        if (! config('tenancy.central_domains')[0]) {
+            $mainPath = database_path('migrations');
+            $directories = glob($mainPath.'/*', GLOB_ONLYDIR);
+
+            $this->loadMigrationsFrom($directories);
+        }
     }
 }
