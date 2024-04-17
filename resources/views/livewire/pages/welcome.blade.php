@@ -160,7 +160,7 @@ state([
             </p>
             <div class="mt-6 sm:mt-8">
               <div class="flex md:flex-row flex-col md:space-x-5 md:space-y-0 space-y-5 lg:justify-start justify-center">
-                <a href="https://drive.usercontent.google.com/download?id=1U5cXfzDOARKhWu6TRzNDQ6zMqFdsPJVb&export=download&authuser=0" target="_blank" class="bg-primary text-white md:w-auto w-full px-8 py-4 rounded-full flex items-center justify-center font-medium text-lg focus:ring-offset-2 focus:ring-2 focus:ring-primary">Unduh Sekarang</a>
+                <a href="https://github.com/lakasir/lakasir_flutter/releases" target="_blank" class="bg-primary text-white md:w-auto w-full px-8 py-4 rounded-full flex items-center justify-center font-medium text-lg focus:ring-offset-2 focus:ring-2 focus:ring-primary">Unduh Sekarang</a>
                 <a href="#_"
                   class="bg-gray-800 text-white px-8 py-4 rounded-full flex items-center justify-center font-medium text-lg focus:ring-offset-2 focus:ring-2 focus:ring-gray-800"
                   x-on:click="$refs.overlay.classList.remove('hidden'); $refs.dialog.classList.remove('hidden');"
