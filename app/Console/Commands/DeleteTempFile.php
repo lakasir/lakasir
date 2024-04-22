@@ -3,7 +3,6 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Storage;
 
 class DeleteTempFile extends Command
 {
@@ -28,10 +27,9 @@ class DeleteTempFile extends Command
      */
     public function handle()
     {
-        // get all files in tmp folder
-        $files = Storage::disk('tmp')->files();
-        foreach ($files as $file) {
-            Storage::disk('tmp')->delete($file);
-        }
+        // $files = Storage::disk('tmp')->files();
+        // foreach ($files as $file) {
+        //     Storage::disk('tmp')->delete($file);
+        // }
     }
 }

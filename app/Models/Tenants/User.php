@@ -26,6 +26,7 @@ class User extends Authenticatable implements HasAvatar, HasName
         'name',
         'email',
         'password',
+        'fcm_token',
     ];
 
     /**
@@ -36,6 +37,7 @@ class User extends Authenticatable implements HasAvatar, HasName
     protected $hidden = [
         'password',
         'remember_token',
+        'fcm_token',
     ];
 
     /**
@@ -85,5 +87,10 @@ class User extends Authenticatable implements HasAvatar, HasName
     public function getFilamentAvatarUrl(): ?string
     {
         return $this->profile?->photo ?? null;
+    }
+
+    public function routeNotificationForFcm()
+    {
+        return $this->fcm_token;
     }
 }

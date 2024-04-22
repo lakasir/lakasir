@@ -17,12 +17,12 @@ class SettingController extends Controller
                 'string',
                 Rule::in([
                     'currency',
-                    'locale',
                     'selling_method',
                     'cash_drawer_enabled',
                     'secure_initial_price_enabled',
                     'secure_initial_price_using_pin',
                     'default_tax',
+                    'minimum_stock_nofication',
                 ]),
                 function ($attribute, $value, $fail) use ($request) {
                     if ($value == 'default_tax') {
@@ -67,12 +67,12 @@ class SettingController extends Controller
     {
         if (! in_array($key, [
             'currency',
-            'locale',
             'selling_method',
             'cash_drawer_enabled',
             'secure_initial_price_enabled',
             'secure_initial_price_using_pin',
             'default_tax',
+            'minimum_stock_nofication',
             'all',
         ])) {
             return $this->buildResponse()
@@ -85,11 +85,11 @@ class SettingController extends Controller
             return $this->buildResponse()
                 ->setData([
                     'currency' => Setting::get('currency', 'IDR'),
-                    'locale' => Setting::get('locale', 'en'),
                     'selling_method' => Setting::get('selling_method', 'fifo'),
                     'cash_drawer_enabled' => (bool) Setting::get('cash_drawer_enabled', false),
                     'secure_initial_price_enabled' => (bool) Setting::get('secure_initial_price_enabled', false),
                     'secure_initial_price_using_pin' => (bool) Setting::get('secure_initial_price_using_pin', false),
+                    'minimum_stock_nofication' => (float) Setting::get('minimum_stock_nofication', 0),
                     'default_tax' => (float) Setting::get('default_tax', 0),
                 ])
                 ->present();

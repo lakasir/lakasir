@@ -27,7 +27,7 @@ class SellingController extends Controller
                 'updated_at',
                 'sellingDetails.product_id',
             ])
-            ->with(['member', 'paymentMethod', 'sellingDetails.product'])
+            ->with(['member', 'paymentMethod', 'sellingDetails.product', 'user'])
             ->defaultSort('-created_at')
             ->simplePaginate($request->get('per_page', 10));
 
@@ -50,7 +50,7 @@ class SellingController extends Controller
 
     public function show(Selling $selling)
     {
-        $selling->load(['member', 'paymentMethod', 'sellingDetails']);
+        $selling->load(['member', 'paymentMethod', 'sellingDetails', 'user']);
 
         return $this->buildResponse()
             ->setData(new SellingCollection($selling))

@@ -44,9 +44,11 @@ class InitializeTenancyByDomain extends IdentificationMiddleware
     {
         try {
             if (config('tenancy.central_domains')[0]) {
-                $this->tenancy->initialize(
-                    $this->resolver->resolve(...$resolverArguments)
-                );
+                if (! in_array($request->getHost(), config('tenancy.central_domains'))) {
+                    $this->tenancy->initialize(
+                        $this->resolver->resolve(...$resolverArguments)
+                    );
+                }
             }
         } catch (TenantCouldNotBeIdentifiedException $e) {
             $onFail = static::$onFail ?? function ($e) {
