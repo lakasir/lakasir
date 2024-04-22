@@ -43,7 +43,7 @@ jobs:
           tools: php-cs-fixer, composer, phpunit
 
       - name: Installing dependecies
-        run: composer update && composer install -q --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist
+        run: composer install -q --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist
 
       - name: Setup laravel
         run: >
