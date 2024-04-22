@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\Tenants\Master\Product\StockController;
 use App\Http\Controllers\Api\Tenants\Master\ProductController;
 use App\Http\Controllers\Api\Tenants\PaymentMethodController;
 use App\Http\Controllers\Api\Tenants\ProfileController;
+use App\Http\Controllers\Api\Tenants\RegisterFCMTokenController;
 use App\Http\Controllers\Api\Tenants\Reports\CashierReportController;
 use App\Http\Controllers\Api\Tenants\Settings\SecureInitialPriceController;
 use App\Http\Controllers\Api\Tenants\Transaction\CashDrawerController;
@@ -47,6 +48,7 @@ Route::middleware([
 ])
     ->prefix('api')
     ->group(function () {
+        Route::post('/register-fcm-token', RegisterFCMTokenController::class);
         Route::get('check', function () {
             return response()->json([
                 'tenant' => tenant('id'),

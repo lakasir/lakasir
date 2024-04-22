@@ -169,7 +169,7 @@ class DashboardController extends Controller
                 $endDate = now()->subYear()->endOfYear();
                 break;
             default:
-                $startDate = now()->startOfDay();
+                $startDate = now();
                 $endDate = now()->endOfDay();
                 break;
         }

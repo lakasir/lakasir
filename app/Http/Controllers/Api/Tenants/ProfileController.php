@@ -24,10 +24,10 @@ class ProfileController extends Controller
     {
         $this->validate($request, [
             'name' => ['nullable', 'string'],
-            'email' => ['nullable', 'email', 'unique:users,email,' . auth()->id()],
+            'email' => ['nullable', 'email', 'unique:users,email,'.auth()->id()],
             'phone' => ['nullable', 'string', 'digits_between:10,13'],
             'address' => ['nullable', 'string'],
-            'locale' => ['nullable', 'string'],
+            'locale' => ['nullable', 'string', 'in:id,en'],
             'photo_url' => ['nullable', 'string', 'url', 'regex:/^(http)?s?:?(\/\/[^\']*\.(?:png|jpg|jpeg|gif|png|svg))$/'],
         ]);
 
@@ -44,7 +44,7 @@ class ProfileController extends Controller
             ]);
             $profile = $user->profile()->updateOrCreate([
                 'user_id' => $user->id,
-            ], $request->only('phone', 'address'));
+            ], $request->only('phone', 'address', 'locale'));
 
             if ($request->filled('photo_url') && $request->photo_url !== $profile->photo) {
                 /** @var \App\Models\Tenants\UploadedFile $tmpFile */

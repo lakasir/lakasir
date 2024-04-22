@@ -17,7 +17,6 @@ class SettingController extends Controller
                 'string',
                 Rule::in([
                     'currency',
-                    'locale',
                     'selling_method',
                     'cash_drawer_enabled',
                     'secure_initial_price_enabled',
@@ -67,7 +66,6 @@ class SettingController extends Controller
     {
         if (! in_array($key, [
             'currency',
-            'locale',
             'selling_method',
             'cash_drawer_enabled',
             'secure_initial_price_enabled',
@@ -85,7 +83,6 @@ class SettingController extends Controller
             return $this->buildResponse()
                 ->setData([
                     'currency' => Setting::get('currency', 'IDR'),
-                    'locale' => Setting::get('locale', 'en'),
                     'selling_method' => Setting::get('selling_method', 'fifo'),
                     'cash_drawer_enabled' => (bool) Setting::get('cash_drawer_enabled', false),
                     'secure_initial_price_enabled' => (bool) Setting::get('secure_initial_price_enabled', false),

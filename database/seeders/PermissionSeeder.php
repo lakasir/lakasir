@@ -6,34 +6,15 @@ use App\Constants\Role;
 use App\Models\Tenants\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
-use InvalidArgumentException;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role as ModelsRole;
 
 class PermissionSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
     public function run()
     {
-        DB::statement('SET FOREIGN_KEY_CHECKS=0');
-        if (config('database.default') == 'sanctum') {
-            DB::statement('SET FOREIGN_KEY_CHECKS=0');
-        }
-        DB::table('permissions')->truncate();
-        DB::table('role_has_permissions')->truncate();
-        User::get()->each(fn (User $user) => $this->assignRoleToUser($user));
-
         $permissions = $this->getPermissions();
         $permissions->each(fn ($roles) => $this->savePermission($roles));
-        if (config('database.default') == 'sanctum') {
-            DB::statement('SET FOREIGN_KEY_CHECKS=1');
-        }
-        DB::statement('SET FOREIGN_KEY_CHECKS=1');
 
         User::first()->assignRole(Role::admin);
     }
@@ -172,9 +153,15 @@ class PermissionSeeder extends Seeder
                     ],
                     'detail initial price' => [
                         'permission' => [
-                            'hide',
+                            'r',
                         ],
                         'guard' => ['web', 'sanctum'],
+                    ],
+                    'set the minimum stock notification' => [
+                        'permission' => [
+                            '',
+                        ],
+                        'guard' => ['sanctum'],
                     ],
                 ],
             ],
@@ -211,7 +198,7 @@ class PermissionSeeder extends Seeder
                 foreach ($actions as $action) {
                     $normalize[] = [
                         'role' => $permissions['role'],
-                        'action' => $action,
+                        'action' => trim($action),
                         'guard' => $crud['guard'],
                     ];
                 }
@@ -241,16 +228,5 @@ class PermissionSeeder extends Seeder
         /** @var ModelsRole $role */
         $role = ModelsRole::where('name', $role[0])->firstOrCreate(['name' => $role[0]]);
         $role->permissions()->syncWithoutDetaching($permission);
-    }
-
-    /**
-     * @return void
-     *
-     * @throws InvalidArgumentException
-     */
-    private function assignRoleToUser(User $user)
-    {
-        $role = ModelsRole::inRandomOrder()->first();
-        $user->syncRoles($role);
     }
 }
