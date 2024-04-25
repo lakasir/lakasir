@@ -48,7 +48,8 @@ Route::middleware([
 ])
     ->prefix('api')
     ->group(function () {
-        Route::post('/register-fcm-token', RegisterFCMTokenController::class);
+        Route::post('/register-fcm-token', RegisterFCMTokenController::class)
+            ->middleware('auth:sanctum');
         Route::get('check', function () {
             return response()->json([
                 'tenant' => tenant('id'),
