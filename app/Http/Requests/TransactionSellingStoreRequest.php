@@ -69,6 +69,7 @@ class TransactionSellingStoreRequest extends FormRequest
         }
 
         return [
+            'fee' => ['numeric'],
             'payed_money' => ['required', 'gte:total_price'],
             'total_price' => ['required_if:friend_price,true', 'numeric'],
             'total_qty' => ['required_if:friend_price,true', 'numeric', new ShouldSameWithSellingDetail('qty')],
