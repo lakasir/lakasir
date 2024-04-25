@@ -35,6 +35,14 @@ class StockRunsOut extends Notification
         }
         $convertedArray = [];
         foreach ($this->data as $key => $data) {
+            $data = array_merge($data, [
+                'name' => __('notifications.stocks.single-runs-out', [
+                    'product' => $data['name'],
+                ]),
+                'stock' => __('notifications.stocks.field_stock', [
+                    'stock' => $data['stock'],
+                ]),
+            ]);
             $convertedArray['data'.($key + 1)] = json_encode($data);
         }
 
@@ -43,7 +51,6 @@ class StockRunsOut extends Notification
                 notification: new FcmNotification(
                     title: $title,
                     body: $body,
-                    image: 'https://lakasir.com/assets/logo/image.png'
                 )
             ))
                 ->data($convertedArray)
