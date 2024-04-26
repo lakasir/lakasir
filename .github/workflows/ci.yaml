@@ -50,7 +50,8 @@ jobs:
           php -r "file_exists('.env') || copy('.env.example', '.env');"
           php artisan key:generate
 
+      - name: Setup database Unit Test
+        run: php artisan app:migrate-testing-database
+
       - name: Setup database and Run Unit Test
-        run: >
-          php artisan app:migrate-testing-database
-          vendor/bin/pest
+        run: vendor/bin/pest
