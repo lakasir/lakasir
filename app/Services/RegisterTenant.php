@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Models\Tenants\About;
+use App\Models\Tenants\User;
 use App\Notifications\DomainCreated;
 use App\Tenant;
 use Illuminate\Support\Facades\Artisan;
@@ -19,22 +21,31 @@ class RegisterTenant
         $tenant->domains()->create([
             'domain' => $data['domain'],
         ]);
-        $tenant->user()->create([
-            'email' => $data['email'],
-            'password' => bcrypt($data['password']),
-        ]);
 
-        $tenant->user->about()->create([
-            'shop_name' => $data['full_name'] ?? null,
-            'business_type' => $data['business_type'],
-        ]);
+        $tenant->run(function () use ($data) {
+            $user = User::create([
+                'email' => $data['email'],
+                'password' => bcrypt($data['password']),
+                'is_owner' => true,
+            ]);
 
-        $tenant->user->notify(new DomainCreated());
+            About::create([
+                'shop_name' => $data['full_name'] ?? null,
+                'business_type' => $data['business_type'],
+            ]);
 
-        Artisan::call('tenants:seed', [
-            '--tenants' => [$tenant->id],
-            '--force' => true,
-        ]);
+            $user->notify(new DomainCreated());
+
+            Artisan::call('db:seed', [
+                '--class' => 'PermissionSeeder',
+            ]);
+            Artisan::call('db:seed', [
+                '--class' => 'PaymentMethodSeeder',
+            ]);
+            Artisan::call('db:seed', [
+                '--class' => 'CategorySeeder',
+            ]);
+        });
 
         return $tenant;
     }

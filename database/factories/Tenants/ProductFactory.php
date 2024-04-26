@@ -31,8 +31,8 @@ class ProductFactory extends Factory
             'stock' => $this->faker->randomDigit(),
             'initial_price' => rand(50000, 60000),
             'selling_price' => rand(60000, 70000),
-            'unit' => "PCS",
-            "type" => "product"
+            'unit' => 'PCS',
+            'type' => 'product',
         ];
     }
 }

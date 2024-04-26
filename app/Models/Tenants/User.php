@@ -4,6 +4,7 @@ namespace App\Models\Tenants;
 
 use Filament\Models\Contracts\HasAvatar;
 use Filament\Models\Contracts\HasName;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -27,6 +28,7 @@ class User extends Authenticatable implements HasAvatar, HasName
         'email',
         'password',
         'fcm_token',
+        'is_owner',
     ];
 
     /**
@@ -92,5 +94,10 @@ class User extends Authenticatable implements HasAvatar, HasName
     public function routeNotificationForFcm()
     {
         return $this->fcm_token;
+    }
+
+    public function scopeOwner(Builder $builder)
+    {
+        return $builder->whereIsOwner(true);
     }
 }

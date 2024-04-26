@@ -21,6 +21,7 @@ class SellingCollection extends JsonResource
             'friend_price' => $this->friend_price,
             'tax' => $this->tax,
             'total_qty' => $this->total_qty,
+            'note' => $this->note,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
             'member' => $this->whenLoaded('member'),

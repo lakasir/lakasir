@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models\Tenants;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -13,7 +13,6 @@ class About extends Model
         'shop_name',
         'shop_location',
         'business_type',
-        'tenant_user_id',
         'photo',
     ];
 }

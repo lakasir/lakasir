@@ -2,7 +2,7 @@
 
 namespace App\Notifications;
 
-use App\TenantUser;
+use App\Models\Tenants\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
@@ -11,22 +11,22 @@ class DomainCreated extends Notification
 {
     use Queueable;
 
-    public function via(TenantUser $notifiable)
+    public function via(User $notifiable)
     {
         return ['mail'];
     }
 
-    public function toMail(TenantUser $notifiable)
+    public function toMail(User $notifiable)
     {
         return (new MailMessage)
             ->line('Selamat datang di Lakasir')
             ->line('Terima kasih telah menggunakan aplikasi kami!')
-            ->line('Kami telah membuatkan domain untuk anda, silahkan daftarkan domain '. $notifiable->tenant->domains->first()->domain .' ke aplikasi di menu domain')
+            ->line('Kami telah membuatkan domain untuk anda, silahkan daftarkan domain '.tenant()->domains->first()->domain.' ke aplikasi di menu domain')
             ->line('dan domain anda akan aktif dalam waktu 30 hari untuk masa percobaan')
             ->salutation('Lakasir');
     }
 
-    public function toArray(TenantUser $notifiable)
+    public function toArray(User $notifiable)
     {
         return [
             //
