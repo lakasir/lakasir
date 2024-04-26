@@ -35,7 +35,8 @@
    * composer install
    * cp .env.example .env
    * edit the env based on your local configuration
-   * php artisan migrate --seed
+   * php artisan migrate --see
+5. Create the user using `php artisan app:create-user`
 
 ## Usage
 * api: localdomain.test/api/test
