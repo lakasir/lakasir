@@ -14,9 +14,4 @@ class Tenant extends BaseTenant implements TenantWithDatabase
     protected $hidden = [
         'tenancy_db_profile_password',
     ];
-
-    public function user()
-    {
-        return $this->hasOne(TenantUser::class);
-    }
 }

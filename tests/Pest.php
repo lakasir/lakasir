@@ -11,8 +11,8 @@
 |
 */
 
+use App\Services\RegisterTenant;
 use App\Tenant;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 
 uses(
@@ -48,38 +48,19 @@ expect()->extend('toBeOne', function () {
 
 function mockTenant(): Tenant
 {
-    DB::statement('DROP DATABASE IF EXISTS lakasir_tenancy_toko_test');
-    Tenant::where('id', 'toko_test')->delete();
+    DB::statement('DROP DATABASE IF EXISTS lakasir_toko_testing');
+    Tenant::where('id', 'toko_testing')->delete();
     $data = [
-        'name' => 'toko_test',
-        'domain' => 'toko_test.'.config('tenancy.central_domains')[0],
-        'email' => 'toko_test@mail.com',
+        'name' => 'toko_testing',
+        'domain' => 'toko_testing.'.config('tenancy.central_domains')[0],
+        'email' => 'toko_testing@mail.com',
         'password' => 'password',
-        'full_name' => 'Toko Test',
-        'shop_name' => 'Toko Test',
+        'full_name' => 'Toko Testing',
+        'shop_name' => 'Toko Testing',
         'business_type' => 'Retail',
     ];
-    $tenant = Tenant::create([
-        'id' => 'toko_test',
-        'tenancy_db_name' => 'lakasir_tenancy_toko_test',
-    ]);
-    $tenant->domains()->create([
-        'domain' => $data['domain'],
-    ]);
-    $tenant->user()->create([
-        'email' => $data['email'],
-        'password' => bcrypt($data['password']),
-    ]);
-
-    $tenant->user->about()->create([
-        'shop_name' => $data['shop_name'],
-        'business_type' => $data['business_type'],
-    ]);
-
-    Artisan::call('tenants:seed', [
-        '--tenants' => [$tenant->id],
-        '--force' => true,
-    ]);
+    $sRegisterTenant = new RegisterTenant();
+    $tenant = $sRegisterTenant->create($data);
 
     return $tenant;
 }

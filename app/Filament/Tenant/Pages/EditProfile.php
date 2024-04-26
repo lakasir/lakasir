@@ -39,10 +39,15 @@ class EditProfile extends AuthEditProfile
     protected function handleRecordUpdate(Model|User $record, array $data): Model
     {
         $record->update($data);
-        $record->profile()->update([
-            'phone' => $data['phone'],
-            'address' => $data['address'],
-        ]);
+        $record->profile()->updateOrInsert(
+            [
+                'user_id' => $record->getKey(),
+            ],
+            [
+                'phone' => $data['phone'],
+                'address' => $data['address'],
+            ]
+        );
 
         return $record;
     }
