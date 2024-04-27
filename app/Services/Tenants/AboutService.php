@@ -13,10 +13,13 @@ class AboutService
     public function createOrUpdate(array $data): void
     {
         $about = About::query()
-            ->createOrFirst(Arr::only($data, [
+            ->updateOrCreate([
+                'id' => About::first()->getKey(),
+            ], Arr::only($data, [
                 'shop_name',
                 'shop_location',
                 'business_type',
+                'other_business_type',
             ]));
 
         $owner = User::owner()->first();
