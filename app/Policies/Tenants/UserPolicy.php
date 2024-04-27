@@ -4,6 +4,7 @@ namespace App\Policies\Tenants;
 
 use App\Models\Tenants\User;
 use App\Models\Tenants\User as ModelsUser;
+use Filament\Facades\Filament;
 
 class UserPolicy
 {
@@ -36,6 +37,10 @@ class UserPolicy
      */
     public function update(User $user, ModelsUser $member): bool
     {
+        if ($member->is_owner) {
+            return false;
+        }
+
         return $user->can('update user');
     }
 
@@ -44,6 +49,10 @@ class UserPolicy
      */
     public function delete(User $user, ModelsUser $member): bool
     {
+        if ($member->is_owner && ! Filament::auth()->user()->is_owner) {
+            return false;
+        }
+
         return $user->can('delete user');
     }
 }
