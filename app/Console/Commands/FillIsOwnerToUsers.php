@@ -5,7 +5,6 @@ namespace App\Console\Commands;
 use App\Models\Tenants\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
 
 class FillIsOwnerToUsers extends Command
 {
@@ -21,9 +20,6 @@ class FillIsOwnerToUsers extends Command
      */
     public function handle()
     {
-        if (! Schema::hasTable('tenant_user')) {
-            return;
-        }
         $tenantUser = DB::connection('mysql')
             ->table('tenant_users')
             ->select('email')

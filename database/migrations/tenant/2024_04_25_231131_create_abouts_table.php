@@ -23,7 +23,9 @@ return new class extends Migration
             });
         } else {
             Schema::table('abouts', function (Blueprint $table) {
-                $table->dropColumn('tenant_user_id');
+                if (Schema::hasColumn('abouts', 'tenant_user_id')) {
+                    $table->dropColumn('tenant_user_id');
+                }
             });
         }
     }

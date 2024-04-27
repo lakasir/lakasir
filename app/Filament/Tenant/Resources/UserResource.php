@@ -9,6 +9,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\BooleanColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Hash;
@@ -68,6 +69,7 @@ class UserResource extends Resource
                     ->label('Address'),
                 TextColumn::make('roles.0.name')
                     ->label('Role'),
+                BooleanColumn::make('is_owner'),
             ])
             ->filters([
                 //
