@@ -24,6 +24,7 @@ class AboutController extends Controller
             'shop_name' => ['nullable', 'string'],
             'shop_location' => ['nullable', 'string'],
             'business_type' => ['required', 'in:retail,wholesale,fnb,fashion,pharmacy,other'],
+            'other_business_type' => ['required_if:business_type,other'],
             'owner_name' => ['nullable', 'string'],
         ]);
 
