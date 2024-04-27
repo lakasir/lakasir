@@ -32,6 +32,7 @@ class RegisterTenant
             About::create([
                 'shop_name' => $data['full_name'] ?? null,
                 'business_type' => $data['business_type'],
+                'other_business_type' => $data['other_business_type'] ?? null,
             ]);
 
             $user->notify(new DomainCreated());
