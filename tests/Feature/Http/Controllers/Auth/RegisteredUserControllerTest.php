@@ -79,6 +79,17 @@ it('user can not create the tenant with invalid busines type', function () {
     $response->assertJsonValidationErrors(['business_type']);
 });
 
+test('user can not create the tenant when the other business type null if business type is other', function () {
+    $data = [
+        'domain' => 'test.localhost.com',
+        'business_type' => 'other',
+    ];
+    $response = postJson('/api/domain/register', $data);
+
+    $response->assertStatus(422);
+    $response->assertJsonValidationErrors(['other_business_type']);
+});
+
 afterAll(function () {
     DB::statement('DROP DATABASE IF EXISTS lakasir_tokotest');
 });

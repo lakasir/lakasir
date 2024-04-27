@@ -9,6 +9,7 @@ use Filament\Forms\Components\Wizard;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\HtmlString;
 use Illuminate\Validation\Rules\Password;
@@ -66,7 +67,13 @@ class RegisterTenantForm extends Component implements HasForms
                                     'pharmacy' => 'Pharmacy',
                                     'other' => 'Other',
                                 ])
+                                ->live()
                                 ->required(),
+                            TextInput::make('other_business_type')
+                                ->label('Lainnya')
+                                ->visible(fn (Get $get): bool => $get('business_type') == 'other')
+                                ->required(fn (Get $get): bool => $get('business_type') == 'other')
+                                ->string(),
                         ])
                         ->icon('heroicon-o-shopping-bag'),
                     Wizard\Step::make('Domain Toko')
@@ -74,7 +81,6 @@ class RegisterTenantForm extends Component implements HasForms
                             TextInput::make('domain')
                                 ->label('Domain')
                                 ->rules(['unique:tenants,id'])
-                                ->live(debounce: 500)
                                 ->suffix('.'.config('tenancy.central_domains')[0]),
                         ])
                         ->icon('heroicon-o-globe-alt'),

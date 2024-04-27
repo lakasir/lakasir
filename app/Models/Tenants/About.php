@@ -13,6 +13,7 @@ class About extends Model
         'shop_name',
         'shop_location',
         'business_type',
+        'other_business_type',
         'photo',
     ];
 }

@@ -41,6 +41,7 @@ class RegisterRequest extends FormRequest
             'email' => ['required', 'string', 'email', 'max:255', 'unique:tenant_users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'business_type' => ['required', Rule::in(ShopType::cases())],
+            'other_business_type' => ['required_if:business_type,other'],
         ];
     }
 
