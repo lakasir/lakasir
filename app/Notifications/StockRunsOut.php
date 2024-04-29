@@ -17,7 +17,26 @@ class StockRunsOut extends Notification
 
     public function via()
     {
-        return [FcmChannel::class];
+        return [FcmChannel::class, 'database'];
+    }
+
+    public function toArray($notifiable)
+    {
+        $convertedArray = [];
+        foreach ($this->data as $data) {
+            $data = array_merge($data, [
+                'name' => __('notifications.stocks.single-runs-out', [
+                    'product' => $data['name'],
+                ]),
+                'stock' => __('notifications.stocks.field_stock', [
+                    'stock' => $data['stock'],
+                ]),
+                'route' => '/menu/product/stock',
+            ]);
+            $convertedArray[] = $data;
+        }
+
+        return $convertedArray;
     }
 
     public function toFcm(User $notifiable): FcmMessage
@@ -33,18 +52,6 @@ class StockRunsOut extends Notification
                 'count' => count($this->data),
             ]);
         }
-        $convertedArray = [];
-        foreach ($this->data as $key => $data) {
-            $data = array_merge($data, [
-                'name' => __('notifications.stocks.single-runs-out', [
-                    'product' => $data['name'],
-                ]),
-                'stock' => __('notifications.stocks.field_stock', [
-                    'stock' => $data['stock'],
-                ]),
-            ]);
-            $convertedArray['data'.($key + 1)] = json_encode($data);
-        }
 
         return (
             new FcmMessage(
@@ -53,7 +60,10 @@ class StockRunsOut extends Notification
                     body: $body,
                 )
             ))
-                ->data($convertedArray)
+                ->data([
+                    'title' => $title,
+                    'body' => $body,
+                ])
                 ->custom([
                     'android' => [
                         'notification' => [
