@@ -2,12 +2,13 @@
 
 namespace App\Models\Tenants;
 
+use App\Traits\UseTimezoneAwareQuery;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Selling extends Model
 {
-    use HasFactory;
+    use HasFactory, UseTimezoneAwareQuery;
 
     protected $guarded = ['friend_price'];
 

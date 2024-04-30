@@ -15,8 +15,9 @@ class Profile extends Model
         'address',
         'locale',
         'photo',
+        'timezone',
     ];
-    
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
