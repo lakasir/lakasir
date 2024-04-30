@@ -57,7 +57,10 @@ class SellingRevenueOverview extends BaseWidget
             $color = 'danger';
             $icon = 'heroicon-m-arrow-trending-down';
         }
-        $prosentase = (($todayRevenue->total_revenue - $yesterdayRevenue->total_revenue) / $yesterdayRevenue->total_revenue) * 100;
+        $prosentase = 100;
+        if ($yesterdayRevenue->total_revenue) {
+            $prosentase = (($todayRevenue->total_revenue - $yesterdayRevenue->total_revenue) / $yesterdayRevenue->total_revenue) * 100;
+        }
 
         return [
             Stat::make('Today total revenue', $todayRevenue->total_revenue.$readable)
