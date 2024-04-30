@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Forms;
+namespace App\Livewire\Forms\Auth;
 
 use App\Services\RegisterTenant;
 use Filament\Forms\Components\Select;
@@ -115,6 +115,6 @@ class RegisterTenantForm extends Component implements HasForms
 
     public function render()
     {
-        return view('livewire.pages.auth.register');
+        return view('livewire.forms.auth.register');
     }
 }

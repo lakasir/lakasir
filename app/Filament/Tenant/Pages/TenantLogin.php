@@ -12,7 +12,7 @@ class TenantLogin extends Login
     public function authenticate(): ?LoginResponse
     {
         $loginResponse = parent::authenticate();
-        /** @var \App\Models\User $user */
+        /** @var \App\Models\Tenants\User $user */
         $user = Filament::auth()->user();
         if (! $user->can('access web app')) {
             throw ValidationException::withMessages([
@@ -21,6 +21,14 @@ class TenantLogin extends Login
 
             return null;
         }
+        $user->profile()->updateOrCreate(
+            [
+                'user_id' => $user->getKey(),
+            ],
+            [
+                'timezone' => 'Asia/Jakarta',
+            ]
+        );
 
         return $loginResponse;
     }

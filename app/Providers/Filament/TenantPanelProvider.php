@@ -9,6 +9,7 @@ use App\Filament\Tenant\Resources\MemberResource;
 use App\Filament\Tenant\Resources\PermissionResource;
 use App\Filament\Tenant\Resources\ProductResource;
 use App\Filament\Tenant\Resources\RoleResource;
+use App\Filament\Tenant\Resources\SellingResource;
 use App\Filament\Tenant\Resources\UserResource;
 use App\Tenant;
 use Filament\Facades\Filament;
@@ -21,6 +22,8 @@ use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
+use Filament\Support\Facades\FilamentView;
+use Filament\View\PanelsRenderHook;
 use Filament\Widgets;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
@@ -28,6 +31,7 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Stancl\Tenancy\Bootstrappers\DatabaseTenancyBootstrapper;
 
@@ -58,6 +62,10 @@ class TenantPanelProvider extends PanelProvider
                         ...($user?->can('read product') ? ProductResource::getNavigationItems() : []),
                     ])
                     ->groups([
+                        NavigationGroup::make('Transaction')
+                            ->items([
+                                ...($user?->can('read selling') ? SellingResource::getNavigationItems() : []),
+                            ]),
                         NavigationGroup::make('User')
                             ->items([
                                 ...($user?->can('read user') ? UserResource::getNavigationItems() : []),
@@ -93,6 +101,10 @@ class TenantPanelProvider extends PanelProvider
                 Authenticate::class,
             ]);
 
+        FilamentView::registerRenderHook(
+            PanelsRenderHook::GLOBAL_SEARCH_AFTER,
+            fn (): string => Blade::render('@livewire(\'forms.global.timezone-select\')'),
+        );
         $url = request()->getHost();
         if (config('tenancy.central_domains')[0] === null) {
             return $panel;
