@@ -19,6 +19,7 @@ class SellingRevenueOverview extends BaseWidget
                 DB::raw('SUM(total_cost / 1000) as total_cost'),
                 DB::raw('SUM((total_price - total_cost) / 1000) as total_revenue'),
             )
+            ->isPaid()
             ->whereBetween('created_at', [
                 now()->subDay(1)->startOfDay(),
                 now()->subDay(1)->endOfDay(),
@@ -30,6 +31,7 @@ class SellingRevenueOverview extends BaseWidget
                 DB::raw('SUM(total_cost / 1000) as total_cost'),
                 DB::raw('SUM((total_price - total_cost) / 1000) as total_revenue'),
             )
+            ->isPaid()
             ->whereBetween('created_at', [
                 now()->startOfDay(),
                 now()->endOfDay(),

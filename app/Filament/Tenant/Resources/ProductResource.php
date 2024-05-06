@@ -21,7 +21,7 @@ class ProductResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->query(fn (): Builder => Product::query()->latest())
+            ->query(fn (): Builder => Product::query()->with('stocks')->latest())
             ->columns([
                 TextColumn::make('id')
                     ->searchable()

@@ -6,6 +6,7 @@ use App\Filament\Tenant\Resources\SellingResource;
 use Filament\Forms\Form;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Tables;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class ListSellings extends ListRecords
@@ -30,5 +31,11 @@ class ListSellings extends ListRecords
         if ($resource::hasPage('view')) {
             $action->url(fn (Model $record): string => $resource::getUrl('view', ['record' => $record]));
         }
+    }
+
+    protected function getTableQuery(): ?Builder
+    {
+        return $this->getResource()::getEloquentQuery()
+            ->isPaid();
     }
 }

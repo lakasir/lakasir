@@ -2,12 +2,16 @@
 
 namespace App\Models\Tenants;
 
+use Filament\Facades\Filament;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+
+use function Filament\Support\format_money;
 
 class Product extends Model
 {
@@ -23,6 +27,12 @@ class Product extends Model
     public function stocks()
     {
         return $this->hasMany(Stock::class);
+    }
+
+    public function CartItems(): HasMany
+    {
+        return $this->hasMany(CartItem::class)
+            ->where('user_id', Filament::auth()->id());
     }
 
     public function scopeStockLatestIn()
@@ -53,7 +63,8 @@ class Product extends Model
 
                     return ($lastStock ? $lastStock->stock : 0) + $value;
                 }
-                $stock = $this->stockLatestIn()
+                $stock = $this->with('stocks')
+                    ->stockLatestIn()
                     ->sum('stock');
 
                 return $stock + $value;
@@ -66,7 +77,8 @@ class Product extends Model
     {
         return Attribute::make(
             get: function ($value) {
-                $stock = $this->stockLatestIn();
+                $stock = $this->with('stocks')
+                    ->stockLatestIn();
                 if ($stock?->first() == null) {
                     return $value;
                 }
@@ -81,12 +93,23 @@ class Product extends Model
     {
         return Attribute::make(
             get: function ($value) {
-                $stock = $this->stockLatestIn();
+                $stock = $this->with('stocks')
+                    ->stockLatestIn();
                 if ($stock?->first() == null) {
                     return $value;
                 }
 
                 return $stock->first()->selling_price;
+            },
+            set: fn ($value) => $value
+        );
+    }
+
+    public function sellingPriceLabel(): Attribute
+    {
+        return Attribute::make(
+            get: function ($value) {
+                return format_money($this->initial_price, Setting::get('currency', 'IDR'));
             },
             set: fn ($value) => $value
         );
