@@ -1,6 +1,6 @@
 <?php
 
-use App\Livewire\Forms\RegisterTenantForm;
+use App\Livewire\Forms\Auth\RegisterTenantForm;
 use App\Notifications\DomainCreated;
 use App\Tenant;
 use Illuminate\Foundation\Testing\RefreshDatabase;

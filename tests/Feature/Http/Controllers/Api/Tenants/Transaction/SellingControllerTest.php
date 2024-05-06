@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Tenants\CashDrawer;
+use App\Models\Tenants\Member;
 use App\Models\Tenants\Product;
 use App\Models\Tenants\Setting;
 use App\Models\Tenants\Stock;
@@ -13,7 +14,32 @@ uses(RefreshDatabaseWithTenant::class);
 
 test('cashier can create the selling transaction', function () {
     $user = User::first();
+    $member = Member::factory()->create();
 
+    $response = actingAs($user)->postJson('/api/transaction/selling', [
+        'payed_money' => 20000,
+        'friend_price' => false,
+        'member_id' => $member->getKey(),
+        'products' => [
+            [
+                'product_id' => $this->product->id,
+                'qty' => 1,
+            ],
+        ],
+    ]);
+
+    $response->assertOk()
+        ->assertJsonPath('message', 'success create selling');
+
+    $this->assertDatabaseHas('sellings', [
+        'total_price' => 20000,
+        'total_cost' => 10000,
+        'total_qty' => 1,
+    ]);
+});
+
+test('cashier can create the selling transaction with member_id null', function () {
+    $user = User::first();
     $response = actingAs($user)->postJson('/api/transaction/selling', [
         'payed_money' => 20000,
         'friend_price' => false,

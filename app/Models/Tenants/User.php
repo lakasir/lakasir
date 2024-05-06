@@ -5,6 +5,7 @@ namespace App\Models\Tenants;
 use Filament\Models\Contracts\HasAvatar;
 use Filament\Models\Contracts\HasName;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -89,6 +90,13 @@ class User extends Authenticatable implements HasAvatar, HasName
     public function getFilamentAvatarUrl(): ?string
     {
         return $this->profile?->photo ?? null;
+    }
+
+    public function cashierName(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->name ?? $this->email
+        );
     }
 
     public function routeNotificationForFcm()

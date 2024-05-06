@@ -2,9 +2,14 @@
 
 namespace App\Filament\Tenant\Resources;
 
+use App\Filament\Tenant\Resources\SellingDetailResource\RelationManagers\SellingDetailsRelationManager;
 use App\Filament\Tenant\Resources\SellingResource\Pages;
 use App\Models\Tenants\Selling;
 use App\Models\Tenants\Setting;
+use App\Models\Tenants\User;
+use Filament\Infolists\Components\Card;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
@@ -25,6 +30,10 @@ class SellingResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->query(
+                Selling::query()
+                    ->latest()
+            )
             ->columns([
                 TextColumn::make('code')
                     ->searchable()
@@ -38,8 +47,10 @@ class SellingResource extends Resource
                                 ->orWhere('name', 'like', "%{$search}%");
                         });
                     }),
-                TextColumn::make('member.name'),
-                TextColumn::make('customer_number'),
+                TextColumn::make('member.name')
+                    ->default('-'),
+                TextColumn::make('customer_number')
+                    ->default('-'),
                 TextColumn::make('date'),
                 TextColumn::make('total_price')
                     ->sortable()
@@ -53,8 +64,12 @@ class SellingResource extends Resource
             ])
             ->searchPlaceholder('Search (Code, User, Customer Number')
             ->filters([
-                SelectFilter::make('Cashier')
-                    ->relationship('user', 'name'),
+                SelectFilter::make('user_id')
+                    ->label('Cashier')
+                    ->options(
+                        User::all()->mapWithKeys(fn (User $user) => [$user->id => $user->cashier_name]
+                        )
+                    ),
             ])
             ->actions([
             ])
@@ -65,10 +80,43 @@ class SellingResource extends Resource
             ]);
     }
 
+    public static function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist
+            ->schema([
+                Card::make()
+                    ->schema([
+                        TextEntry::make('total_price')
+                            ->money(Setting::get('currency', 'IDR')),
+                        TextEntry::make('total_cost')
+                            ->money(Setting::get('currency', 'IDR')),
+                        TextEntry::make('tax_price')
+                            ->money(Setting::get('currency', 'IDR')),
+                        TextEntry::make('tax')
+                            ->money(Setting::get('currency', 'IDR')),
+                        TextEntry::make('payed_money')
+                            ->money(Setting::get('currency', 'IDR')),
+                        TextEntry::make('money_changes')
+                            ->money(Setting::get('currency', 'IDR')),
+                        TextEntry::make('user.name')
+                            ->label('Cashier'),
+                        TextEntry::make('member.name')
+                            ->default('-'),
+                        TextEntry::make('customer_number')
+                            ->default('-'),
+                        TextEntry::make('cashDrawer.cash')
+                            ->default('-'),
+                        TextEntry::make('paymentMethod.name'),
+                        TextEntry::make('note'),
+                    ])
+                    ->columns(2),
+            ]);
+    }
+
     public static function getRelations(): array
     {
         return [
-            //
+            SellingDetailsRelationManager::make(),
         ];
     }
 

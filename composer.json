@@ -22,6 +22,7 @@
         "tapp/filament-timezone-field": "^3.0"
     },
     "require-dev": {
+        "barryvdh/laravel-debugbar": "^3.13",
         "fakerphp/faker": "^1.9.1",
         "laravel-lang/common": "^6.2",
         "laravel/breeze": "^1.9",

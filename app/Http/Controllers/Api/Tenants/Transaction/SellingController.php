@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api\Tenants\Transaction;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\TransactionSellingStoreRequest;
+use App\Http\Requests\Tenants\Sellings\TransactionSellingStoreRequest;
 use App\Http\Resources\SellingCollection;
 use App\Models\Tenants\Selling;
 use Illuminate\Http\Request;
@@ -28,6 +28,7 @@ class SellingController extends Controller
                 'sellingDetails.product_id',
             ])
             ->with(['member', 'paymentMethod', 'sellingDetails.product', 'user'])
+            ->isPaid()
             ->defaultSort('-created_at')
             ->simplePaginate($request->get('per_page', 10));
 

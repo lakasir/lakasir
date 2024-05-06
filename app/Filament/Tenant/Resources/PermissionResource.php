@@ -22,14 +22,7 @@ class PermissionResource extends Resource
                     ->searchable(),
                 TextColumn::make('guard_name'),
             ])
-            ->filters([]);
-    }
-
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
+            ->paginated(false);
     }
 
     public static function getPages(): array

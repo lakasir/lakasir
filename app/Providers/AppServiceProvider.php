@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Filament\Support\Assets\Css;
 use Filament\Support\Assets\Js;
 use Filament\Support\Facades\FilamentAsset;
 use Illuminate\Database\Query\Builder;
@@ -61,6 +62,7 @@ class AppServiceProvider extends ServiceProvider
             $this->loadMigrationsFrom($directories);
         }
         FilamentAsset::register([
+            Css::make('custom-stylesheet', __DIR__.'/../../resources/css/app.css'),
             Js::make('custom-javascript', __DIR__.'/../../resources/js/app.js'),
         ]);
     }
