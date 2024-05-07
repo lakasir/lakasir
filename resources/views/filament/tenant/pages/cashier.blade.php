@@ -202,11 +202,15 @@ use function Filament\Support\format_money;
                 class="h-5 w-5 text-gray-500 dark:text-white"
               />
             </button>
-            <button type="submit" class="col-span-3 bg-[#ff6600] hover:bg-[#ff6611] p-2 rounded-md text-white text-lg">Pay it</button>
+            <button
+              wire:loading.attr="disabled"
+              wire:target="proceedThePayment"
+              type="submit" class="col-span-3 bg-[#ff6600] hover:bg-[#ff6611] p-2 rounded-md text-white text-lg">Pay it</button>
           </div>
         </div>
       </div>
       <div class="overflow-y-scroll max-h-[80vh]">
+        @error('products') <p class="error text-danger-500 text-lg text-center w-full">{{ $message }}</p> @enderror
         @include('filament.tenant.pages.cashier.items')
       </div>
     </div>
