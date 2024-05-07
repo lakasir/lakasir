@@ -272,7 +272,7 @@ test('cashier cannot create the sellings transaction with normal selling method 
 
     $response->assertUnprocessable()
         ->assertJsonValidationErrors('payed_money');
-})->skip();
+});
 
 beforeEach(function () {
     $product = Product::factory()

@@ -44,13 +44,6 @@ class SellingRevenueOverview extends BaseWidget
             default => ''
         };
 
-        // $readableYesterday = match (true) {
-        //     $yesterdayRevenue->total_revenue >= 1 => 'K',
-        //     $yesterdayRevenue->total_revenue >= 1000 => 'M',
-        //     $yesterdayRevenue->total_revenue >= 1000000 => 'B',
-        //     default => ''
-        // };
-
         $trend = 'increase';
         $color = 'success';
         $icon = 'heroicon-m-arrow-trending-up';
