@@ -10,31 +10,29 @@ class ShouldSameWithSellingDetail implements ValidationRule
 {
     private $message;
 
-    private $equals;
-
     /**
      * Create a new rule instance.
      *
      * @return void
      */
-    public function __construct($equals)
+    public function __construct(private $equals, private array $products)
     {
-        $this->equals = $equals;
     }
 
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        $this->message = Str::of($attribute)->replace("_", " ")->ucfirst();
-        $products = request()->products;
+        $this->message = Str::of($attribute)->replace('_', ' ')->ucfirst();
+        $products = $this->products;
         $totals = 0;
         foreach ($products as $product) {
             $totals += $product[$this->equals];
         }
         if ($value != $totals) {
             $fail($this->message());
+
             return;
         }
-   }
+    }
 
     /**
      * Get the validation error message.
@@ -43,6 +41,6 @@ class ShouldSameWithSellingDetail implements ValidationRule
      */
     public function message()
     {
-        return $this->message . ' is invalid';
+        return $this->message.' is invalid';
     }
 }

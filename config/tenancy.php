@@ -20,6 +20,11 @@ return [
         env('APP_CENTRAL_DOMAIN', null),
     ],
 
+    'admin_domains' => [
+        'admin.'.env('APP_CENTRAL_DOMAIN', null),
+        env('APP_ADMIN_DOMAIN', null),
+    ],
+
     /**
      * Tenancy bootstrappers are executed when tenancy is initialized.
      * Their responsibility is making Laravel features tenant-aware.

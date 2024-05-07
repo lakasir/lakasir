@@ -2,7 +2,9 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Tenant\Pages\Cashier;
 use App\Filament\Tenant\Pages\EditProfile;
+use App\Filament\Tenant\Pages\Settings;
 use App\Filament\Tenant\Pages\TenantLogin;
 use App\Filament\Tenant\Resources\CategoryResource;
 use App\Filament\Tenant\Resources\MemberResource;
@@ -18,6 +20,7 @@ use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Navigation\NavigationBuilder;
 use Filament\Navigation\NavigationGroup;
+use Filament\Navigation\NavigationItem;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
@@ -43,6 +46,7 @@ class TenantPanelProvider extends PanelProvider
     {
         $panel = $panel
             ->id('tenant')
+            ->viteTheme('resources/css/filament/tenant/theme.css')
             ->colors([
                 'primary' => Color::hex('#FF6600'),
             ])
@@ -50,6 +54,7 @@ class TenantPanelProvider extends PanelProvider
             ->authGuard('web')
             ->path('/member')
             ->login(TenantLogin::class)
+            // ->topNavigation()
             ->navigation(function (NavigationBuilder $navigationBuilder) {
                 /** @var \App\Models\User $user */
                 $user = Filament::auth()->user();
@@ -60,11 +65,16 @@ class TenantPanelProvider extends PanelProvider
                         ...($user?->can('read member') ? MemberResource::getNavigationItems() : []),
                         ...($user?->can('read category') ? CategoryResource::getNavigationItems() : []),
                         ...($user?->can('read product') ? ProductResource::getNavigationItems() : []),
+                        // NavigationItem::make('setting')
+                        //     ->label(__('Setting'))
+                        //     ->icon(Settings::getNavigationIcon())
+                        //     ->url(Settings::getNavigationUrl()),
                     ])
                     ->groups([
                         NavigationGroup::make('Transaction')
                             ->items([
                                 ...($user?->can('read selling') ? SellingResource::getNavigationItems() : []),
+                                ...($user?->can('create selling') ? Cashier::getNavigationItems() : []),
                             ]),
                         NavigationGroup::make('User')
                             ->items([
@@ -72,14 +82,23 @@ class TenantPanelProvider extends PanelProvider
                                 ...($user?->can('read role') ? RoleResource::getNavigationItems() : []),
                                 ...($user?->can('read permission') ? PermissionResource::getNavigationItems() : []),
                             ]),
+
+                        NavigationGroup::make(__('General'))
+                            ->collapsible(false)
+                            ->items([
+                                ...Settings::getNavigationItems(),
+                            ]),
                     ]);
 
             })
+            ->navigationItems([
+            ])
             ->profile(EditProfile::class)
             ->discoverResources(in: app_path('Filament/Tenant/Resources'), for: 'App\\Filament\\Tenant\\Resources')
             ->discoverPages(in: app_path('Filament/Tenant/Pages'), for: 'App\\Filament\\Tenant\\Pages')
             ->pages([
                 Pages\Dashboard::class,
+                Settings::class,
             ])
             ->discoverWidgets(in: app_path('Filament/Tenant/Widgets'), for: 'App\\Filament\\Tenant\\Widgets')
             ->widgets([
@@ -119,6 +138,7 @@ class TenantPanelProvider extends PanelProvider
             tenancy()->initialize($tenant->id);
             $about = $tenant?->user?->about;
             $subdomain = $tenant?->domains()->where('domain', $url)->first()?->domain;
+            config(['cache.prefix' => $subdomain.'_']);
             $panel
                 ->brandName($about->shop_name ?? 'Your Brand')
                 ->brandLogo($about->photo ?? null)

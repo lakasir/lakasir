@@ -11,13 +11,19 @@ class ListPermissions extends ListRecords
 {
     protected static string $resource = PermissionResource::class;
 
+    protected function getTableQuery(): ?Builder
+    {
+        return static::getResource()::getEloquentQuery()
+            ->limit(10);
+    }
+
     public function getTabs(): array
     {
         return [
             'all' => Tab::make(),
-            'mobile' => Tab::make()
+            'web' => Tab::make()
                 ->modifyQueryUsing(fn (Builder $query) => $query->where('guard_name', 'web')),
-            'web app' => Tab::make()
+            'mobile app' => Tab::make()
                 ->modifyQueryUsing(fn (Builder $query) => $query->where('guard_name', 'sanctum')),
         ];
     }
