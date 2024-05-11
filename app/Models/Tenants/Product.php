@@ -13,6 +13,50 @@ use Illuminate\Support\Str;
 
 use function Filament\Support\format_money;
 
+/**
+ * 
+ *
+ * @property int $id
+ * @property int $category_id
+ * @property string $name
+ * @property string|null $sku
+ * @property string|null $barcode
+ * @property float $stock
+ * @property int $is_non_stock
+ * @property float $initial_price
+ * @property float $selling_price
+ * @property string $unit
+ * @property string $type
+ * @property string|null $hero_images
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Tenants\CartItem> $CartItems
+ * @property-read int|null $cart_items_count
+ * @property-read \App\Models\Tenants\Category $category
+ * @property mixed $selling_price_label
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Tenants\Stock> $stocks
+ * @property-read int|null $stocks_count
+ * @method static \Database\Factories\Tenants\ProductFactory factory($count = null, $state = [])
+ * @method static Builder|Product newModelQuery()
+ * @method static Builder|Product newQuery()
+ * @method static Builder|Product query()
+ * @method static Builder|Product stockLatestIn()
+ * @method static Builder|Product whereBarcode($value)
+ * @method static Builder|Product whereCategoryId($value)
+ * @method static Builder|Product whereCreatedAt($value)
+ * @method static Builder|Product whereHeroImages($value)
+ * @method static Builder|Product whereId($value)
+ * @method static Builder|Product whereInitialPrice($value)
+ * @method static Builder|Product whereIsNonStock($value)
+ * @method static Builder|Product whereName($value)
+ * @method static Builder|Product whereSellingPrice($value)
+ * @method static Builder|Product whereSku($value)
+ * @method static Builder|Product whereStock($value)
+ * @method static Builder|Product whereType($value)
+ * @method static Builder|Product whereUnit($value)
+ * @method static Builder|Product whereUpdatedAt($value)
+ * @mixin \Eloquent
+ */
 class Product extends Model
 {
     use HasFactory;
