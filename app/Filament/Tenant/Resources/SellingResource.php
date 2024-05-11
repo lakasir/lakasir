@@ -11,7 +11,6 @@ use Filament\Infolists\Components\Card;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
-use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
@@ -70,13 +69,6 @@ class SellingResource extends Resource
                         User::all()->mapWithKeys(fn (User $user) => [$user->id => $user->cashier_name]
                         )
                     ),
-            ])
-            ->actions([
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
             ]);
     }
 
@@ -125,13 +117,6 @@ class SellingResource extends Resource
         return [
             'index' => Pages\ListSellings::route('/'),
             'view' => Pages\ViewSelling::route('/{record}'),
-        ];
-    }
-
-    public static function getWidgets(): array
-    {
-        return [
-            SellingResource\Widgets\SellingRevenueOverview::class,
         ];
     }
 }

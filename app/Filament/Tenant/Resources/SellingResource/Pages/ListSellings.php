@@ -16,6 +16,7 @@ class ListSellings extends ListRecords
     protected function getHeaderWidgets(): array
     {
         return [
+            // SellingResource\Widgets\SellingGrossProfitOverview::class,
             SellingResource\Widgets\SellingRevenueOverview::class,
         ];
     }
