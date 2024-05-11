@@ -35,7 +35,7 @@
    * composer install
    * cp .env.example .env
    * edit the env based on your local configuration
-   * php artisan migrate --seed
+   * php artisan migrate --path=database/migrations/tenant --seed
 5. Create the user using `php artisan app:create-user`
 
 ## Usage
