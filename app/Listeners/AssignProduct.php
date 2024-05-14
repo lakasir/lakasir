@@ -22,7 +22,7 @@ class AssignProduct
         $this->assignTheProducts($event->selling, $event->data);
     }
 
-    private function assignTheProducts(Selling $selling, array $data)
+    private function assignTheProducts(Selling $selling, array $data): void
     {
         foreach ($data['products'] as $productRequest) {
             $product = Product::find($productRequest['product_id']);
@@ -40,7 +40,7 @@ class AssignProduct
         }
     }
 
-    private function reduceStock(Product $product, $qty)
+    private function reduceStock(Product $product, int $qty): void
     {
         if (Setting::get('selling_method', 'fifo') == 'normal') {
             $lastStock = $product->stocks()->where('stock', '>', 0)->orderBy('date', 'asc')->first();

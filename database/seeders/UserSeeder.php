@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\Tenants\User;
 use App\Tenant;
-use Faker\Factory;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
@@ -19,8 +18,7 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        $faker = Factory::create();
-        $email = $faker->email;
+        $email = 'superadmin@admin.com';
         $password = bcrypt('password');
         if (Schema::hasTable('tenant')) {
             $dbName = DB::connection()->getDatabaseName();
