@@ -6,6 +6,8 @@
     "license": "MIT",
     "require": {
         "php": "^8.1",
+        "awcodes/filament-table-repeater": "^3.0",
+        "aymanalhattami/filament-date-scopes-filter": "^1.0",
         "barryvdh/laravel-dompdf": "^2.0",
         "filament/filament": "^3.1",
         "guzzlehttp/guzzle": "^7.2",
