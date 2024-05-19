@@ -16,6 +16,7 @@ use App\Filament\Tenant\Resources\RoleResource;
 use App\Filament\Tenant\Resources\SellingResource;
 use App\Filament\Tenant\Resources\StockOpnameResource;
 use App\Filament\Tenant\Resources\UserResource;
+use App\Models\Tenants\About;
 use App\Tenant;
 use Filament\Facades\Filament;
 use Filament\Http\Middleware\Authenticate;
@@ -133,17 +134,20 @@ class TenantPanelProvider extends PanelProvider
                 abort(404);
             }
             tenancy()->initialize($tenant->id);
-            $about = $tenant?->user?->about;
             $subdomain = $tenant?->domains()->where('domain', $url)->first()?->domain;
             config(['cache.prefix' => $subdomain.'_']);
-            $panel
-                ->brandName($about->shop_name ?? 'Your Brand')
-                ->brandLogo($about->photo ?? null)
-                ->domain($subdomain);
 
             $db = app(DatabaseTenancyBootstrapper::class);
             $db->bootstrap($tenant);
+            tenant()->run(function () use ($panel) {
+                /** @var About $about */
+                $about = About::first();
+                $panel
+                    ->brandName($about->shop_name ?? 'Your Brand')
+                    ->brandLogo($about->photo ?? null);
 
+            });
+            $panel->domain($subdomain);
         }
 
         return $panel;
