@@ -11,7 +11,7 @@ class StockService
 {
     public function reduceStock(Product $product, $qty): void
     {
-        if (Setting::get('selling_method', 'fifo') == 'normal') {
+        if (Setting::get('selling_method', env('SELLING_METHOD', 'fifo')) == 'normal') {
             $lastStock = $product->stocks()->where('stock', '>', 0)->orderBy('date', 'asc')->first();
         } else {
             $lastStock = $product->stockLatestIn()->first();

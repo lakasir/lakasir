@@ -7,6 +7,7 @@ use App\Filament\Tenant\Resources\Traits\RefreshThePage;
 use App\Models\Tenants\Debt;
 use App\Models\Tenants\DebtPayment;
 use App\Models\Tenants\Setting;
+use App\Models\Tenants\User;
 use App\Services\Tenants\DebtPaymentService;
 use Filament\Facades\Filament;
 use Filament\Forms\Form;
@@ -32,12 +33,12 @@ class DebtPaymentsRelationManager extends RelationManager
 
     public static function canViewForRecord(Model|Debt $ownerRecord, string $pageClass): bool
     {
-        return Filament::auth()->user()->can('read debt payment');
+        return User::query()->find(Filament::auth()->id())->can('read debt payment');
     }
 
     public function form(Form $form): Form
     {
-        return $form->schema($this->getFormPayment())->columns(1);
+        return $form->schema($this->getFormPayment($this->ownerRecord))->columns(1);
     }
 
     public function table(Table $table): Table

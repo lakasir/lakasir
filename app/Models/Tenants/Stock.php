@@ -62,11 +62,11 @@ class Stock extends Model
 
     public function totalSellingPrice(): Attribute
     {
-        return Attribute::make(get: fn () => $this->selling_price * $this->stock);
+        return Attribute::make(get: fn () => $this->selling_price * $this->init_stock);
     }
 
     public function totalInitialPrice(): Attribute
     {
-        return Attribute::make(get: fn () => $this->initial_price * $this->stock);
+        return Attribute::make(get: fn () => $this->initial_price * $this->init_stock);
     }
 }

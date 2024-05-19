@@ -24,6 +24,10 @@ class DebtResource extends Resource
         return $table
             ->defaultSort('created_at', 'desc')
             ->columns([
+                TextColumn::make('selling.code')
+                    ->searchable()
+                    ->prefix('#')
+                    ->label(__('Transaction Code')),
                 TextColumn::make('member.name')
                     ->searchable()
                     ->label(__('Member Name')),

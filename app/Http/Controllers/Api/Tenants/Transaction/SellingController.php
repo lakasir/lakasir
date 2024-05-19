@@ -20,7 +20,7 @@ class SellingController extends Controller
                 'date',
                 'code',
                 'payed_money',
-                'money_changes',
+                'money_change',
                 'total_price',
                 'total_qty',
                 'created_at',

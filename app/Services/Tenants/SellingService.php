@@ -70,6 +70,12 @@ class SellingService
             $request = array_merge($request, [
                 'payment_method_id' => PaymentMethod::where('name', 'Cash')->first()->id,
             ]);
+        } else {
+            /** @var PaymentMethod $pMethod */
+            $pMethod = PaymentMethod::find($data['payment_method_id']);
+            if ($pMethod->is_credit) {
+                $request['money_change'] = 0;
+            }
         }
 
         return $request;

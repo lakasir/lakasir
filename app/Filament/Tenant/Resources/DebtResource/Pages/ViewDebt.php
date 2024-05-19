@@ -42,7 +42,7 @@ class ViewDebt extends ViewRecord
 
                     return false;
                 })
-                ->form($this->getFormPayment())
+                ->form($this->getFormPayment($this->record))
                 ->action(function (array $data, Debt $debt): void {
                     $this->dPService->create($debt, $data);
                     $this->refreshPage();

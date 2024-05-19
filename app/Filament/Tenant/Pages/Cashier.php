@@ -145,6 +145,7 @@ class Cashier extends Page implements HasForms, HasTable
                 return [
                     'product_id' => $cartItem->product_id,
                     'qty' => $cartItem->qty,
+                    'price' => $cartItem->price,
                 ];
             })->toArray(),
         ]);
