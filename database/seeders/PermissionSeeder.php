@@ -163,6 +163,30 @@ class PermissionSeeder extends Seeder
                         ],
                         'guard' => ['sanctum'],
                     ],
+                    'purchasing' => [
+                        'permission' => [
+                            'c', 'r', 'u', 'd',
+                        ],
+                        'guard' => ['web', 'sanctum'],
+                    ],
+                    'stock opname' => [
+                        'permission' => [
+                            'c', 'r', 'u', 'd',
+                        ],
+                        'guard' => ['web', 'sanctum'],
+                    ],
+                    'debt' => [
+                        'permission' => [
+                            'r',
+                        ],
+                        'guard' => ['web', 'sanctum'],
+                    ],
+                    'debt payment' => [
+                        'permission' => [
+                            'c', 'r', 'u', 'd',
+                        ],
+                        'guard' => ['web', 'sanctum'],
+                    ],
                 ],
             ],
         ];

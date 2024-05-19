@@ -57,6 +57,7 @@ class UserResource extends Resource
             ->query(function () {
                 return User::query()->whereNot('id', auth()->id());
             })
+            ->defaultSort('created_at', 'desc')
             ->columns([
                 TextColumn::make('name')
                     ->searchable(),

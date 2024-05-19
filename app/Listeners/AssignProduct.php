@@ -6,11 +6,11 @@ use App\Events\SellingCreated;
 use App\Models\Tenants\Product;
 use App\Models\Tenants\Selling;
 use App\Models\Tenants\SellingDetail;
-use App\Models\Tenants\Setting;
+use App\Services\Tenants\StockService;
 
 class AssignProduct
 {
-    public function __construct()
+    public function __construct(public StockService $stockService)
     {
     }
 
@@ -22,7 +22,7 @@ class AssignProduct
         $this->assignTheProducts($event->selling, $event->data);
     }
 
-    private function assignTheProducts(Selling $selling, array $data): void
+    private function assignTheProducts(Selling $selling, array $data)
     {
         foreach ($data['products'] as $productRequest) {
             $product = Product::find($productRequest['product_id']);
@@ -40,26 +40,8 @@ class AssignProduct
         }
     }
 
-    private function reduceStock(Product $product, int $qty): void
+    private function reduceStock(Product $product, $qty)
     {
-        if (Setting::get('selling_method', 'fifo') == 'normal') {
-            $lastStock = $product->stocks()->where('stock', '>', 0)->orderBy('date', 'asc')->first();
-        } else {
-            $lastStock = $product->stockLatestIn()->first();
-        }
-        if ($lastStock) {
-            if ($lastStock->stock < $qty) {
-                $qty = $qty - $lastStock->stock;
-                $lastStock->stock = 0;
-                $lastStock->save();
-                $this->reduceStock($product, $qty);
-            } else {
-                $lastStock->stock = $lastStock->stock - $qty;
-                $lastStock->save();
-            }
-        } else {
-            $product->stock = $product->stock - $qty;
-            $product->save();
-        }
+        $this->stockService->reduceStock($product, $qty);
     }
 }

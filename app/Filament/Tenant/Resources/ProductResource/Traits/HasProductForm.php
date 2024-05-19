@@ -69,6 +69,7 @@ trait HasProductForm
     {
         return TextInput::make('selling_price')
             ->mask(RawJs::make('$money($input)'))
+            ->gte('initial_price')
             ->stripCharacters(',')
             ->numeric()
             ->prefix(Setting::get('currency', 'IDR'))
@@ -79,6 +80,7 @@ trait HasProductForm
     {
         return TextInput::make('initial_price')
             ->mask(RawJs::make('$money($input)'))
+            ->lte('selling_price')
             ->stripCharacters(',')
             ->numeric()
             ->prefix(Setting::get('currency', 'IDR'))

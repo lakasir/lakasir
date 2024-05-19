@@ -158,15 +158,27 @@ use function Filament\Support\format_money;
         }">
         <div class="rounded-lg">
           <div class="mb-4 grid grid-cols-4 gap-1">
-            <template x-for="(paymentMethod, key) in paymentMethods">
+            <template x-for="paymentMethod in paymentMethods">
               <div
-                x-on:click="cartDetail['payment_method_id'] = key; $wire.cartDetail['payment_method_id'] = key;"
+                x-on:click="cartDetail['payment_method_id'] = paymentMethod.id; $wire.cartDetail['payment_method_id'] = paymentMethod.id;"
                 class="cursor-pointer hover:scale-105 border border-[#ff6600] rounded-md px-4 py-2 flex justify-center dark:text-white text-sm"
-                :class="cartDetail['payment_method_id']  == key ? 'bg-[#ff6600] text-white' : 'dark:bg-gray-900 '"
-                x-text="paymentMethod.substring(0, 8)">
+                :class="cartDetail['payment_method_id']  == paymentMethod.id ? 'bg-[#ff6600] text-white' : 'dark:bg-gray-900 '"
+                x-text="paymentMethod.name.substring(0, 8)">
               </div>
             </template>
           </div>
+          <x-filament::input.wrapper
+            x-show="paymentMethods.filter((pm) => pm.is_credit)[0].id == cartDetail['payment_method_id']"
+            :valid="! $errors->has('due_date')"
+            class="mb-2">
+            <x-slot name="prefix">
+              {{ __('Due date') }}
+            </x-slot>
+            <x-filament::input
+              type="date"
+              wire:model="cartDetail.due_date"
+            />
+          </x-filament::input.wrapper>
           <div class="mb-4">
             @include('filament.tenant.pages.cashier.total')
           </div>
@@ -210,7 +222,11 @@ use function Filament\Support\format_money;
         </div>
       </div>
       <div class="overflow-y-scroll max-h-[80vh]">
-        @error('products') <p class="error text-danger-500 text-lg text-center w-full">{{ $message }}</p> @enderror
+        @if ($errors->any())
+          @foreach ($errors->all() as $error)
+            <p class="error text-danger-500 text-lg text-center w-full">{{ $error }}</p>
+          @endforeach
+        @endif
         @include('filament.tenant.pages.cashier.items')
       </div>
     </div>

@@ -8,35 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 
 /**
- * 
- *
- * @property int $id
- * @property string $name
- * @property string $original_name
- * @property string $url
- * @property string $mime_type
- * @property string $extension
- * @property string $size
- * @property string $path
- * @property string $disk
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @method static \Illuminate\Database\Eloquent\Builder|UploadedFile inUrl($url)
- * @method static \Illuminate\Database\Eloquent\Builder|UploadedFile newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|UploadedFile newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|UploadedFile query()
- * @method static \Illuminate\Database\Eloquent\Builder|UploadedFile whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|UploadedFile whereDisk($value)
- * @method static \Illuminate\Database\Eloquent\Builder|UploadedFile whereExtension($value)
- * @method static \Illuminate\Database\Eloquent\Builder|UploadedFile whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|UploadedFile whereMimeType($value)
- * @method static \Illuminate\Database\Eloquent\Builder|UploadedFile whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|UploadedFile whereOriginalName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|UploadedFile wherePath($value)
- * @method static \Illuminate\Database\Eloquent\Builder|UploadedFile whereSize($value)
- * @method static \Illuminate\Database\Eloquent\Builder|UploadedFile whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|UploadedFile whereUrl($value)
- * @mixin \Eloquent
+ * @mixin IdeHelperUploadedFile
  */
 class UploadedFile extends Model
 {

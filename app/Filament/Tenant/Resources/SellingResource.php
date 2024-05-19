@@ -29,10 +29,7 @@ class SellingResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->query(
-                Selling::query()
-                    ->latest()
-            )
+            ->defaultSort('created_at', 'desc')
             ->columns([
                 TextColumn::make('code')
                     ->searchable()

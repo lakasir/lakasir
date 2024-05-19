@@ -6,8 +6,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * 
- *
  * @property int $id
  * @property string|null $shop_name
  * @property string|null $shop_location
@@ -30,6 +28,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|About whereShopName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|About whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @mixin IdeHelperAbout
  */
 class About extends Model
 {

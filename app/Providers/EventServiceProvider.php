@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+use App\Events\SellingCreated;
+use App\Listeners\CreateDebtIfCredit;
+use App\Listeners\AssignProduct;
 use App\Models\Tenants\Member;
 use App\Models\Tenants\Product;
 use App\Models\Tenants\Selling;
@@ -25,8 +28,9 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
-        \App\Events\SellingCreated::class => [
-            \App\Listeners\AssignProduct::class,
+        SellingCreated::class => [
+            AssignProduct::class,
+            CreateDebtIfCredit::class,
         ],
     ];
 
@@ -44,15 +48,19 @@ class EventServiceProvider extends ServiceProvider
 
     /**
      * Register any events for your application.
+     *
+     * @return void
      */
-    public function boot(): void
+    public function boot()
     {
     }
 
     /**
      * Determine if events and listeners should be automatically discovered.
+     *
+     * @return bool
      */
-    public function shouldDiscoverEvents(): bool
+    public function shouldDiscoverEvents()
     {
         return false;
     }

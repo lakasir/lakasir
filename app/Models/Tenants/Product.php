@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
@@ -14,48 +15,7 @@ use Illuminate\Support\Str;
 use function Filament\Support\format_money;
 
 /**
- * 
- *
- * @property int $id
- * @property int $category_id
- * @property string $name
- * @property string|null $sku
- * @property string|null $barcode
- * @property float $stock
- * @property int $is_non_stock
- * @property float $initial_price
- * @property float $selling_price
- * @property string $unit
- * @property string $type
- * @property string|null $hero_images
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Tenants\CartItem> $CartItems
- * @property-read int|null $cart_items_count
- * @property-read \App\Models\Tenants\Category $category
- * @property mixed $selling_price_label
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Tenants\Stock> $stocks
- * @property-read int|null $stocks_count
- * @method static \Database\Factories\Tenants\ProductFactory factory($count = null, $state = [])
- * @method static Builder|Product newModelQuery()
- * @method static Builder|Product newQuery()
- * @method static Builder|Product query()
- * @method static Builder|Product stockLatestIn()
- * @method static Builder|Product whereBarcode($value)
- * @method static Builder|Product whereCategoryId($value)
- * @method static Builder|Product whereCreatedAt($value)
- * @method static Builder|Product whereHeroImages($value)
- * @method static Builder|Product whereId($value)
- * @method static Builder|Product whereInitialPrice($value)
- * @method static Builder|Product whereIsNonStock($value)
- * @method static Builder|Product whereName($value)
- * @method static Builder|Product whereSellingPrice($value)
- * @method static Builder|Product whereSku($value)
- * @method static Builder|Product whereStock($value)
- * @method static Builder|Product whereType($value)
- * @method static Builder|Product whereUnit($value)
- * @method static Builder|Product whereUpdatedAt($value)
- * @mixin \Eloquent
+ * @mixin IdeHelperProduct
  */
 class Product extends Model
 {
@@ -63,12 +23,12 @@ class Product extends Model
 
     protected $guarded = ['id', 'hero_images_url'];
 
-    public function category()
+    public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
     }
 
-    public function stocks()
+    public function stocks(): HasMany
     {
         return $this->hasMany(Stock::class);
     }
@@ -164,6 +124,13 @@ class Product extends Model
         return Attribute::make(
             get: fn ($value) => $value ? Str::of($value)->explode(',') : [],
             set: fn ($value) => $value ? Arr::join(is_array($value) ? $value : $value->toArray(), ',') : null
+        );
+    }
+
+    public function netProfit(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->selling_price - $this->initial_price
         );
     }
 }

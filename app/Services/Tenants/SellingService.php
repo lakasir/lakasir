@@ -6,11 +6,14 @@ use App\Events\SellingCreated;
 use App\Models\Tenants\PaymentMethod;
 use App\Models\Tenants\Product;
 use App\Models\Tenants\Selling;
+use App\Services\Tenants\Traits\HasNumber;
 use Exception;
 use Illuminate\Support\Facades\DB;
 
 class SellingService
 {
+    use HasNumber;
+
     public function create(array $data)
     {
         try {
@@ -31,6 +34,7 @@ class SellingService
     public function mapProductRequest(array $data): array
     {
         $request = [];
+        $payed_money = ($data['payed_money'] ?? 0);
         if (isset($data['friend_price'])) {
             $total_price = 0;
             $total_net_price = 0;
@@ -51,12 +55,14 @@ class SellingService
                 'total_price' => $total_price,
                 'total_cost' => $total_net_price,
                 'total_qty' => $total_qty,
-                'money_change' => $data['payed_money'] - $total_price,
+                'money_change' => $payed_money - $total_price,
                 'tax_price' => $tax_price,
+                'payed_money' => $payed_money,
             ];
         } else {
             $request = [
-                'money_change' => $data['payed_money'] - $data['total_price'],
+                'money_change' => ($data['payed_money'] ?? 0) - $data['total_price'],
+                'payed_money' => $payed_money,
             ];
         }
 

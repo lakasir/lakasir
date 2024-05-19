@@ -11,30 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use function Filament\Support\format_money;
 
 /**
- * 
- *
- * @property int $id
- * @property int $user_id
- * @property int $product_id
- * @property float $qty
- * @property float|null $price
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \App\Models\Tenants\User $cashier
- * @property-read mixed $price_format_m_oney
- * @property-read \App\Models\Tenants\Product $product
- * @method static Builder|CartItem cashier()
- * @method static Builder|CartItem newModelQuery()
- * @method static Builder|CartItem newQuery()
- * @method static Builder|CartItem query()
- * @method static Builder|CartItem whereCreatedAt($value)
- * @method static Builder|CartItem whereId($value)
- * @method static Builder|CartItem wherePrice($value)
- * @method static Builder|CartItem whereProductId($value)
- * @method static Builder|CartItem whereQty($value)
- * @method static Builder|CartItem whereUpdatedAt($value)
- * @method static Builder|CartItem whereUserId($value)
- * @mixin \Eloquent
+ * @mixin IdeHelperCartItem
  */
 class CartItem extends Model
 {

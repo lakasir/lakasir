@@ -23,6 +23,7 @@ use Filament\Tables\Contracts\HasTable;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Collection as CollectionSupport;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 
 class Cashier extends Page implements HasForms, HasTable
@@ -39,7 +40,7 @@ class Cashier extends Page implements HasForms, HasTable
 
     public array $cartDetail = [];
 
-    public CollectionSupport $paymentMethods;
+    public array $paymentMethods;
 
     public CollectionSupport $members;
 
@@ -73,9 +74,9 @@ class Cashier extends Page implements HasForms, HasTable
         $this->total_price = $this->sub_total + ($this->sub_total * $this->tax / 100);
 
         $this->paymentMethods = PaymentMethod::query()
-            ->select('id', 'name')
+            ->select('id', 'name', 'is_credit')
             ->get()
-            ->pluck('name', 'id');
+            ->toArray();
 
         $this->members = Member::query()
             ->select('id', 'name')
@@ -123,10 +124,10 @@ class Cashier extends Page implements HasForms, HasTable
 
     private function fillPayemntMethod()
     {
-        $paymentMethod = $this->paymentMethods->filter(function (string $value, int $key) {
-            return $key == $this->cartDetail['payment_method_id'];
+        $paymentMethod = collect($this->paymentMethods)->filter(function ($value, int $key) {
+            return $value['id'] == $this->cartDetail['payment_method_id'];
         })->first();
-        $this->cartDetail['payment_method_label'] = $paymentMethod;
+        $this->cartDetail['payment_method_label'] = $paymentMethod['name'];
     }
 
     private function fillMember()
@@ -147,10 +148,16 @@ class Cashier extends Page implements HasForms, HasTable
                 ];
             })->toArray(),
         ]);
+        $pMethod = PaymentMethod::find($request['payment_method_id']);
         $validator = Validator::make($request, [
             'payed_money' => ['required', 'min:1'],
             'fee' => ['numeric'],
-            'payed_money' => ['required', 'gte:total_price'],
+            'member_id' => Rule::requiredIf(fn () => $pMethod->is_credit),
+            'due_date' => Rule::requiredIf(fn () => $pMethod->is_credit),
+            'payed_money' => [
+                fn () => ! $pMethod->is_credit ? 'gte:total_price' : null,
+                Rule::requiredIf(fn () => ! $pMethod->is_credit),
+            ],
             'total_price' => ['required_if:friend_price,true', 'numeric'],
             'total_qty' => ['required_if:friend_price,true', 'numeric', new ShouldSameWithSellingDetail('qty', $request['products'])],
             'friend_price' => ['required', 'boolean'],

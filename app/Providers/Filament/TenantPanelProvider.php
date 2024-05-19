@@ -7,11 +7,14 @@ use App\Filament\Tenant\Pages\EditProfile;
 use App\Filament\Tenant\Pages\Settings;
 use App\Filament\Tenant\Pages\TenantLogin;
 use App\Filament\Tenant\Resources\CategoryResource;
+use App\Filament\Tenant\Resources\DebtResource;
 use App\Filament\Tenant\Resources\MemberResource;
 use App\Filament\Tenant\Resources\PermissionResource;
 use App\Filament\Tenant\Resources\ProductResource;
+use App\Filament\Tenant\Resources\PurchasingResource;
 use App\Filament\Tenant\Resources\RoleResource;
 use App\Filament\Tenant\Resources\SellingResource;
+use App\Filament\Tenant\Resources\StockOpnameResource;
 use App\Filament\Tenant\Resources\UserResource;
 use App\Tenant;
 use Filament\Facades\Filament;
@@ -20,14 +23,12 @@ use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Navigation\NavigationBuilder;
 use Filament\Navigation\NavigationGroup;
-use Filament\Navigation\NavigationItem;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
 use Filament\Support\Facades\FilamentView;
 use Filament\View\PanelsRenderHook;
-use Filament\Widgets;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -54,7 +55,6 @@ class TenantPanelProvider extends PanelProvider
             ->authGuard('web')
             ->path('/member')
             ->login(TenantLogin::class)
-            // ->topNavigation()
             ->navigation(function (NavigationBuilder $navigationBuilder) {
                 /** @var \App\Models\User $user */
                 $user = Filament::auth()->user();
@@ -65,10 +65,9 @@ class TenantPanelProvider extends PanelProvider
                         ...($user?->can('read member') ? MemberResource::getNavigationItems() : []),
                         ...($user?->can('read category') ? CategoryResource::getNavigationItems() : []),
                         ...($user?->can('read product') ? ProductResource::getNavigationItems() : []),
-                        // NavigationItem::make('setting')
-                        //     ->label(__('Setting'))
-                        //     ->icon(Settings::getNavigationIcon())
-                        //     ->url(Settings::getNavigationUrl()),
+                        ...($user?->can('read purchasing') ? PurchasingResource::getNavigationItems() : []),
+                        ...($user?->can('read stock opname') ? StockOpnameResource::getNavigationItems() : []),
+                        ...($user?->can('read debt') ? DebtResource::getNavigationItems() : []),
                     ])
                     ->groups([
                         NavigationGroup::make('Transaction')
@@ -102,8 +101,6 @@ class TenantPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Tenant/Widgets'), for: 'App\\Filament\\Tenant\\Widgets')
             ->widgets([
-                Widgets\AccountWidget::class,
-                Widgets\FilamentInfoWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,
