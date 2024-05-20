@@ -17,11 +17,11 @@ class StockService
                 ->stocks()
                 ->where('stock', '>', 0)
                 ->orderBy('date', 'asc')
-                ->latest()
+                // ->latest()
                 ->first();
         } else {
             /** @var Stock $lastStock */
-            $lastStock = $product->stockLatestIn()->first();
+            $lastStock = $product->stockLatestCalculateIn()->first();
         }
         if ($lastStock) {
             if ($lastStock->stock < $qty) {

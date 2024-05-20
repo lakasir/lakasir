@@ -60,12 +60,12 @@ class Product extends Model
     {
         return Attribute::make(
             get: function () {
-                // $usingNormalPrice = Setting::get('selling_method', env('SELLING_METHOD', 'fifo')) == 'normal';
-                // if ($usingNormalPrice) {
-                //     $lastStock = $this->stocks()->where('stock', '>', 0)->orderBy('date', 'asc')->first();
-                //
-                //     return ($lastStock ? $lastStock->stock : 0) + $value;
-                // }
+                $usingNormalPrice = Setting::get('selling_method', env('SELLING_METHOD', 'fifo')) == 'normal';
+                if ($usingNormalPrice) {
+                    $lastStock = $this->stocks()->where('stock', '>', 0)->orderBy('date', 'asc')->first();
+
+                    return $lastStock ? $lastStock->stock : 0;
+                }
                 $stock = $this
                     ->stockLatestCalculateIn()
                     ->sum('stock');

@@ -1,5 +1,6 @@
 <?php
 
+use App\Events\RecalculateEvent;
 use App\Models\Tenants\CashDrawer;
 use App\Models\Tenants\Member;
 use App\Models\Tenants\Product;
@@ -241,9 +242,12 @@ test('cashier can create the sellings transaction with normal selling method wit
 
 test('cashier cannot create the sellings transaction with normal selling method with updated selling price', function () {
     Setting::set('selling_method', 'normal');
+    /** @var Product $product */
+    $product = $this->product->replicate();
+    $product->save();
     Stock::factory()
         ->createQuietly([
-            'product_id' => $this->product->id,
+            'product_id' => $product->id,
             'date' => now()->subDay(),
             'stock' => 0,
             'initial_price' => 20000,
@@ -251,12 +255,13 @@ test('cashier cannot create the sellings transaction with normal selling method 
         ]);
     Stock::factory()
         ->createQuietly([
-            'product_id' => $this->product->id,
+            'product_id' => $product->id,
             'date' => now()->subDay(),
             'stock' => 20,
             'initial_price' => 20000,
             'selling_price' => 30000,
         ]);
+    RecalculateEvent::dispatch($product, []);
     $user = User::first();
 
     $response = actingAs($user)->postJson('/api/transaction/selling', [
@@ -264,7 +269,7 @@ test('cashier cannot create the sellings transaction with normal selling method 
         'friend_price' => false,
         'products' => [
             [
-                'product_id' => $this->product->id,
+                'product_id' => $product->id,
                 'qty' => 1,
             ],
         ],
@@ -276,7 +281,7 @@ test('cashier cannot create the sellings transaction with normal selling method 
 
 beforeEach(function () {
     $product = Product::factory()
-        ->createQuietly([
+        ->create([
             'name' => 'test',
             'initial_price' => 10000,
             'selling_price' => 20000,
