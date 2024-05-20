@@ -10,7 +10,6 @@ use App\Models\Tenants\Product;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
-/** @package App\Http\Controllers\Api\Master */
 class ProductController extends Controller
 {
     public function index()
@@ -40,7 +39,7 @@ class ProductController extends Controller
         $request->created();
 
         return $this->buildResponse()
-            ->setMessage("success creating items")
+            ->setMessage('success creating items')
             ->present();
     }
 
@@ -59,7 +58,7 @@ class ProductController extends Controller
         $request->updated();
 
         return $this->buildResponse()
-            ->setMessage("success updating items")
+            ->setMessage('success updating items')
             ->present();
     }
 
@@ -69,7 +68,7 @@ class ProductController extends Controller
         $product->delete();
 
         return $this->buildResponse()
-            ->setMessage("success deleting items")
+            ->setMessage('success deleting items')
             ->present();
     }
 }

@@ -2,16 +2,21 @@
 
 namespace App\Events;
 
-use App\Models\Tenants\Selling;
+use App\Models\Tenants\Product;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Collection;
 
-class SellingCreated
+class RecalculateEvent
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public function __construct(public Selling $selling, public array $data)
+    /**
+     * @param  Collection<Product>  $products
+     * @return void
+     */
+    public function __construct(public $products, public array $data)
     {
     }
 }

@@ -2,9 +2,11 @@
 
 namespace App\Providers;
 
+use App\Events\RecalculateEvent;
 use App\Events\SellingCreated;
-use App\Listeners\CreateDebtIfCredit;
+use App\Listeners\AdjustProduct;
 use App\Listeners\AssignProduct;
+use App\Listeners\CreateDebtIfCredit;
 use App\Models\Tenants\Member;
 use App\Models\Tenants\Product;
 use App\Models\Tenants\Selling;
@@ -31,6 +33,9 @@ class EventServiceProvider extends ServiceProvider
         SellingCreated::class => [
             AssignProduct::class,
             CreateDebtIfCredit::class,
+        ],
+        RecalculateEvent::class => [
+            AdjustProduct::class,
         ],
     ];
 

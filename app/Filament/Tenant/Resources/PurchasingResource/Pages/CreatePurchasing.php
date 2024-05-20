@@ -5,6 +5,7 @@ namespace App\Filament\Tenant\Resources\PurchasingResource\Pages;
 use App\Filament\Tenant\Resources\PurchasingResource;
 use App\Models\Tenants\Purchasing;
 use App\Services\Tenants\PurchasingService;
+use Exception;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Model;
@@ -25,9 +26,14 @@ class CreatePurchasing extends CreateRecord
 
     protected function handleRecordCreation(array $data): Model|Purchasing
     {
-        $data['number'] = $this->purchasingService->generateNumber($this->prefix);
+        try {
+            $data['number'] = $this->purchasingService->generateNumber($this->prefix);
+            $purchasing = $this->purchasingService->create($data);
+        } catch (Exception $e) {
+            throw $e;
+        }
 
-        return $this->purchasingService->create($data);
+        return $purchasing;
     }
 
     public function getTitle(): string|Htmlable

@@ -30,7 +30,7 @@ class ProductResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->query(fn (): Builder => Product::query()->with('stocks')->latest())
+            ->query(fn (): Builder => Product::query()->with('stocks', 'category')->latest())
             ->defaultSort('created_at', 'desc')
             ->columns([
                 TextColumn::make('id')

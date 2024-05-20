@@ -2,6 +2,7 @@
 
 namespace App\Services\Tenants;
 
+use App\Events\RecalculateEvent;
 use App\Events\SellingCreated;
 use App\Models\Tenants\PaymentMethod;
 use App\Models\Tenants\Product;
@@ -18,9 +19,13 @@ class SellingService
     {
         try {
             DB::beginTransaction();
+            /** @var Selling $selling */
             $selling = Selling::create($data);
 
             SellingCreated::dispatch($selling, $data);
+            /** @var Collection<Product> $products */
+            $products = Product::find($selling->sellingDetails->pluck('product_id'));
+            RecalculateEvent::dispatch($products, $data);
 
             DB::commit();
 

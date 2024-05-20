@@ -19,6 +19,7 @@ class CreateUser extends Command
                 'name' => $this->ask('name'),
                 'email' => $this->ask('email'),
                 'password' => bcrypt($this->ask('password')),
+                'is_owner' => true,
             ]);
             Artisan::call('db:seed', [
                 '--class' => 'PermissionSeeder',

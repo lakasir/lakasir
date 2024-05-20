@@ -25,6 +25,7 @@ class AssignProduct
     private function assignTheProducts(Selling $selling, array $data)
     {
         foreach ($data['products'] as $productRequest) {
+            /** @var Product $product */
             $product = Product::find($productRequest['product_id']);
             if (! $product->is_non_stock) {
                 $this->reduceStock($product, $productRequest['qty']);

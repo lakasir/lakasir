@@ -3,6 +3,7 @@
 namespace App\Observers;
 
 use App\Models\Tenants\Product;
+use App\Services\Tenants\StockService;
 use Illuminate\Support\Str;
 
 class ProductObserver
@@ -19,5 +20,15 @@ class ProductObserver
         if (! $product->sku) {
             $this->generateSku($product);
         }
+        $stockService = new StockService();
+        $stockService->create([
+            'product_id' => $product->getKey(),
+            'stock' => $product->stock,
+            'init_stock' => $product->stock,
+            'initial_price' => $product->initial_price,
+            'selling_price' => $product->selling_price,
+            'type' => 'in',
+            'date' => $product->created_at,
+        ]);
     }
 }

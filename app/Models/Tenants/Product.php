@@ -10,9 +10,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Number;
 use Illuminate\Support\Str;
-
-use function Filament\Support\format_money;
 
 /**
  * @mixin IdeHelperProduct
@@ -39,7 +38,7 @@ class Product extends Model
             ->where('user_id', Filament::auth()->id());
     }
 
-    public function scopeStockLatestIn()
+    public function scopeStockLatestCalculateIn()
     {
         $usingFifoPrice = Setting::get('selling_method', env('SELLING_METHOD', 'fifo')) == 'fifo';
         $usingNormalPrice = Setting::get('selling_method', env('SELLING_METHOD', 'fifo')) == 'normal';
@@ -57,32 +56,32 @@ class Product extends Model
                 ->orderByDesc('created_at')->orderByDesc('date'));
     }
 
-    public function stock(): Attribute
+    public function stockCalculate(): Attribute
     {
         return Attribute::make(
-            get: function ($value) {
-                $usingNormalPrice = Setting::get('selling_method', 'fifo') == 'normal';
-                if ($usingNormalPrice) {
-                    $lastStock = $this->stocks()->where('stock', '>', 0)->orderBy('date', 'asc')->first();
-
-                    return ($lastStock ? $lastStock->stock : 0) + $value;
-                }
+            get: function () {
+                // $usingNormalPrice = Setting::get('selling_method', env('SELLING_METHOD', 'fifo')) == 'normal';
+                // if ($usingNormalPrice) {
+                //     $lastStock = $this->stocks()->where('stock', '>', 0)->orderBy('date', 'asc')->first();
+                //
+                //     return ($lastStock ? $lastStock->stock : 0) + $value;
+                // }
                 $stock = $this
-                    ->stockLatestIn()
+                    ->stockLatestCalculateIn()
                     ->sum('stock');
 
-                return $stock + $value;
+                return $stock;
             },
             set: fn ($value) => $value
         );
     }
 
-    public function initialPrice(): Attribute
+    public function initialPriceCalculate(): Attribute
     {
         return Attribute::make(
             get: function ($value) {
                 $stock = $this
-                    ->stockLatestIn();
+                    ->stockLatestCalculateIn();
                 if ($stock?->first() == null) {
                     return $value;
                 }
@@ -93,12 +92,12 @@ class Product extends Model
         );
     }
 
-    public function sellingPrice(): Attribute
+    public function sellingPriceCalculate(): Attribute
     {
         return Attribute::make(
             get: function ($value) {
                 $stock = $this
-                    ->stockLatestIn();
+                    ->stockLatestCalculateIn();
                 if ($stock?->first() == null) {
                     return $value;
                 }
@@ -109,11 +108,11 @@ class Product extends Model
         );
     }
 
-    public function sellingPriceLabel(): Attribute
+    public function sellingPriceLabelCalculate(): Attribute
     {
         return Attribute::make(
             get: function ($value) {
-                return format_money($this->initial_price, Setting::get('currency', 'IDR'));
+                return Number::currency($this->initial_price, Setting::get('currency', 'IDR'));
             },
             set: fn ($value) => $value
         );

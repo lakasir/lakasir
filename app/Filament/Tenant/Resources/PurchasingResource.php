@@ -24,7 +24,6 @@ use Filament\Support\RawJs;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 
 class PurchasingResource extends Resource
@@ -167,9 +166,7 @@ class PurchasingResource extends Resource
                 TextColumn::make('date')
                     ->label(__('Selling Date'))
                     ->date(),
-                TextColumn::make('item_amounts')->counts([
-                    'stocks' => fn (Builder $builder) => $builder,
-                ]),
+                TextColumn::make('item_amounts'),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
