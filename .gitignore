@@ -1,14 +1,17 @@
 /node_modules
 /public/hot
 /public/storage
+/public/tmp
 /storage/*.key
 /storage/debugbar
 /vendor
-/public/vendor
 /public/js/
 /public/css/
 /public/app/
 /nginx/*.log
+/packages
+/public/build/manifest.json
+public/build
 tags
 .env
 .env.backup
@@ -17,3 +20,5 @@ Homestead.json
 Homestead.yaml
 npm-debug.log
 yarn-error.log
+tinker.php
+_ide_helper.php

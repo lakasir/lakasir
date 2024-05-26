@@ -1,44 +1,64 @@
-﻿# Lakasir™
-## About Lakasir
+<div align="center">
 
-Lakasir is a free, open source and online Point Of Sale Software designed for small shop or retail. It is built with modern technologies such as Laravel, VueJS, Bootstrap 4, RESTful API etc.
+  <img src="https://lakasir.com/assets/logo/image.png" alt="logo" width="200" height="auto" />
+  <h1>Lakasir Web App</h1>
+
+  <p> Lakasir is a Point of Sale (POS) application built using Laravel for the API, the Filament admin panel for the web application, and Flutter for the mobile application. </p>
+  
+</div>
 
 ## Requirements
+* php 8.1
+* mysql 5.7 or higher
+* php-ext.* base on laravel extenstion requirement
 
-* PHP 7.4 or higher
-* Database (eg: MySQL, PostgresSql)
-* Web Server (eg: Nginx)
-* Other Libraries: development
 
-## Framework
+## Features
+* **Role Management**: Define roles and permissions for users.
+* **Transaction Management**: Handle sales transactions seamlessly.
+* **Product Management**: Manage your inventory and products effectively.
+* **Simple Reporting**: Generate reports for insights into sales and performance.
+* **Simple Accounting**: Basic accounting features for financial tracking.
+* **Unit Price**: The product will have a different price base on the basic unit
+* **Friend Price**: You can sell the product with a lower price or the highest price
 
-Lakasir uses [Laravel](http://laravel.com), the best existing PHP framework, as the foundation framework and [Module](https://github.com/lakasir/lakasir) package for Apps.
-
+## Technologies Used
+* **Backend**: [Laravel](https://laravel.com)
+* **Frontend** (Web): [Filament Admin Panel](https://filamentphp.com)
+* **Frontend** (Mobile): [Flutter](https://flutter.github.io)
 
 ## Installation
+1. Clone the repository: git clone https://github.com/lakasir/lakasir.git
+2. Navigate to the project directory: cd lakasir
+3. Install dependencies:
+4. Laravel:
+   * composer install
+   * cp .env.example .env
+   * edit the env based on your local configuration
+   * php artisan migrate --path=database/migrations/tenant --seed
+5. Create the user using `php artisan app:create-user`
 
-* Install [Composer](https://getcomposer.org/download) and [Npm](https://nodejs.org/en/download)
-* Clone the repository: `git clone https://github.com/lakasir/lakasir.git`
-* Or use `composer create-project lakasir/lakasir your-project-name` 
-* Install dependencies: `composer install ; npm install ; npm run dev`
+## Usage
+* api: localdomain.test/api/test
+* webapp: localdomain.test/member/login
 
 ## Contributing
 
-Please, be very clear on your commit messages and pull requests, empty pull request messages may be rejected without reason.
+We welcome contributions from the community! If you'd like to contribute to Lakasir, please follow these steps:
 
-When contributing code to Lakasir, you must follow the PSR coding standards. The golden rule is: Imitate the existing Lakasir code
-
-## Ideas
-
-if you want to contribute and add some ideas, please check this link [ideas](https://github.com/orgs/lakasir/projects/1), you can add notes to the ideas card.
-  
-## Credits
-
-* [Sheena Muhammad Ali Zien](https://github.com/sheenazien8)
-* [Nasrul Fuad](https://github.com/nasrulfuad) 
-
-## Sponsors
-
-Support Lakasir to becoming a sponsor on [Github](https://github.com/lakasir), Your Profile Picture will show up here with link to your account
+1. keep on eye on [project board](https://github.com/orgs/lakasir/projects/2/views/1)
+2. Fork the repository.
+3. Create a new branch (git checkout -b feature/new-feature). 
+4. Make your changes and commit them (git commit -am 'Add new feature').
+5. Push to the branch (git push origin feature/new-feature).
+6. Create a new Pull Request.
+   
+When contributing to this project, please keep an eye on our project features board on GitHub to stay updated with ongoing and planned features.
 
 ## License
+This project is licensed under the GPL-3.0 license - see the [LICENSE](https://github.com/lakasir/lakasir?tab=GPL-3.0-1-ov-file) file for details.
+
+## Contact
+For any inquiries or support, please contact lakasirapp@gmail.com or you can open discussion in discussion features
+
+

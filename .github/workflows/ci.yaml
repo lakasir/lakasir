@@ -1,0 +1,57 @@
+name: unit-test
+env:
+  DB_CONNECTION: testing
+  DB_DATABASE: ${{ secrets.DB_DATABASE }}
+  DB_PORT: 3306
+  DB_USERNAME: ${{ secrets.DB_USERNAME }}
+  DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+  DB_DATABASE_TESTING: ${{ secrets.DB_DATABASE }}
+  DB_HOST: "127.0.0.1"
+on:
+  push:
+    branches:
+      - master
+      - features/**
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    name: Unit Test
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php-version: [8.2]
+    services:
+      mysql:
+        image: mysql:5.7
+        ports:
+          - 3306:3306
+        env:
+          MYSQL_DATABASE: ${{ env.DB_DATABASE }}
+          MYSQL_ROOT_PASSWORD: ${{ env.DB_PASSWORD }}
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup php ${{ matrix.php-version }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          tools: php-cs-fixer, composer, phpunit
+
+      - name: Installing dependecies
+        run: composer install -q --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist
+
+      - name: Setup laravel
+        run: >
+          php -r "file_exists('.env') || copy('.env.example', '.env');"
+          php artisan key:generate
+
+      - name: Setup database Unit Test
+        run: php artisan app:migrate-testing-database
+
+      - name: Setup database and Run Unit Test
+        run: vendor/bin/pest

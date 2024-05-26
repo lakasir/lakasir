@@ -2,22 +2,53 @@
 
 namespace App\Providers;
 
+use App\Events\RecalculateEvent;
+use App\Events\SellingCreated;
+use App\Listeners\AdjustProduct;
+use App\Listeners\AssignProduct;
+use App\Listeners\CreateDebtIfCredit;
+use App\Models\Tenants\Member;
+use App\Models\Tenants\Product;
+use App\Models\Tenants\Selling;
+use App\Observers\MemberObserver;
+use App\Observers\ProductObserver;
+use App\Observers\SellingObserver;
+use App\Observers\TenantObserver;
+use App\Tenant;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Event;
 
 class EventServiceProvider extends ServiceProvider
 {
     /**
-     * The event listener mappings for the application.
+     * The event to listener mappings for the application.
      *
-     * @var array
+     * @var array<class-string, array<int, class-string>>
      */
     protected $listen = [
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
+        SellingCreated::class => [
+            AssignProduct::class,
+            CreateDebtIfCredit::class,
+        ],
+        RecalculateEvent::class => [
+            AdjustProduct::class,
+        ],
+    ];
+
+    /**
+     * The model observers for your application.
+     *
+     * @var array
+     */
+    protected $observers = [
+        Member::class => [MemberObserver::class],
+        Selling::class => [SellingObserver::class],
+        Tenant::class => [TenantObserver::class],
+        Product::class => [ProductObserver::class],
     ];
 
     /**
@@ -27,8 +58,15 @@ class EventServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        parent::boot();
+    }
 
-        //
+    /**
+     * Determine if events and listeners should be automatically discovered.
+     *
+     * @return bool
+     */
+    public function shouldDiscoverEvents()
+    {
+        return false;
     }
 }

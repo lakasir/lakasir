@@ -2,10 +2,11 @@
 
 namespace App\Providers;
 
-use App\Helpers\Response;
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Validator;
+use Filament\Support\Assets\Css;
+use Filament\Support\Assets\Js;
+use Filament\Support\Facades\FilamentAsset;
+use Illuminate\Database\Query\Builder;
+use Illuminate\Http\Request;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -27,31 +28,42 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        if (!file_exists(base_path('.env'))) {
-            copy(base_path('.env.example'), base_path('.env'));
+        Builder::macro('filter', function (Request $request) {
+            /* WIP:  <07-08-22, sheenazien8> */
+            $columns = $request->filters;
+            $query = $this;
+            if ($columns) {
+                foreach ($columns as $filterColumn) {
+                    $column = $filterColumn['column'];
+
+                    if ($filterColumn['condition'] == 'equals') {
+                        $condition = '=';
+                    } else {
+                        $condition = $filterColumn['condition'];
+                    }
+                    if ($filterColumn['condition'] == 'like') {
+                        $value = '%'.$filterColumn['value'].'%';
+                    } else {
+                        $value = $filterColumn['value'];
+                    }
+                    if (! $value) {
+                        return $this;
+                    }
+                    $query = optional($this)->where($column, $condition, $value);
+                }
+            }
+
+            return $columns ? $query : $this;
+        });
+        if (! config('tenancy.central_domains')[0]) {
+            $mainPath = database_path('migrations');
+            $directories = glob($mainPath.'/*', GLOB_ONLYDIR);
+
+            $this->loadMigrationsFrom($directories);
         }
-        if (!env('APP_KEY')) {
-            Artisan::call('key:generate');
-        }
-        \Spatie\Flash\Flash::levels([
-            'success' => 'alert-success',
-            'warning' => 'alert-warning',
-            'error' => 'alert-error',
+        FilamentAsset::register([
+            Css::make('custom-stylesheet', __DIR__.'/../../resources/css/app.css'),
+            Js::make('custom-javascript', __DIR__.'/../../resources/js/app.js'),
         ]);
-
-        /**
-         * FIXME: create error custome message foR extend falidation <sheenazien8 2020-06-29>
-         *
-         */
-
-        Validator::extend('confirmation', function ($attribute, $value, $parameters, $validator) {
-            $keyConfirmed = explode('_', request()->key)[0];
-
-            return $value == request()->{ $keyConfirmed };
-        });
-
-        $this->app->bind('ResponseHelper', function () {
-            return new Response();
-        });
     }
 }
