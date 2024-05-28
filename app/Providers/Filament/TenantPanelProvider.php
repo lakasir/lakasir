@@ -4,6 +4,7 @@ namespace App\Providers\Filament;
 
 use App\Filament\Tenant\Pages\Cashier;
 use App\Filament\Tenant\Pages\EditProfile;
+use App\Filament\Tenant\Pages\SellingReport;
 use App\Filament\Tenant\Pages\Settings;
 use App\Filament\Tenant\Pages\TenantLogin;
 use App\Filament\Tenant\Resources\CategoryResource;
@@ -16,6 +17,7 @@ use App\Filament\Tenant\Resources\RoleResource;
 use App\Filament\Tenant\Resources\SellingResource;
 use App\Filament\Tenant\Resources\StockOpnameResource;
 use App\Filament\Tenant\Resources\UserResource;
+use App\Filament\Tenant\Resources\VoucherResource;
 use App\Tenant;
 use Filament\Facades\Filament;
 use Filament\Http\Middleware\Authenticate;
@@ -51,7 +53,7 @@ class TenantPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::hex('#FF6600'),
             ])
-            ->spa()
+            ->spa(config('app.spa_mode'))
             ->authGuard('web')
             ->path('/member')
             ->login(TenantLogin::class)
@@ -81,10 +83,14 @@ class TenantPanelProvider extends PanelProvider
                                 ...($user?->can('read role') ? RoleResource::getNavigationItems() : []),
                                 ...($user?->can('read permission') ? PermissionResource::getNavigationItems() : []),
                             ]),
-
+                        NavigationGroup::make(__('Report'))
+                            ->items([
+                                ...SellingReport::getNavigationItems(),
+                            ]),
                         NavigationGroup::make(__('General'))
                             ->collapsible(false)
                             ->items([
+                                ...VoucherResource::getNavigationItems(),
                                 ...Settings::getNavigationItems(),
                             ]),
                     ]);
@@ -98,6 +104,7 @@ class TenantPanelProvider extends PanelProvider
             ->pages([
                 Pages\Dashboard::class,
                 Settings::class,
+                SellingReport::class,
             ])
             ->discoverWidgets(in: app_path('Filament/Tenant/Widgets'), for: 'App\\Filament\\Tenant\\Widgets')
             ->widgets([

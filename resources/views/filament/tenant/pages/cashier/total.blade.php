@@ -11,6 +11,10 @@ use function Filament\Support\format_money;
     <p>{{ __('Tax') }}</p>
     <p class="font-bold text-[#ff6600]">{{ $tax }}%</p>
   </div>
+  <div class="flex justify-between">
+    <p>{{ __('Discount Price') }}</p>
+    <p class="font-bold text-[#ff6600]">({{ format_money($this->discount_price, $currency) }})</p>
+  </div>
   <hr/>
   <div class="flex justify-between">
     <p class="font-bold">{{ __('Total') }}</p>

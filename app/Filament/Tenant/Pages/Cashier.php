@@ -12,6 +12,7 @@ use App\Models\Tenants\Setting;
 use App\Rules\CheckProductStock;
 use App\Rules\ShouldSameWithSellingDetail;
 use App\Services\Tenants\SellingService;
+use App\Services\VoucherService;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -51,6 +52,8 @@ class Cashier extends Page implements HasForms, HasTable
     public float $sub_total = 0;
 
     public float $total_price = 0;
+
+    private float $discount_price = 0;
 
     public function mount()
     {
@@ -109,13 +112,25 @@ class Cashier extends Page implements HasForms, HasTable
                     ->options($this->members)
                     ->searchable(),
                 RichEditor::make('note'),
+                TextInput::make('voucher'),
             ])
             ->statePath('cartDetail')
             ->model(Selling::class);
     }
 
-    public function storeCart(): void
+    public function storeCart(VoucherService $voucherService): void
     {
+        if ($this->cartDetail['voucher']) {
+            if ($voucher = $voucherService->applyable($this->cartDetail['voucher'], $this->total_price)) {
+                $this->discount_price = $voucher->calculate();
+                $this->total_price = $this->total_price - $this->discount_price;
+            } else {
+                Notification::make('voucher_not_found')
+                    ->title(__('Voucher not found'))
+                    ->warning()
+                    ->send();
+            }
+        }
         $this->fillMember();
         $this->fillPayemntMethod();
 
@@ -140,6 +155,9 @@ class Cashier extends Page implements HasForms, HasTable
 
     public function proceedThePayment(SellingService $sellingService): void
     {
+        $this->cartDetail = array_merge($this->cartDetail, [
+            'total_price' => $this->total_price,
+        ]);
         $request = array_merge($this->cartDetail, [
             'products' => $this->cartItems->map(function (CartItem $cartItem) {
                 return [
@@ -156,7 +174,7 @@ class Cashier extends Page implements HasForms, HasTable
             'member_id' => Rule::requiredIf(fn () => $pMethod->is_credit),
             'due_date' => Rule::requiredIf(fn () => $pMethod->is_credit),
             'payed_money' => [
-                fn () => ! $pMethod->is_credit ? 'gte:total_price' : null,
+                ! $pMethod->is_credit ? 'gte:total_price' : null,
                 Rule::requiredIf(fn () => ! $pMethod->is_credit),
             ],
             'total_price' => ['required_if:friend_price,true', 'numeric'],
@@ -169,6 +187,8 @@ class Cashier extends Page implements HasForms, HasTable
         ]);
         if ($validator->fails()) {
             throw ValidationException::withMessages($validator->messages()->toArray());
+
+            return;
         }
         $data = array_merge($sellingService->mapProductRequest($request), $request);
         $sellingService->create($data);
