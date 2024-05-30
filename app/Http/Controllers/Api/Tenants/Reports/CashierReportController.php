@@ -17,6 +17,6 @@ class CashierReportController extends Controller
 
         $cashierReportService = new CashierReportService();
 
-        return $cashierReportService->generate($request->all());
+        return $cashierReportService->generate($request->all())->download('cashier-report.pdf');
     }
 }
