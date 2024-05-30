@@ -87,8 +87,8 @@ class TenantPanelProvider extends PanelProvider
                             ]),
                         NavigationGroup::make(__('Report'))
                             ->items([
-                                ...SellingReport::getNavigationItems(),
-                                ...CashierReport::getNavigationItems(),
+                                ...($user?->can('generate selling report') ? SellingReport::getNavigationItems() : []),
+                                ...($user?->can('generate cashier report') ? CashierReport::getNavigationItems() : []),
                             ]),
                         NavigationGroup::make(__('General'))
                             ->collapsible(false)
