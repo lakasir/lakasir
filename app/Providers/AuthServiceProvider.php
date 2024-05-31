@@ -7,6 +7,7 @@ use App\Models\Tenants\Category;
 use App\Models\Tenants\Debt;
 use App\Models\Tenants\DebtPayment;
 use App\Models\Tenants\Member;
+use App\Models\Tenants\PaymentMethod;
 use App\Models\Tenants\Product;
 use App\Models\Tenants\Purchasing;
 use App\Models\Tenants\StockOpname;
@@ -16,6 +17,7 @@ use App\Policies\Tenants\CategoryPolicy;
 use App\Policies\Tenants\DebtPaymentPolicy;
 use App\Policies\Tenants\DebtPolicy;
 use App\Policies\Tenants\MemberPolicy;
+use App\Policies\Tenants\PaymentMethodPolicy;
 use App\Policies\Tenants\PermissionPolicy;
 use App\Policies\Tenants\ProductPolicy;
 use App\Policies\Tenants\PurchasingPolicy;
@@ -48,6 +50,7 @@ class AuthServiceProvider extends ServiceProvider
         Member::class => MemberPolicy::class,
         Product::class => ProductPolicy::class,
         Category::class => CategoryPolicy::class,
+        PaymentMethod::class => PaymentMethodPolicy::class,
         User::class => UserPolicy::class,
         Role::class => RolePolicy::class,
         Permission::class => PermissionPolicy::class,
