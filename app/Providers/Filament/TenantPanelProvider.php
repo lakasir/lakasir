@@ -11,6 +11,7 @@ use App\Filament\Tenant\Pages\TenantLogin;
 use App\Filament\Tenant\Resources\CategoryResource;
 use App\Filament\Tenant\Resources\DebtResource;
 use App\Filament\Tenant\Resources\MemberResource;
+use App\Filament\Tenant\Resources\PaymentMethodResource;
 use App\Filament\Tenant\Resources\PermissionResource;
 use App\Filament\Tenant\Resources\ProductResource;
 use App\Filament\Tenant\Resources\PurchasingResource;
@@ -68,6 +69,7 @@ class TenantPanelProvider extends PanelProvider
                         ...Pages\Dashboard::getNavigationItems(),
                         ...($user?->can('read member') ? MemberResource::getNavigationItems() : []),
                         ...($user?->can('read category') ? CategoryResource::getNavigationItems() : []),
+                        ...($user?->can('read payment method') ? PaymentMethodResource::getNavigationItems() : []),
                         ...($user?->can('read product') ? ProductResource::getNavigationItems() : []),
                         ...($user?->can('read purchasing') ? PurchasingResource::getNavigationItems() : []),
                         ...($user?->can('read stock opname') ? StockOpnameResource::getNavigationItems() : []),

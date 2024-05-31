@@ -15,6 +15,13 @@ class PaymentMethod extends Model
 
     protected $guarded = [];
 
+    protected $casts = [
+        'is_cash' => 'boolean',
+        'is_debit' => 'boolean',
+        'is_credit' => 'boolean',
+        'is_wallet' => 'boolean',
+    ];
+
     public function icon(): Attribute
     {
         return Attribute::make(
