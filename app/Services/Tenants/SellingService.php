@@ -8,6 +8,7 @@ use App\Models\Tenants\PaymentMethod;
 use App\Models\Tenants\Product;
 use App\Models\Tenants\Selling;
 use App\Services\Tenants\Traits\HasNumber;
+use App\Services\VoucherService;
 use Exception;
 use Illuminate\Support\Facades\DB;
 
@@ -40,7 +41,7 @@ class SellingService
     {
         $request = [];
         $payed_money = ($data['payed_money'] ?? 0);
-        if (isset($data['friend_price'])) {
+        if (isset($data['friend_price']) && ! $data['friend_price']) {
             $total_price = 0;
             $total_net_price = 0;
             Product::whereIn('id', collect($data['products'])->pluck('product_id'))->chunk(100,
@@ -56,7 +57,17 @@ class SellingService
                 });
             $total_price = ($tax_price = $total_price * ($data['tax'] ?? 0) / 100) + $total_price;
             $total_qty = collect($data['products'])->sum('qty');
+            $discount_price = 0;
+            if ($data['voucher']) {
+                $voucherService = new VoucherService();
+                if ($voucher = $voucherService->applyable($data['voucher'], $total_price)) {
+                    $discount_price = $voucher->calculate();
+                    $total_price = $total_price - $discount_price;
+                    $voucher->reduceUsed();
+                }
+            }
             $request = [
+                'discount_price' => $discount_price,
                 'total_price' => $total_price,
                 'total_cost' => $total_net_price,
                 'total_qty' => $total_qty,

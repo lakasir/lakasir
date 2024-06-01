@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Facade;
 
 return [
 
+    'spa_mode' => env('SPA_MODE', false),
+
     /*
     |--------------------------------------------------------------------------
     | Application Name

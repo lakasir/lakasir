@@ -75,6 +75,10 @@ class SellingResource extends Resource
             ->schema([
                 Card::make()
                     ->schema([
+                        TextEntry::make('voucher'),
+
+                        TextEntry::make('discount_price')
+                            ->money(Setting::get('currency', 'IDR')),
                         TextEntry::make('total_price')
                             ->money(Setting::get('currency', 'IDR')),
                         TextEntry::make('total_cost')

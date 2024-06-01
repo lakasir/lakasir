@@ -3,12 +3,15 @@
 namespace App\Providers\Filament;
 
 use App\Filament\Tenant\Pages\Cashier;
+use App\Filament\Tenant\Pages\CashierReport;
 use App\Filament\Tenant\Pages\EditProfile;
+use App\Filament\Tenant\Pages\SellingReport;
 use App\Filament\Tenant\Pages\Settings;
 use App\Filament\Tenant\Pages\TenantLogin;
 use App\Filament\Tenant\Resources\CategoryResource;
 use App\Filament\Tenant\Resources\DebtResource;
 use App\Filament\Tenant\Resources\MemberResource;
+use App\Filament\Tenant\Resources\PaymentMethodResource;
 use App\Filament\Tenant\Resources\PermissionResource;
 use App\Filament\Tenant\Resources\ProductResource;
 use App\Filament\Tenant\Resources\PurchasingResource;
@@ -16,6 +19,8 @@ use App\Filament\Tenant\Resources\RoleResource;
 use App\Filament\Tenant\Resources\SellingResource;
 use App\Filament\Tenant\Resources\StockOpnameResource;
 use App\Filament\Tenant\Resources\UserResource;
+use App\Filament\Tenant\Resources\VoucherResource;
+use App\Models\Tenants\About;
 use App\Tenant;
 use Filament\Facades\Filament;
 use Filament\Http\Middleware\Authenticate;
@@ -51,7 +56,7 @@ class TenantPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::hex('#FF6600'),
             ])
-            ->spa()
+            ->spa(config('app.spa_mode'))
             ->authGuard('web')
             ->path('/member')
             ->login(TenantLogin::class)
@@ -64,6 +69,7 @@ class TenantPanelProvider extends PanelProvider
                         ...Pages\Dashboard::getNavigationItems(),
                         ...($user?->can('read member') ? MemberResource::getNavigationItems() : []),
                         ...($user?->can('read category') ? CategoryResource::getNavigationItems() : []),
+                        ...($user?->can('read payment method') ? PaymentMethodResource::getNavigationItems() : []),
                         ...($user?->can('read product') ? ProductResource::getNavigationItems() : []),
                         ...($user?->can('read purchasing') ? PurchasingResource::getNavigationItems() : []),
                         ...($user?->can('read stock opname') ? StockOpnameResource::getNavigationItems() : []),
@@ -81,10 +87,15 @@ class TenantPanelProvider extends PanelProvider
                                 ...($user?->can('read role') ? RoleResource::getNavigationItems() : []),
                                 ...($user?->can('read permission') ? PermissionResource::getNavigationItems() : []),
                             ]),
-
+                        NavigationGroup::make(__('Report'))
+                            ->items([
+                                ...($user?->can('generate selling report') ? SellingReport::getNavigationItems() : []),
+                                ...($user?->can('generate cashier report') ? CashierReport::getNavigationItems() : []),
+                            ]),
                         NavigationGroup::make(__('General'))
                             ->collapsible(false)
                             ->items([
+                                ...VoucherResource::getNavigationItems(),
                                 ...Settings::getNavigationItems(),
                             ]),
                     ]);
@@ -98,6 +109,8 @@ class TenantPanelProvider extends PanelProvider
             ->pages([
                 Pages\Dashboard::class,
                 Settings::class,
+                SellingReport::class,
+                CashierReport::class,
             ])
             ->discoverWidgets(in: app_path('Filament/Tenant/Widgets'), for: 'App\\Filament\\Tenant\\Widgets')
             ->widgets([
@@ -123,26 +136,36 @@ class TenantPanelProvider extends PanelProvider
         );
         $url = request()->getHost();
         if (config('tenancy.central_domains')[0] === null) {
-            return $panel;
+            $about = About::first();
+
+            return $panel
+                ->brandName($about->shop_name ?? config('app.name') ?? 'Your Brand')
+                ->brandLogo($about->photo ?? null);
         }
         $tenant = Tenant::whereHas('domains', function ($query) use ($url) {
             $query->where('domain', $url);
         })->first();
+
         if ($tenant) {
             if (! $tenant) {
                 abort(404);
             }
             tenancy()->initialize($tenant->id);
-            $about = $tenant?->user?->about;
             $subdomain = $tenant?->domains()->where('domain', $url)->first()?->domain;
-            config(['cache.prefix' => $subdomain.'_']);
             $panel
-                ->brandName($about->shop_name ?? 'Your Brand')
-                ->brandLogo($about->photo ?? null)
                 ->domain($subdomain);
+            config(['cache.prefix' => $subdomain.'_']);
 
             $db = app(DatabaseTenancyBootstrapper::class);
             $db->bootstrap($tenant);
+
+            tenant()->run(function () use ($panel) {
+                $about = About::first();
+
+                $panel
+                    ->brandName($about->shop_name ?? 'Your Brand')
+                    ->brandLogo($about->photo ?? null);
+            });
 
         }
 
