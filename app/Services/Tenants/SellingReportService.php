@@ -3,9 +3,12 @@
 namespace App\Services\Tenants;
 
 use App\Models\Tenants\About;
+use App\Models\Tenants\Setting;
 use App\Models\Tenants\Selling;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Carbon;
+
+use function Filament\Support\format_money;
 
 class SellingReportService
 {
@@ -16,10 +19,10 @@ class SellingReportService
         $startDate = Carbon::parse($data['start_date'])->setTimezone('UTC');
         $endDate = Carbon::parse($data['end_date'])->setTimezone('UTC');
         $sellings = Selling::query()
-            ->select('id', 'code', 'user_id', 'created_at', 'total_price', 'total_cost')
+            ->select()
             ->with(
                 'sellingDetails:id,selling_id,product_id,qty,price,cost',
-                'sellingDetails.product:id,name,initial_price,selling_price',
+                'sellingDetails.product:id,name,initial_price,selling_price,sku',
                 'user:id,name,email'
             )
             ->when($data['start_date'] ?? '', function ($query) use ($startDate) {
@@ -30,7 +33,6 @@ class SellingReportService
             })
             ->orderBy('created_at', 'desc')
             ->get();
-
         $header = [
             'shop_name' => $about?->shop_name,
             'shop_location' => $about?->shop_location,
@@ -40,13 +42,26 @@ class SellingReportService
             'end_date' => $endDate->format('d F Y h:i'),
         ];
         $reports = [];
+
+        foreach($sellings as $selling) {
+            foreach($selling->sellingDetails as $detail) {
+                $reports[] = [
+                    'sku' => $detail->product->sku,
+                    'name' => $detail->product->name,
+                    'selling_price' => format_money($detail->price, Setting::get('currency', 'IDR')),
+                    'initial_price' => format_money($detail->cost, Setting::get('currency', 'IDR')),
+                    'qty' => $detail->qty,
+                ];
+            }
+        }
+
         $footer = [
             'total_gross_profit' => $this->formatCurrency($sellings->sum('total_price')),
             'total_cost' => $this->formatCurrency($sellings->sum('total_cost')),
             'total_net_profit' => $this->formatCurrency($sellings->sum('total_price') - $sellings->sum('total_cost')),
         ];
 
-        $pdf = Pdf::loadView('reports.cashier', compact('reports', 'footer', 'header'))
+        $pdf = Pdf::loadView('reports.selling', compact('reports', 'footer', 'header'))
             ->setPaper('a4', 'landscape');
         $pdf->output();
         $domPdf = $pdf->getDomPDF();
@@ -60,4 +75,4 @@ class SellingReportService
     {
         return number_format($value, 0, ',', '.');
     }
-}
+

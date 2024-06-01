@@ -50,5 +50,8 @@ class SellingReport extends Page implements HasActions, HasForms
 
     public function generate(SellingReportService $sellingReportService)
     {
+        return response()->streamDownload(function () use ($sellingReportService) {
+            echo $sellingReportService->generate($this->data)->stream();
+        }, 'report.pdf');
     }
 }

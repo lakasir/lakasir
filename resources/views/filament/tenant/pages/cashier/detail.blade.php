@@ -22,7 +22,12 @@
   <div class="flex justify-between hover:underline cursor-pointer"
     x-on:click="$dispatch('open-modal', {id: 'edit-detail'})" >
     <p>{{ __('Voucher') }}</p>
-    <div>{!! $cartDetail['voucher'] ?? '-' !!}</div>
+    <div>{{ $cartDetail['voucher'] ?? '-' }}</div>
+  </div>
+  <div class="flex justify-between hover:underline cursor-pointer"
+    x-on:click="$dispatch('open-modal', {id: 'edit-detail'})" >
+    <p>{{ __('Discount') }}</p>
+    <div>{{ $cartDetail['discount_price'] ?? '-' }}</div>
   </div>
 </div>
 

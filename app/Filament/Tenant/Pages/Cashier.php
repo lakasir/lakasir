@@ -26,6 +26,8 @@ use Illuminate\Support\Collection as CollectionSupport;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
+use Filament\Support\RawJs;
+use function Filament\Support\format_money;
 
 class Cashier extends Page implements HasForms, HasTable
 {
@@ -113,6 +115,12 @@ class Cashier extends Page implements HasForms, HasTable
                     ->searchable(),
                 RichEditor::make('note'),
                 TextInput::make('voucher'),
+                TextInput::make('discount_price')
+                    // ->mask(RawJs::make('$money($input)'))
+                    // ->stripCharacters(',')
+                    // ->numeric()
+                    // ->prefix(Setting::get('currency', 'IDR'))
+                    ->label(__('Manual Discount')),
             ])
             ->statePath('cartDetail')
             ->model(Selling::class);
@@ -130,6 +138,10 @@ class Cashier extends Page implements HasForms, HasTable
                     ->warning()
                     ->send();
             }
+        }
+        if ($this->cartDetail['discount_price']) {
+            $this->discount_price = (float) $this->cartDetail['discount_price'];
+            $this->total_price = $this->total_price - $this->discount_price;
         }
         $this->fillMember();
         $this->fillPayemntMethod();
