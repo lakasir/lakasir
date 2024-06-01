@@ -84,6 +84,15 @@ trait CartInteraction
         $this->mount();
     }
 
+    public function reducePricePerItem(CartItem $cartItem, $value)
+    {
+        if (!($value && $value > 0) && $value > $cartItem->product->selling_price) return;
+        $cartItem->discount_price = (float) $value;
+
+        $cartItem->save();
+        $this->mount();
+    }
+
     public function updateCart(CartItem $cartItem, $value)
     {
         if ((int) $value == 0) {

@@ -24,7 +24,7 @@ class CartItem extends Model
         'product_id',
     ];
 
-    protected $appends = ['price_format_money'];
+    protected $appends = ['price_format_money', 'discount_price_format', 'final_price_format'];
 
     public function cashier(): BelongsTo
     {
@@ -44,5 +44,15 @@ class CartItem extends Model
     public function getPriceFormatMOneyAttribute()
     {
         return format_money($this->price, Setting::get('currency', 'IDR'));
+    }
+
+    public function getFinalPriceFormatAttribute()
+    {
+        return format_money($this->price - ($this->discount_price ?? 0), Setting::get('currency', 'IDR'));
+    }
+
+    public function getDiscountPriceFormatAttribute()
+    {
+        return format_money($this->discount_price, Setting::get('currency', 'IDR'));
     }
 }

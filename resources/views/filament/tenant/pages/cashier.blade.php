@@ -37,7 +37,7 @@ use function Filament\Support\format_money;
       </div>
       <div class="overflow-y-scroll min-h-40 max-h-[35%] overflow-auto"
         @forelse($cartItems as $item)
-          <div class="flex justify-between mb-2 border rounded-lg bg-white dark:border-gray-900 dark:bg-gray-900 px-4 py-2">
+          <div class="flex justify-between mb-2 border rounded-lg bg-white dark:border-gray-900 dark:bg-gray-900 px-4 py-2" key="{{ rand() }}">
             <div class="flex items-center space-x-3">
               <img
               class="object-cover h-16 w-20 rounded-lg"
@@ -69,9 +69,22 @@ use function Filament\Support\format_money;
                   </button>
                 </div>
               </div>
+              <div>
+                <input
+                  type="number"
+                  id="{{ $item->product->name }}-{{ $item->id }}"
+                  value="{{ $item->discount_price }}"
+                  wire:change="reducePricePerItem({{  $item  }}, $event.target.value)"
+                  class="w-full mb-4 p-2 border border-gray-300 rounded-md text-lg text-right dark:bg-gray-900 dark:text-white"
+                >
+              </div>
             </div>
-            <div class="flex items-center">
+            <div class="items-center">
               <p class="font-semibold text-[#ff6600]">{{ $item->price_format_money }}</p>
+              @if($item->discount_price && $item->discount_price > 0)
+                <p class="font-semibold text-[#ff6600]">{{ $item->discount_price_format }}</p>
+                <p class="font-semibold text-[#ff6600]">{{ $item->final_price_format }}</p>
+              @endif
             </div>
           </div>
         @empty

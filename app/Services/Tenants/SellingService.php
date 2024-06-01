@@ -43,13 +43,17 @@ class SellingService
         $payed_money = ($data['payed_money'] ?? 0);
         if (isset($data['friend_price']) && ! $data['friend_price']) {
             $total_price = 0;
+            $total_price_after_discount = 0;
             $total_net_price = 0;
             Product::whereIn('id', collect($data['products'])->pluck('product_id'))->chunk(100,
-                function ($products) use (&$total_price, &$total_net_price, $data) {
+                function ($products) use (&$total_price, &$total_net_price, $data, &$total_price_after_discount) {
                     foreach ($products as $product) {
                         $total_price += $product->selling_price * collect($data['products'])
                             ->where('product_id', $product->id)
                             ->sum('qty');
+                        $total_price_after_discount = $total_price - collect($data['products'])->filter(function ($_product) use (&$product) {
+                            return $_product['product_id'] === $product->id;
+                        })[0]['discount_price'];
                         $total_net_price += $product->initial_price * collect($data['products'])
                             ->where('product_id', $product->id)
                             ->sum('qty');
