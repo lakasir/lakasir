@@ -58,7 +58,7 @@ class SellingService
             $total_price = ($tax_price = $total_price * ($data['tax'] ?? 0) / 100) + $total_price;
             $total_qty = collect($data['products'])->sum('qty');
             $discount_price = 0;
-            if ($data['voucher']) {
+            if ($data['voucher'] ?? false) {
                 $voucherService = new VoucherService();
                 if ($voucher = $voucherService->applyable($data['voucher'], $total_price)) {
                     $discount_price = $voucher->calculate();
