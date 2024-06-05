@@ -136,11 +136,7 @@ class TenantPanelProvider extends PanelProvider
         );
         $url = request()->getHost();
         if (config('tenancy.central_domains')[0] === null) {
-            $about = About::first();
-
-            return $panel
-                ->brandName($about->shop_name ?? config('app.name') ?? 'Your Brand')
-                ->brandLogo($about->photo ?? null);
+            return $panel;
         }
         $tenant = Tenant::whereHas('domains', function ($query) use ($url) {
             $query->where('domain', $url);

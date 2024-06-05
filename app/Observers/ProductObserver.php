@@ -4,22 +4,43 @@ namespace App\Observers;
 
 use App\Models\Tenants\Product;
 use App\Services\Tenants\StockService;
+use Illuminate\Contracts\Validation\DataAwareRule;
 use Illuminate\Support\Str;
 
-class ProductObserver
+class ProductObserver extends AbstractObserver implements DataAwareRule
 {
-    private function generateSku(Product $product)
+    protected $data = [];
+
+    public function setData($data)
+    {
+        $this->data = $data;
+
+        return $this;
+    }
+
+    private function generateSku(Product $product): string
     {
         $prefix = Str::of($product->category->name)->substr(0, 3)->upper();
-        $product->sku = $prefix.'-'.Str::of($product->name)->substr(0, 3)->upper().'-'.Str::of($product->id)->padLeft(4, 0)->value();
-        $product->save();
+
+        return $prefix.'-'.Str::of($product->name)->substr(0, 3)->upper().'-'.Str::of($product->id)->padLeft(4, 0)->value();
+    }
+
+    private function generateBarcode(Product $product): string
+    {
+        $prefix = Str::of($product->category->name)->substr(0, 3)->upper();
+
+        return $prefix.'-'.Str::of($product->name)->substr(0, 3)->upper().'-'.Str::of($product->id)->padLeft(4, 0)->value();
     }
 
     public function created(Product $product)
     {
         if (! $product->sku) {
-            $this->generateSku($product);
+            $product->sku = $this->generateSku($product);
         }
+        if (! $product->barcode) {
+            $product->barcode = $this->generateBarcode($product);
+        }
+
         $stockService = new StockService();
         $stockService->create([
             'product_id' => $product->getKey(),
@@ -28,7 +49,8 @@ class ProductObserver
             'initial_price' => $product->initial_price,
             'selling_price' => $product->selling_price,
             'type' => 'in',
-            'date' => $product->created_at,
+            'expired' => $this->data['expired'] ?? null,
+
         ]);
     }
 }

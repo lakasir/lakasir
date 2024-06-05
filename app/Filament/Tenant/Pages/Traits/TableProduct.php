@@ -51,11 +51,18 @@ trait TableProduct
                         ])
                         ->searchable(['sku', 'name']),
                     TextColumn::make('stock')
-                        ->icon(
-                            fn (Product $product) => $product->stock < Setting::get('minimum_stock_nofication', 0)
+                        ->hidden(function (Product $product) {
+                            return $product->is_non_stock;
+                        })
+                        ->icon(function (Product $product) {
+                            if ($product->is_non_stock) {
+                                return '';
+                            }
+
+                            return $product->stock < Setting::get('minimum_stock_nofication', 10)
                                     ? 'heroicon-s-information-circle'
-                                : ''
-                        )
+                                : '';
+                        })
                         ->iconColor('danger')
                         ->extraAttributes([
                             'class' => 'font-bold',

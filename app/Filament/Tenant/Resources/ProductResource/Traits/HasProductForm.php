@@ -104,6 +104,9 @@ trait HasProductForm
     {
         return TextInput::make('stock')
             ->numeric()
+            ->disabled(function ($get) {
+                return $get('is_non_stock');
+            })
             ->required();
     }
 
@@ -122,6 +125,12 @@ trait HasProductForm
     public function generateNonStockFormComponent(): Checkbox
     {
         return Checkbox::make('is_non_stock')
-            ->label('Non Stock');
+            ->label(__('Non Stock'))
+            ->live()
+            ->afterStateUpdated(function ($state, $set) {
+                if ($state) {
+                    $set('stock', 0);
+                }
+            });
     }
 }

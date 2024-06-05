@@ -20,14 +20,13 @@ use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
+use Filament\Support\RawJs;
 use Filament\Tables\Contracts\HasTable;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Collection as CollectionSupport;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
-use Filament\Support\RawJs;
-use function Filament\Support\format_money;
 
 class Cashier extends Page implements HasForms, HasTable
 {
@@ -114,8 +113,14 @@ class Cashier extends Page implements HasForms, HasTable
                 TextInput::make('customer_number'),
                 Select::make('member_id')
                     ->label('Member')
-                    ->options($this->members)
+                    ->getSearchResultsUsing(function (string $search): array {
+                        return Member::query()
+                            ->where('name', 'like', "%{$search}%")
+                            ->pluck('name', 'id')
+                            ->toArray();
+                    })
                     ->searchable(),
+
                 RichEditor::make('note'),
                 TextInput::make('voucher'),
                 TextInput::make('discount_price')

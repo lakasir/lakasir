@@ -14,14 +14,7 @@ class Stock extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'stock',
-        'initial_price',
-        'selling_price',
-        'type',
-        'date',
-        'init_stock',
-    ];
+    protected $guarded = ['id'];
 
     protected $appends = [
         'total_selling_price',
