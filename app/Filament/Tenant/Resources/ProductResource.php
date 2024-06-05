@@ -62,7 +62,13 @@ class ProductResource extends Resource
             ->filters([
                 Filter::make('expired')
                     ->toggle()
-                    ->query(fn (Builder $query) => $query->whereDate('expired', '<=', now())),
+                    ->query(function (Builder $query) {
+                        return $query
+                            ->whereHas('stocks', function (Builder $builder) {
+                                return $builder
+                                    ->whereDate('expired', '<=', now());
+                            });
+                    }),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

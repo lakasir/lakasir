@@ -3,8 +3,8 @@
 namespace App\Services\Tenants;
 
 use App\Models\Tenants\About;
-use App\Models\Tenants\Setting;
 use App\Models\Tenants\Selling;
+use App\Models\Tenants\Setting;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Carbon;
 
@@ -43,8 +43,8 @@ class SellingReportService
         ];
         $reports = [];
 
-        foreach($sellings as $selling) {
-            foreach($selling->sellingDetails as $detail) {
+        foreach ($sellings as $selling) {
+            foreach ($selling->sellingDetails as $detail) {
                 $reports[] = [
                     'sku' => $detail->product->sku,
                     'name' => $detail->product->name,
@@ -75,4 +75,4 @@ class SellingReportService
     {
         return number_format($value, 0, ',', '.');
     }
-
+}

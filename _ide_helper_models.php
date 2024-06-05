@@ -360,10 +360,10 @@ namespace App\Models\Tenants{
  *
  * @property int $id
  * @property string $name
- * @property int $is_cash
- * @property int $is_debit
- * @property int $is_credit
- * @property int $is_wallet
+ * @property bool $is_cash
+ * @property bool $is_debit
+ * @property bool $is_credit
+ * @property bool $is_wallet
  * @property-read string|null $icon
  * @property string|null $waletable_type
  * @property int|null $waletable_id
@@ -432,7 +432,6 @@ namespace App\Models\Tenants{
  * @property string $unit
  * @property string $type
  * @property string|null $hero_images
- * @property string|null $expired
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Tenants\CartItem> $CartItems
@@ -453,7 +452,6 @@ namespace App\Models\Tenants{
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereBarcode($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereCategoryId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Product whereExpired($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereHeroImages($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereInitialPrice($value)
@@ -607,6 +605,8 @@ namespace App\Models\Tenants{
  * @property int|null $cash_drawer_id
  * @property string|null $note
  * @property float $fee
+ * @property string|null $voucher
+ * @property float|null $discount_price
  * @property string $date
  * @property string $code
  * @property float $payed_money
@@ -639,6 +639,7 @@ namespace App\Models\Tenants{
  * @method static \Illuminate\Database\Eloquent\Builder|Selling whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Selling whereCustomerNumber($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Selling whereDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Selling whereDiscountPrice($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Selling whereFee($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Selling whereFriendPrice($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Selling whereId($value)
@@ -655,6 +656,7 @@ namespace App\Models\Tenants{
  * @method static \Illuminate\Database\Eloquent\Builder|Selling whereTotalQty($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Selling whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Selling whereUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Selling whereVoucher($value)
  * @mixin \Eloquent
  */
 	#[\AllowDynamicProperties]
@@ -729,6 +731,7 @@ namespace App\Models\Tenants{
  * @property float|null $selling_price
  * @property string $type
  * @property string $date
+ * @property string|null $expired
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\Tenants\Product $product
@@ -745,6 +748,7 @@ namespace App\Models\Tenants{
  * @method static \Illuminate\Database\Eloquent\Builder|Stock query()
  * @method static \Illuminate\Database\Eloquent\Builder|Stock whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Stock whereDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Stock whereExpired($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Stock whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Stock whereInitStock($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Stock whereInitialPrice($value)
