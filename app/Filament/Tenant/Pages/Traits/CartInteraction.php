@@ -11,7 +11,7 @@ trait CartInteraction
 {
     private function validateStock(Product $product, $qty): bool
     {
-        if ($product->stock < 0 || $product->stock < $qty) {
+        if (! $product->is_non_stock && ($product->stock < 0 || $product->stock < $qty)) {
             Notification::make()
                 ->title(__('Stock is out'))
                 ->danger()

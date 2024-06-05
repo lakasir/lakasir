@@ -31,7 +31,7 @@ class AssignProduct
                 $this->reduceStock($product, $productRequest['qty']);
             }
             if (! $data['friend_price']) {
-                $productRequest['price'] = $product->selling_price * $productRequest['qty'];
+                $productRequest['price'] = ($productRequest['price'] ?? $product->selling_price) * $productRequest['qty'];
                 $productRequest['cost'] = $product->initial_price * $productRequest['qty'];
             }
             $sellingDetail = new SellingDetail();
