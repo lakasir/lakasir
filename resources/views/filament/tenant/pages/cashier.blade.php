@@ -1,6 +1,5 @@
 @php
 use Filament\Facades\Filament;
-use function Filament\Support\format_money;
 
 @endphp
 <div class="">
@@ -72,20 +71,19 @@ use function Filament\Support\format_money;
             </div>
             <div class="items-center text-right space-y-2">
               <p class="font-semibold text-[#ff6600]">{{ $item->price_format_money }}</p>
-              <x-filament::input.wrapper>
-                <x-slot name="prefix">
-                  {{ __('Discount') }} {{ $currency }}
-                </x-slot>
+              <div class="flex justify-end">
+              <x-filament::input.wrapper class="w-1/2">
                 <x-filament::input
                   type="text"
                   id="{{ $item->product->name }}-{{ $item->id }}"
-                  value="{{ $item->discount_price }}"
-                  wire:keyup.debounce.500ms="reducePricePerItem({{  $item  }}, $event.target.value)"
+                  value="{{ $item->discount_price == 0  ? '' : $item->discount_price }}"
+                  wire:keyup.debounce.500ms="reducePricePerItem({{  $item  }}, parseFloat($event.target.value.replace(/,/g, '')))"
                   placeholder="{{ __('Discount') }}"
                   class="text-right w-1/2"
                   x-mask:dynamic="$money($input)"
                 />
               </x-filament::input.wrapper>
+              </div>
               @if($item->discount_price && $item->discount_price > 0)
                 <!-- <p class="font-semibold text-[#ff6600]">{{ $item->discount_price_format }}</p> -->
                 <p class="font-semibold text-[#ff6600]">{{ $item->final_price_format }}</p>
@@ -169,8 +167,9 @@ use function Filament\Support\format_money;
            return formatter.format(number);
          },
          changes() {
-           $wire.cartDetail['money_changes'] = $refs.payedMoney.value - (this.subtotal);
-           $wire.cartDetail['payed_money'] = Number($refs.payedMoney.value);
+           let num = parseFloat($refs.payedMoney.value.replace(/,/g, ''));
+           $wire.cartDetail['money_changes'] = num - (this.subtotal);
+           $wire.cartDetail['payed_money'] = num;
            $refs.moneyChanges.textContent = this.moneyFormat($wire.cartDetail['money_changes']);
          }
         }">
@@ -200,16 +199,13 @@ use function Filament\Support\format_money;
           <div class="mb-4">
             @include('filament.tenant.pages.cashier.total')
           </div>
-          <div
-            x-ref="payedMoneyLabel"
-            class="w-full p-2 border border-gray-300 rounded-md text-lg text-right dark:bg-gray-900 dark:text-white h-20 text-black @error('payed_money') 'border-danger-500' @enderror"
-          >
-          </div>
           @error('payed_money') <span class="error text-danger-500">{{ $message }}</span> @enderror
           <input
-            type="hidden"
             id="display"
-            class="w-full mb-4 p-2 border border-gray-300 rounded-md text-lg text-right dark:bg-gray-900 dark:text-white"
+            class="w-full p-2 border border-gray-300 rounded-md text-lg text-right dark:bg-gray-900 dark:text-white h-20 text-black @error('payed_money') 'border-danger-500' @enderror"
+            focus
+            x-mask:dynamic="$money($input)"
+            x-on:keyup="changes"
             x-ref="payedMoney"
           >
           <div class="grid grid-cols-3 gap-4 mt-4">
