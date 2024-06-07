@@ -19,9 +19,9 @@ class CashierReportService
         $startDate = Carbon::parse($data['start_date'])->setTimezone('UTC');
         $endDate = Carbon::parse($data['end_date'])->setTimezone('UTC');
         $sellings = Selling::query()
-            ->select('id', 'code', 'user_id', 'created_at', 'total_price', 'total_cost')
+            ->select('id', 'code', 'user_id', 'created_at', 'total_price', 'total_cost', 'discount_price')
             ->with(
-                'sellingDetails:id,selling_id,product_id,qty,price,cost',
+                'sellingDetails:id,selling_id,product_id,qty,price,cost,discount_price',
                 'sellingDetails.product:id,name,initial_price,selling_price',
                 'user:id,name,email'
             )
@@ -43,35 +43,83 @@ class CashierReportService
             'end_date' => $endDate->format('d F Y h:i'),
         ];
         $reports = [];
+
+        $totalCost = 0;
+        $totalGross = 0;
+        $totalNet = 0;
+        $totalGrossProfit = 0;
+        $totalDiscount = 0;
+        $totalDiscountPerItem = 0;
+        $totalNetProfitBeforeDiscountSelling = 0;
+        $totalNetProfitAfterDiscountSelling = 0;
+
         foreach ($sellings as $selling) {
+            $totalDiscountPerItem = 0;
+            $totalBeforeDiscountPerSelling = 0;
+            $totalAfterDiscountPerSelling = 0;
+            $totalNetProfitPerSelling = 0;
+            $totalGrossProfitPerSelling = 0;
+            $totalCostPerSelling = 0;
+
             $reports[] = [
+                'id' => $selling->id,
+                'created_at' => Carbon::parse($selling->created_at)->setTimezone($tzName)->format('d F Y h:i'),
+                'number' => $selling->code,
+                'user' => $selling->user?->name ?? $selling->user?->email,
                 'transaction' => [
-                    'id' => $selling->id,
-                    'created_at' => Carbon::parse($selling->created_at)->setTimezone($tzName)->format('d F Y h:i'),
-                    'number' => $selling->code,
-                    'user' => $selling->user?->name ?? $selling->user?->email,
-                    'items' => $selling->sellingDetails->map(function ($item) {
+                    'items' => $selling->sellingDetails->map(function ($item) use (&$totalDiscountPerItem, &$totalBeforeDiscountPerSelling, &$totalAfterDiscountPerSelling, &$totalNetProfitPerSelling, &$totalGrossProfitPerSelling, &$totalCostPerSelling) {
+                        $totalDiscountPerItem += $item->discount_price;
+                        $totalBeforeDiscountPerSelling += $item->price;
+                        $totalAfterDiscountPerSelling += ($item->price - $item->discount_price);
+                        $totalNetProfitPerSelling += (($item->price - $item->cost) - $item->discount_price);
+                        $totalGrossProfitPerSelling += ($item->price - $item->cost);
+                        $totalCostPerSelling += $item->cost;
+
                         return [
                             'product' => $item->product?->name,
                             'quantity' => $item->qty,
-                            'product_price' => $this->formatCurrency($item->product?->initial_price),
+                            'product_price' => $this->formatCurrency($item->price / $item->qty),
+                            'product_cost' => $this->formatCurrency($item->cost / $item->qty),
                             'price' => $this->formatCurrency($item->price),
                             'cost' => $this->formatCurrency($item->cost),
-                            'net_profit' => $this->formatCurrency($item->price - $item->cost),
+                            'discount_price' => $this->formatCurrency($item->discount_price),
+                            'total_after_discount' => $this->formatCurrency($item->price - $item->discount_price),
+                            'net_profit' => $this->formatCurrency(($item->price - $item->discount_price) - $item->cost),
+                            'gross_profit' => $this->formatCurrency($item->price - $item->cost),
                         ];
                     }),
                 ],
                 'total' => [
-                    'gross_profit' => $this->formatCurrency($selling->total_price),
-                    'cost' => $this->formatCurrency($selling->total_cost),
-                    'net_profit' => $this->formatCurrency($selling->total_price - $selling->total_cost),
+                    'cost' => $this->formatCurrency($totalCost),
+                    'discount' => $this->formatCurrency($totalDiscountPerItem),
+                    'gross_selling' => $this->formatCurrency($totalBeforeDiscountPerSelling),
+                    'net_selling' => $this->formatCurrency($totalAfterDiscountPerSelling),
+                    'discount_selling' => $this->formatCurrency($selling->discount_price ?? 0),
+                    'total_net_profit' => $this->formatCurrency($totalNetProfitPerSelling),
+                    'total_gross_profit' => $this->formatCurrency($totalGrossProfitPerSelling),
+                    'grand_total' => $this->formatCurrency($totalAfterDiscountPerSelling - ($selling->discount_price ?? 0))
                 ],
             ];
+
+            $totalCost += $totalCostPerSelling;
+            $totalDiscount += $selling->discount_price;
+            $totalGross += $totalBeforeDiscountPerSelling;
+            $totalNet += $totalAfterDiscountPerSelling;
+            $totalGrossProfit += $totalGrossProfitPerSelling;
+            $totalDiscountPerItem += $totalDiscountPerItem;
+            $totalNetProfitBeforeDiscountSelling += $totalNetProfitPerSelling;
+            $totalNetProfitAfterDiscountSelling += ($totalNetProfitPerSelling - $selling->discount_price);
         }
+
         $footer = [
-            'total_gross_profit' => $this->formatCurrency($sellings->sum('total_price')),
-            'total_cost' => $this->formatCurrency($sellings->sum('total_cost')),
-            'total_net_profit' => $this->formatCurrency($sellings->sum('total_price') - $sellings->sum('total_cost')),
+            'total_cost' => $this->formatCurrency($totalCost),
+            'total_gross' => $this->formatCurrency($totalGross),
+            'total_net' => $this->formatCurrency($totalNet - $totalDiscount),
+            'total_discount' => $this->formatCurrency($totalDiscount),
+            'total_discount_per_item' => $this->formatCurrency($totalDiscountPerItem),
+            'total_gross_profit' => $this->formatCurrency($totalGross - $totalCost),
+            'total_net_profit_before_discount_selling' => $this->formatCurrency($totalNet - $totalCost),
+            'total_net_profit_after_discount_selling' => $this->formatCurrency($totalNet - $totalDiscount - $totalCost),
         ];
 
         $pdf = Pdf::loadView('reports.cashier', compact('reports', 'footer', 'header'))

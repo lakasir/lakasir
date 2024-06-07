@@ -44,10 +44,36 @@ class SellingReportService
         ];
         $reports = [];
 
+        $totalQty = 0;
+        $totalCost = 0;
+        $totalGross = 0;
+        $totalNet = 0;
+        $totalGrossProfit = 0;
+        $totalDiscount = 0;
+        $totalDiscountPerItem = 0;
+        $totalNetProfitBeforeDiscountSelling = 0;
+        $totalNetProfitAfterDiscountSelling = 0;
+
         /** @var Selling $selling */
         foreach ($sellings as $selling) {
+            $totalDiscountPerItem = 0;
+            $totalBeforeDiscountPerSelling = 0;
+            $totalAfterDiscountPerSelling = 0;
+            $totalNetProfitPerSelling = 0;
+            $totalGrossProfitPerSelling = 0;
+            $totalCostPerSelling = 0;
+            $totalQtyPerSelling = 0;
+
             /** @var SellingDetail $detail */
             foreach ($selling->sellingDetails as $detail) {
+                $totalDiscountPerItem += $detail->discount_price;
+                $totalBeforeDiscountPerSelling += $detail->price;
+                $totalAfterDiscountPerSelling += ($detail->price - $detail->discount_price);
+                $totalNetProfitPerSelling += (($detail->price - $detail->cost) - $detail->discount_price);
+                $totalGrossProfitPerSelling += ($detail->price - $detail->cost);
+                $totalCost += ($detail->cost / $detail->qty);
+                $totalQtyPerSelling += $detail->qty;
+
                 $reports[] = [
                     'code' => $selling->code,
                     'sku' => $detail->product->sku,
@@ -55,16 +81,36 @@ class SellingReportService
                     'selling_price' => $this->formatCurrency($detail->price / $detail->qty),
                     'selling' => $this->formatCurrency($detail->price - $detail->discount_price),
                     'discount_price' => $this->formatCurrency($detail->discount_price ?? 0),
-                    'initial_price' => $this->formatCurrency($detail->cost),
+                    'initial_price' => $this->formatCurrency($detail->cost / $detail->qty),
                     'qty' => $detail->qty,
+                    'cost' => $detail->cost,
+                    'total_after_discount' => $this->formatCurrency($detail->price - $detail->discount_price),
+                    'net_profit' => $this->formatCurrency(($detail->price - $detail->discount_price) - $detail->cost),
+                    'gross_profit' => $this->formatCurrency($detail->price - $detail->cost),
                 ];
             }
+
+            $totalCost += $totalCostPerSelling;
+            $totalDiscount += $selling->discount_price;
+            $totalGross += $totalBeforeDiscountPerSelling;
+            $totalNet += $totalAfterDiscountPerSelling;
+            $totalNetProfitBeforeDiscountSelling += $totalNetProfitPerSelling;
+            $totalNetProfitAfterDiscountSelling += ($totalNetProfitPerSelling - $selling->discount_price);
+            $totalGrossProfit += $totalGrossProfitPerSelling;
+            $totalDiscountPerItem += $totalDiscountPerItem;
+            $totalQty += $totalQtyPerSelling;
         }
 
         $footer = [
-            'total_gross_profit' => $this->formatCurrency($sellings->sum('total_price')),
-            'total_cost' => $this->formatCurrency($sellings->sum('total_cost')),
-            'total_net_profit' => $this->formatCurrency($sellings->sum('total_price') - $sellings->sum('total_cost')),
+            'total_cost' => $this->formatCurrency($totalCost),
+            'total_gross' => $this->formatCurrency($totalGross),
+            'total_net' => $this->formatCurrency($totalNet - $totalDiscount),
+            'total_discount' => $this->formatCurrency($totalDiscount),
+            'total_discount_per_item' => $this->formatCurrency($totalDiscountPerItem),
+            'total_gross_profit' => $this->formatCurrency($totalGross - $totalCost),
+            'total_net_profit_before_discount_selling' => $this->formatCurrency($totalNet - $totalCost),
+            'total_net_profit_after_discount_selling' => $this->formatCurrency($totalNet - $totalDiscount - $totalCost),
+            'total_qty' => $totalQty,
         ];
 
         $pdf = Pdf::loadView('reports.selling', compact('reports', 'footer', 'header'))

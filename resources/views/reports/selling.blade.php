@@ -64,37 +64,74 @@
     <p>{{ __('Period') }}: <b>{{ $header['start_date'] }} - {{ $header['end_date'] }}</b></p>
     <table>
         <thead>
-            <th>#</th>
+            <!-- <th>#</th> -->
             <th>SKU</th>
-            <th>{{ __('Product name') }}</th>
-            <th style="width: 100px;" class="number">{{ __('Selling price') }}</th>
+            <th>{{ __('Product Name') }}</th>
+            <!-- <th style="width: 100px;" class="number">{{ __('Cost') }}</th> -->
+            <th style="width: 100px;" class="number">{{ __('Price') }}</th>
             <th>{{ __('Qty') }}</th>
             <th style="width: 100px;" class="number">{{ __('Selling') }}</th>
-            <th style="width: 100px;" class="number">{{ __('Discount price') }}</th>
-            <th style="width: 100px;" class="number">{{ __('Cost') }}</th>
+            <th style="width: 100px;" class="number">{{ __('Discount') }}</th>
+            <!-- <th style="width: 100px;" class="number">{{ __('Total Cost') }}</th> -->
+            <th style="width: 100px;" class="number">{{ __('Net Selling') }}</th>
+            <th style="width: 100px;" class="number">{{ __('Gross Profit') }}</th>
+            <th style="width: 100px;" class="number">{{ __('Net Profit') }}</th>
         </thead>
       @foreach($reports as $key => $report)
         <tbody>
             <tr>
-                <td>{{ $report['code'] }}</td>
+                <!-- <td>{{ $report['code'] }}</td> -->
                 <td>{{ $report['sku'] }}</td>
                 <td>{{ $report['name'] }}</td>
+                <!-- <td class="number">{{ $report['initial_price'] }}</td> -->
                 <td class="number">{{ $report['selling_price'] }}</td>
                 <td>{{ $report['qty'] }}</td>
                 <td class="number">{{ $report['selling'] }}</td>
                 <td class="number">{{ $report['discount_price'] }}</td>
-                <td class="number">{{ $report['initial_price'] }}</td>
+                <!-- <td class="number">{{ $report['cost'] }}</td> -->
+                <td class="number">{{ $report['total_after_discount'] }}</td>
+                <td class="number">{{ $report['gross_profit'] }}</td>
+                <td class="number">{{ $report['net_profit'] }}</td>
             </tr>
         @endforeach
+            <tr>
+              <td colspan="3">{{ __('Total') }}</td>
+              <td class="number">{{ $footer['total_qty'] }}</td>
+              <td class="number">{{ $footer['total_gross'] }}</td>
+              <td class="number">{{ $footer['total_discount_per_item'] }}</td>
+              <td class="number">{{ $footer['total_net'] }}</td>
+              <td class="number">{{ $footer['total_gross_profit'] }}</td>
+              <td class="number">{{ $footer['total_net_profit_before_discount_selling'] }}</td>
+            </tr>
         </tbody>
     </table>
+
     <table>
-      <tr>
-        <td colspan="5">Grand Total</td>
+      <thead>
+        <tr>
+          <th colspan="8" style="text-align: center;">{{ __('Grand Total') }}</th>
+        </tr>
+        <tr>
+          <th>{{ __('Cost') }}</th>
+          <th>{{ __('Penjualan') }}</th>
+          <th>{{ __('Discount per Penjualan') }}</th>
+          <th>{{ __('Discount per Item') }}</th>
+          <th>{{ __('Penjualan Setelah Discount') }}</th>
+          <th>{{ __('Keuntungan Kotor') }}</th>
+          <th>{{ __('Keuntungan Bersih Sebelum Diskon Penjualan') }}</th>
+          <th>{{ __('Keuntungan Bersih Setelah Diskon Penjualan') }}</th>
+        </tr>
+      </thead>
+      <tbody>
         <td class="number"><b>{{ $footer['total_cost'] }}</b></td>
+        <td class="number"><b>{{ $footer['total_gross'] }}</b></td>
+        <td class="number"><b>{{ $footer['total_discount'] }}</b></td>
+        <td class="number"><b>{{ $footer['total_discount_per_item'] }}</b></td>
+        <td class="number"><b>{{ $footer['total_net'] }}</b></td>
         <td class="number"><b>{{ $footer['total_gross_profit'] }}</b></td>
-        <td class="number"><b>{{ $footer['total_net_profit'] }}</b></td>
-      </tr>
+        <td class="number"><b>{{ $footer['total_net_profit_before_discount_selling'] }}</b></td>
+        <td class="number"><b>{{ $footer['total_net_profit_after_discount_selling'] }}</b></td>
+      </tbody>
     </table>
 </body>
 </html>
