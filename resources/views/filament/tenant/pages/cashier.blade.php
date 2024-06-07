@@ -133,45 +133,7 @@ use Filament\Facades\Filament;
         {{ __('Proceed The Payment') }}
       </x-slot>
     <div class="my-2 grid grid-cols-2 gap-x-4">
-      <div x-data="{
-         displayValue: '',
-         paymentMethods: $wire.entangle('paymentMethods'),
-         cartDetail: @js($cartDetail),
-         subtotal: $wire.entangle('total_price'),
-         append(number) {
-           if(number == 'no_changes') {
-             $refs.payedMoneyLabel.textContent = this.moneyFormat(this.subtotal);
-             $refs.payedMoney.value = this.subtotal;
-             this.changes();
-             return;
-           }
-           if(number == 'backspace') {
-             this.displayValue = this.displayValue.slice(0, -1);
-             $refs.payedMoneyLabel.textContent = this.moneyFormat(this.displayValue);
-             $refs.payedMoney.value = this.displayValue;
-             this.changes();
-             return;
-           }
-           this.displayValue += number;
-           $refs.payedMoneyLabel.textContent = this.moneyFormat(this.displayValue);
-           $refs.payedMoney.value = this.displayValue;
-           this.changes();
-         },
-         moneyFormat(number) {
-           const formatter = new Intl.NumberFormat({
-             style: 'currency',
-             currency: '{{ $currency }}',
-           });
-
-           return formatter.format(number);
-         },
-         changes() {
-           let num = parseFloat($refs.payedMoney.value.replace(/,/g, ''));
-           $wire.cartDetail['money_changes'] = num - (this.subtotal);
-           $wire.cartDetail['payed_money'] = num;
-           $refs.moneyChanges.textContent = this.moneyFormat($wire.cartDetail['money_changes']);
-         }
-        }">
+      <div x-data="detail">
         <div class="rounded-lg">
           <div class="mb-4 grid grid-cols-4 gap-1">
             <template x-for="paymentMethod in paymentMethods">
@@ -248,6 +210,45 @@ use Filament\Facades\Filament;
 
 @script
 <script>
+  Alpine.data('detail', () => {
+    return {
+      displayValue: '',
+      paymentMethods: $wire.entangle('paymentMethods'),
+      cartDetail: @js($cartDetail),
+      subtotal: $wire.entangle('total_price'),
+      append(number) {
+        if(number == 'no_changes') {
+          this.$refs.payedMoney.value = this.moneyFormat(this.subtotal);
+          this.changes();
+          return;
+        }
+        if(number == 'backspace') {
+          this.displayValue = this.displayValue.slice(0, -1);
+          this.$refs.payedMoney.value = this.moneyFormat(this.displayValue);
+          this.changes();
+          return;
+        }
+        this.displayValue += number;
+        this.$refs.payedMoney.value = this.moneyFormat(this.displayValue);
+        this.changes();
+      },
+      moneyFormat(number) {
+        const formatter = new Intl.NumberFormat({
+          style: 'currency',
+          currency: '{{ $currency }}',
+        });
+
+        return formatter.format(number);
+      },
+      changes() {
+        let num = parseFloat(this.$refs.payedMoney.value.replace(/,/g, ''));
+        num = isNaN(num) ? 0 : num;
+        $wire.cartDetail['money_change'] = num - (this.subtotal);
+        $wire.cartDetail['payed_money'] = num;
+        this.$refs.moneyChanges.textContent = this.moneyFormat($wire.cartDetail['money_change']);
+      }
+    }
+  })
   const inputSearch = document.querySelector('input[type=search]');
   inputSearch.addEventListener('keyup', function(event) {
     if(event.key === 'Enter') {

@@ -75,6 +75,7 @@ trait TableProduct
                 'xl' => 4,
             ])
             ->headerActionsPosition(HeaderActionsPosition::Bottom)
+            ->searchPlaceholder(__('Search (SKU, name, barcode)'))
             ->actions([
                 Action::make('add_item')
                     ->icon('heroicon-o-plus')
