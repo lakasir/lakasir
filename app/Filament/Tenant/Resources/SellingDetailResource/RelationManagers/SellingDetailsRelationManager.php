@@ -31,12 +31,19 @@ class SellingDetailsRelationManager extends RelationManager
             ->recordTitleAttribute('product_id')
             ->columns([
                 Tables\Columns\TextColumn::make('product.name')
-                    ->label('Item Name'),
-                Tables\Columns\TextColumn::make('qty'),
+                    ->label(__('Item Name')),
+                Tables\Columns\TextColumn::make('qty')
+                    ->label(__('Qty')),
                 Tables\Columns\TextColumn::make('price')
+                    ->label(__('Price'))
+                    ->sortable()
+                    ->money(Setting::get('currency', 'IDR')),
+                Tables\Columns\TextColumn::make('discount_price')
+                    ->label(__('Discount price'))
                     ->sortable()
                     ->money(Setting::get('currency', 'IDR')),
                 Tables\Columns\TextColumn::make('cost')
+                    ->label(__('Cost'))
                     ->sortable()
                     ->money(Setting::get('currency', 'IDR')),
             ])

@@ -69,20 +69,24 @@ use function Filament\Support\format_money;
                   </button>
                 </div>
               </div>
-              <div>
-                <input
-                  type="number"
+            </div>
+            <div class="items-center text-right space-y-2">
+              <p class="font-semibold text-[#ff6600]">{{ $item->price_format_money }}</p>
+              <x-filament::input.wrapper>
+                <x-slot name="prefix">
+                  {{ __('Discount') }} {{ $currency }}
+                </x-slot>
+                <x-filament::input
+                  type="text"
                   id="{{ $item->product->name }}-{{ $item->id }}"
                   value="{{ $item->discount_price }}"
-                  wire:change="reducePricePerItem({{  $item  }}, $event.target.value)"
-                  class="w-full mb-4 p-2 border border-gray-300 rounded-md text-lg text-right dark:bg-gray-900 dark:text-white"
-                >
-              </div>
-            </div>
-            <div class="items-center">
-              <p class="font-semibold text-[#ff6600]">{{ $item->price_format_money }}</p>
+                  wire:keyup.debounce.500ms="reducePricePerItem({{  $item  }}, $event.target.value)"
+                  placeholder="{{ __('Discount') }}"
+                  class="text-right w-1/2"
+                />
+              </x-filament::input.wrapper>
               @if($item->discount_price && $item->discount_price > 0)
-                <p class="font-semibold text-[#ff6600]">{{ $item->discount_price_format }}</p>
+                <!-- <p class="font-semibold text-[#ff6600]">{{ $item->discount_price_format }}</p> -->
                 <p class="font-semibold text-[#ff6600]">{{ $item->final_price_format }}</p>
               @endif
             </div>

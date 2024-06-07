@@ -110,9 +110,12 @@ namespace App\Models\Tenants{
  * @property int $product_id
  * @property float $qty
  * @property float|null $price
+ * @property float $discount_price
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\Tenants\User $cashier
+ * @property-read mixed $discount_price_format
+ * @property-read mixed $final_price_format
  * @property-read mixed $price_format_m_oney
  * @property-read \App\Models\Tenants\Product $product
  * @method static \Illuminate\Database\Eloquent\Builder|CartItem cashier()
@@ -120,6 +123,7 @@ namespace App\Models\Tenants{
  * @method static \Illuminate\Database\Eloquent\Builder|CartItem newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|CartItem query()
  * @method static \Illuminate\Database\Eloquent\Builder|CartItem whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CartItem whereDiscountPrice($value)
  * @method static \Illuminate\Database\Eloquent\Builder|CartItem whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|CartItem wherePrice($value)
  * @method static \Illuminate\Database\Eloquent\Builder|CartItem whereProductId($value)
@@ -437,6 +441,7 @@ namespace App\Models\Tenants{
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Tenants\CartItem> $CartItems
  * @property-read int|null $cart_items_count
  * @property-read \App\Models\Tenants\Category $category
+ * @property-read mixed $has_expired_stock
  * @property mixed $initial_price_calculate
  * @property-read mixed $net_profit
  * @property mixed $selling_price_calculate
@@ -445,6 +450,8 @@ namespace App\Models\Tenants{
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Tenants\Stock> $stocks
  * @property-read int|null $stocks_count
  * @method static \Database\Factories\Tenants\ProductFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder|Product getExpiredStock()
+ * @method static \Illuminate\Database\Eloquent\Builder|Product nearestExpiredProduct()
  * @method static \Illuminate\Database\Eloquent\Builder|Product newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Product newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Product query()
@@ -675,6 +682,7 @@ namespace App\Models\Tenants{
  * @property float $qty
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property float $discount_price
  * @property-read \App\Models\Tenants\Product $product
  * @property-read \App\Models\Tenants\Selling $selling
  * @method static \Database\Factories\Tenants\SellingDetailFactory factory($count = null, $state = [])
@@ -683,6 +691,7 @@ namespace App\Models\Tenants{
  * @method static \Illuminate\Database\Eloquent\Builder|SellingDetail query()
  * @method static \Illuminate\Database\Eloquent\Builder|SellingDetail whereCost($value)
  * @method static \Illuminate\Database\Eloquent\Builder|SellingDetail whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SellingDetail whereDiscountPrice($value)
  * @method static \Illuminate\Database\Eloquent\Builder|SellingDetail whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|SellingDetail wherePrice($value)
  * @method static \Illuminate\Database\Eloquent\Builder|SellingDetail whereProductId($value)
@@ -914,7 +923,6 @@ namespace App\Models\Tenants{
  * @property-read int|null $sellings_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \Laravel\Sanctum\PersonalAccessToken> $tokens
  * @property-read int|null $tokens_count
- * @property-read User|null $user
  * @method static \Database\Factories\Tenants\UserFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|User newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|User newQuery()

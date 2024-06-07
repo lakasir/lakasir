@@ -75,32 +75,47 @@ class SellingResource extends Resource
             ->schema([
                 Card::make()
                     ->schema([
-                        TextEntry::make('voucher'),
-
+                        TextEntry::make('voucher')
+                            ->label(__('Voucher')),
                         TextEntry::make('discount_price')
+                            ->label(__('Discount price'))
                             ->money(Setting::get('currency', 'IDR')),
                         TextEntry::make('total_price')
+                            ->label(__('Total price'))
                             ->money(Setting::get('currency', 'IDR')),
                         TextEntry::make('total_cost')
+                            ->label(__('Total cost'))
                             ->money(Setting::get('currency', 'IDR')),
                         TextEntry::make('tax_price')
+                            ->label(__('Tax price'))
                             ->money(Setting::get('currency', 'IDR')),
                         TextEntry::make('tax')
+                            ->label(__('Tax'))
                             ->money(Setting::get('currency', 'IDR')),
                         TextEntry::make('payed_money')
+                            ->label(__('Payed money'))
                             ->money(Setting::get('currency', 'IDR')),
                         TextEntry::make('money_changes')
+                            ->label(__('Money changes'))
                             ->money(Setting::get('currency', 'IDR')),
-                        TextEntry::make('user.name')
+                        TextEntry::make('user')
+                            ->getStateUsing(function (Selling $selling) {
+                                return $selling->user->name ?? $selling->user->email;
+                            })
                             ->label('Cashier'),
                         TextEntry::make('member.name')
+                            ->label(__('Member'))
                             ->default('-'),
                         TextEntry::make('customer_number')
+                            ->label(__('Customer number'))
                             ->default('-'),
                         TextEntry::make('cashDrawer.cash')
+                            ->label(__('Cash drawer'))
                             ->default('-'),
-                        TextEntry::make('paymentMethod.name'),
-                        TextEntry::make('note'),
+                        TextEntry::make('paymentMethod.name')
+                            ->label(__('Payment method')),
+                        TextEntry::make('note')
+                            ->label(__('Note')),
                     ])
                     ->columns(2),
             ]);

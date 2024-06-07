@@ -15,7 +15,7 @@ abstract class AbstractObserver
     {
         if (method_exists($this, 'setData') && $this instanceof DataAwareRule) {
             if (isset(request()->all()['components'])) {
-                $this->setData(json_decode(request()->all()['components'][0]['snapshot'], true)['data']['data'][0]);
+                $this->setData(json_decode(request()->all()['components'][0]['snapshot'], true)['data']['data'][0] ?? []);
             } else {
                 $this->setData(request()->all());
             }

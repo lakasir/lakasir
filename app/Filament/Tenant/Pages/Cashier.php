@@ -184,7 +184,7 @@ class Cashier extends Page implements HasForms, HasTable
                     'product_id' => $cartItem->product_id,
                     'qty' => $cartItem->qty,
                     'price' => $cartItem->price,
-                    'discount_price' => $cartItem->discount_price
+                    'discount_price' => $cartItem->discount_price,
                 ];
             })->toArray(),
         ]);
@@ -212,7 +212,6 @@ class Cashier extends Page implements HasForms, HasTable
             return;
         }
         $data = array_merge($sellingService->mapProductRequest($request), $request);
-        dd($data);
         $sellingService->create($data);
         CartItem::query()
             ->cashier()

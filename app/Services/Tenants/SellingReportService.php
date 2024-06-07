@@ -4,11 +4,12 @@ namespace App\Services\Tenants;
 
 use App\Models\Tenants\About;
 use App\Models\Tenants\Selling;
+use App\Models\Tenants\SellingDetail;
 use App\Models\Tenants\Setting;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
-
-use function Filament\Support\format_money;
+use Illuminate\Support\Number;
 
 class SellingReportService
 {
@@ -21,15 +22,15 @@ class SellingReportService
         $sellings = Selling::query()
             ->select()
             ->with(
-                'sellingDetails:id,selling_id,product_id,qty,price,cost',
+                'sellingDetails:id,selling_id,product_id,qty,price,cost,discount_price',
                 'sellingDetails.product:id,name,initial_price,selling_price,sku',
                 'user:id,name,email'
             )
-            ->when($data['start_date'] ?? '', function ($query) use ($startDate) {
-                $query->where('created_at', '>=', $startDate);
+            ->when($data['start_date'] ?? '', function (Builder $query) use ($startDate) {
+                $query->whereDate('created_at', '>=', $startDate);
             })
-            ->when($data['end_date'] ?? '', function ($query) use ($endDate) {
-                $query->where('created_at', '<=', $endDate);
+            ->when($data['end_date'] ?? '', function (Builder $query) use ($endDate) {
+                $query->whereDate('created_at', '<=', $endDate);
             })
             ->orderBy('created_at', 'desc')
             ->get();
@@ -43,13 +44,18 @@ class SellingReportService
         ];
         $reports = [];
 
+        /** @var Selling $selling */
         foreach ($sellings as $selling) {
+            /** @var SellingDetail $detail */
             foreach ($selling->sellingDetails as $detail) {
                 $reports[] = [
+                    'code' => $selling->code,
                     'sku' => $detail->product->sku,
                     'name' => $detail->product->name,
-                    'selling_price' => format_money($detail->price, Setting::get('currency', 'IDR')),
-                    'initial_price' => format_money($detail->cost, Setting::get('currency', 'IDR')),
+                    'selling_price' => $this->formatCurrency($detail->price / $detail->qty),
+                    'selling' => $this->formatCurrency($detail->price - $detail->discount_price),
+                    'discount_price' => $this->formatCurrency($detail->discount_price ?? 0),
+                    'initial_price' => $this->formatCurrency($detail->cost),
                     'qty' => $detail->qty,
                 ];
             }
@@ -65,7 +71,7 @@ class SellingReportService
             ->setPaper('a4', 'landscape');
         $pdf->output();
         $domPdf = $pdf->getDomPDF();
-        $canvas = $domPdf->get_canvas();
+        $canvas = $domPdf->getCanvas();
         $canvas->page_text(720, 570, 'Halaman {PAGE_NUM} dari {PAGE_COUNT}', null, 10, [0, 0, 0]);
 
         return $pdf;
@@ -73,6 +79,6 @@ class SellingReportService
 
     private function formatCurrency($value)
     {
-        return number_format($value, 0, ',', '.');
+        return Number::currency($value, Setting::get('currency', 'IDR'));
     }
 }
