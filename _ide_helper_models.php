@@ -117,6 +117,7 @@ namespace App\Models\Tenants{
  * @property-read mixed $discount_price_format
  * @property-read mixed $final_price_format
  * @property-read mixed $price_format_m_oney
+ * @property-read mixed $hero_image
  * @property-read \App\Models\Tenants\Product $product
  * @method static \Illuminate\Database\Eloquent\Builder|CartItem cashier()
  * @method static \Illuminate\Database\Eloquent\Builder|CartItem newModelQuery()
@@ -442,6 +443,7 @@ namespace App\Models\Tenants{
  * @property-read int|null $cart_items_count
  * @property-read \App\Models\Tenants\Category $category
  * @property-read mixed $has_expired_stock
+ * @property-read mixed $hero_image
  * @property mixed $initial_price_calculate
  * @property-read mixed $net_profit
  * @property mixed $selling_price_calculate

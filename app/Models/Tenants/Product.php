@@ -177,4 +177,13 @@ class Product extends Model
 
         return $this;
     }
+
+    public function heroImage(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                return $this->hero_images ? $this->hero_images[0] : 'https://cdn4.iconfinder.com/data/icons/picture-sharing-sites/32/No_Image-1024.png';
+            }
+        );
+    }
 }

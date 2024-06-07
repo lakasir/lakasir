@@ -40,7 +40,7 @@ use Filament\Facades\Filament;
             <div class="flex items-center space-x-3">
               <img
               class="object-cover h-16 w-20 rounded-lg"
-              src=" {{ $item->product?->hero_images ? $item->product?->hero_images[0] : 'https://cdn4.iconfinder.com/data/icons/picture-sharing-sites/32/No_Image-1024.png' }}"/>
+              src=" {{ $item->hero_image }}"/>
               <div class="space-y-3">
                 <p class="font-semibold"> {{ $item->product->name }}</p>
                 <div class="flex space-x-3 h-8">
@@ -85,7 +85,6 @@ use Filament\Facades\Filament;
               </x-filament::input.wrapper>
               </div>
               @if($item->discount_price && $item->discount_price > 0)
-                <!-- <p class="font-semibold text-[#ff6600]">{{ $item->discount_price_format }}</p> -->
                 <p class="font-semibold text-[#ff6600]">{{ $item->final_price_format }}</p>
               @endif
             </div>

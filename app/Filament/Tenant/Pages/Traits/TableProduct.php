@@ -31,9 +31,8 @@ trait TableProduct
             ->paginated(false)
             ->columns([
                 Stack::make([
-                    ImageColumn::make('hero_images')
+                    ImageColumn::make('hero_image')
                         ->alignCenter()
-                        ->defaultImageUrl(url('https://cdn4.iconfinder.com/data/icons/picture-sharing-sites/32/No_Image-1024.png'))
                         ->extraAttributes([
                             'class' => 'py-0',
                         ])

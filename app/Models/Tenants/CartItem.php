@@ -4,6 +4,7 @@ namespace App\Models\Tenants;
 
 use Filament\Facades\Filament;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -54,5 +55,14 @@ class CartItem extends Model
     public function getDiscountPriceFormatAttribute()
     {
         return format_money($this->discount_price, Setting::get('currency', 'IDR'));
+    }
+
+    public function heroImage(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                return $this->product?->hero_images ? $this->product->hero_images[0] : 'https://cdn4.iconfinder.com/data/icons/picture-sharing-sites/32/No_Image-1024.png';
+            }
+        );
     }
 }
