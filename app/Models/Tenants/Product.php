@@ -22,6 +22,8 @@ class Product extends Model
 
     protected $guarded = ['id', 'hero_images_url'];
 
+    private int $expiredDay = 20;
+
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
@@ -134,5 +136,45 @@ class Product extends Model
         return Attribute::make(
             get: fn () => $this->selling_price - $this->initial_price
         );
+    }
+
+    public function scopeNearestExpiredProduct(Builder $builder)
+    {
+        return $builder->whereHas('stocks', function (Builder $builder) {
+            $nearestExpired = now()->addDay($this->expiredDay);
+
+            return $builder
+                ->whereDate('expired', '<=', $nearestExpired);
+        });
+    }
+
+    public function scopeGetExpiredStock(Builder $builder)
+    {
+        $nearestExpired = now()->addDay($this->expiredDay);
+
+        return $this
+            ->stocks()
+            ->where('stock', '>', 0)
+            ->whereDate('expired', '<=', $nearestExpired)->latest()->first();
+    }
+
+    public function hasExpiredStock(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                $nearestExpired = now()->addDay($this->expiredDay);
+
+                return $this->stocks()
+                    ->where('stock', '>', 0)
+                    ->whereDate('expired', '<=', $nearestExpired)->exists();
+            }
+        );
+    }
+
+    public function setExpiredDay(int $day)
+    {
+        $this->expiredDay = $day;
+
+        return $this;
     }
 }

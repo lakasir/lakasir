@@ -82,6 +82,9 @@ class PurchasingResource extends Resource
                         Header::make('quantity')
                             ->label(__('Quantity'))
                             ->width('150px'),
+                        Header::make('expired')
+                            ->label(__('Expired'))
+                            ->width('150px'),
                         Header::make('initial_price')
                             ->label(__('Initial Price'))
                             ->width('150px'),
@@ -115,6 +118,10 @@ class PurchasingResource extends Resource
                                 $set('total_selling_price', Str::of($get('selling_price'))->replace(',', '')->toInteger() * (float) $state);
                             })
                             ->live(onBlur: true),
+                        DatePicker::make('expired')
+                            ->rule('after:now')
+                            ->date()
+                            ->native(false),
                         TextInput::make('initial_price')
                             ->prefix(Setting::get('currency', 'IDR'))
                             ->mask(RawJs::make('$money($input)'))

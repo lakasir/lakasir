@@ -2,7 +2,6 @@
 
 namespace App\Filament\Tenant\Pages;
 
-use App\Services\Tenants\CashierReportService;
 use Filament\Actions\Action;
 use Filament\Actions\Contracts\HasActions;
 use Filament\Forms\Components\DatePicker;
@@ -48,10 +47,8 @@ class CashierReport extends Page implements HasActions, HasForms
         ];
     }
 
-    public function generate(CashierReportService $cashierReportService)
+    public function generate()
     {
-        return response()->streamDownload(function () use ($cashierReportService) {
-            echo $cashierReportService->generate($this->data)->stream();
-        }, 'report.pdf');
+        return $this->redirectRoute('cashier-report.generate', $this->data);
     }
 }

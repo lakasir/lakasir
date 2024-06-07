@@ -2,7 +2,6 @@
 
 namespace App\Filament\Tenant\Pages;
 
-use App\Services\Tenants\SellingReportService;
 use Filament\Actions\Action;
 use Filament\Actions\Contracts\HasActions;
 use Filament\Forms\Components\DatePicker;
@@ -48,10 +47,8 @@ class SellingReport extends Page implements HasActions, HasForms
         ];
     }
 
-    public function generate(SellingReportService $sellingReportService)
+    public function generate()
     {
-        return response()->streamDownload(function () use ($sellingReportService) {
-            echo $sellingReportService->generate($this->data)->stream();
-        }, 'report.pdf');
+        return $this->redirectRoute('selling-report.generate', $this->data);
     }
 }

@@ -11,7 +11,6 @@ use App\Http\Controllers\Api\Tenants\NotificationController;
 use App\Http\Controllers\Api\Tenants\PaymentMethodController;
 use App\Http\Controllers\Api\Tenants\ProfileController;
 use App\Http\Controllers\Api\Tenants\RegisterFCMTokenController;
-use App\Http\Controllers\Api\Tenants\Reports\CashierReportController;
 use App\Http\Controllers\Api\Tenants\Settings\SecureInitialPriceController;
 use App\Http\Controllers\Api\Tenants\Transaction\CashDrawerController;
 use App\Http\Controllers\Api\Tenants\Transaction\DashboardController;
@@ -21,7 +20,9 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\VerifyEmailController;
+use App\Http\Controllers\CashierReportController;
 use App\Http\Controllers\PrinterController;
+use App\Http\Controllers\SellingReportController;
 use App\Http\Middleware\InitializeTenancyByDomain;
 use App\Livewire\ResetPassword;
 use Illuminate\Http\Request;
@@ -37,6 +38,10 @@ Route::middleware([
         Route::get('/', function () {
             return redirect()->to('/member');
         });
+        Route::get('/member/selling-report/generate', SellingReportController::class)
+            ->name('selling-report.generate');
+        Route::get('/member/cashier-report/generate', CashierReportController::class)
+            ->name('cashier-report.generate');
         Route::get('/reset-password/{token}', ResetPassword::class)
             ->middleware('guest')
             ->name('reset-password.index');

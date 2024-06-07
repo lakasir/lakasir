@@ -43,18 +43,17 @@ class SellingService
         $payed_money = ($data['payed_money'] ?? 0);
         if (isset($data['friend_price']) && ! $data['friend_price']) {
             $total_price = 0;
-            $total_net_price = 0;
-            Product::whereIn('id', collect($data['products'])->pluck('product_id'))->chunk(100,
-                function ($products) use (&$total_price, &$total_net_price, $data) {
-                    foreach ($products as $product) {
-                        $total_price += $product->selling_price * collect($data['products'])
-                            ->where('product_id', $product->id)
-                            ->sum('qty');
-                        $total_net_price += $product->initial_price * collect($data['products'])
-                            ->where('product_id', $product->id)
-                            ->sum('qty');
-                    }
-                });
+            $total_price_after_discount = 0;
+            $total_cost = 0;
+            $productsCollection = collect($data['products']);
+            $productsCollection->each(
+                function ($product) use (&$total_price, &$total_cost, &$total_price_after_discount) {
+                    $modelProduct = Product::find($product['product_id']);
+                    $total_price += $product['price'] ?? $modelProduct->selling_price * $product['qty'];
+                    $total_price_after_discount = $total_price - ($product['discount_price'] ?? 0);
+                    $total_cost += $modelProduct->initial_price * $product['qty'];
+                }
+            );
             $total_price = ($tax_price = $total_price * ($data['tax'] ?? 0) / 100) + $total_price;
             $total_qty = collect($data['products'])->sum('qty');
             $discount_price = 0;
@@ -69,15 +68,15 @@ class SellingService
             $request = [
                 'discount_price' => $discount_price,
                 'total_price' => $total_price,
-                'total_cost' => $total_net_price,
+                'total_cost' => $total_cost,
                 'total_qty' => $total_qty,
-                'money_change' => $payed_money - $total_price,
+                'money_changes' => $payed_money - $total_price,
                 'tax_price' => $tax_price,
                 'payed_money' => $payed_money,
             ];
         } else {
             $request = [
-                'money_change' => ($data['payed_money'] ?? 0) - $data['total_price'],
+                'money_changes' => ($data['payed_money'] ?? 0) - $data['total_price'],
                 'payed_money' => $payed_money,
             ];
         }

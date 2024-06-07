@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::table('sellings', function (Blueprint $table) {
             $table->after('total_price', function (Blueprint $table) {
+                // TODO: delete this in future, and update all of double to decimal like this
                 $table->decimal('tax_price', 15, 2)->default(0);
             });
         });

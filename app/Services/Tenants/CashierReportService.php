@@ -4,8 +4,11 @@ namespace App\Services\Tenants;
 
 use App\Models\Tenants\About;
 use App\Models\Tenants\Selling;
+use App\Models\Tenants\Setting;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Number;
 
 class CashierReportService
 {
@@ -22,11 +25,11 @@ class CashierReportService
                 'sellingDetails.product:id,name,initial_price,selling_price',
                 'user:id,name,email'
             )
-            ->when($data['start_date'] ?? '', function ($query) use ($startDate) {
-                $query->where('created_at', '>=', $startDate);
+            ->when($data['start_date'] ?? '', function (Builder $query) use ($startDate) {
+                $query->whereDate('created_at', '>=', $startDate);
             })
-            ->when($data['end_date'] ?? '', function ($query) use ($endDate) {
-                $query->where('created_at', '<=', $endDate);
+            ->when($data['end_date'] ?? '', function (Builder $query) use ($endDate) {
+                $query->whereDate('created_at', '<=', $endDate);
             })
             ->orderBy('created_at', 'desc')
             ->get();
@@ -75,7 +78,7 @@ class CashierReportService
             ->setPaper('a4', 'landscape');
         $pdf->output();
         $domPdf = $pdf->getDomPDF();
-        $canvas = $domPdf->get_canvas();
+        $canvas = $domPdf->getCanvas();
         $canvas->page_text(720, 570, 'Halaman {PAGE_NUM} dari {PAGE_COUNT}', null, 10, [0, 0, 0]);
 
         return $pdf;
@@ -83,6 +86,6 @@ class CashierReportService
 
     private function formatCurrency($value)
     {
-        return number_format($value, 0, ',', '.');
+        return Number::currency($value, Setting::get('currency', 'IDR'));
     }
 }
