@@ -86,7 +86,10 @@ trait CartInteraction
 
     public function reducePricePerItem(CartItem $cartItem, $value)
     {
-        if (!($value && $value > 0) && $value > $cartItem->product->selling_price) return;
+        dump((float) $value);
+        if (! ($value && $value > 0) && $value > $cartItem->product->selling_price) {
+            return;
+        }
         $cartItem->discount_price = (float) $value;
 
         $cartItem->save();

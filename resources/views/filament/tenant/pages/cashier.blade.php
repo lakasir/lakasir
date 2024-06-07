@@ -83,6 +83,7 @@ use function Filament\Support\format_money;
                   wire:keyup.debounce.500ms="reducePricePerItem({{  $item  }}, $event.target.value)"
                   placeholder="{{ __('Discount') }}"
                   class="text-right w-1/2"
+                  x-mask:dynamic="$money($input)"
                 />
               </x-filament::input.wrapper>
               @if($item->discount_price && $item->discount_price > 0)
@@ -201,8 +202,7 @@ use function Filament\Support\format_money;
           </div>
           <div
             x-ref="payedMoneyLabel"
-            class="w-full p-2 border border-gray-300 rounded-md text-lg text-right dark:bg-gray-900 dark:text-white h-20 text-black"
-            :class="@error('payed_money') 'border-danger-500' @enderror"
+            class="w-full p-2 border border-gray-300 rounded-md text-lg text-right dark:bg-gray-900 dark:text-white h-20 text-black @error('payed_money') 'border-danger-500' @enderror"
           >
           </div>
           @error('payed_money') <span class="error text-danger-500">{{ $message }}</span> @enderror
@@ -250,4 +250,16 @@ use function Filament\Support\format_money;
     </form>
   </x-filament::modal>
 </div>
+
+@script
+<script>
+  const inputSearch = document.querySelector('input[type=search]');
+  inputSearch.addEventListener('keyup', function(event) {
+    if(event.key === 'Enter') {
+      $wire.addCartUsingScanner(event.target.value);
+    }
+  });
+</script>
+@endscript
+
 
