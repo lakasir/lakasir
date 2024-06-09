@@ -6,11 +6,6 @@
   </div>
   <div class="flex justify-between hover:underline cursor-pointer"
     x-on:click="$dispatch('open-modal', {id: 'edit-detail'})" >
-    <p>{{ __('Customer Number') }}</p>
-    <p class="font-bold">{{ $cartDetail['customer_number'] ?? 'No Customer Selected' }}</p>
-  </div>
-  <div class="flex justify-between hover:underline cursor-pointer"
-    x-on:click="$dispatch('open-modal', {id: 'edit-detail'})" >
     <p>{{ __('Member') }}</p>
     <p class="font-bold">{{ $cartDetail['member_label'] ?? 'No Member Selected' }}</p>
   </div>

@@ -110,24 +110,24 @@ class Cashier extends Page implements HasForms, HasTable
     {
         return $form
             ->schema([
-                TextInput::make('customer_number'),
                 Select::make('member_id')
                     ->label('Member')
                     ->getSearchResultsUsing(function (string $search): array {
                         return Member::query()
                             ->where('name', 'like', "%{$search}%")
+                            ->orWhere('email', 'like', "%{$search}%")
+                            ->orWhere('code', 'like', "%{$search}%")
                             ->pluck('name', 'id')
                             ->toArray();
                     })
                     ->searchable(),
-
                 RichEditor::make('note'),
                 TextInput::make('voucher'),
                 TextInput::make('discount_price')
-                    // ->mask(RawJs::make('$money($input)'))
-                    // ->stripCharacters(',')
-                    // ->numeric()
-                    // ->prefix(Setting::get('currency', 'IDR'))
+                    ->mask(RawJs::make('$money($input)'))
+                    ->stripCharacters(',')
+                    ->numeric()
+                    ->prefix(Setting::get('currency', 'IDR'))
                     ->label(__('Manual Discount')),
             ])
             ->statePath('cartDetail')
@@ -147,8 +147,8 @@ class Cashier extends Page implements HasForms, HasTable
                     ->send();
             }
         }
-        if ($this->cartDetail['discount_price']) {
-            $this->discount_price = (float) $this->cartDetail['discount_price'];
+        if ($discount_price = str_replace(',', '', $this->cartDetail['discount_price'])) {
+            $this->discount_price = floatval($discount_price);
             $this->total_price = $this->total_price - $this->discount_price;
         }
         $this->fillMember();

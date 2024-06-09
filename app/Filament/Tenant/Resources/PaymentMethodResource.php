@@ -61,7 +61,7 @@ class PaymentMethodResource extends Resource
                 TextColumn::make('is_credit')
                     ->badge()
                     ->getStateUsing(function (PaymentMethod $pMethod) {
-                        return $pMethod->is_debit ? 'Yes' : 'No';
+                        return $pMethod->is_credit ? 'Yes' : 'No';
                     })
                     ->color(fn (string $state): string => match ($state) {
                         'No' => 'danger',
@@ -70,7 +70,7 @@ class PaymentMethodResource extends Resource
                 TextColumn::make('is_wallet')
                     ->badge()
                     ->getStateUsing(function (PaymentMethod $pMethod) {
-                        return $pMethod->is_debit ? 'Yes' : 'No';
+                        return $pMethod->is_wallet ? 'Yes' : 'No';
                     })
                     ->color(fn (string $state): string => match ($state) {
                         'No' => 'danger',
