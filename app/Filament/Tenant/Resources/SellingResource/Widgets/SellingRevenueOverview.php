@@ -3,10 +3,8 @@
 namespace App\Filament\Tenant\Resources\SellingResource\Widgets;
 
 use App\Models\Tenants\Selling;
-use Carbon\Carbon;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
-use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 
 class SellingRevenueOverview extends BaseWidget
