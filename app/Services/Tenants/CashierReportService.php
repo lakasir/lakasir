@@ -68,10 +68,10 @@ class CashierReportService
                 'user' => $selling->user?->name ?? $selling->user?->email,
                 'transaction' => [
                     'items' => $selling->sellingDetails->map(function ($item) use (&$totalDiscountPerItem, &$totalBeforeDiscountPerSelling, &$totalAfterDiscountPerSelling, &$totalNetProfitPerSelling, &$totalGrossProfitPerSelling, &$totalCostPerSelling) {
-                        $totalDiscountPerItem += $item->discount_price;
+                        $totalDiscountPerItem += ($item->discount_price ?? 0);
                         $totalBeforeDiscountPerSelling += $item->price;
-                        $totalAfterDiscountPerSelling += ($item->price - $item->discount_price);
-                        $totalNetProfitPerSelling += (($item->price - $item->cost) - $item->discount_price);
+                        $totalAfterDiscountPerSelling += ($item->price - ($item->discount_price ?? 0));
+                        $totalNetProfitPerSelling += (($item->price - $item->cost) - ($item->discount_price ?? 0));
                         $totalGrossProfitPerSelling += ($item->price - $item->cost);
                         $totalCostPerSelling += $item->cost;
 
@@ -82,15 +82,15 @@ class CashierReportService
                             'product_cost' => $this->formatCurrency($item->cost / $item->qty),
                             'price' => $this->formatCurrency($item->price),
                             'cost' => $this->formatCurrency($item->cost),
-                            'discount_price' => $this->formatCurrency($item->discount_price),
-                            'total_after_discount' => $this->formatCurrency($item->price - $item->discount_price),
-                            'net_profit' => $this->formatCurrency(($item->price - $item->discount_price) - $item->cost),
+                            'discount_price' => $this->formatCurrency($item->discount_price ?? 0),
+                            'total_after_discount' => $this->formatCurrency($item->price - ($item->discount_price ?? 0)),
+                            'net_profit' => $this->formatCurrency(($item->price - ($item->discount_price ?? 0)) - $item->cost),
                             'gross_profit' => $this->formatCurrency($item->price - $item->cost),
                         ];
                     }),
                 ],
                 'total' => [
-                    'cost' => $this->formatCurrency($totalCost),
+                    'cost' => $this->formatCurrency($totalCostPerSelling),
                     'discount' => $this->formatCurrency($totalDiscountPerItem),
                     'gross_selling' => $this->formatCurrency($totalBeforeDiscountPerSelling),
                     'net_selling' => $this->formatCurrency($totalAfterDiscountPerSelling),
@@ -102,13 +102,13 @@ class CashierReportService
             ];
 
             $totalCost += $totalCostPerSelling;
-            $totalDiscount += $selling->discount_price;
+            $totalDiscount += ($selling->discount_price ?? 0);
             $totalGross += $totalBeforeDiscountPerSelling;
             $totalNet += $totalAfterDiscountPerSelling;
             $totalGrossProfit += $totalGrossProfitPerSelling;
             $totalDiscountPerItem += $totalDiscountPerItem;
             $totalNetProfitBeforeDiscountSelling += $totalNetProfitPerSelling;
-            $totalNetProfitAfterDiscountSelling += ($totalNetProfitPerSelling - $selling->discount_price);
+            $totalNetProfitAfterDiscountSelling += ($totalNetProfitPerSelling - ($selling->discount_price ?? 0));
         }
 
         $footer = [

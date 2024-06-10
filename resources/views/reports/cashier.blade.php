@@ -87,7 +87,7 @@
             <tr>
                 <td>{{ $item['product'] }}</td>
                 <td class="number">{{ $item['product_price'] }} x {{ $item['quantity'] }}</td>
-                <td class="number">{{ $item['cost'] }} x {{ $item['quantity'] }}</td>
+                <td class="number">{{ $item['product_cost'] }} x {{ $item['quantity'] }}</td>
                 <td class="number">{{ $item['discount_price'] }}</td>
                 <td class="number">{{ $item['price'] }}</td>
                 <td class="number">{{ $item['cost'] }}</td>
