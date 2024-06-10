@@ -249,11 +249,26 @@ use Filament\Facades\Filament;
       }
     }
   })
-  const inputSearch = document.querySelector('input[type=search]');
-  inputSearch.addEventListener('keyup', function(event) {
-    if(event.key === 'Enter') {
-      $wire.addCartUsingScanner(event.target.value);
+
+  let barcodeData = '';
+  let barcodeTimeout;
+  document.addEventListener('keypress', (event) => {
+    if (barcodeTimeout) {
+      clearTimeout(barcodeTimeout);
     }
+
+    if (event.key === 'Enter') {
+      console.log('Barcode scanned:', barcodeData);
+      $wire.addCartUsingScanner(barcodeData);
+
+      barcodeData = '';
+    } else {
+      barcodeData += event.key;
+    }
+
+    barcodeTimeout = setTimeout(() => {
+      barcodeData = '';
+    }, 500);
   });
 </script>
 @endscript
