@@ -15,9 +15,9 @@ class SellingRevenueOverview extends BaseWidget
     {
         $yesterdayRevenue = Selling::query()
             ->select(
-                DB::raw('SUM(total_price / 1000) as total_price'),
-                DB::raw('SUM(total_cost / 1000) as total_cost'),
-                DB::raw('SUM((total_price - total_cost) / 1000) as total_revenue'),
+                DB::raw('SUM(total_price / 100) as total_price'),
+                DB::raw('SUM(total_cost / 100) as total_cost'),
+                DB::raw('SUM((total_price - total_cost) / 100) as total_revenue'),
             )
             ->isPaid()
             ->whereBetween('created_at', [
@@ -27,9 +27,9 @@ class SellingRevenueOverview extends BaseWidget
             ->first();
         $todayRevenue = Selling::query()
             ->select(
-                DB::raw('SUM(total_price / 1000) as total_price'),
-                DB::raw('SUM(total_cost / 1000) as total_cost'),
-                DB::raw('SUM((total_price - total_cost) / 1000) as total_revenue'),
+                DB::raw('SUM(total_price / 100) as total_price'),
+                DB::raw('SUM(total_cost / 100) as total_cost'),
+                DB::raw('SUM((total_price - total_cost) / 100) as total_revenue'),
             )
             ->isPaid()
             ->whereBetween('created_at', [
@@ -39,8 +39,8 @@ class SellingRevenueOverview extends BaseWidget
             ->first();
         $readable = match (true) {
             $todayRevenue->total_revenue >= 1 => 'K',
-            $todayRevenue->total_revenue >= 1000 => 'M',
-            $todayRevenue->total_revenue >= 1000000 => 'B',
+            $todayRevenue->total_revenue >= 100 => 'M',
+            $todayRevenue->total_revenue >= 100000 => 'B',
             default => ''
         };
 

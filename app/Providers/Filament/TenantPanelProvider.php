@@ -95,7 +95,7 @@ class TenantPanelProvider extends PanelProvider
                         NavigationGroup::make(__('General'))
                             ->collapsible(false)
                             ->items([
-                                ...VoucherResource::getNavigationItems(),
+                                ...($user?->can('read voucher') ? VoucherResource::getNavigationItems() : []),
                                 ...Settings::getNavigationItems(),
                             ]),
                     ]);

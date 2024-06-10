@@ -147,8 +147,9 @@ class Cashier extends Page implements HasForms, HasTable
                     ->send();
             }
         }
-        if ($discount_price = str_replace(',', '', $this->cartDetail['discount_price'])) {
+        if ($discount_price = str_replace(',', 0, $this->cartDetail['discount_price'])) {
             $this->discount_price = floatval($discount_price);
+            dump($discount_price);
             $this->total_price = $this->total_price - $this->discount_price;
         }
         $this->fillMember();
@@ -211,7 +212,9 @@ class Cashier extends Page implements HasForms, HasTable
 
             return;
         }
+        dump($request);
         $data = array_merge($sellingService->mapProductRequest($request), $request);
+        dd($data);
         $sellingService->create($data);
         CartItem::query()
             ->cashier()
