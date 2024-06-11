@@ -66,12 +66,12 @@ class SellingReportService
 
             /** @var SellingDetail $detail */
             foreach ($selling->sellingDetails as $detail) {
-                $totalDiscountPerItem += $detail->discount_price;
+                $totalDiscountPerItem += ($detail->discount_price ?? 0);
                 $totalBeforeDiscountPerSelling += $detail->price;
-                $totalAfterDiscountPerSelling += ($detail->price - $detail->discount_price);
-                $totalNetProfitPerSelling += (($detail->price - $detail->cost) - $detail->discount_price);
+                $totalAfterDiscountPerSelling += ($detail->price - ($detail->discount_price ?? 0));
+                $totalNetProfitPerSelling += (($detail->price - $detail->cost) - ($detail->discount_price ?? 0));
                 $totalGrossProfitPerSelling += ($detail->price - $detail->cost);
-                $totalCost += ($detail->cost / $detail->qty);
+                $totalCostPerSelling += $detail->cost;
                 $totalQtyPerSelling += $detail->qty;
 
                 $reports[] = [
@@ -79,23 +79,23 @@ class SellingReportService
                     'sku' => $detail->product->sku,
                     'name' => $detail->product->name,
                     'selling_price' => $this->formatCurrency($detail->price / $detail->qty),
-                    'selling' => $this->formatCurrency($detail->price - $detail->discount_price),
+                    'selling' => $this->formatCurrency($detail->price - ($detail->discount_price ?? 0)),
                     'discount_price' => $this->formatCurrency($detail->discount_price ?? 0),
                     'initial_price' => $this->formatCurrency($detail->cost / $detail->qty),
                     'qty' => $detail->qty,
                     'cost' => $detail->cost,
-                    'total_after_discount' => $this->formatCurrency($detail->price - $detail->discount_price),
-                    'net_profit' => $this->formatCurrency(($detail->price - $detail->discount_price) - $detail->cost),
+                    'total_after_discount' => $this->formatCurrency($detail->price - ($detail->discount_price ?? 0)),
+                    'net_profit' => $this->formatCurrency(($detail->price - ($detail->discount_price ?? 0)) - $detail->cost),
                     'gross_profit' => $this->formatCurrency($detail->price - $detail->cost),
                 ];
             }
 
             $totalCost += $totalCostPerSelling;
-            $totalDiscount += $selling->discount_price;
+            $totalDiscount += ($selling->discount_price ?? 0);
             $totalGross += $totalBeforeDiscountPerSelling;
             $totalNet += $totalAfterDiscountPerSelling;
             $totalNetProfitBeforeDiscountSelling += $totalNetProfitPerSelling;
-            $totalNetProfitAfterDiscountSelling += ($totalNetProfitPerSelling - $selling->discount_price);
+            $totalNetProfitAfterDiscountSelling += ($totalNetProfitPerSelling - ($selling->discount_price ?? 0));
             $totalGrossProfit += $totalGrossProfitPerSelling;
             $totalDiscountPerItem += $totalDiscountPerItem;
             $totalQty += $totalQtyPerSelling;
