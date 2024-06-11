@@ -2,6 +2,15 @@
 
 namespace App\Providers\Filament;
 
+use App\Features\Debt;
+use App\Features\Member;
+use App\Features\PaymentMethod;
+use App\Features\Permission;
+use App\Features\Purchasing;
+use App\Features\Role;
+use App\Features\Setting;
+use App\Features\StockOpname;
+use App\Features\Voucher;
 use App\Filament\Tenant\Pages\Cashier;
 use App\Filament\Tenant\Pages\CashierReport;
 use App\Filament\Tenant\Pages\EditProfile;
@@ -21,6 +30,7 @@ use App\Filament\Tenant\Resources\StockOpnameResource;
 use App\Filament\Tenant\Resources\UserResource;
 use App\Filament\Tenant\Resources\VoucherResource;
 use App\Models\Tenants\About;
+use App\Models\Tenants\User;
 use App\Tenant;
 use Filament\Facades\Filament;
 use Filament\Http\Middleware\Authenticate;
@@ -61,19 +71,19 @@ class TenantPanelProvider extends PanelProvider
             ->path('/member')
             ->login(TenantLogin::class)
             ->navigation(function (NavigationBuilder $navigationBuilder) {
-                /** @var \App\Models\User $user */
+                /** @var User $user */
                 $user = Filament::auth()->user();
 
                 return $navigationBuilder
                     ->items([
                         ...Pages\Dashboard::getNavigationItems(),
-                        ...($user?->can('read member') ? MemberResource::getNavigationItems() : []),
+                        ...(hasFeatureAndPermission(Member::class, 'read member') ? MemberResource::getNavigationItems() : []),
                         ...($user?->can('read category') ? CategoryResource::getNavigationItems() : []),
-                        ...($user?->can('read payment method') ? PaymentMethodResource::getNavigationItems() : []),
+                        ...(hasFeatureAndPermission(PaymentMethod::class, 'read payment method') ? PaymentMethodResource::getNavigationItems() : []),
                         ...($user?->can('read product') ? ProductResource::getNavigationItems() : []),
-                        ...($user?->can('read purchasing') ? PurchasingResource::getNavigationItems() : []),
-                        ...($user?->can('read stock opname') ? StockOpnameResource::getNavigationItems() : []),
-                        ...($user?->can('read debt') ? DebtResource::getNavigationItems() : []),
+                        ...(hasFeatureAndPermission(Purchasing::class, 'read purchasing') ? PurchasingResource::getNavigationItems() : []),
+                        ...(hasFeatureAndPermission(StockOpname::class, 'read stock opname') ? StockOpnameResource::getNavigationItems() : []),
+                        ...(hasFeatureAndPermission(Debt::class, 'read debt') ? DebtResource::getNavigationItems() : []),
                     ])
                     ->groups([
                         NavigationGroup::make('Transaction')
@@ -84,8 +94,8 @@ class TenantPanelProvider extends PanelProvider
                         NavigationGroup::make('User')
                             ->items([
                                 ...($user?->can('read user') ? UserResource::getNavigationItems() : []),
-                                ...($user?->can('read role') ? RoleResource::getNavigationItems() : []),
-                                ...($user?->can('read permission') ? PermissionResource::getNavigationItems() : []),
+                                ...(hasFeatureAndPermission(Role::class, 'read role') ? RoleResource::getNavigationItems() : []),
+                                ...(hasFeatureAndPermission(Permission::class, 'read permission') ? PermissionResource::getNavigationItems() : []),
                             ]),
                         NavigationGroup::make(__('Report'))
                             ->items([
@@ -95,8 +105,8 @@ class TenantPanelProvider extends PanelProvider
                         NavigationGroup::make(__('General'))
                             ->collapsible(false)
                             ->items([
-                                ...VoucherResource::getNavigationItems(),
-                                ...Settings::getNavigationItems(),
+                                ...(hasFeatureAndPermission(Voucher::class, 'read voucher') ? VoucherResource::getNavigationItems() : []),
+                                ...(hasFeatureAndPermission(Setting::class) ? Settings::getNavigationItems() : []),
                             ]),
                     ]);
 
