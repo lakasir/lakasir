@@ -2,8 +2,11 @@
 
 namespace App\Features;
 
-class PaymentMethod
+class Voucher
 {
+    /**
+     * Resolve the feature's initial value.
+     */
     public function resolve(): mixed
     {
         return true;

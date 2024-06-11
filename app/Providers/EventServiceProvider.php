@@ -10,10 +10,12 @@ use App\Listeners\CreateDebtIfCredit;
 use App\Models\Tenants\Member;
 use App\Models\Tenants\Product;
 use App\Models\Tenants\Selling;
+use App\Models\Tenants\User;
 use App\Observers\MemberObserver;
 use App\Observers\ProductObserver;
 use App\Observers\SellingObserver;
 use App\Observers\TenantObserver;
+use App\Observers\UserObserver;
 use App\Tenant;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -49,6 +51,7 @@ class EventServiceProvider extends ServiceProvider
         Selling::class => [SellingObserver::class],
         Tenant::class => [TenantObserver::class],
         Product::class => [ProductObserver::class],
+        User::class => [UserObserver::class],
     ];
 
     /**

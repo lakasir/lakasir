@@ -2,7 +2,7 @@
 
 namespace App\Features;
 
-class PaymentMethod
+class Permission
 {
     public function resolve(): mixed
     {

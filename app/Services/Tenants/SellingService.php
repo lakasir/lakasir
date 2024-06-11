@@ -20,7 +20,6 @@ class SellingService
     {
         try {
             DB::beginTransaction();
-            dd($data);
             /** @var Selling $selling */
             $selling = Selling::create($data);
 
@@ -40,7 +39,6 @@ class SellingService
 
     public function mapProductRequest(array $data): array
     {
-        dump($data);
         $request = [];
         $payed_money = ($data['payed_money'] ?? 0);
         if (isset($data['friend_price']) && ! $data['friend_price']) {
@@ -67,7 +65,6 @@ class SellingService
                     $voucher->reduceUsed();
                 }
             }
-            dump($discount_price);
             $request = [
                 'discount_price' => $discount_price,
                 'total_price' => $total_price,

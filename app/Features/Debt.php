@@ -2,7 +2,7 @@
 
 namespace App\Features;
 
-class PaymentMethod
+class Debt
 {
     public function resolve(): mixed
     {

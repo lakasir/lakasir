@@ -2,6 +2,8 @@
 
 namespace App\Filament\Tenant\Pages;
 
+use App\Features\Member as FeaturesMember;
+use App\Features\Voucher;
 use App\Filament\Tenant\Pages\Traits\CartInteraction;
 use App\Filament\Tenant\Pages\Traits\TableProduct;
 use App\Models\Tenants\CartItem;
@@ -111,6 +113,7 @@ class Cashier extends Page implements HasForms, HasTable
         return $form
             ->schema([
                 Select::make('member_id')
+                    ->visible(hasFeatureAndPermission(FeaturesMember::class))
                     ->label('Member')
                     ->getSearchResultsUsing(function (string $search): array {
                         return Member::query()
@@ -122,7 +125,8 @@ class Cashier extends Page implements HasForms, HasTable
                     })
                     ->searchable(),
                 RichEditor::make('note'),
-                TextInput::make('voucher'),
+                TextInput::make('voucher')
+                    ->visible(hasFeatureAndPermission(Voucher::class)),
                 TextInput::make('discount_price')
                     ->mask(RawJs::make('$money($input)'))
                     ->stripCharacters(',')
@@ -147,9 +151,8 @@ class Cashier extends Page implements HasForms, HasTable
                     ->send();
             }
         }
-        if ($discount_price = str_replace(',', 0, $this->cartDetail['discount_price'])) {
+        if ($discount_price = str_replace(',', '', $this->cartDetail['discount_price'])) {
             $this->discount_price = floatval($discount_price);
-            dump($discount_price);
             $this->total_price = $this->total_price - $this->discount_price;
         }
         $this->fillMember();
@@ -180,6 +183,7 @@ class Cashier extends Page implements HasForms, HasTable
             'total_price' => $this->total_price,
         ]);
         $request = array_merge($this->cartDetail, [
+            'discount_price' => $this->discount_price,
             'products' => $this->cartItems->map(function (CartItem $cartItem) {
                 return [
                     'product_id' => $cartItem->product_id,
@@ -212,9 +216,7 @@ class Cashier extends Page implements HasForms, HasTable
 
             return;
         }
-        dump($request);
         $data = array_merge($sellingService->mapProductRequest($request), $request);
-        dd($data);
         $sellingService->create($data);
         CartItem::query()
             ->cashier()
