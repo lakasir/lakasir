@@ -2,6 +2,7 @@
 
 namespace App\Filament\Tenant\Pages;
 
+use App\Traits\HasTranslatableResource;
 use Filament\Actions\Action;
 use Filament\Actions\Contracts\HasActions;
 use Filament\Forms\Components\DatePicker;
@@ -13,8 +14,7 @@ use Filament\Pages\Page;
 
 class CashierReport extends Page implements HasActions, HasForms
 {
-    use InteractsWithFormActions;
-    use InteractsWithForms;
+    use HasTranslatableResource, InteractsWithFormActions, InteractsWithForms;
 
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
 

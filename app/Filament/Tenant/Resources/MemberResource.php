@@ -4,6 +4,7 @@ namespace App\Filament\Tenant\Resources;
 
 use App\Filament\Tenant\Resources\MemberResource\Pages;
 use App\Models\Tenants\Member;
+use App\Traits\HasTranslatableResource;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -15,6 +16,8 @@ use Filament\Tables\Table;
 
 class MemberResource extends Resource
 {
+    use HasTranslatableResource;
+
     protected static ?string $model = Member::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-user-group';
@@ -24,13 +27,14 @@ class MemberResource extends Resource
         return $form
             ->schema([
                 Select::make('identity_type')
+                    ->translateLabel()
                     ->options([
                         'sim' => 'Sim',
                         'ktp' => 'Ktp',
                         'other' => __('Other'),
                     ]),
                 TextInput::make('identity_number')
-                    ->label(__('Identity Number'))
+                    ->label(__('Identity number'))
                     ->required(),
                 TextInput::make('name')
                     ->label(__('Name'))
@@ -42,7 +46,8 @@ class MemberResource extends Resource
                 TextInput::make('email')
                     ->label(__('Contact'))
                     ->placeholder(__('Please provide a valid email address or whatsapp/phone number.')),
-                DatePicker::make('joined_date'),
+                DatePicker::make('joined_date')
+                    ->translateLabel(),
             ]);
     }
 
@@ -70,10 +75,9 @@ class MemberResource extends Resource
                     ->searchable(),
 
                 TextColumn::make('identity_number')
-                    ->label(__('Identity Number'))
+                    ->label(__('Identity number'))
                     ->searchable()
                     ->sortable(),
-
             ])
             ->filters([
                 //
