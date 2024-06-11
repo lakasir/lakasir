@@ -4,6 +4,7 @@ namespace App\Filament\Tenant\Resources;
 
 use App\Filament\Tenant\Resources\CategoryResource\Pages;
 use App\Models\Tenants\Category;
+use App\Traits\HasTranslatableResource;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -13,6 +14,8 @@ use Filament\Tables\Table;
 
 class CategoryResource extends Resource
 {
+    use HasTranslatableResource;
+
     protected static ?string $model = Category::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
@@ -22,7 +25,7 @@ class CategoryResource extends Resource
         return $form
             ->schema([
                 TextInput::make('name')
-                    ->label('Name')
+                    ->translateLabel()
                     ->required(),
 
             ]);
@@ -38,6 +41,7 @@ class CategoryResource extends Resource
                     ->sortable(),
                 TextColumn::make('name')
                     ->searchable()
+                    ->translateLabel()
                     ->sortable(),
             ])
             ->filters([

@@ -41,6 +41,7 @@ class StocksRelationManager extends RelationManager
     {
         return $form->schema([
             Select::make('product_id')
+                ->translateLabel()
                 ->relationship(name: 'product', titleAttribute: 'name')
                 ->searchable()
                 ->live()
@@ -52,12 +53,14 @@ class StocksRelationManager extends RelationManager
                     }
                 }),
             TextInput::make('stock')
+                ->translateLabel()
                 ->afterStateUpdated(function (Set $set, Get $get, ?string $state) {
                     $set('total_initial_price', Str::of($get('initial_price'))->replace(',', '')->toInteger() * (float) $state);
                     $set('total_selling_price', Str::of($get('selling_price'))->replace(',', '')->toInteger() * (float) $state);
                 })
                 ->live(onBlur: true),
             TextInput::make('initial_price')
+                ->translateLabel()
                 ->prefix(Setting::get('currency', 'IDR'))
                 ->mask(RawJs::make('$money($input)'))
                 ->lte('selling_price')
@@ -69,6 +72,7 @@ class StocksRelationManager extends RelationManager
                 })
                 ->live(onBlur: true),
             TextInput::make('selling_price')
+                ->translateLabel()
                 ->prefix(Setting::get('currency', 'IDR'))
                 ->mask(RawJs::make('$money($input)'))
                 ->gte('initial_price')
@@ -80,6 +84,7 @@ class StocksRelationManager extends RelationManager
                 })
                 ->live(onBlur: true),
             TextInput::make('total_initial_price')
+                ->translateLabel()
                 ->mask(RawJs::make('$money($input)'))
                 ->stripCharacters(',')
                 ->numeric()
@@ -98,16 +103,21 @@ class StocksRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('product.name')
             ->columns([
-                TextColumn::make('product.name'),
+                TextColumn::make('product.name')
+                    ->translateLabel(),
                 TextColumn::make('init_stock')
                     ->label(__('Stock')),
                 TextColumn::make('initial_price')
+                    ->translateLabel()
                     ->money(Setting::get('currency', 'IDR')),
                 TextColumn::make('selling_price')
+                    ->translateLabel()
                     ->money(Setting::get('currency', 'IDR')),
                 TextColumn::make('total_initial_price')
+                    ->translateLabel()
                     ->money(Setting::get('currency', 'IDR')),
                 TextColumn::make('total_selling_price')
+                    ->translateLabel()
                     ->money(Setting::get('currency', 'IDR')),
             ])
             ->headerActions([

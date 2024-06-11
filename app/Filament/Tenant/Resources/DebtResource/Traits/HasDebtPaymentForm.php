@@ -16,17 +16,19 @@ trait HasDebtPaymentForm
     {
         return [
             Select::make('payment_method_id')
+                ->label(__('Payment method'))
                 ->options(PaymentMethod::query()->pluck('name', 'id'))
                 ->required(),
             TextInput::make('amount')
+                ->translateLabel()
                 ->mask(RawJs::make('$money($input)'))
                 ->stripCharacters(',')
                 ->prefix(Setting::get('currency', 'IDR'))
                 ->lte($debt->rest_debt, true)
                 ->required(),
             DatePicker::make('date')
+                ->translateLabel()
                 ->native(false)
-                ->label(__('Payment Date'))
                 ->required(),
         ];
     }
