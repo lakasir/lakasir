@@ -5,6 +5,7 @@ namespace App\Filament\Tenant\Resources;
 use App\Features\Role;
 use App\Filament\Tenant\Resources\UserResource\Pages;
 use App\Models\Tenants\User;
+use App\Traits\HasTranslatableResource;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -17,6 +18,8 @@ use Illuminate\Support\Facades\Hash;
 
 class UserResource extends Resource
 {
+    use HasTranslatableResource;
+
     protected static ?string $model = User::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-users';

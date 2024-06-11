@@ -15,11 +15,15 @@ class DebtItemsRelationManager extends RelationManager
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('product.name'),
-                Tables\Columns\TextColumn::make('amount'),
+                Tables\Columns\TextColumn::make('product.name')
+                    ->translateLabel(),
+                Tables\Columns\TextColumn::make('amount')
+                    ->translateLabel(),
                 Tables\Columns\TextColumn::make('price')
+                    ->translateLabel()
                     ->money(Setting::get('currency', 'IDR')),
                 Tables\Columns\TextColumn::make('subtotal')
+                    ->translateLabel()
                     ->money(Setting::get('currency', 'IDR')),
             ])
             ->filters([

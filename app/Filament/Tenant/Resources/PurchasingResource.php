@@ -7,6 +7,7 @@ use App\Models\Tenants\Product;
 use App\Models\Tenants\Purchasing;
 use App\Models\Tenants\Setting;
 use App\Models\Tenants\Supplier;
+use App\Traits\HasTranslatableResource;
 use Awcodes\TableRepeater\Components\TableRepeater;
 use Awcodes\TableRepeater\Header;
 use Filament\Forms\Components\DatePicker;
@@ -28,6 +29,8 @@ use Illuminate\Support\Str;
 
 class PurchasingResource extends Resource
 {
+    use HasTranslatableResource;
+
     protected static ?string $model = Purchasing::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-archive-box-arrow-down';
@@ -39,7 +42,7 @@ class PurchasingResource extends Resource
         return $form
             ->schema([
                 Select::make('supplier_id')
-                    ->label(__('Supplier'))
+                    ->translateLabel()
                     ->options(Supplier::pluck('name', 'id'))
                     ->native(false)
                     ->searchable()
@@ -61,23 +64,23 @@ class PurchasingResource extends Resource
                     ->afterStateUpdated(fn (Set $set, ?string $state) => $set('supplier_phone_number', Supplier::find($state)?->phone_number ?? ''))
                     ->live(),
                 TextInput::make('supplier_phone_number')
-                    ->label(__('Supplier Phone Number'))
+                    ->translateLabel()
                     ->readOnly(),
                 DatePicker::make('due_date')
-                    ->label(__('Due Date'))
+                    ->translateLabel()
                     ->native(false)
                     ->required(),
                 DatePicker::make('date')
-                    ->label(__('Purchasing Date'))
+                    ->translateLabel()
                     ->native(false)
                     ->required(),
                 FileUpload::make('image')
-                    ->label(__('Attachment'))
+                    ->translateLabel()
                     ->image(),
                 TableRepeater::make('stocks')
                     ->headers([
                         Header::make('product_name')
-                            ->label(__('Product Name'))
+                            ->label(__('Product name'))
                             ->width('150px'),
                         Header::make('quantity')
                             ->label(__('Quantity'))
@@ -86,20 +89,21 @@ class PurchasingResource extends Resource
                             ->label(__('Expired'))
                             ->width('150px'),
                         Header::make('initial_price')
-                            ->label(__('Initial Price'))
+                            ->label(__('Initial price'))
                             ->width('150px'),
                         Header::make('selling_price')
-                            ->label(__('Selling Price'))
+                            ->label(__('Selling price'))
                             ->width('150px'),
                         Header::make('total_initial_price')
-                            ->label(__('Total Initial Price'))
+                            ->label(__('Total initial price'))
                             ->width('150px'),
                         Header::make('total_selling_price')
-                            ->label(__('Total Selling Price'))
+                            ->label(__('Total selling price'))
                             ->width('150px'),
                     ])
                     ->schema([
                         Select::make('product_id')
+                            ->translateLabel()
                             ->native(false)
                             ->placeholder(__('Search...'))
                             ->relationship(name: 'stocks.product', titleAttribute: 'name')
@@ -113,6 +117,7 @@ class PurchasingResource extends Resource
                                 }
                             }),
                         TextInput::make('stock')
+                            ->translateLabel()
                             ->afterStateUpdated(function (Set $set, Get $get, ?string $state) {
                                 $set('total_initial_price', Str::of($get('initial_price'))->replace(',', '')->toInteger() * (float) $state);
                                 $set('total_selling_price', Str::of($get('selling_price'))->replace(',', '')->toInteger() * (float) $state);
@@ -167,13 +172,17 @@ class PurchasingResource extends Resource
             ->defaultSort('created_at', 'desc')
             ->columns([
                 TextColumn::make('supplier.name')
+                    ->translateLabel()
                     ->searchable(),
                 TextColumn::make('number')
+                    ->translateLabel()
                     ->searchable(),
                 TextColumn::make('date')
-                    ->label(__('Selling Date'))
+                    ->translateLabel()
                     ->date(),
-                TextColumn::make('item_amounts'),
+                TextColumn::make('stocks_count')
+                    ->label(__('Item amounts'))
+                    ->counts('stocks'),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
@@ -185,23 +194,23 @@ class PurchasingResource extends Resource
     {
         return $infolist->schema([
             TextEntry::make('supplier.name')
-                ->label(__('Supplier Name')),
+                ->translateLabel(),
             TextEntry::make('supplier.phone_number')
-                ->label(__('Supplier Contact')),
+                ->label(__('Supplier phone number')),
             TextEntry::make('due_date')
                 ->date()
-                ->label(__('Due Date')),
+                ->translateLabel(),
             TextEntry::make('date')
                 ->date()
-                ->label(__('Purchasing Date')),
+                ->translateLabel(),
             TextEntry::make('total_initial_price')
                 ->money(Setting::get('currency', 'IDR'))
-                ->label(__('Total Initial Price')),
+                ->translateLabel(),
             TextEntry::make('total_selling_price')
                 ->money(Setting::get('currency', 'IDR'))
-                ->label(__('Total Selling Price')),
+                ->translateLabel(),
             ImageEntry::make('image')
-                ->label(__('Attachment')),
+                ->translateLabel(),
         ]);
     }
 

@@ -7,6 +7,7 @@ use App\Filament\Tenant\Resources\SellingResource\Pages;
 use App\Models\Tenants\Selling;
 use App\Models\Tenants\Setting;
 use App\Models\Tenants\User;
+use App\Traits\HasTranslatableResource;
 use Filament\Infolists\Components\Card;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
@@ -18,6 +19,8 @@ use Illuminate\Database\Eloquent\Builder;
 
 class SellingResource extends Resource
 {
+    use HasTranslatableResource;
+
     protected static ?string $model = Selling::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-banknotes';
@@ -35,7 +38,7 @@ class SellingResource extends Resource
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('user.name')
-                    ->label('Cashier')
+                    ->label(__('Cashier'))
                     ->searchable(query: function (Builder $query, string $search): Builder {
                         return $query->whereHas('user', function (Builder $query) use ($search) {
                             return $query
@@ -44,27 +47,31 @@ class SellingResource extends Resource
                         });
                     }),
                 TextColumn::make('member.name')
+                    ->translateLabel()
                     ->default('-'),
                 TextColumn::make('customer_number')
+                    ->translateLabel()
                     ->default('-'),
-                TextColumn::make('date'),
+                TextColumn::make('date')
+                    ->translateLabel(),
                 TextColumn::make('total_price')
+                    ->translateLabel()
                     ->sortable()
                     ->money(Setting::get('currency', 'IDR')),
                 TextColumn::make('tax_price')
+                    ->translateLabel()
                     ->sortable()
                     ->money(Setting::get('currency', 'IDR')),
                 TextColumn::make('total_cost')
+                    ->translateLabel()
                     ->sortable()
                     ->money(Setting::get('currency', 'IDR')),
             ])
             ->searchPlaceholder('Search (Code, User, Customer Number')
             ->filters([
                 SelectFilter::make('user_id')
-                    ->label('Cashier')
-                    ->options(
-                        User::all()->mapWithKeys(fn (User $user) => [$user->id => $user->cashier_name]
-                        )
+                    ->label(__('Cashier'))
+                    ->options(User::all()->mapWithKeys(fn (User $user) => [$user->id => $user->cashier_name])
                     ),
             ]);
     }
@@ -102,7 +109,7 @@ class SellingResource extends Resource
                             ->getStateUsing(function (Selling $selling) {
                                 return $selling->user->name ?? $selling->user->email;
                             })
-                            ->label('Cashier'),
+                            ->label(__('Cashier')),
                         TextEntry::make('member.name')
                             ->label(__('Member'))
                             ->default('-'),

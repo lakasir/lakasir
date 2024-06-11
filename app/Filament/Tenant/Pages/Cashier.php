@@ -15,6 +15,7 @@ use App\Rules\CheckProductStock;
 use App\Rules\ShouldSameWithSellingDetail;
 use App\Services\Tenants\SellingService;
 use App\Services\VoucherService;
+use App\Traits\HasTranslatableResource;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -32,7 +33,7 @@ use Illuminate\Validation\ValidationException;
 
 class Cashier extends Page implements HasForms, HasTable
 {
-    use CartInteraction, TableProduct;
+    use CartInteraction, HasTranslatableResource, TableProduct;
 
     protected static ?string $navigationIcon = 'heroicon-o-bolt';
 

@@ -32,6 +32,7 @@ trait TableProduct
             ->columns([
                 Stack::make([
                     ImageColumn::make('hero_image')
+                        ->translateLabel()
                         ->alignCenter()
                         ->extraAttributes([
                             'class' => 'py-0',
@@ -67,7 +68,7 @@ trait TableProduct
                         ->extraAttributes([
                             'class' => 'font-bold',
                         ])
-                        ->formatStateUsing(fn (Product $product) => 'Stock: '.$product->stock),
+                        ->formatStateUsing(fn (Product $product) => __('Stock').': '.$product->stock),
                 ]),
             ])
             ->contentGrid([

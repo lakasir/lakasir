@@ -3,6 +3,7 @@
 namespace App\Filament\Tenant\Resources;
 
 use App\Filament\Tenant\Resources\RoleResource\Pages;
+use App\Traits\HasTranslatableResource;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -14,6 +15,8 @@ use Spatie\Permission\Models\Role;
 
 class RoleResource extends Resource
 {
+    use HasTranslatableResource;
+
     protected static ?string $model = Role::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-list-bullet';
@@ -23,7 +26,7 @@ class RoleResource extends Resource
         return $form
             ->schema([
                 TextInput::make('name')
-                    ->label('Name')
+                    ->translateLabel()
                     ->required(),
                 CheckboxList::make('permissions')
                     ->label('Web app permissions')
@@ -53,6 +56,7 @@ class RoleResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('name')
+                    ->translateLabel()
                     ->searchable()
                     ->sortable(),
             ])

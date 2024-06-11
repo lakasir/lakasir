@@ -45,13 +45,18 @@ class DebtPaymentsRelationManager extends RelationManager
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('user.name'),
+                Tables\Columns\TextColumn::make('user.name')
+                    ->translateLabel(),
                 Tables\Columns\TextColumn::make('amount')
+                    ->translateLabel()
                     ->money(Setting::get('currency', 'IDR')),
-                Tables\Columns\TextColumn::make('paymentMethod.name'),
+                Tables\Columns\TextColumn::make('paymentMethod.name')
+                    ->translateLabel(),
                 Tables\Columns\TextColumn::make('last_debt')
+                    ->translateLabel()
                     ->money(Setting::get('currency', 'IDR')),
                 Tables\Columns\TextColumn::make('date')
+                    ->translateLabel()
                     ->date(),
             ])
             ->actions([

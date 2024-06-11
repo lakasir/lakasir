@@ -91,7 +91,7 @@ class TenantPanelProvider extends PanelProvider
                                 ...($user?->can('read selling') ? SellingResource::getNavigationItems() : []),
                                 ...($user?->can('create selling') ? Cashier::getNavigationItems() : []),
                             ]),
-                        NavigationGroup::make('User')
+                        NavigationGroup::make(__('User'))
                             ->items([
                                 ...($user?->can('read user') ? UserResource::getNavigationItems() : []),
                                 ...(hasFeatureAndPermission(Role::class, 'read role') ? RoleResource::getNavigationItems() : []),
