@@ -2,9 +2,11 @@
 
 namespace App\Filament\Tenant\Resources;
 
+use App\Filament\Tenant\Resources\Traits\RedirectToIndex;
 use App\Filament\Tenant\Resources\VoucherResource\Pages;
 use App\Models\Tenants\Setting;
 use App\Models\Tenants\Voucher;
+use App\Traits\HasTranslatableResource;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -18,6 +20,8 @@ use Filament\Tables\Table;
 
 class VoucherResource extends Resource
 {
+    use HasTranslatableResource, RedirectToIndex;
+
     protected static ?string $model = Voucher::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-receipt-percent';
@@ -27,16 +31,16 @@ class VoucherResource extends Resource
         return $form
             ->schema([
                 TextInput::make('name')
-                    ->label(__('Name'))
+                    ->translateLabel()
                     ->required(),
                 TextInput::make('code')
-                    ->label(__('Voucher code'))
-                    ->unique(ignorable: function (Voucher $record) {
+                    ->translateLabel()
+                    ->unique(ignorable: function (?Voucher $record) {
                         return $record;
                     })
                     ->required(),
                 Select::make('type')
-                    ->label(__('Voucher type'))
+                    ->translateLabel()
                     ->options([
                         'percentage' => __('Percentage'),
                         'flat' => __('Flat'),
@@ -57,15 +61,15 @@ class VoucherResource extends Resource
                     ->required(),
                 DatePicker::make('start_date')
                     ->native(false)
-                    ->label(__('Start Date'))
+                    ->translateLabel()
                     ->required(),
                 DatePicker::make('expired')
                     ->native(false)
-                    ->label(__('Expired Date'))
+                    ->translateLabel()
                     ->gte('start_date')
                     ->required(),
                 TextInput::make('minimal_buying')
-                    ->label(__('Minimal Buying'))
+                    ->translateLabel()
                     ->stripCharacters(',')
                     ->numeric()
                     ->mask(RawJs::make('$money($input)'))
@@ -83,14 +87,18 @@ class VoucherResource extends Resource
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('name')
+                    ->translateLabel()
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('code')
+                    ->translateLabel()
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('start_date')
+                    ->translateLabel()
                     ->date(),
                 TextColumn::make('expired')
+                    ->translateLabel()
                     ->date(),
             ])
             ->actions([

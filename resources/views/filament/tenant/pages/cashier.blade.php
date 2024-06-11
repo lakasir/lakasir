@@ -13,7 +13,7 @@ use Filament\Facades\Filament;
       </div>
       <div class="flex justify-between">
         <p class="">{{ Filament::auth()->user()->cashier_name }}</p>
-        <p class="text-primary">Order numbers: <span class="!text-[#ff6600] font-bold">#0921033</span></p>
+        <!-- <p class="text-primary">Order numbers: <span class="!text-[#ff6600] font-bold">#0921033</span></p> -->
       </div>
       <div class="flex justify-between items-center">
         <p class="text-2xl font-bold mb-2">{{ __('Current Orders') }}</p>
@@ -129,9 +129,6 @@ use Filament\Facades\Filament;
     id="proceed-the-payment"
     width="5xl">
     <form wire:submit.prevent="proceedThePayment">
-      <x-slot name="heading">
-        {{ __('Proceed The Payment') }}
-      </x-slot>
     <div class="my-2 grid grid-cols-2 gap-x-4">
       <div x-data="detail">
         <div class="rounded-lg">
@@ -191,7 +188,7 @@ use Filament\Facades\Filament;
             <button
               wire:loading.attr="disabled"
               wire:target="proceedThePayment"
-              type="submit" class="col-span-3 bg-[#ff6600] hover:bg-[#ff6611] p-2 rounded-md text-white text-lg">Pay it</button>
+              type="submit" class="col-span-3 bg-[#ff6600] hover:bg-[#ff6611] p-2 rounded-md text-white text-lg">{{ __('Pay it') }}</button>
           </div>
         </div>
       </div>
@@ -249,11 +246,26 @@ use Filament\Facades\Filament;
       }
     }
   })
-  const inputSearch = document.querySelector('input[type=search]');
-  inputSearch.addEventListener('keyup', function(event) {
-    if(event.key === 'Enter') {
-      $wire.addCartUsingScanner(event.target.value);
+
+  let barcodeData = '';
+  let barcodeTimeout;
+  document.addEventListener('keypress', (event) => {
+    if (barcodeTimeout) {
+      clearTimeout(barcodeTimeout);
     }
+
+    if (event.key === 'Enter') {
+      console.log('Barcode scanned:', barcodeData);
+      $wire.addCartUsingScanner(barcodeData);
+
+      barcodeData = '';
+    } else {
+      barcodeData += event.key;
+    }
+
+    barcodeTimeout = setTimeout(() => {
+      barcodeData = '';
+    }, 500);
   });
 </script>
 @endscript

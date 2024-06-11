@@ -8,12 +8,11 @@ use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 
 class SellingDetailsRelationManager extends RelationManager
 {
     protected static string $relationship = 'sellingDetails';
-
-    protected static ?string $title = 'Items';
 
     public function form(Form $form): Form
     {
@@ -31,7 +30,7 @@ class SellingDetailsRelationManager extends RelationManager
             ->recordTitleAttribute('product_id')
             ->columns([
                 Tables\Columns\TextColumn::make('product.name')
-                    ->label(__('Item Name')),
+                    ->label(__('Item name')),
                 Tables\Columns\TextColumn::make('qty')
                     ->label(__('Qty')),
                 Tables\Columns\TextColumn::make('price')
@@ -48,5 +47,10 @@ class SellingDetailsRelationManager extends RelationManager
                     ->money(Setting::get('currency', 'IDR')),
             ])
             ->paginated(false);
+    }
+
+    public static function getTitle(Model $ownerRecord, string $pageClass): string
+    {
+        return __('Items');
     }
 }

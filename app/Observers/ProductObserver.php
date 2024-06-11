@@ -40,7 +40,7 @@ class ProductObserver extends AbstractObserver implements DataAwareRule
         if (! $product->barcode) {
             $product->barcode = $this->generateBarcode($product);
         }
-
+        $product->save();
         $stockService = new StockService();
         $stockService->create([
             'product_id' => $product->getKey(),

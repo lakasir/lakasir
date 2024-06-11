@@ -3,6 +3,7 @@
 namespace App\Filament\Tenant\Pages;
 
 use App\Models\Tenants\Setting;
+use App\Traits\HasTranslatableResource;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Contracts\HasForms;
@@ -12,7 +13,7 @@ use Filament\Pages\Page;
 
 class Settings extends Page implements HasForms
 {
-    use InteractsWithFormActions;
+    use HasTranslatableResource, InteractsWithFormActions;
 
     protected static string $routePath = '/member/settings';
 

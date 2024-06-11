@@ -42,6 +42,8 @@ Route::middleware([
             ->name('selling-report.generate');
         Route::get('/member/cashier-report/generate', CashierReportController::class)
             ->name('cashier-report.generate');
+        Route::view('/member/sellings/{selling}/print', 'filament.tenant.pages.selling.print-receipt')
+            ->name('selling.print');
         Route::get('/reset-password/{token}', ResetPassword::class)
             ->middleware('guest')
             ->name('reset-password.index');

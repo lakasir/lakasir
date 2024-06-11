@@ -7,6 +7,9 @@ use App\Filament\Tenant\Resources\DebtResource\RelationManagers\DebtItemsRelatio
 use App\Filament\Tenant\Resources\DebtResource\RelationManagers\DebtPaymentsRelationManager;
 use App\Models\Tenants\Debt;
 use App\Models\Tenants\Setting;
+use App\Traits\HasTranslatableResource;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Infolist;
 use Filament\Resources\RelationManagers\RelationGroup;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -15,6 +18,8 @@ use Filament\Tables\Table;
 
 class DebtResource extends Resource
 {
+    use HasTranslatableResource;
+
     protected static ?string $model = Debt::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-calendar';
@@ -25,23 +30,23 @@ class DebtResource extends Resource
             ->defaultSort('created_at', 'desc')
             ->columns([
                 TextColumn::make('selling.code')
+                    ->translateLabel()
                     ->searchable()
-                    ->prefix('#')
-                    ->label(__('Transaction Code')),
+                    ->prefix('#'),
                 TextColumn::make('member.name')
-                    ->searchable()
-                    ->label(__('Member Name')),
+                    ->translateLabel()
+                    ->searchable(),
                 TextColumn::make('total_debt')
                     ->money(Setting::get('currency', 'IDR'))
-                    ->label(__('Total Debt')),
+                    ->translateLabel(),
                 TextColumn::make('rest_debt')
                     ->money(Setting::get('currency', 'IDR'))
-                    ->label(__('Rest Debt')),
+                    ->translateLabel(),
                 TextColumn::make('due_date')
-                    ->label(__('Due Date'))
+                    ->translateLabel()
                     ->date(),
                 TextColumn::make('last_billing_date')
-                    ->label(__('Last Billing Date'))
+                    ->translateLabel()
                     ->date(),
                 TextColumn::make('status')
                     ->badge()
@@ -56,6 +61,49 @@ class DebtResource extends Resource
             ->actions([
                 Tables\Actions\ViewAction::make(),
             ]);
+    }
+
+    public static function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist->schema([
+            TextEntry::make('member.name')
+                ->translateLabel(),
+            TextEntry::make('member.email')
+                ->translateLabel(),
+            TextEntry::make('total_debt')
+                ->translateLabel()
+                ->money(Setting::get('currency', 'IDR')),
+            TextEntry::make('rest_debt')
+                ->translateLabel()
+                ->money(Setting::get('currency', 'IDR')),
+            TextEntry::make('due_date')
+                ->translateLabel()
+                ->date(),
+            TextEntry::make('total_billing_via_whatsapp')
+                ->translateLabel(),
+            TextEntry::make('last_billing_date')
+                ->translateLabel()
+                ->date(),
+            TextEntry::make('status')
+                ->translateLabel()
+                ->getStateUsing(function (Debt $debt) {
+                    return $debt->status ? 'Paid off' : 'Unpaid';
+                })
+                ->badge()
+                ->iconColor(fn (string $state): string => match ($state) {
+                    'Unpaid' => 'danger',
+                    'Paid off' => 'success',
+                })
+                ->color(fn (string $state): string => match ($state) {
+                    'Unpaid' => 'danger',
+                    'Paid off' => 'success',
+                })
+                ->icon(fn (string $state): string => match ($state) {
+                    'Paid off' => 'heroicon-o-check-circle',
+                    'Unpaid' => 'heroicon-o-exclamation-circle',
+                }),
+        ]);
+
     }
 
     public static function getRelations(): array

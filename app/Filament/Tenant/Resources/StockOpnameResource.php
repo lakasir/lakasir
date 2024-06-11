@@ -5,6 +5,7 @@ namespace App\Filament\Tenant\Resources;
 use App\Filament\Tenant\Resources\StockOpnameResource\Pages;
 use App\Models\Tenants\Product;
 use App\Models\Tenants\StockOpname;
+use App\Traits\HasTranslatableResource;
 use Awcodes\TableRepeater\Components\TableRepeater;
 use Awcodes\TableRepeater\Header;
 use Filament\Forms\Components\DatePicker;
@@ -19,10 +20,11 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
 
 class StockOpnameResource extends Resource
 {
+    use HasTranslatableResource;
+
     protected static ?string $model = StockOpname::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-circle-stack';
@@ -39,28 +41,30 @@ class StockOpnameResource extends Resource
                     ->native(false)
                     ->label(__('Date')),
                 TableRepeater::make('stock_opname_items')
+                    ->translateLabel()
                     ->headers([
                         Header::make('product_name')
-                            ->label(__('Product Name'))
+                            ->label(__('Product name'))
                             ->width('150px'),
                         Header::make('current_stock')
-                            ->label(__('Current Stock'))
+                            ->label(__('Current stock'))
                             ->width('150px'),
                         Header::make('adjustment_type')
-                            ->label(__('Adjustment Type'))
+                            ->label(__('Adjustment type'))
                             ->width('150px'),
                         Header::make('amount')
                             ->label(__('Amount'))
                             ->width('150px'),
                         Header::make('amount_after_adjustment')
-                            ->label(__('Amount After Adjustment'))
+                            ->label(__('Amount after adjustment'))
                             ->width('150px'),
-                        Header::make('total_selling_price')
-                            ->label(__('Total Selling Price'))
+                        Header::make('image')
+                            ->label(__('Image'))
                             ->width('150px'),
                     ])
                     ->schema([
                         Select::make('product_id')
+                            ->translateLabel()
                             ->required()
                             ->native(false)
                             ->placeholder(__('Search...'))
@@ -74,9 +78,11 @@ class StockOpnameResource extends Resource
                                 }
                             }),
                         TextInput::make('current_stock')
+                            ->translateLabel()
                             ->readOnly()
                             ->numeric(),
                         Select::make('adjustment_type')
+                            ->translateLabel()
                             ->default('broken')
                             ->options([
                                 'broken' => __('Broken'),
@@ -85,6 +91,7 @@ class StockOpnameResource extends Resource
                                 'manual_input' => __('Manual Input'),
                             ]),
                         TextInput::make('amount')
+                            ->translateLabel()
                             ->required()
                             ->lte('current_stock')
                             ->live(onBlur: true)
@@ -104,9 +111,11 @@ class StockOpnameResource extends Resource
                             })
                             ->numeric(),
                         TextInput::make('amount_after_adjustment')
+                            ->translateLabel()
                             ->readOnly()
                             ->numeric(),
                         FileUpload::make('attachment')
+                            ->translateLabel()
                             ->maxWidth(10)
                             ->image(),
                     ])
@@ -121,11 +130,11 @@ class StockOpnameResource extends Resource
             ->defaultSort('created_at', 'desc')
             ->columns([
                 TextColumn::make('number')
+                    ->translateLabel()
                     ->searchable(),
-                TextColumn::make('items_count')
-                    ->counts([
-                        'stockOpnameItems' => fn (Builder $builder) => $builder,
-                    ]),
+                TextColumn::make('stock_opname_items_count')
+                    ->label(__('Item amounts'))
+                    ->counts('stockOpnameItems'),
                 TextColumn::make('date')
                     ->date(),
             ])

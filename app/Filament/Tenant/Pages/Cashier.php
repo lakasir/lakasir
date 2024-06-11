@@ -2,6 +2,8 @@
 
 namespace App\Filament\Tenant\Pages;
 
+use App\Features\Member as FeaturesMember;
+use App\Features\Voucher;
 use App\Filament\Tenant\Pages\Traits\CartInteraction;
 use App\Filament\Tenant\Pages\Traits\TableProduct;
 use App\Models\Tenants\CartItem;
@@ -13,6 +15,7 @@ use App\Rules\CheckProductStock;
 use App\Rules\ShouldSameWithSellingDetail;
 use App\Services\Tenants\SellingService;
 use App\Services\VoucherService;
+use App\Traits\HasTranslatableResource;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -30,7 +33,7 @@ use Illuminate\Validation\ValidationException;
 
 class Cashier extends Page implements HasForms, HasTable
 {
-    use CartInteraction, TableProduct;
+    use CartInteraction, HasTranslatableResource, TableProduct;
 
     protected static ?string $navigationIcon = 'heroicon-o-bolt';
 
@@ -111,6 +114,7 @@ class Cashier extends Page implements HasForms, HasTable
         return $form
             ->schema([
                 Select::make('member_id')
+                    ->visible(hasFeatureAndPermission(FeaturesMember::class))
                     ->label('Member')
                     ->getSearchResultsUsing(function (string $search): array {
                         return Member::query()
@@ -122,7 +126,8 @@ class Cashier extends Page implements HasForms, HasTable
                     })
                     ->searchable(),
                 RichEditor::make('note'),
-                TextInput::make('voucher'),
+                TextInput::make('voucher')
+                    ->visible(hasFeatureAndPermission(Voucher::class)),
                 TextInput::make('discount_price')
                     ->mask(RawJs::make('$money($input)'))
                     ->stripCharacters(',')
@@ -179,6 +184,7 @@ class Cashier extends Page implements HasForms, HasTable
             'total_price' => $this->total_price,
         ]);
         $request = array_merge($this->cartDetail, [
+            'discount_price' => $this->discount_price,
             'products' => $this->cartItems->map(function (CartItem $cartItem) {
                 return [
                     'product_id' => $cartItem->product_id,

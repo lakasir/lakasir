@@ -2,8 +2,10 @@
 
 namespace App\Filament\Tenant\Resources;
 
+use App\Features\Role;
 use App\Filament\Tenant\Resources\UserResource\Pages;
 use App\Models\Tenants\User;
+use App\Traits\HasTranslatableResource;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -16,6 +18,8 @@ use Illuminate\Support\Facades\Hash;
 
 class UserResource extends Resource
 {
+    use HasTranslatableResource;
+
     protected static ?string $model = User::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-users';
@@ -38,15 +42,19 @@ class UserResource extends Resource
                     ->label('Address'),
                 TextInput::make('password')
                     ->password()
+                    ->revealable(filament()->arePasswordsRevealable())
                     ->dehydrateStateUsing(fn ($state): string => Hash::make($state))
                     ->dehydrated(fn (?string $state): bool => filled($state))
                     ->required(fn (string $operation): bool => $operation === 'create')
                     ->rules('confirmed'),
                 TextInput::make('password_confirmation')
                     ->password()
+                    ->revealable(filament()->arePasswordsRevealable())
                     ->label('Confirm New Password'),
                 Select::make('roles')
                     ->label('Roles')
+                    ->default(1)
+                    ->visible(hasFeatureAndPermission(Role::class))
                     ->relationship('roles', 'name'),
             ]);
     }
@@ -69,6 +77,7 @@ class UserResource extends Resource
                 TextColumn::make('profile.address')
                     ->label('Address'),
                 TextColumn::make('roles.0.name')
+                    ->visible(hasFeatureAndPermission(Role::class))
                     ->label('Role'),
                 BooleanColumn::make('is_owner'),
             ])

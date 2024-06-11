@@ -6,6 +6,7 @@ use App\Filament\Tenant\Resources\ProductResource\Pages;
 use App\Filament\Tenant\Resources\ProductResource\Traits\HasProductForm;
 use App\Models\Tenants\Product;
 use App\Models\Tenants\Setting;
+use App\Traits\HasTranslatableResource;
 use Filament\Forms\Components\BaseFileUpload;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Grid;
@@ -21,7 +22,7 @@ use League\Flysystem\UnableToCheckFileExistence;
 
 class ProductResource extends Resource
 {
-    use HasProductForm;
+    use HasProductForm, HasTranslatableResource;
 
     protected static ?string $model = Product::class;
 
@@ -37,25 +38,34 @@ class ProductResource extends Resource
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('category.name')
-                    ->label('Category')
+                    ->translateLabel()
                     ->searchable(),
                 TextColumn::make('name')
+                    ->translateLabel()
                     ->searchable(),
-                TextColumn::make('sku'),
+                TextColumn::make('sku')
+                    ->translateLabel(),
                 TextColumn::make('stock')
+                    ->translateLabel()
                     ->sortable(),
-                TextColumn::make('unit'),
+                TextColumn::make('unit')
+                    ->translateLabel(),
                 TextColumn::make('initial_price')
+                    ->translateLabel()
                     ->sortable()
                     ->money(Setting::get('currency', 'IDR')),
                 TextColumn::make('selling_price')
+                    ->translateLabel()
                     ->sortable()
                     ->money(Setting::get('currency', 'IDR')),
                 TextColumn::make('net_profit')
+                    ->translateLabel()
                     ->sortable()
                     ->money(Setting::get('currency', 'IDR')),
-                TextColumn::make('type'),
+                TextColumn::make('type')
+                    ->translateLabel(),
                 ToggleColumn::make('is_non_stock')
+                    ->translateLabel()
                     ->label('Non Stock'),
 
             ])
@@ -123,6 +133,7 @@ class ProductResource extends Resource
                 ]),
             $this->generateNameFormComponent()
                 ->columnSpan(1),
+            $this->generateBarcodeFormComponent(),
             $this->generateSkuFormComponent(),
             $this->generateCategoryFormComponent(),
             $this->generateStockFormComponent(),
