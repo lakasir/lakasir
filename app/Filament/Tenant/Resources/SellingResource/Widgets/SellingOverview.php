@@ -21,6 +21,16 @@ class SellingOverview extends BaseWidget
                 ->description($totalRevenue['description'])
                 ->chart([$totalRevenue['yesterdayRevenue'], $totalRevenue['todayRevenue']])
                 ->color($totalRevenue['color']),
+            Stat::make(__('Sales today'), $totalRevenue['total_revenue'])
+                ->descriptionIcon($totalRevenue['icon'])
+                ->description($totalRevenue['description'])
+                ->chart([$totalRevenue['yesterdayRevenue'], $totalRevenue['todayRevenue']])
+                ->color($totalRevenue['color']),
+            Stat::make(__('Discount today'), $totalRevenue['total_revenue'])
+                ->descriptionIcon($totalRevenue['icon'])
+                ->description($totalRevenue['description'])
+                ->chart([$totalRevenue['yesterdayRevenue'], $totalRevenue['todayRevenue']])
+                ->color($totalRevenue['color']),
         ];
     }
 
