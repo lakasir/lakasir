@@ -123,6 +123,7 @@ class ProductResource extends Resource
                 ]),
             $this->generateNameFormComponent()
                 ->columnSpan(1),
+            $this->generateBarcodeFormComponent(),
             $this->generateSkuFormComponent(),
             $this->generateCategoryFormComponent(),
             $this->generateStockFormComponent(),

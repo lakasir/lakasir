@@ -122,6 +122,11 @@ trait HasProductForm
             ->required();
     }
 
+    public function generateBarcodeFormComponent(): TextInput
+    {
+        return TextInput::make('barcode');
+    }
+
     public function generateNonStockFormComponent(): Checkbox
     {
         return Checkbox::make('is_non_stock')
