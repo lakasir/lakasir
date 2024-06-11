@@ -15,9 +15,16 @@ class SellingRevenueOverview extends BaseWidget
     {
         $yesterdayRevenue = Selling::query()
             ->select(
-                DB::raw('SUM(total_price / 100) as total_price'),
-                DB::raw('SUM(total_cost / 100) as total_cost'),
-                DB::raw('SUM((total_price - total_cost) / 100) as total_revenue'),
+                DB::raw('(COALESCE(SUM(sellings.discount_price), 0) / 1000) as total_discount_selling'),
+            )
+            ->addSelect(
+                DB::raw('COALESCE(SUM(COALESCE((SELECT SUM(selling_details.cost) as total_cost FROM selling_details WHERE selling_details.selling_id = sellings.id), 0) / 1000), 0) as total_cost')
+            )
+            ->addSelect(
+                DB::raw('COALESCE(SUM(COALESCE((SELECT SUM(selling_details.price) FROM selling_details WHERE selling_details.selling_id = sellings.id), 0) / 1000), 0) as total_price')
+            )
+            ->addSelect(
+                DB::raw('COALESCE(SUM(COALESCE((SELECT COALESCE(SUM(selling_details.discount_price), 0) FROM selling_details WHERE selling_details.selling_id = sellings.id), 0) / 1000), 0) as total_discount_per_item')
             )
             ->isPaid()
             ->whereBetween('created_at', [
@@ -27,9 +34,16 @@ class SellingRevenueOverview extends BaseWidget
             ->first();
         $todayRevenue = Selling::query()
             ->select(
-                DB::raw('SUM(total_price / 100) as total_price'),
-                DB::raw('SUM(total_cost / 100) as total_cost'),
-                DB::raw('SUM((total_price - total_cost) / 100) as total_revenue'),
+                DB::raw('(COALESCE(SUM(sellings.discount_price), 0) / 1000) as total_discount_selling'),
+            )
+            ->addSelect(
+                DB::raw('COALESCE(SUM(COALESCE((SELECT SUM(selling_details.cost) as total_cost FROM selling_details WHERE selling_details.selling_id = sellings.id), 0) / 1000), 0) as total_cost')
+            )
+            ->addSelect(
+                DB::raw('COALESCE(SUM(COALESCE((SELECT SUM(selling_details.price) FROM selling_details WHERE selling_details.selling_id = sellings.id), 0) / 1000), 0) as total_price')
+            )
+            ->addSelect(
+                DB::raw('COALESCE(SUM(COALESCE((SELECT COALESCE(SUM(selling_details.discount_price), 0) FROM selling_details WHERE selling_details.selling_id = sellings.id), 0) / 1000), 0) as total_discount_per_item')
             )
             ->isPaid()
             ->whereBetween('created_at', [
@@ -37,32 +51,42 @@ class SellingRevenueOverview extends BaseWidget
                 now()->endOfDay(),
             ])
             ->first();
+
+        $totalYesterdayRevenue = $yesterdayRevenue->total_price - $yesterdayRevenue->total_cost - $yesterdayRevenue->total_discount_per_item - $yesterdayRevenue->total_discount_selling;
+        $totalTodayRevenue = $todayRevenue->total_price - $todayRevenue->total_cost - $todayRevenue->total_discount_per_item - $todayRevenue->total_discount_selling;
+
         $readable = match (true) {
-            $todayRevenue->total_revenue >= 1 => 'K',
-            $todayRevenue->total_revenue >= 100 => 'M',
-            $todayRevenue->total_revenue >= 100000 => 'B',
+            $totalTodayRevenue >= 1 => 'K',
+            $totalTodayRevenue >= 1000 => 'M',
+            $totalTodayRevenue >= 1000000 => 'B',
             default => ''
         };
 
-        $trend = 'increase';
-        $color = 'success';
-        $icon = 'heroicon-m-arrow-trending-up';
-        if ($yesterdayRevenue->total_revenue > $todayRevenue->total_revenue) {
+        $trend = 'sideway';
+        $color = 'warning';
+        $icon = 'heroicon-m-minus';
+        if ($totalYesterdayRevenue > $totalTodayRevenue) {
             $trend = 'decrease';
             $color = 'danger';
             $icon = 'heroicon-m-arrow-trending-down';
         }
-        $prosentase = 100;
-        if ($yesterdayRevenue->total_revenue) {
-            $prosentase = (($todayRevenue->total_revenue - $yesterdayRevenue->total_revenue) / $yesterdayRevenue->total_revenue) * 100;
+        if ($totalYesterdayRevenue < $totalTodayRevenue) {
+            $trend = 'increase';
+            $color = 'success';
+            $icon = 'heroicon-m-arrow-trending-up';
+        }
+
+        $prosentase = 0;
+        if ($totalYesterdayRevenue) {
+            $prosentase = (($totalTodayRevenue - $totalYesterdayRevenue) / $totalYesterdayRevenue) * 100;
         }
 
         return [
-            Stat::make('Today total revenue', $todayRevenue->total_revenue.$readable)
+            Stat::make('Today total revenue', $totalTodayRevenue.$readable)
                 // ->description(($yesterdayRevenue->total_revenue - $todayRevenue->total_revenue).$readableYesterday.' '.$trend)
                 ->descriptionIcon($icon)
                 ->description($prosentase.'% '.$trend)
-                ->chart([$yesterdayRevenue->total_revenue, $todayRevenue->total_revenue])
+                ->chart([$totalYesterdayRevenue, $totalTodayRevenue])
                 // ->descriptionColor()
                 ->color($color),
         ];
