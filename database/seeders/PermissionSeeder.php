@@ -16,7 +16,9 @@ class PermissionSeeder extends Seeder
         $permissions = $this->getPermissions();
         $permissions->each(fn ($roles) => $this->savePermission($roles));
 
-        User::first()->assignRole(Role::admin);
+        if ($user = User::firsst()) {
+            $user->assignRole(Role::admin);
+        }
     }
 
     private function crudRolePermission(): array
@@ -76,12 +78,6 @@ class PermissionSeeder extends Seeder
                     'cash drawer' => [
                         'permission' => [
                             'open', 'enable', 'close',
-                        ],
-                        'guard' => ['web', 'sanctum'],
-                    ],
-                    'printer' => [
-                        'permission' => [
-                            'c', 'r', 'u', 'd',
                         ],
                         'guard' => ['web', 'sanctum'],
                     ],

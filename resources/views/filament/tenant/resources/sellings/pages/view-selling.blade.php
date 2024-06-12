@@ -56,7 +56,7 @@
       paddedText = text.padEnd(length);
     }
 
-    return sizes[textSize] + paddedText;
+    return paddedText;
   }
 
   function moneyFormat(number) {
@@ -71,30 +71,38 @@
     let header = ``;
     let detail = ``;
     if (about) {
-      header += '\x1D\x21\x11'
       header += `${padText(about.shop_name, 32, false, true)}\n`
       header += `${padText(about.shop_location, 32, false, true)}\n\n`
       header += `${padText('-------------------------------', 32)}\n`;
     }
-    detail += `${padText('Cashier', 16)}${padText(selling.user.name ?? selling.user.email, 16, true)}\n`;
+    detail += `${padText('@lang('Cashier')', 16)}${padText(selling.user.name ?? selling.user.email, 16, true)}\n`;
     if(selling.member != null) {
-      detail += `${padText('Member', 16)}${padText(selling.member.name, 16, true)}\n`;
+      detail += `${padText('@lang('Member')', 16)}${padText(selling.member.name, 16, true)}\n`;
     }
-    detail += `${padText('Payment method', 16)}${padText(selling.payment_method.name, 16, true)}\n`;
+    detail += `${padText('@lang('Payment method')', 16)}${padText(selling.payment_method.name, 16, true)}\n`;
     detail += `${padText('-------------------------------', 32)}\n`;
     selling.selling_details.forEach((sellingDetail) => {
-      detail += `${padText(sellingDetail.product.name, 16)}${padText(moneyFormat(sellingDetail.price / sellingDetail.qty) +' x ' + sellingDetail.qty.toString(), 16, true)}\n`;
-      detail += `${padText(moneyFormat(sellingDetail.price), 32, true)}\n`;
+      detail += `${padText(sellingDetail.product.name, 16)}${padText(moneyFormat(sellingDetail.price / sellingDetail.qty) + ' x ' + sellingDetail.qty.toString(), 16, true)}\n`;
+      let price = sellingDetail.price;
+      if (sellingDetail.discount_price > 0) {
+        price = price - sellingDetail.discount_price;
+        detail += `${padText('@lang('Discount')', 16)}${padText(moneyFormat(sellingDetail.discount_price), 16, true)}\n`;
+      }
+      detail += `${padText(moneyFormat(price), 32, true)}\n`;
     });
     detail += `${padText('-------------------------------', 32)}\n`;
-    detail += `${padText('Subtotal', 16)}${padText(moneyFormat(selling.total_price), 16, true)}\n`;
-    detail += `${padText('Tax', 16)}${padText(selling.tax.toString(), 16, true)}\n`;
-    detail += `${padText('Total Price', 16)}${padText(moneyFormat((selling.total_price * selling.tax / 100) + selling.total_price), 16, true)}\n`;
+    detail += `${padText('@lang('Subtotal')', 16)}${padText(moneyFormat(selling.total_price), 16, true)}\n`;
+    let totalPrice = selling.total_price;
+    if (selling.discount_price > 0) {
+      detail += `${padText('@lang('Discount')', 16)}${padText(moneyFormat(selling.discount_price), 16, true)}\n`;
+    }
+    detail += `${padText('@lang('Tax')', 16)}${padText(selling.tax.toString(), 16, true)}\n`;
+    detail += `${padText('@lang('Total price')', 16)}${padText(moneyFormat((selling.total_price * selling.tax / 100) + selling.total_price), 16, true)}\n`;
     detail += `${padText('-------------------------------', 32)}\n`;
-    detail += `${padText('Payed Money', 16)}${padText('Rp. 303.000', 16, true)}\n`;
-    detail += `${padText('Change', 16)}${padText('Rp. 0', 16, true)}\n`;
+    detail += `${padText('@lang('Payed money')', 16)}${padText(moneyFormat(selling.payed_money), 16, true)}\n`;
+    detail += `${padText('@lang('Change')', 16)}${padText(moneyFormat(selling.money_changes), 16, true)}\n`;
     detail += `${padText('-------------------------------', 32)}\n`;
-    detail += `${padText('Copy', 32)}\n`;
+    detail += `${padText('@lang('Copy')', 32)}\n`;
     detail += `${padText('    ', 32)}\n`;
     detail += `${padText('    ', 32)}\n`;
     let receiptText = header+detail;
@@ -113,13 +121,13 @@
       if (device) {
         console.log('Found USB device:', device.productName);
 
-        await device.open();
-        await device.selectConfiguration(1);
-        await device.claimInterface(0);
-
-        const encoder = new TextEncoder();
-        const data = encoder.encode(receiptText);
-        await device.transferOut(1, data);
+        /* await device.open(); */
+        /* await device.selectConfiguration(1); */
+        /* await device.claimInterface(0); */
+        /**/
+        /* const encoder = new TextEncoder(); */
+        /* const data = encoder.encode(receiptText); */
+        /* await device.transferOut(1, data); */
 
         console.log('Data sent to printer');
       } else {
