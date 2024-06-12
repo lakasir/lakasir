@@ -16,7 +16,7 @@ class PermissionSeeder extends Seeder
         $permissions = $this->getPermissions();
         $permissions->each(fn ($roles) => $this->savePermission($roles));
 
-        if ($user = User::firsst()) {
+        if ($user = User::first()) {
             $user->assignRole(Role::admin);
         }
     }
