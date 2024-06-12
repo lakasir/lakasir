@@ -121,13 +121,13 @@
       if (device) {
         console.log('Found USB device:', device.productName);
 
-        /* await device.open(); */
-        /* await device.selectConfiguration(1); */
-        /* await device.claimInterface(0); */
-        /**/
-        /* const encoder = new TextEncoder(); */
-        /* const data = encoder.encode(receiptText); */
-        /* await device.transferOut(1, data); */
+        await device.open();
+        await device.selectConfiguration(1);
+        await device.claimInterface(0);
+
+        const encoder = new TextEncoder();
+        const data = encoder.encode(receiptText);
+        await device.transferOut(1, data);
 
         console.log('Data sent to printer');
       } else {
