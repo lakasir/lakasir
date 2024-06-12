@@ -9,6 +9,6 @@ class Setting
      */
     public function resolve(): mixed
     {
-        return true;
+        return false;
     }
 }

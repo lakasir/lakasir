@@ -16,3 +16,13 @@ if (! function_exists('hasFeatureAndPermission')) {
         return feature($feature) && $user->can($permission);
     }
 }
+
+if (! function_exists('can')) {
+    function can(string $permission): bool
+    {
+        /** @var User $user */
+        $user = Filament::auth()->user();
+
+        return $user->can($permission);
+    }
+}
