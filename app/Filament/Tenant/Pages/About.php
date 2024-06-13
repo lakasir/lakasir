@@ -35,7 +35,7 @@ class About extends Page implements HasActions, HasForms
 
     public function mount(): void
     {
-        $this->data = TenantsAbout::first()->toArray();
+        $this->data = TenantsAbout::first()?->toArray() ?? $this->data;
     }
 
     public function form(Form $form): Form
