@@ -7,11 +7,9 @@ use Filament\Facades\Filament;
     <div class="col-span-2">
       {{ $this->table }}
     </div>
-    <div class="fixed right-0 w-1/3 h-screen pb-10">
-      <div class="px-4 mt-4 space-y-2 overflow-y-scroll h-screen">
-        <div class="">
-          <p class="text-2xl font-bold">{{ __('Orders details') }}</p>
-        </div>
+    <div class="fixed right-0 w-1/3 h-screen pb-10 overflow-y-scroll">
+      <div class="px-4 mt-4 space-y-2 h-screen">
+        <p class="text-2xl font-bold">{{ __('Orders details') }}</p>
         <div class="flex justify-between">
           <p class="">{{ Filament::auth()->user()->cashier_name }}</p>
           <!-- <p class="text-primary">Order numbers: <span class="!text-[#ff6600] font-bold">#0921033</span></p> -->
