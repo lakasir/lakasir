@@ -141,7 +141,16 @@
   document.getElementById('usbButton').addEventListener('click', async () => {
     try {
       if (localStorage.printer == undefined) {
-        selectUSBPrinter();
+        new FilamentNotification()
+          .title('@lang('You should choose the printer first in printer setting')')
+          .danger()
+          .actions([
+            new FilamentNotificationAction('Setting')
+              .icon('heroicon-o-cog-6-tooth')
+              .button()
+              .url('/member/printer'),
+          ])
+          .send()
       } else {
         printToUSBPrinter();
       }

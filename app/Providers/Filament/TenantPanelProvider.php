@@ -15,6 +15,7 @@ use App\Filament\Tenant\Pages\About as PagesAbout;
 use App\Filament\Tenant\Pages\Cashier;
 use App\Filament\Tenant\Pages\CashierReport;
 use App\Filament\Tenant\Pages\EditProfile;
+use App\Filament\Tenant\Pages\Printer;
 use App\Filament\Tenant\Pages\SellingReport;
 use App\Filament\Tenant\Pages\Settings;
 use App\Filament\Tenant\Pages\TenantLogin;
@@ -103,6 +104,11 @@ class TenantPanelProvider extends PanelProvider
                             ->collapsible(false)
                             ->items([
                                 ...(hasFeatureAndPermission(Voucher::class, 'read voucher') ? VoucherResource::getNavigationItems() : []),
+                            ]),
+                        NavigationGroup::make(__('Setting'))
+                            ->collapsible(false)
+                            ->items([
+                                ...Printer::getNavigationItems(),
                                 ...(hasFeatureAndPermission(Setting::class) ? Settings::getNavigationItems() : []),
                             ]),
                     ]);
