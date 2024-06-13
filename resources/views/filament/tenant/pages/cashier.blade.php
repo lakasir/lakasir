@@ -9,7 +9,15 @@ use Filament\Facades\Filament;
     </div>
     <div class="fixed right-0 w-1/3 h-screen pb-10 overflow-y-scroll">
       <div class="px-4 mt-4 space-y-2 h-screen">
-        <p class="text-2xl font-bold">{{ __('Orders details') }}</p>
+        <div class="flex justify-between" x-data="fullscreen">
+          <p class="text-2xl font-bold">{{ __('Orders details') }}</p>
+          <x-filament::icon
+            x-on:click="requestFullscreen"
+            alias="panels::topbar.global-search.field"
+            icon="heroicon-m-arrows-pointing-out"
+            class="h-5 w-5 text-gray-300 dark:text-gray-900 cursor-pointer"
+          />
+        </div>
         <div class="flex justify-between">
           <p class="">{{ Filament::auth()->user()->cashier_name }}</p>
           <!-- <p class="text-primary">Order numbers: <span class="!text-[#ff6600] font-bold">#0921033</span></p> -->
@@ -207,6 +215,20 @@ use Filament\Facades\Filament;
 
 @script
 <script>
+  Alpine.data('fullscreen', () => {
+    return {
+      isFullscreen: false,
+      requestFullscreen() {
+        if (!document.fullscreenElement) {
+          document.documentElement.requestFullscreen();
+          isFullscreen = true;
+        } else {
+          document.exitFullscreen();
+          isFullscreen = false;
+        }
+      }
+    }
+  });
   Alpine.data('detail', () => {
     return {
       displayValue: '',
@@ -245,7 +267,7 @@ use Filament\Facades\Filament;
         this.$refs.moneyChanges.textContent = this.moneyFormat($wire.cartDetail['money_change']);
       }
     }
-  })
+  });
 
   let barcodeData = '';
   let barcodeTimeout;
