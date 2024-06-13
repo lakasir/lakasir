@@ -11,12 +11,20 @@ use Filament\Facades\Filament;
       <div class="px-4 mt-4 space-y-2 h-screen">
         <div class="flex justify-between" x-data="fullscreen">
           <p class="text-2xl font-bold">{{ __('Orders details') }}</p>
-          <x-filament::icon
-            x-on:click="requestFullscreen"
-            alias="panels::topbar.global-search.field"
-            icon="heroicon-m-arrows-pointing-out"
-            class="h-5 w-5 text-gray-300 dark:text-gray-900 cursor-pointer"
-          />
+          <div class="flex gap-x-2">
+            <x-filament::icon
+              x-on:click="document.location.reload()"
+              alias="panels::topbar.global-search.field"
+              icon="heroicon-m-arrow-path"
+              class="h-5 w-5 text-gray-300 dark:text-gray-900 cursor-pointer"
+            />
+            <x-filament::icon
+              x-on:click="requestFullscreen"
+              alias="panels::topbar.global-search.field"
+              icon="heroicon-m-arrows-pointing-out"
+              class="h-5 w-5 text-gray-300 dark:text-gray-900 cursor-pointer"
+            />
+          </div>
         </div>
         <div class="flex justify-between">
           <p class="">{{ Filament::auth()->user()->cashier_name }}</p>
@@ -87,6 +95,7 @@ use Filament\Facades\Filament;
                     wire:keyup.debounce.500ms="reducePricePerItem({{  $item  }}, parseFloat($event.target.value.replace(/,/g, '')))"
                     placeholder="{{ __('Discount') }}"
                     class="text-right w-1/2"
+                    inputMode="numeric"
                     x-mask:dynamic="$money($input)"
                   />
                 </x-filament::input.wrapper>
@@ -170,9 +179,11 @@ use Filament\Facades\Filament;
             id="display"
             class="w-full p-2 border border-gray-300 rounded-md text-lg text-right dark:bg-gray-900 dark:text-white h-20 text-black @error('payed_money') 'border-danger-500' @enderror"
             focus
+            :disabled="isTouchScreen"
             x-mask:dynamic="$money($input)"
             x-on:keyup="changes"
             x-ref="payedMoney"
+            inputMode="numeric"
           >
           <div class="grid grid-cols-3 gap-4 mt-4">
             <button type="button" class="col-span-3 bg-gray-300 hover:bg-gray-400 p-2 rounded-md text-lg" x-on:click="append('no_changes')">{{ __('No change') }}</button>
@@ -231,6 +242,11 @@ use Filament\Facades\Filament;
   });
   Alpine.data('detail', () => {
     return {
+      isTouchScreen() {
+        return ( 'ontouchstart' in window ) ||
+          ( navigator.maxTouchPoints > 0 ) ||
+          ( navigator.msMaxTouchPoints > 0 );
+      },
       displayValue: '',
       paymentMethods: $wire.entangle('paymentMethods'),
       cartDetail: @js($cartDetail),
