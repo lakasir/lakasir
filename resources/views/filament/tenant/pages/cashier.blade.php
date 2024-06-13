@@ -7,109 +7,111 @@ use Filament\Facades\Filament;
     <div class="col-span-2">
       {{ $this->table }}
     </div>
-    <div class="px-4 mt-4 space-y-2 fixed right-0 w-1/3 h-screen">
-      <div class="">
-        <p class="text-2xl font-bold">{{ __('Orders details') }}</p>
-      </div>
-      <div class="flex justify-between">
-        <p class="">{{ Filament::auth()->user()->cashier_name }}</p>
-        <!-- <p class="text-primary">Order numbers: <span class="!text-[#ff6600] font-bold">#0921033</span></p> -->
-      </div>
-      <div class="flex justify-between items-center">
-        <p class="text-2xl font-bold mb-2">{{ __('Current Orders') }}</p>
-        <div class="flex gap-x-1">
-          <a
-            href="/member/sellings"
-            class="py-1 px-4 flex justify-center items-center bg-gray-100 rounded-lg">
-            <x-heroicon-o-arrow-left class="h-4 w-4 text-gray-500"/>
-          </a>
-          <button
-            class="py-1 px-4 bg-[#ff6600] text-white rounded-lg"
-            x-on:click="$dispatch('open-modal', {id: 'edit-detail'})"
-            >{{ __('Edit Detail') }}</button>
-          <button class="py-1 px-4 bg-red-200 text-red-500 rounded-lg"
-            wire:confirm="Are you sure you want to clear all of the items?"
-            wire:click.prevent="clearCart" >
-            <x-heroicon-o-trash class="h-4 w-4 text-red-500"/>
-          </button>
+    <div class="fixed right-0 w-1/3 h-screen pb-10">
+      <div class="px-4 mt-4 space-y-2 overflow-y-scroll h-screen">
+        <div class="">
+          <p class="text-2xl font-bold">{{ __('Orders details') }}</p>
         </div>
-      </div>
-      <div class="overflow-y-scroll min-h-40 max-h-[35%] overflow-auto"
-        @forelse($cartItems as $item)
-          <div class="flex justify-between mb-2 border rounded-lg bg-white dark:border-gray-900 dark:bg-gray-900 px-4 py-2" key="{{ rand() }}">
-            <div class="flex items-center space-x-3">
-              <img
-              class="object-cover h-16 w-20 rounded-lg"
-              src=" {{ $item->hero_image }}"/>
-              <div class="space-y-3">
-                <p class="font-semibold"> {{ $item->product->name }}</p>
-                <div class="flex space-x-3 h-8">
-                  <button
-                    class="!bg-[#ff6600] rounded-lg px-2 py-1"
-                    wire:click.stop="addCart( {{ $item->product_id  }} )"
-                    wire:loading.attr="disabled"
-                    >
-                    <x-heroicon-o-plus-small class="!text-white h-4 w-4"/>
-                  </button>
-                  <p class="my-auto">{{ $item->qty }}</p>
-                  <button
-                    class="!bg-gray-100 rounded-lg px-2 py-1"
-                    wire:click="reduceCart({{  $item->product_id  }})"
-                    wire:loading.attr="disabled"
-                    >
-                    <x-heroicon-o-minus-small class="!text-green-900 h-4 w-4"/>
-                  </button>
-                  <button
-                    class="!bg-danger-100 rounded-lg px-2 py-1"
-                    wire:click="deleteCart({{ $item->id  }})"
-                    wire:loading.attr="disabled"
-                    >
-                    <x-heroicon-o-trash class="!text-danger-900 h-4 w-4"/>
-                  </button>
+        <div class="flex justify-between">
+          <p class="">{{ Filament::auth()->user()->cashier_name }}</p>
+          <!-- <p class="text-primary">Order numbers: <span class="!text-[#ff6600] font-bold">#0921033</span></p> -->
+        </div>
+        <div class="flex justify-between items-center">
+          <p class="text-2xl font-bold mb-2">{{ __('Current Orders') }}</p>
+          <div class="flex gap-x-1">
+            <a
+              href="/member/sellings"
+              class="py-1 px-4 flex justify-center items-center bg-gray-100 rounded-lg">
+              <x-heroicon-o-arrow-left class="h-4 w-4 text-gray-500"/>
+            </a>
+            <button
+              class="py-1 px-4 bg-[#ff6600] text-white rounded-lg"
+              x-on:click="$dispatch('open-modal', {id: 'edit-detail'})"
+              >{{ __('Edit Detail') }}</button>
+            <button class="py-1 px-4 bg-red-200 text-red-500 rounded-lg"
+              wire:confirm="Are you sure you want to clear all of the items?"
+              wire:click.prevent="clearCart" >
+              <x-heroicon-o-trash class="h-4 w-4 text-red-500"/>
+            </button>
+          </div>
+        </div>
+        <div class="overflow-y-scroll min-h-40 max-h-[35%] overflow-auto"
+          @forelse($cartItems as $item)
+            <div class="flex justify-between mb-2 border rounded-lg bg-white dark:border-gray-900 dark:bg-gray-900 px-4 py-2" key="{{ rand() }}">
+              <div class="flex items-center space-x-3">
+                <img
+                class="object-cover h-16 w-20 rounded-lg"
+                src=" {{ $item->hero_image }}"/>
+                <div class="space-y-3">
+                  <p class="font-semibold"> {{ $item->product->name }}</p>
+                  <div class="flex space-x-3 h-8">
+                    <button
+                      class="!bg-[#ff6600] rounded-lg px-2 py-1"
+                      wire:click.stop="addCart( {{ $item->product_id  }} )"
+                      wire:loading.attr="disabled"
+                      >
+                      <x-heroicon-o-plus-small class="!text-white h-4 w-4"/>
+                    </button>
+                    <p class="my-auto">{{ $item->qty }}</p>
+                    <button
+                      class="!bg-gray-100 rounded-lg px-2 py-1"
+                      wire:click="reduceCart({{  $item->product_id  }})"
+                      wire:loading.attr="disabled"
+                      >
+                      <x-heroicon-o-minus-small class="!text-green-900 h-4 w-4"/>
+                    </button>
+                    <button
+                      class="!bg-danger-100 rounded-lg px-2 py-1"
+                      wire:click="deleteCart({{ $item->id  }})"
+                      wire:loading.attr="disabled"
+                      >
+                      <x-heroicon-o-trash class="!text-danger-900 h-4 w-4"/>
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div class="items-center text-right space-y-2">
-              <p class="font-semibold text-[#ff6600]">{{ $item->price_format_money }}</p>
-              <div class="flex justify-end">
-              <x-filament::input.wrapper class="w-1/2">
-                <x-filament::input
-                  type="text"
-                  id="{{ $item->product->name }}-{{ $item->id }}"
-                  value="{{ $item->discount_price == 0  ? '' : $item->discount_price }}"
-                  wire:keyup.debounce.500ms="reducePricePerItem({{  $item  }}, parseFloat($event.target.value.replace(/,/g, '')))"
-                  placeholder="{{ __('Discount') }}"
-                  class="text-right w-1/2"
-                  x-mask:dynamic="$money($input)"
-                />
-              </x-filament::input.wrapper>
+              <div class="items-center text-right space-y-2">
+                <p class="font-semibold text-[#ff6600]">{{ $item->price_format_money }}</p>
+                <div class="flex justify-end">
+                <x-filament::input.wrapper class="w-1/2">
+                  <x-filament::input
+                    type="text"
+                    id="{{ $item->product->name }}-{{ $item->id }}"
+                    value="{{ $item->discount_price == 0  ? '' : $item->discount_price }}"
+                    wire:keyup.debounce.500ms="reducePricePerItem({{  $item  }}, parseFloat($event.target.value.replace(/,/g, '')))"
+                    placeholder="{{ __('Discount') }}"
+                    class="text-right w-1/2"
+                    x-mask:dynamic="$money($input)"
+                  />
+                </x-filament::input.wrapper>
+                </div>
+                @if($item->discount_price && $item->discount_price > 0)
+                  <p class="font-semibold text-[#ff6600]">{{ $item->final_price_format }}</p>
+                @endif
               </div>
-              @if($item->discount_price && $item->discount_price > 0)
-                <p class="font-semibold text-[#ff6600]">{{ $item->final_price_format }}</p>
-              @endif
             </div>
-          </div>
-        @empty
-          <div class="flex justify-center items-center h-40 border bg-white rounded-lg dark:border-gray-900 dark:bg-gray-900">
-            <x-heroicon-o-x-mark class="text-gray-900 dark:text-white h-10 w-10"/>
-              <p class="text-3xl text-gray-600 dark:text-white">{{ __('No item') }}</p>
-          </div>
-        @endforelse
-      </div>
-      <div>
-        <div class="bg-white px-4 py-2 w-full border rounded-lg dark:border-gray-900 dark:bg-gray-900 dark:text-white text-gray-600">
-          @include('filament.tenant.pages.cashier.detail')
+          @empty
+            <div class="flex justify-center items-center h-40 border bg-white rounded-lg dark:border-gray-900 dark:bg-gray-900">
+              <x-heroicon-o-x-mark class="text-gray-900 dark:text-white h-10 w-10"/>
+                <p class="text-3xl text-gray-600 dark:text-white">{{ __('No item') }}</p>
+            </div>
+          @endforelse
         </div>
-      </div>
-      <div>
-        <div class="bg-white px-4 py-2 w-full border rounded-lg dark:border-gray-900 dark:bg-gray-900 dark:text-white text-gray-600">
-          @include('filament.tenant.pages.cashier.total')
+        <div>
+          <div class="bg-white px-4 py-2 w-full border rounded-lg dark:border-gray-900 dark:bg-gray-900 dark:text-white text-gray-600">
+            @include('filament.tenant.pages.cashier.detail')
+          </div>
         </div>
+        <div>
+          <div class="bg-white px-4 py-2 w-full border rounded-lg dark:border-gray-900 dark:bg-gray-900 dark:text-white text-gray-600">
+            @include('filament.tenant.pages.cashier.total')
+          </div>
+        </div>
+        <button
+          class="py-4 px-2 bg-[#ff6600] text-white rounded-lg w-full"
+          x-on:click="$dispatch('open-modal', {id: 'proceed-the-payment'})"
+          >{{ __('Proceed to payment') }}</button>
       </div>
-      <button
-        class="py-4 px-2 bg-[#ff6600] text-white rounded-lg w-full"
-        x-on:click="$dispatch('open-modal', {id: 'proceed-the-payment'})"
-        >{{ __('Proceed to payment') }}</button>
     </div>
   </div>
   <x-filament::modal
