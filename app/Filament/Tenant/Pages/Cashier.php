@@ -6,6 +6,7 @@ use App\Features\Member as FeaturesMember;
 use App\Features\Voucher;
 use App\Filament\Tenant\Pages\Traits\CartInteraction;
 use App\Filament\Tenant\Pages\Traits\TableProduct;
+use App\Models\Tenants\About;
 use App\Models\Tenants\CartItem;
 use App\Models\Tenants\Member;
 use App\Models\Tenants\PaymentMethod;
@@ -57,10 +58,14 @@ class Cashier extends Page implements HasForms, HasTable
 
     public float $total_price = 0;
 
+    public About $about;
+
     private float $discount_price = 0;
 
     public function mount()
     {
+        $this->about = About::first();
+
         $this->tax = (float) Setting::get('default_tax', 0);
 
         $this->currency = Setting::get('currency', 'IDR');
@@ -218,7 +223,7 @@ class Cashier extends Page implements HasForms, HasTable
             return;
         }
         $data = array_merge($sellingService->mapProductRequest($request), $request);
-        $sellingService->create($data);
+        $selling = $sellingService->create($data);
         CartItem::query()
             ->cashier()
             ->delete();
@@ -230,6 +235,6 @@ class Cashier extends Page implements HasForms, HasTable
 
         $this->mount();
 
-        $this->dispatch('close-modal', id: 'proceed-the-payment');
+        $this->dispatch('selling-created', selling: $selling->load('sellingDetails.product'));
     }
 }

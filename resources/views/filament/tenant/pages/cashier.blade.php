@@ -222,10 +222,62 @@ use Filament\Facades\Filament;
     </div>
     </form>
   </x-filament::modal>
+  <x-filament::modal
+    id="success-modal"
+    width="xl"
+    :close-by-clicking-away="false"
+    :close-by-escaping="false"
+    >
+    <div class="flex justify-center items-center flex-col">
+      <x-heroicon-o-check-circle style="color: rgb(34 197 94); width: 200px" />
+      <p class="font-bold text-4xl">@lang('Success')</p>
+      <p>@lang('Your transaction was successfull')</p>
+    </div>
+    <x-slot name="footer">
+      <div class="grid grid-cols-2 gap-x-2">
+        <x-filament::button icon="heroicon-m-printer" id="printReceiptButton">
+          {{ __('Print') }}
+        </x-filament::button>
+        <x-filament::button color="gray" x-on:click="$dispatch('close-modal', {id: 'success-modal'})">
+          {{ __('Close') }}
+        </x-filament::button>
+      </div>
+    </x-slot>
+  </x-filament::modal>
 </div>
 
 @script
 <script>
+  let selling = null;
+  $wire.on('selling-created', (event) => {
+    $wire.dispatch('close-modal', {id: 'proceed-the-payment'});
+
+    $wire.dispatch('open-modal', {id: 'success-modal'});
+    selling = event.selling;
+  });
+  document.getElementById("printReceiptButton").addEventListener('click', (event) => {
+    let about = @js($about);
+
+    try {
+      if (localStorage.printer == undefined) {
+        new FilamentNotification()
+          .title('@lang('You should choose the printer first in printer setting')')
+          .danger()
+          .actions([
+            new FilamentNotificationAction('Setting')
+              .icon('heroicon-o-cog-6-tooth')
+              .button()
+              .url('/member/printer'),
+          ])
+          .send()
+      } else {
+        printToUSBPrinter(selling, about);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  });
+
   Alpine.data('fullscreen', () => {
     return {
       isFullscreen: false,
@@ -287,7 +339,12 @@ use Filament\Facades\Filament;
 
   let barcodeData = '';
   let barcodeTimeout;
+  let scannerEnabled = true;
+
   document.addEventListener('keypress', (event) => {
+    if (!scannerEnabled) {
+      return;
+    }
     if (barcodeTimeout) {
       clearTimeout(barcodeTimeout);
     }
@@ -297,6 +354,11 @@ use Filament\Facades\Filament;
       $wire.addCartUsingScanner(barcodeData);
 
       barcodeData = '';
+      scannerEnabled = false;
+
+      setTimeout(() => {
+        scannerEnabled = true;
+      }, 2000);
     } else {
       barcodeData += event.key;
     }

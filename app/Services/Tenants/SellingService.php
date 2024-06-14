@@ -72,6 +72,7 @@ class SellingService
                 'total_qty' => $total_qty,
                 'money_changes' => $payed_money - $total_price,
                 'tax_price' => $tax_price,
+                'tax' => $tax_price,
                 'payed_money' => $payed_money,
             ];
         } else {
