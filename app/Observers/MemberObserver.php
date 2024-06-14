@@ -12,12 +12,14 @@ class MemberObserver
         $lastCount = $members->count();
         $lastMember = Member::orderBy('code', 'desc')->first();
         if ($lastMember) {
-            $lastCount = (int)substr($lastMember->code, 3);
+            $lastCount = (int) substr($lastMember->code, 3);
         } else {
             $lastCount = 0;
         }
 
-        // Generate the new customer code
-        $member->code = "CUS" . str_pad($lastCount + 1, 4, '0', STR_PAD_LEFT);
+        if (! $member->code) {
+            // Generate the new customer code
+            $member->code = 'CUS'.str_pad($lastCount + 1, 4, '0', STR_PAD_LEFT);
+        }
     }
 }

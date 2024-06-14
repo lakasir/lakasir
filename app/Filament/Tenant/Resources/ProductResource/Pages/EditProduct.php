@@ -3,6 +3,7 @@
 namespace App\Filament\Tenant\Resources\ProductResource\Pages;
 
 use App\Filament\Tenant\Resources\ProductResource;
+use App\Filament\Tenant\Resources\Traits\RedirectToIndex;
 use App\Models\Tenants\Product;
 use App\Models\Tenants\UploadedFile;
 use App\Services\Tenants\ProductService;
@@ -15,6 +16,8 @@ use Illuminate\Support\Facades\Storage;
 
 class EditProduct extends EditRecord
 {
+    use RedirectToIndex;
+
     protected static string $resource = ProductResource::class;
 
     private ProductService $productService;
@@ -37,12 +40,6 @@ class EditProduct extends EditRecord
         return [
             Actions\DeleteAction::make(),
         ];
-    }
-
-    protected function getRedirectUrl(): string
-    {
-        return '/member/products';
-
     }
 
     protected function mutateFormDataBeforeFill(array $data): array

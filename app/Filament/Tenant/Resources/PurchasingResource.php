@@ -2,6 +2,7 @@
 
 namespace App\Filament\Tenant\Resources;
 
+use App\Constants\PurchasingStatus;
 use App\Filament\Tenant\Resources\PurchasingResource\Pages;
 use App\Models\Tenants\Product;
 use App\Models\Tenants\Purchasing;
@@ -71,6 +72,7 @@ class PurchasingResource extends Resource
                     ->native(false)
                     ->required(),
                 DatePicker::make('date')
+                    ->default(now())
                     ->translateLabel()
                     ->native(false)
                     ->required(),
@@ -149,12 +151,12 @@ class PurchasingResource extends Resource
                                 $set('total_selling_price', Str::of($state)->replace(',', '')->toInteger() * $get('stock'));
                             })
                             ->live(onBlur: true),
-                        TextInput::make('total_selling_price')
+                        TextInput::make('total_initial_price')
                             ->mask(RawJs::make('$money($input)'))
                             ->stripCharacters(',')
                             ->numeric()
                             ->readOnly(),
-                        TextInput::make('total_initial_price')
+                        TextInput::make('total_selling_price')
                             ->mask(RawJs::make('$money($input)'))
                             ->stripCharacters(',')
                             ->numeric()
@@ -183,6 +185,14 @@ class PurchasingResource extends Resource
                 TextColumn::make('stocks_count')
                     ->label(__('Item amounts'))
                     ->counts('stocks'),
+                TextColumn::make('status')
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        PurchasingStatus::pending => 'gray',
+                        PurchasingStatus::reviewing => 'warning',
+                        PurchasingStatus::approved => 'success',
+                    })
+                    ->translateLabel(),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
@@ -193,6 +203,14 @@ class PurchasingResource extends Resource
     public static function infolist(Infolist $infolist): Infolist
     {
         return $infolist->schema([
+            TextEntry::make('status')
+                ->badge()
+                ->color(fn (string $state): string => match ($state) {
+                    PurchasingStatus::pending => 'gray',
+                    PurchasingStatus::reviewing => 'warning',
+                    PurchasingStatus::approved => 'success',
+                })
+                ->translateLabel(),
             TextEntry::make('supplier.name')
                 ->translateLabel(),
             TextEntry::make('supplier.phone_number')

@@ -38,6 +38,7 @@ class StockOpnameResource extends Resource
                     ->label(__('PIC')),
                 DatePicker::make('date')
                     ->required()
+                    ->default(now())
                     ->native(false)
                     ->label(__('Date')),
                 TableRepeater::make('stock_opname_items')

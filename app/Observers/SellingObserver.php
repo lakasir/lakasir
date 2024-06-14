@@ -28,7 +28,7 @@ class SellingObserver extends AbstractObserver implements DataAwareRule
         $lastCount = $sellings->count();
         /* TODO: fixing the iteration code <10-08-22, sheenazien8> */
         $selling->code = 'SELL'.Str::of($lastCount + 1)->padLeft(4, 0)->value();
-        $selling->money_changes = $selling->payed_money - $selling->total_price;
+        // $selling->money_changes = $selling->payed_money - $selling->total_price;
         if (Setting::get('cash_drawer_enabled', false)) {
             $selling->cash_drawer_id = CashDrawer::lastOpened()->first()->id;
         }

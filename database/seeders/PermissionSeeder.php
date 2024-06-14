@@ -195,6 +195,12 @@ class PermissionSeeder extends Seeder
                         ],
                         'guard' => ['web'],
                     ],
+                    'purchasing' => [
+                        'permission' => [
+                            'approve',
+                        ],
+                        'guard' => ['web'],
+                    ],
                 ],
             ],
         ];

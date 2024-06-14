@@ -2,15 +2,19 @@
 
 namespace App\Filament\Tenant\Resources\PurchasingResource\Pages;
 
-use App\Events\RecalculateEvent;
+use App\Constants\PurchasingStatus;
 use App\Filament\Tenant\Resources\PurchasingResource;
 use App\Filament\Tenant\Resources\PurchasingResource\RelationManagers\StocksRelationManager;
 use App\Filament\Tenant\Resources\Traits\RefreshThePage;
-use App\Models\Tenants\Product;
 use App\Models\Tenants\Purchasing;
+use App\Services\Tenants\PurchasingService;
 use Filament\Actions;
+use Filament\Actions\Action;
+use Filament\Forms\Components\Select;
+use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ViewRecord;
 use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Support\Arr;
 
 class ViewPurchasing extends ViewRecord
 {
@@ -21,27 +25,35 @@ class ViewPurchasing extends ViewRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\EditAction::make()
-                ->action(function (Purchasing $purchasing, array $data) {
-                    $stock_id = $purchasing->stocks()->whereRaw('stock = init_stock')->get();
-                    $products = null;
-                    if ($stock_id->count() > 0) {
-                        $products = Product::find($stock_id->pluck('product_id'));
-                    }
-                    $purchasing->update($data);
+            Action::make('update_status')
+                ->form([
+                    Select::make('status')
+                        ->required()
+                        ->default($this->record->status)
+                        ->options(Arr::where(PurchasingStatus::all(), function ($data, $key) {
+                            if ($key == PurchasingStatus::approved) {
+                                return can('approve purchasing');
+                            }
 
-                    RecalculateEvent::dispatch($products, $data);
+                            return true;
+                        })),
+                ])
+                ->action(function ($data, Purchasing $purchasing, PurchasingService $purchasingService) {
+                    $purchasingService->updateStatus($purchasing, $data['status']);
+                    Notification::make('success')
+                        ->title(__('Status updated'))
+                        ->success()
+                        ->send();
+                    $this->refreshPage();
+                })
+                ->color('warning')
+                ->visible(function (Purchasing $purchasing) {
+                    return $purchasing->status != PurchasingStatus::approved;
                 }),
-            Actions\DeleteAction::make()->action(function (Purchasing $purchasing) {
-                $stock_id = $purchasing->stocks()->whereRaw('stock = init_stock')->get();
-                $products = collect();
-                if ($stock_id->count() > 0) {
-                    $products = Product::find($stock_id->pluck('product_id'));
-                }
-                $purchasing->delete();
-
-                RecalculateEvent::dispatch($products, []);
-            }),
+            Actions\EditAction::make()
+                ->visible(fn (Purchasing $purchasing) => $purchasing->status != PurchasingStatus::approved),
+            Actions\DeleteAction::make()
+                ->visible(fn (Purchasing $purchasing) => $purchasing->status != PurchasingStatus::approved),
         ];
     }
 

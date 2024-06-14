@@ -2,6 +2,7 @@
 
 namespace App\Filament\Tenant\Resources\PurchasingResource\RelationManagers;
 
+use App\Constants\PurchasingStatus;
 use App\Filament\Tenant\Resources\Traits\RefreshThePage;
 use App\Models\Tenants\Product;
 use App\Models\Tenants\Purchasing;
@@ -18,6 +19,7 @@ use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Support\RawJs;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\TextInputColumn;
 use Filament\Tables\Table;
 use Illuminate\Support\Str;
 
@@ -105,8 +107,17 @@ class StocksRelationManager extends RelationManager
             ->columns([
                 TextColumn::make('product.name')
                     ->translateLabel(),
-                TextColumn::make('init_stock')
-                    ->label(__('Stock')),
+                TextInputColumn::make('init_stock')
+                    ->type('number')
+                    ->translateLabel()
+                    ->disabled(fn () => $this->getOwnerRecord()->status == PurchasingStatus::approved)
+                    ->afterStateUpdated(function (Stock $record, $state) {
+                        $this->stockService->update($record, [
+                            'init_stock' => $state,
+                            'stock' => $state,
+                            'product_id' => $record->product_id,
+                        ]);
+                    }),
                 TextColumn::make('initial_price')
                     ->translateLabel()
                     ->money(Setting::get('currency', 'IDR')),
@@ -136,6 +147,7 @@ class StocksRelationManager extends RelationManager
             ])
             ->actions([
                 Tables\Actions\EditAction::make()
+                    ->visible(fn (Purchasing $purchasing) => $purchasing->status != PurchasingStatus::approved)
                     ->action(function (Stock $stock, array $data) {
                         /** @var Purchasing $purchasing */
                         $purchasing = $this->ownerRecord;
@@ -147,6 +159,7 @@ class StocksRelationManager extends RelationManager
                         $this->refreshPage();
                     }),
                 Tables\Actions\DeleteAction::make()
+                    ->visible(fn (Purchasing $purchasing) => $purchasing->status != PurchasingStatus::approved)
                     ->action(function (Stock $stock) {
                         $stock->delete();
                         $purchasing = $this->ownerRecord;
@@ -162,6 +175,8 @@ class StocksRelationManager extends RelationManager
 
     public function isReadOnly(): bool
     {
-        return false;
+        $purchasing = $this->getOwnerRecord();
+
+        return $purchasing->status == PurchasingStatus::approved;
     }
 }

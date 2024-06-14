@@ -5,7 +5,6 @@ namespace App\Services\Tenants;
 use App\Models\Tenants\About;
 use App\Models\Tenants\Selling;
 use App\Models\Tenants\SellingDetail;
-use App\Models\Tenants\Setting;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
@@ -125,6 +124,6 @@ class SellingReportService
 
     private function formatCurrency($value)
     {
-        return Number::currency($value, Setting::get('currency', 'IDR'));
+        return Number::format($value);
     }
 }

@@ -56,12 +56,12 @@ class SellingService
             );
             $total_price = ($tax_price = $total_price * ($tax = $data['tax'] ?? 0) / 100) + $total_price;
             $total_qty = collect($data['products'])->sum('qty');
-            $discount_price = 0;
+            $discount_price = $data['discount_price'] ?? 0;
             if ($data['voucher'] ?? false) {
                 $voucherService = new VoucherService();
                 if ($voucher = $voucherService->applyable($data['voucher'], $total_price)) {
                     $discount_price = $voucher->calculate();
-                    $total_price = $total_price - $discount_price;
+                    // $total_price = $total_price - $discount_price;
                     $voucher->reduceUsed();
                 }
             }
@@ -70,7 +70,7 @@ class SellingService
                 'total_price' => $total_price,
                 'total_cost' => $total_cost,
                 'total_qty' => $total_qty,
-                'money_changes' => $payed_money - $total_price,
+                'money_changes' => $payed_money - ($total_price - $discount_price),
                 'tax_price' => $tax_price,
                 'tax' => $tax,
                 'payed_money' => $payed_money,
@@ -90,7 +90,7 @@ class SellingService
             /** @var PaymentMethod $pMethod */
             $pMethod = PaymentMethod::find($data['payment_method_id']);
             if ($pMethod->is_credit) {
-                $request['money_change'] = 0;
+                $request['money_changes'] = 0;
             }
         }
 

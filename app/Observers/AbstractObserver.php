@@ -3,6 +3,7 @@
 namespace App\Observers;
 
 use Illuminate\Contracts\Validation\DataAwareRule;
+use Illuminate\Support\Arr;
 
 /**
  * Class AbstractObserver
@@ -15,7 +16,8 @@ abstract class AbstractObserver
     {
         if (method_exists($this, 'setData') && $this instanceof DataAwareRule) {
             if (isset(request()->all()['components'])) {
-                $this->setData(json_decode(request()->all()['components'][0]['snapshot'], true)['data']['data'][0] ?? []);
+                $data = Arr::undot(request()->all()['components'][0]['updates'])['data'] ?? [];
+                $this->setData($data);
             } else {
                 $this->setData(request()->all());
             }

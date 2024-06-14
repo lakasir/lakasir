@@ -4,6 +4,7 @@ namespace App\Filament\Tenant\Resources\StockOpnameResource\Pages;
 
 use App\Filament\Tenant\Resources\StockOpnameResource;
 use App\Filament\Tenant\Resources\Traits\HasItemData;
+use App\Filament\Tenant\Resources\Traits\RedirectToIndex;
 use App\Models\Tenants\StockOpname;
 use App\Services\Tenants\StockOpnameService;
 use Filament\Actions;
@@ -12,7 +13,7 @@ use Illuminate\Contracts\Support\Htmlable;
 
 class ViewStockOpname extends ViewRecord
 {
-    use HasItemData;
+    use HasItemData, RedirectToIndex;
 
     protected static string $resource = StockOpnameResource::class;
 

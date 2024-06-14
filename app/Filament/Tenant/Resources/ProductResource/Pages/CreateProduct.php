@@ -3,12 +3,15 @@
 namespace App\Filament\Tenant\Resources\ProductResource\Pages;
 
 use App\Filament\Tenant\Resources\ProductResource;
+use App\Filament\Tenant\Resources\Traits\RedirectToIndex;
 use App\Models\Tenants\Product;
 use App\Services\Tenants\ProductService;
 use Filament\Resources\Pages\CreateRecord;
 
 class CreateProduct extends CreateRecord
 {
+    use RedirectToIndex;
+
     protected static string $resource = ProductResource::class;
 
     private ProductService $productService;
@@ -16,11 +19,6 @@ class CreateProduct extends CreateRecord
     public function __construct()
     {
         $this->productService = new ProductService();
-    }
-
-    protected function getRedirectUrl(): string
-    {
-        return '/member/products';
     }
 
     public function afterCreate()

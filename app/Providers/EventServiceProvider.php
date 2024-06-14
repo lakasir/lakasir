@@ -10,10 +10,12 @@ use App\Listeners\CreateDebtIfCredit;
 use App\Models\Tenants\Member;
 use App\Models\Tenants\Product;
 use App\Models\Tenants\Selling;
+use App\Models\Tenants\StockOpname;
 use App\Models\Tenants\User;
 use App\Observers\MemberObserver;
 use App\Observers\ProductObserver;
 use App\Observers\SellingObserver;
+use App\Observers\StockOpnameObserver;
 use App\Observers\TenantObserver;
 use App\Observers\UserObserver;
 use App\Tenant;
@@ -52,6 +54,7 @@ class EventServiceProvider extends ServiceProvider
         Tenant::class => [TenantObserver::class],
         Product::class => [ProductObserver::class],
         User::class => [UserObserver::class],
+        StockOpname::class => [StockOpnameObserver::class],
     ];
 
     /**
