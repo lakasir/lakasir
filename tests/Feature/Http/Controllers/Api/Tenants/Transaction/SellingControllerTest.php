@@ -253,6 +253,7 @@ test('cashier cannot create the sellings transaction with normal selling method 
             'stock' => 0,
             'initial_price' => 20000,
             'selling_price' => 30000,
+            'is_ready' => true,
         ]);
     Stock::factory()
         ->createQuietly([
@@ -261,6 +262,7 @@ test('cashier cannot create the sellings transaction with normal selling method 
             'stock' => 20,
             'initial_price' => 20000,
             'selling_price' => 30000,
+            'is_ready' => true,
         ]);
     RecalculateEvent::dispatch($product, []);
     $user = User::first();

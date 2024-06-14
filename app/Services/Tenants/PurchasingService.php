@@ -2,13 +2,13 @@
 
 namespace App\Services\Tenants;
 
+use App\Constants\PurchasingStatus;
 use App\Events\RecalculateEvent;
 use App\Models\Tenants\Product;
 use App\Models\Tenants\Purchasing;
 use App\Models\Tenants\Stock;
 use App\Services\Tenants\Traits\HasNumber;
 use Exception;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 
 class PurchasingService
@@ -39,10 +39,7 @@ class PurchasingService
                 $item['date'] = $data['date'] ?? now();
                 $this->stockService->create($item, $purchasing);
             });
-            /** @var Collection<Product> $products */
-            $products = Product::find($purchasing->stocks()->pluck('product_id'));
 
-            RecalculateEvent::dispatch($products, $data);
             DB::commit();
 
             return $purchasing;
@@ -57,10 +54,6 @@ class PurchasingService
     {
         $purchasing = Purchasing::find($id);
         $purchasing->update($data);
-
-        /** @var Collection<Product> $products */
-        $products = Product::find($purchasing->stocks()->pluck('product_id'));
-        RecalculateEvent::dispatch($products, $data);
 
         return $purchasing;
     }
@@ -80,5 +73,21 @@ class PurchasingService
             'total_initial_price' => $total_initial_price,
             'total_selling_price' => $total_selling_price,
         ];
+    }
+
+    public function updateStatus(Purchasing $purchasing, $status): void
+    {
+        $purchasing->fill([
+            'status' => $status,
+        ]);
+        $purchasing->save();
+        if ($status == PurchasingStatus::approved) {
+            foreach ($purchasing->stocks as $stock) {
+                $stock->is_ready = true;
+                $stock->save();
+            }
+            $products = Product::find($purchasing->stocks()->pluck('product_id'));
+            RecalculateEvent::dispatch($products, []);
+        }
     }
 }

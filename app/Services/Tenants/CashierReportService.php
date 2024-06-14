@@ -4,7 +4,6 @@ namespace App\Services\Tenants;
 
 use App\Models\Tenants\About;
 use App\Models\Tenants\Selling;
-use App\Models\Tenants\Setting;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
@@ -97,7 +96,7 @@ class CashierReportService
                     'discount_selling' => $this->formatCurrency($selling->discount_price ?? 0),
                     'total_net_profit' => $this->formatCurrency($totalNetProfitPerSelling),
                     'total_gross_profit' => $this->formatCurrency($totalGrossProfitPerSelling),
-                    'grand_total' => $this->formatCurrency($totalAfterDiscountPerSelling - ($selling->discount_price ?? 0))
+                    'grand_total' => $this->formatCurrency($totalAfterDiscountPerSelling - ($selling->discount_price ?? 0)),
                 ],
             ];
 
@@ -134,6 +133,6 @@ class CashierReportService
 
     private function formatCurrency($value)
     {
-        return Number::currency($value, Setting::get('currency', 'IDR'));
+        return Number::format($value);
     }
 }

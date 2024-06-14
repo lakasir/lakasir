@@ -334,9 +334,9 @@ use Filament\Facades\Filament;
       changes() {
         let num = parseFloat(this.$refs.payedMoney.value.replace(/,/g, ''));
         num = isNaN(num) ? 0 : num;
-        $wire.cartDetail['money_change'] = num - (this.subtotal);
+        $wire.cartDetail['money_changes'] = num - (this.subtotal);
         $wire.cartDetail['payed_money'] = num;
-        this.$refs.moneyChanges.textContent = this.moneyFormat($wire.cartDetail['money_change']);
+        this.$refs.moneyChanges.textContent = this.moneyFormat($wire.cartDetail['money_changes']);
       }
     }
   });

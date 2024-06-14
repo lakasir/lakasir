@@ -58,13 +58,13 @@ class Cashier extends Page implements HasForms, HasTable
 
     public float $total_price = 0;
 
-    public About $about;
+    public ?About $about;
 
     private float $discount_price = 0;
 
     public function mount()
     {
-        $this->about = About::first();
+        $this->about = About::first() ?? null;
 
         $this->tax = (float) Setting::get('default_tax', 0);
 
@@ -149,7 +149,7 @@ class Cashier extends Page implements HasForms, HasTable
         if ($this->cartDetail['voucher']) {
             if ($voucher = $voucherService->applyable($this->cartDetail['voucher'], $this->total_price)) {
                 $this->discount_price = $voucher->calculate();
-                $this->total_price = $this->total_price - $this->discount_price;
+                $this->total_price = $this->sub_total + ($this->sub_total * $this->tax / 100) - $this->discount_price;
             } else {
                 Notification::make('voucher_not_found')
                     ->title(__('Voucher not found'))
@@ -159,7 +159,8 @@ class Cashier extends Page implements HasForms, HasTable
         }
         if ($discount_price = str_replace(',', '', $this->cartDetail['discount_price'])) {
             $this->discount_price = floatval($discount_price);
-            $this->total_price = $this->total_price - $this->discount_price;
+            // $this->cartDetail['discount_price'] = $this->discount_price;
+            $this->total_price = $this->sub_total + ($this->sub_total * $this->tax / 100) - $this->discount_price;
         }
         $this->fillMember();
         $this->fillPayemntMethod();
@@ -189,7 +190,7 @@ class Cashier extends Page implements HasForms, HasTable
             'total_price' => $this->total_price,
         ]);
         $request = array_merge($this->cartDetail, [
-            'discount_price' => $this->discount_price,
+            'discount_price' => floatval(str_replace(',', '', $this->cartDetail['discount_price'])),
             'products' => $this->cartItems->map(function (CartItem $cartItem) {
                 return [
                     'product_id' => $cartItem->product_id,
@@ -222,7 +223,7 @@ class Cashier extends Page implements HasForms, HasTable
 
             return;
         }
-        $data = array_merge($sellingService->mapProductRequest($request), $request);
+        $data = array_merge($request, $sellingService->mapProductRequest($request));
         $selling = $sellingService->create($data);
         CartItem::query()
             ->cashier()

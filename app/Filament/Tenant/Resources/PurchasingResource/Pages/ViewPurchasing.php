@@ -2,13 +2,16 @@
 
 namespace App\Filament\Tenant\Resources\PurchasingResource\Pages;
 
-use App\Events\RecalculateEvent;
+use App\Constants\PurchasingStatus;
 use App\Filament\Tenant\Resources\PurchasingResource;
 use App\Filament\Tenant\Resources\PurchasingResource\RelationManagers\StocksRelationManager;
 use App\Filament\Tenant\Resources\Traits\RefreshThePage;
-use App\Models\Tenants\Product;
 use App\Models\Tenants\Purchasing;
+use App\Services\Tenants\PurchasingService;
 use Filament\Actions;
+use Filament\Actions\Action;
+use Filament\Forms\Components\Select;
+use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ViewRecord;
 use Illuminate\Contracts\Support\Htmlable;
 
@@ -21,27 +24,27 @@ class ViewPurchasing extends ViewRecord
     protected function getHeaderActions(): array
     {
         return [
+            Action::make('update_status')
+                ->form([
+                    Select::make('status')
+                        ->required()
+                        ->default($this->record->status)
+                        ->options(PurchasingStatus::all()),
+                ])
+                ->action(function ($data, Purchasing $purchasing, PurchasingService $purchasingService) {
+                    $purchasingService->updateStatus($purchasing, $data['status']);
+                    Notification::make('success')
+                        ->title(__('Status updated'))
+                        ->success()
+                        ->send();
+                    $this->refreshPage();
+                })
+                ->color('warning')
+                ->visible(fn (Purchasing $purchasing) => $purchasing->status != PurchasingStatus::approved),
             Actions\EditAction::make()
-                ->action(function (Purchasing $purchasing, array $data) {
-                    $stock_id = $purchasing->stocks()->whereRaw('stock = init_stock')->get();
-                    $products = null;
-                    if ($stock_id->count() > 0) {
-                        $products = Product::find($stock_id->pluck('product_id'));
-                    }
-                    $purchasing->update($data);
-
-                    RecalculateEvent::dispatch($products, $data);
-                }),
-            Actions\DeleteAction::make()->action(function (Purchasing $purchasing) {
-                $stock_id = $purchasing->stocks()->whereRaw('stock = init_stock')->get();
-                $products = collect();
-                if ($stock_id->count() > 0) {
-                    $products = Product::find($stock_id->pluck('product_id'));
-                }
-                $purchasing->delete();
-
-                RecalculateEvent::dispatch($products, []);
-            }),
+                ->visible(fn (Purchasing $purchasing) => $purchasing->status != PurchasingStatus::approved),
+            Actions\DeleteAction::make()
+                ->visible(fn (Purchasing $purchasing) => $purchasing->status != PurchasingStatus::approved),
         ];
     }
 

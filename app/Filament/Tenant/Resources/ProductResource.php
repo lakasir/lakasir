@@ -139,7 +139,9 @@ class ProductResource extends Resource
             $this->generateStockFormComponent(),
             $this->generateUnitFormComponent(),
             DatePicker::make('expired')
+                ->visible(fn (string $operation) => $operation == 'create')
                 ->rule('after:now')
+                ->required()
                 ->native(false),
             $this->generateInitialPriceFormComponent(),
             $this->generateSellingPriceFormComponent(),
