@@ -7,6 +7,7 @@ use App\Models\Tenants\Product;
 use App\Models\Tenants\Setting;
 use App\Models\Tenants\Stock;
 use App\Models\Tenants\User;
+use Illuminate\Support\Facades\Cache;
 use Tests\RefreshDatabaseWithTenant;
 
 use function Pest\Laravel\actingAs;
@@ -280,6 +281,7 @@ test('cashier cannot create the sellings transaction with normal selling method 
 });
 
 beforeEach(function () {
+    Cache::clear();
     $product = Product::factory()
         ->create([
             'name' => 'test',

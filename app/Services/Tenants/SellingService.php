@@ -54,7 +54,7 @@ class SellingService
                     $total_cost += $modelProduct->initial_price * $product['qty'];
                 }
             );
-            $total_price = ($tax_price = $total_price * ($data['tax'] ?? 0) / 100) + $total_price;
+            $total_price = ($tax_price = $total_price * ($tax = $data['tax'] ?? 0) / 100) + $total_price;
             $total_qty = collect($data['products'])->sum('qty');
             $discount_price = 0;
             if ($data['voucher'] ?? false) {
@@ -72,7 +72,7 @@ class SellingService
                 'total_qty' => $total_qty,
                 'money_changes' => $payed_money - $total_price,
                 'tax_price' => $tax_price,
-                'tax' => $tax_price,
+                'tax' => $tax,
                 'payed_money' => $payed_money,
             ];
         } else {
