@@ -1,6 +1,6 @@
 let selectedDevice = null;
 
-async function printToUSBPrinter(selling, about) {
+async function printToUSBPrinter(selling, about, copy = false) {
   console.log(selling, about);
   let header = ``;
   let detail = ``;
@@ -36,7 +36,9 @@ async function printToUSBPrinter(selling, about) {
   detail += `${padText('Payed money', 16)}${padText(moneyFormat(selling.payed_money), 16, true)}\n`;
   detail += `${padText('Change', 16)}${padText(moneyFormat(selling.money_changes), 16, true)}\n`;
   detail += `${padText('-------------------------------', 32)}\n`;
-  detail += `${padText('Copy', 32)}\n`;
+  if (copy) {
+    detail += `${padText('Copy', 32)}\n`;
+  }
   detail += `${padText('    ', 32)}\n`;
   detail += `${padText('    ', 32)}\n`;
   let receiptText = header + detail;
@@ -66,6 +68,16 @@ async function printToUSBPrinter(selling, about) {
       console.log('Data sent to printer');
     } else {
       console.log('No USB device with the specified vendor ID found');
+      new FilamentNotification()
+        .title('You should choose the printer first in printer setting')
+        .danger()
+        .actions([
+          new FilamentNotificationAction('Setting')
+            .icon('heroicon-o-cog-6-tooth')
+            .button()
+            .url('/member/printer'),
+        ])
+        .send()
     }
   } catch (error) {
     console.error(error);

@@ -33,7 +33,7 @@
           ])
           .send()
       } else {
-        printToUSBPrinter(selling, about);
+        printToUSBPrinter(selling, about, true);
       }
     } catch (error) {
       console.error(error);

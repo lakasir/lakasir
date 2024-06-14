@@ -206,8 +206,12 @@ use Filament\Facades\Filament;
             </button>
             <button
               wire:loading.attr="disabled"
-              wire:target="proceedThePayment"
-              type="submit" class="col-span-3 bg-[#ff6600] hover:bg-[#ff6611] p-2 rounded-md text-white text-lg">{{ __('Pay it') }}</button>
+              type="submit" class="col-span-3 bg-[#ff6600] hover:bg-[#ff6611] p-2 rounded-md text-white text-lg flex justify-center items-center gap-x-2">
+              <div wire:loading>
+                <x-filament::loading-indicator class="h-5 w-5"/>
+              </div>
+              {{ __('Pay it') }}
+            </button>
           </div>
         </div>
       </div>
