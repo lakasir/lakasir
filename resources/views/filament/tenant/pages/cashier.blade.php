@@ -123,7 +123,7 @@ use Filament\Facades\Filament;
         </div>
         <button
           class="py-4 px-2 bg-[#ff6600] text-white rounded-lg w-full"
-          x-on:click="$dispatch('open-modal', {id: 'proceed-the-payment'})"
+          x-on:mousedown="$dispatch('open-modal', {id: 'proceed-the-payment'})"
           >{{ __('Proceed to payment') }}</button>
       </div>
     </div>
@@ -159,7 +159,7 @@ use Filament\Facades\Filament;
             </template>
           </div>
           <x-filament::input.wrapper
-            x-show="paymentMethods.filter((pm) => pm.is_credit)[0].id == cartDetail['payment_method_id']"
+            x-show="paymentMethods.filter((pm) => pm.is_credit)[0]?.id == cartDetail['payment_method_id']"
             :valid="! $errors->has('due_date')"
             class="mb-2">
             <x-slot name="prefix">
@@ -343,8 +343,20 @@ use Filament\Facades\Filament;
   let barcodeData = '';
   let barcodeTimeout;
   let scannerEnabled = true;
+  let modalOpened = false;
+
+  $wire.on('open-modal', (event) => {
+    modalOpened = true;
+  });
+  $wire.on('close-modal', (event) => {
+    modalOpened = false;
+  });
 
   document.addEventListener('keypress', (event) => {
+    if (modalOpened) {
+      return;
+    }
+
     if (!scannerEnabled) {
       return;
     }
