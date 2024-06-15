@@ -13,6 +13,5 @@ class StockOpnameObserver
 
     public function creating(StockOpname $stockOpname): void
     {
-        dd($stockOpname->stockOpnameItems);
     }
 }

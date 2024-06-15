@@ -28,7 +28,6 @@ use Filament\Facades\Filament;
         </div>
         <div class="flex justify-between">
           <p class="">{{ Filament::auth()->user()->cashier_name }}</p>
-          <!-- <p class="text-primary">Order numbers: <span class="!text-[#ff6600] font-bold">#0921033</span></p> -->
         </div>
         <div class="flex justify-between items-center">
           <p class="text-2xl font-bold mb-2">{{ __('Current Orders') }}</p>

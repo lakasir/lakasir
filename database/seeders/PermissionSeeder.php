@@ -13,6 +13,7 @@ class PermissionSeeder extends Seeder
 {
     public function run()
     {
+        $this->deletePermission();
         $permissions = $this->getPermissions();
         $permissions->each(fn ($roles) => $this->savePermission($roles));
 
@@ -161,13 +162,13 @@ class PermissionSeeder extends Seeder
                     ],
                     'purchasing' => [
                         'permission' => [
-                            'c', 'r', 'u', 'd',
+                            'c', 'r', 'u', 'd', 'approve',
                         ],
                         'guard' => ['web', 'sanctum'],
                     ],
                     'stock opname' => [
                         'permission' => [
-                            'c', 'r', 'u', 'd',
+                            'c', 'r', 'u', 'd', 'approve',
                         ],
                         'guard' => ['web', 'sanctum'],
                     ],
@@ -192,12 +193,6 @@ class PermissionSeeder extends Seeder
                     'print selling' => [
                         'permission' => [
                             'can',
-                        ],
-                        'guard' => ['web'],
-                    ],
-                    'purchasing' => [
-                        'permission' => [
-                            'approve',
                         ],
                         'guard' => ['web'],
                     ],
@@ -266,5 +261,13 @@ class PermissionSeeder extends Seeder
         /** @var ModelsRole $role */
         $role = ModelsRole::where('name', $role[0])->firstOrCreate(['name' => $role[0]]);
         $role->permissions()->syncWithoutDetaching($permission);
+    }
+
+    private function deletePermission()
+    {
+        Permission::query()
+            ->whereNotIn('name', $this->getPermissions()->pluck('action'))
+            ->where('guard_name', 'web')
+            ->delete();
     }
 }
