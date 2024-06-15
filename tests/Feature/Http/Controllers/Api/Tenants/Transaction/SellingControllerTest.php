@@ -1,5 +1,6 @@
 <?php
 
+use App\Constants\VoucherType;
 use App\Events\RecalculateEvent;
 use App\Models\Tenants\CashDrawer;
 use App\Models\Tenants\Member;
@@ -7,6 +8,7 @@ use App\Models\Tenants\Product;
 use App\Models\Tenants\Setting;
 use App\Models\Tenants\Stock;
 use App\Models\Tenants\User;
+use App\Models\Tenants\Voucher;
 use Illuminate\Support\Facades\Cache;
 use Tests\RefreshDatabaseWithTenant;
 
@@ -282,7 +284,153 @@ test('cashier cannot create the sellings transaction with normal selling method 
         ->assertJsonValidationErrors('payed_money');
 });
 
+test('cashier can create the seling with manual discount', function () {
+    $user = User::first();
+
+    $response = actingAs($user)->postJson('/api/transaction/selling', [
+        'payed_money' => 20000,
+        'friend_price' => false,
+        'products' => [
+            [
+                'product_id' => $this->product->id,
+                'qty' => 1,
+            ],
+        ],
+        'discount_price' => 1000,
+    ]);
+
+    $response->assertOk()
+        ->assertJsonPath('message', 'success create selling');
+
+    $this->assertDatabaseHas('sellings', [
+        'discount_price' => 1000,
+        'total_price' => 20000,
+        'tax_price' => 0.00,
+        'tax' => 0,
+        'money_changes' => 1000,
+    ]);
+});
+
+test('cashier can create the selling with discount per item', function () {
+    $user = User::first();
+
+    $response = actingAs($user)->postJson('/api/transaction/selling', [
+        'payed_money' => 20000,
+        'friend_price' => false,
+        'products' => [
+            [
+                'product_id' => $this->product->id, // price 20000
+                'qty' => 1,
+                'discount_price' => 1000,
+            ],
+        ],
+    ]);
+
+    $response->assertOk()
+        ->assertJsonPath('message', 'success create selling');
+
+    $this->assertDatabaseHas('sellings', [
+        'payed_money' => 20000,
+        'discount_price' => 0,
+        'total_price' => 20000,
+        'tax_price' => 0.00,
+        'tax' => 0,
+        'money_changes' => 1000,
+        'total_discount_per_item' => 1000,
+    ]);
+
+    $this->assertDatabaseHas('selling_details', [
+        'product_id' => $this->product->id,
+        'discount_price' => 1000,
+        'price' => 20000,
+        'cost' => 10000,
+    ]);
+});
+
+test('cashier can create the selling with voucher flat type', function () {
+    $voucher = Voucher::factory()->create();
+    $user = User::first();
+
+    $response = actingAs($user)->postJson('/api/transaction/selling', [
+        'payed_money' => 20000,
+        'friend_price' => false,
+        'voucher' => $voucher->code,
+        'products' => [
+            [
+                'product_id' => $this->product->id,
+                'qty' => 1,
+            ],
+        ],
+    ]);
+
+    $response->assertOk()
+        ->assertJsonPath('message', 'success create selling');
+
+    $this->assertDatabaseHas('sellings', [
+        'discount_price' => 2000,
+        'total_price' => 20000,
+        'tax_price' => 0.00,
+        'tax' => 0,
+        'money_changes' => 2000,
+    ]);
+});
+
+test('cashier can create the selling with voucher percentage type', function () {
+    $voucher = Voucher::factory()->create([
+        'type' => VoucherType::percentage,
+        'nominal' => 20,
+    ]);
+    $user = User::first();
+
+    $response = actingAs($user)->postJson('/api/transaction/selling', [
+        'payed_money' => 20000,
+        'friend_price' => false,
+        'voucher' => $voucher->code,
+        'products' => [
+            [
+                'product_id' => $this->product->id,
+                'qty' => 1,
+            ],
+        ],
+    ]);
+
+    $response->assertOk()
+        ->assertJsonPath('message', 'success create selling');
+
+    $this->assertDatabaseHas('sellings', [
+        'discount_price' => 4000,
+        'total_price' => 20000,
+        'tax_price' => 0.00,
+        'tax' => 0,
+        'money_changes' => 4000,
+    ]);
+});
+
+test('cashier cannot create the sellig with expired voucher', function () {
+    $voucher = Voucher::factory()->create([
+        'start_date' => now()->subDay(10),
+        'expired' => now()->subDay(1),
+    ]);
+    $user = User::first();
+
+    $response = actingAs($user)->postJson('/api/transaction/selling', [
+        'payed_money' => 20000,
+        'friend_price' => false,
+        'voucher' => $voucher->code,
+        'products' => [
+            [
+                'product_id' => $this->product->id,
+                'qty' => 1,
+            ],
+        ],
+    ]);
+
+    $response->assertUnprocessable()
+        ->assertJsonValidationErrors('voucher');
+});
+
 beforeEach(function () {
+    Setting::set('selling_method', 'fifo');
     Cache::clear();
     $product = Product::factory()
         ->create([

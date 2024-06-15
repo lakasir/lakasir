@@ -44,12 +44,14 @@ class SellingService
         if (isset($data['friend_price']) && ! $data['friend_price']) {
             $total_price = 0;
             $total_price_after_discount = 0;
+            $total_discount_per_item = 0;
             $total_cost = 0;
             $productsCollection = collect($data['products']);
             $productsCollection->each(
-                function ($product) use (&$total_price, &$total_cost, &$total_price_after_discount) {
+                function ($product) use (&$total_price, &$total_cost, &$total_price_after_discount, &$total_discount_per_item) {
                     $modelProduct = Product::find($product['product_id']);
                     $total_price += $product['price'] ?? $modelProduct->selling_price * $product['qty'];
+                    $total_discount_per_item += ($product['discount_price'] ?? 0);
                     $total_price_after_discount = $total_price - ($product['discount_price'] ?? 0);
                     $total_cost += $modelProduct->initial_price * $product['qty'];
                 }
@@ -70,7 +72,8 @@ class SellingService
                 'total_price' => $total_price,
                 'total_cost' => $total_cost,
                 'total_qty' => $total_qty,
-                'money_changes' => $payed_money - ($total_price - $discount_price),
+                'money_changes' => $payed_money - ($total_price - $discount_price - $total_discount_per_item),
+                'total_discount_per_item' => $total_discount_per_item,
                 'tax_price' => $tax_price,
                 'tax' => $tax,
                 'payed_money' => $payed_money,

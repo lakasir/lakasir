@@ -1,7 +1,8 @@
 <?php
 
-namespace Database\Factories;
+namespace Database\Factories\Tenants;
 
+use App\Constants\VoucherType;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +18,14 @@ class VoucherFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'name' => 'voucher-1',
+            'code' => '000000',
+            'type' => VoucherType::flat,
+            'nominal' => 2000,
+            'minimal_buying' => 20000,
+            'start_date' => now(),
+            'expired' => now()->addDays(10),
+            'kuota' => 20,
         ];
     }
 }
