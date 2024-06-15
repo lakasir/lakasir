@@ -2,28 +2,27 @@
 
 namespace App\Filament\Tenant\Resources;
 
+use App\Constants\StockOpnameStatus;
 use App\Filament\Tenant\Resources\StockOpnameResource\Pages;
-use App\Models\Tenants\Product;
+use App\Filament\Tenant\Resources\StockOpnameResource\Traits\HasStockOpnameItemForm;
 use App\Models\Tenants\StockOpname;
 use App\Traits\HasTranslatableResource;
 use Awcodes\TableRepeater\Components\TableRepeater;
 use Awcodes\TableRepeater\Header;
 use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
-use Filament\Forms\Get;
-use Filament\Forms\Set;
-use Filament\Notifications\Notification;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
 class StockOpnameResource extends Resource
 {
-    use HasTranslatableResource;
+    use HasStockOpnameItemForm, HasTranslatableResource;
 
     protected static ?string $model = StockOpname::class;
 
@@ -31,6 +30,8 @@ class StockOpnameResource extends Resource
 
     public static function form(Form $form): Form
     {
+        $self = new self();
+
         return $form
             ->schema([
                 TextInput::make('pic')
@@ -38,6 +39,7 @@ class StockOpnameResource extends Resource
                     ->label(__('PIC')),
                 DatePicker::make('date')
                     ->required()
+                    ->default(now())
                     ->native(false)
                     ->label(__('Date')),
                 TableRepeater::make('stock_opname_items')
@@ -62,63 +64,8 @@ class StockOpnameResource extends Resource
                             ->label(__('Image'))
                             ->width('150px'),
                     ])
-                    ->schema([
-                        Select::make('product_id')
-                            ->translateLabel()
-                            ->required()
-                            ->native(false)
-                            ->placeholder(__('Search...'))
-                            ->relationship(name: 'stockOpnameItems.product', titleAttribute: 'name')
-                            ->searchable()
-                            ->live()
-                            ->afterStateUpdated(function (Set $set, ?string $state) {
-                                $product = Product::find($state);
-                                if ($product) {
-                                    $set('current_stock', $product->stock);
-                                }
-                            }),
-                        TextInput::make('current_stock')
-                            ->translateLabel()
-                            ->readOnly()
-                            ->numeric(),
-                        Select::make('adjustment_type')
-                            ->translateLabel()
-                            ->default('broken')
-                            ->options([
-                                'broken' => __('Broken'),
-                                'lost' => __('Lost'),
-                                'expired' => __('Expired'),
-                                'manual_input' => __('Manual Input'),
-                            ]),
-                        TextInput::make('amount')
-                            ->translateLabel()
-                            ->required()
-                            ->lte('current_stock')
-                            ->live(onBlur: true)
-                            ->afterStateUpdated(function (Set $set, Get $get, ?string $state) {
-                                $product = Product::find($get('product_id'));
-                                if (! $product) {
-                                    Notification::make()
-                                        ->title(__('Please select the product first'))
-                                        ->warning()
-                                        ->send();
-                                    $set('amount', 0);
-
-                                    return;
-                                }
-
-                                $set('amount_after_adjustment', $product->stock - $state);
-                            })
-                            ->numeric(),
-                        TextInput::make('amount_after_adjustment')
-                            ->translateLabel()
-                            ->readOnly()
-                            ->numeric(),
-                        FileUpload::make('attachment')
-                            ->translateLabel()
-                            ->maxWidth(10)
-                            ->image(),
-                    ])
+                    ->schema($self->get())
+                    ->visibleOn(['create'])
                     ->orderable(false)
                     ->columnSpan('full'),
             ]);
@@ -129,6 +76,14 @@ class StockOpnameResource extends Resource
         return $table
             ->defaultSort('created_at', 'desc')
             ->columns([
+                TextColumn::make('status')
+                    ->translateLabel()
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        StockOpnameStatus::pending => 'gray',
+                        StockOpnameStatus::reviewing => 'warning',
+                        StockOpnameStatus::approved => 'success',
+                    }),
                 TextColumn::make('number')
                     ->translateLabel()
                     ->searchable(),
@@ -138,10 +93,32 @@ class StockOpnameResource extends Resource
                 TextColumn::make('date')
                     ->date(),
             ])
+            ->filters([
+                SelectFilter::make('status')
+                    ->options(StockOpnameStatus::all()),
+            ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
             ]);
+    }
+
+    public static function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist->schema([
+            TextEntry::make('status')
+                ->badge()
+                ->color(fn (string $state): string => match ($state) {
+                    StockOpnameStatus::pending => 'gray',
+                    StockOpnameStatus::reviewing => 'warning',
+                    StockOpnameStatus::approved => 'success',
+                })
+                ->translateLabel(),
+            TextEntry::make('pic')
+                ->translateLabel(),
+            TextEntry::make('date')
+                ->translateLabel(),
+        ]);
     }
 
     public static function getPages(): array

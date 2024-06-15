@@ -31,7 +31,8 @@ class Product extends Model
 
     public function stocks(): HasMany
     {
-        return $this->hasMany(Stock::class);
+        return $this->hasMany(Stock::class)
+            ->where('is_ready', 1);
     }
 
     public function CartItems(): HasMany

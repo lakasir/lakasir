@@ -50,7 +50,7 @@ class ProductObserver extends AbstractObserver implements DataAwareRule
             'selling_price' => $product->selling_price,
             'type' => 'in',
             'expired' => $this->data['expired'] ?? null,
-
+            'is_ready' => true,
         ]);
     }
 }

@@ -2,28 +2,24 @@
 
 namespace App\Filament\Tenant\Resources\PurchasingResource\RelationManagers;
 
+use App\Constants\PurchasingStatus;
+use App\Filament\Tenant\Resources\PurchasingResource\Traits\HasPurchasingForm;
 use App\Filament\Tenant\Resources\Traits\RefreshThePage;
-use App\Models\Tenants\Product;
 use App\Models\Tenants\Purchasing;
 use App\Models\Tenants\Setting;
 use App\Models\Tenants\Stock;
 use App\Services\Tenants\PurchasingService;
 use App\Services\Tenants\StockService;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
-use Filament\Forms\Get;
-use Filament\Forms\Set;
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Support\RawJs;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\TextInputColumn;
 use Filament\Tables\Table;
-use Illuminate\Support\Str;
 
 class StocksRelationManager extends RelationManager
 {
-    use RefreshThePage;
+    use HasPurchasingForm, RefreshThePage;
 
     protected static string $relationship = 'stocks';
 
@@ -39,62 +35,7 @@ class StocksRelationManager extends RelationManager
 
     public function form(Form $form): Form
     {
-        return $form->schema([
-            Select::make('product_id')
-                ->translateLabel()
-                ->relationship(name: 'product', titleAttribute: 'name')
-                ->searchable()
-                ->live()
-                ->afterStateUpdated(function (Set $set, ?string $state) {
-                    $product = Product::find($state);
-                    if ($product) {
-                        $set('initial_price', $product->initial_price);
-                        $set('selling_price', $product->selling_price);
-                    }
-                }),
-            TextInput::make('stock')
-                ->translateLabel()
-                ->afterStateUpdated(function (Set $set, Get $get, ?string $state) {
-                    $set('total_initial_price', Str::of($get('initial_price'))->replace(',', '')->toInteger() * (float) $state);
-                    $set('total_selling_price', Str::of($get('selling_price'))->replace(',', '')->toInteger() * (float) $state);
-                })
-                ->live(onBlur: true),
-            TextInput::make('initial_price')
-                ->translateLabel()
-                ->prefix(Setting::get('currency', 'IDR'))
-                ->mask(RawJs::make('$money($input)'))
-                ->lte('selling_price')
-                ->stripCharacters(',')
-                ->numeric()
-                ->required()
-                ->afterStateUpdated(function (Set $set, Get $get, ?string $state) {
-                    $set('total_initial_price', Str::of($state)->replace(',', '')->toInteger() * $get('stock'));
-                })
-                ->live(onBlur: true),
-            TextInput::make('selling_price')
-                ->translateLabel()
-                ->prefix(Setting::get('currency', 'IDR'))
-                ->mask(RawJs::make('$money($input)'))
-                ->gte('initial_price')
-                ->stripCharacters(',')
-                ->numeric()
-                ->required()
-                ->afterStateUpdated(function (Set $set, Get $get, ?string $state) {
-                    $set('total_selling_price', Str::of($state)->replace(',', '')->toInteger() * $get('stock'));
-                })
-                ->live(onBlur: true),
-            TextInput::make('total_initial_price')
-                ->translateLabel()
-                ->mask(RawJs::make('$money($input)'))
-                ->stripCharacters(',')
-                ->numeric()
-                ->readOnly(),
-            TextInput::make('total_selling_price')
-                ->mask(RawJs::make('$money($input)'))
-                ->stripCharacters(',')
-                ->numeric()
-                ->readOnly(),
-        ])
+        return $form->schema($this->get('product'))
             ->columns(1);
     }
 
@@ -105,8 +46,19 @@ class StocksRelationManager extends RelationManager
             ->columns([
                 TextColumn::make('product.name')
                     ->translateLabel(),
-                TextColumn::make('init_stock')
-                    ->label(__('Stock')),
+                TextInputColumn::make('init_stock')
+                    ->type('number')
+                    ->translateLabel()
+                    ->disabled(fn () => $this->getOwnerRecord()->status == PurchasingStatus::approved)
+                    ->afterStateUpdated(function (Stock $record, $state) {
+                        $this->stockService->update($record, [
+                            'init_stock' => $state,
+                            'stock' => $state,
+                            'product_id' => $record->product_id,
+                        ]);
+                    }),
+                TextColumn::make('expired')
+                    ->translateLabel(),
                 TextColumn::make('initial_price')
                     ->translateLabel()
                     ->money(Setting::get('currency', 'IDR')),
@@ -136,6 +88,7 @@ class StocksRelationManager extends RelationManager
             ])
             ->actions([
                 Tables\Actions\EditAction::make()
+                    ->visible(fn (Purchasing $purchasing) => $purchasing->status != PurchasingStatus::approved)
                     ->action(function (Stock $stock, array $data) {
                         /** @var Purchasing $purchasing */
                         $purchasing = $this->ownerRecord;
@@ -147,6 +100,7 @@ class StocksRelationManager extends RelationManager
                         $this->refreshPage();
                     }),
                 Tables\Actions\DeleteAction::make()
+                    ->visible(fn (Purchasing $purchasing) => $purchasing->status != PurchasingStatus::approved)
                     ->action(function (Stock $stock) {
                         $stock->delete();
                         $purchasing = $this->ownerRecord;
@@ -162,6 +116,8 @@ class StocksRelationManager extends RelationManager
 
     public function isReadOnly(): bool
     {
-        return false;
+        $purchasing = $this->getOwnerRecord();
+
+        return $purchasing->status == PurchasingStatus::approved;
     }
 }

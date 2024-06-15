@@ -8,13 +8,16 @@ use App\Models\Tenants\Setting;
 use App\Rules\CheckProductStock;
 use App\Rules\ShouldSameWithSellingDetail;
 use App\Services\Tenants\SellingService;
+use App\Services\VoucherService;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\ValidationException;
 
 class TransactionSellingStoreRequest extends FormRequest
 {
-    public function __construct(public SellingService $sellingService)
-    {
+    public function __construct(
+        private SellingService $sellingService,
+        private VoucherService $voucherService
+    ) {
 
     }
 
@@ -45,6 +48,11 @@ class TransactionSellingStoreRequest extends FormRequest
             'total_price' => ['required_if:friend_price,true', 'numeric'],
             'total_qty' => ['required_if:friend_price,true', 'numeric', new ShouldSameWithSellingDetail('qty', $this->products)],
             'friend_price' => ['required', 'boolean'],
+            'voucher' => [function ($attribute, $value, $fail) {
+                if (! $this->voucherService->applyable($value, $this->total_price)) {
+                    $fail(__('voucher expired'));
+                }
+            }],
             'products' => ['required', 'array'],
             'products.*.product_id' => ['required', 'exists:products,id'],
             'products.*.price' => ['required_if:friend_price,true', 'numeric'],

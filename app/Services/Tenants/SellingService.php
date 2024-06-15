@@ -44,24 +44,26 @@ class SellingService
         if (isset($data['friend_price']) && ! $data['friend_price']) {
             $total_price = 0;
             $total_price_after_discount = 0;
+            $total_discount_per_item = 0;
             $total_cost = 0;
             $productsCollection = collect($data['products']);
             $productsCollection->each(
-                function ($product) use (&$total_price, &$total_cost, &$total_price_after_discount) {
+                function ($product) use (&$total_price, &$total_cost, &$total_price_after_discount, &$total_discount_per_item) {
                     $modelProduct = Product::find($product['product_id']);
                     $total_price += $product['price'] ?? $modelProduct->selling_price * $product['qty'];
+                    $total_discount_per_item += ($product['discount_price'] ?? 0);
                     $total_price_after_discount = $total_price - ($product['discount_price'] ?? 0);
                     $total_cost += $modelProduct->initial_price * $product['qty'];
                 }
             );
-            $total_price = ($tax_price = $total_price * ($data['tax'] ?? 0) / 100) + $total_price;
+            $total_price = ($tax_price = $total_price * ($tax = $data['tax'] ?? 0) / 100) + $total_price;
             $total_qty = collect($data['products'])->sum('qty');
-            $discount_price = 0;
+            $discount_price = $data['discount_price'] ?? 0;
             if ($data['voucher'] ?? false) {
                 $voucherService = new VoucherService();
                 if ($voucher = $voucherService->applyable($data['voucher'], $total_price)) {
                     $discount_price = $voucher->calculate();
-                    $total_price = $total_price - $discount_price;
+                    // $total_price = $total_price - $discount_price;
                     $voucher->reduceUsed();
                 }
             }
@@ -70,8 +72,10 @@ class SellingService
                 'total_price' => $total_price,
                 'total_cost' => $total_cost,
                 'total_qty' => $total_qty,
-                'money_changes' => $payed_money - $total_price,
+                'money_changes' => $payed_money - ($total_price - $discount_price - $total_discount_per_item),
+                'total_discount_per_item' => $total_discount_per_item,
                 'tax_price' => $tax_price,
+                'tax' => $tax,
                 'payed_money' => $payed_money,
             ];
         } else {
@@ -89,7 +93,7 @@ class SellingService
             /** @var PaymentMethod $pMethod */
             $pMethod = PaymentMethod::find($data['payment_method_id']);
             if ($pMethod->is_credit) {
-                $request['money_change'] = 0;
+                $request['money_changes'] = 0;
             }
         }
 

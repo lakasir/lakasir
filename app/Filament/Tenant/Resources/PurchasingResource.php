@@ -2,8 +2,9 @@
 
 namespace App\Filament\Tenant\Resources;
 
+use App\Constants\PurchasingStatus;
 use App\Filament\Tenant\Resources\PurchasingResource\Pages;
-use App\Models\Tenants\Product;
+use App\Filament\Tenant\Resources\PurchasingResource\Traits\HasPurchasingForm;
 use App\Models\Tenants\Purchasing;
 use App\Models\Tenants\Setting;
 use App\Models\Tenants\Supplier;
@@ -15,21 +16,18 @@ use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
-use Filament\Forms\Get;
 use Filament\Forms\Set;
 use Filament\Infolists\Components\ImageEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
-use Filament\Support\RawJs;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Illuminate\Support\Str;
 
 class PurchasingResource extends Resource
 {
-    use HasTranslatableResource;
+    use HasPurchasingForm, HasTranslatableResource;
 
     protected static ?string $model = Purchasing::class;
 
@@ -39,6 +37,8 @@ class PurchasingResource extends Resource
 
     public static function form(Form $form): Form
     {
+        $self = new self();
+
         return $form
             ->schema([
                 Select::make('supplier_id')
@@ -71,6 +71,7 @@ class PurchasingResource extends Resource
                     ->native(false)
                     ->required(),
                 DatePicker::make('date')
+                    ->default(now())
                     ->translateLabel()
                     ->native(false)
                     ->required(),
@@ -101,65 +102,7 @@ class PurchasingResource extends Resource
                             ->label(__('Total selling price'))
                             ->width('150px'),
                     ])
-                    ->schema([
-                        Select::make('product_id')
-                            ->translateLabel()
-                            ->native(false)
-                            ->placeholder(__('Search...'))
-                            ->relationship(name: 'stocks.product', titleAttribute: 'name')
-                            ->searchable()
-                            ->live()
-                            ->afterStateUpdated(function (Set $set, ?string $state) {
-                                $product = Product::find($state);
-                                if ($product) {
-                                    $set('initial_price', $product->initial_price);
-                                    $set('selling_price', $product->selling_price);
-                                }
-                            }),
-                        TextInput::make('stock')
-                            ->translateLabel()
-                            ->afterStateUpdated(function (Set $set, Get $get, ?string $state) {
-                                $set('total_initial_price', Str::of($get('initial_price'))->replace(',', '')->toInteger() * (float) $state);
-                                $set('total_selling_price', Str::of($get('selling_price'))->replace(',', '')->toInteger() * (float) $state);
-                            })
-                            ->live(onBlur: true),
-                        DatePicker::make('expired')
-                            ->rule('after:now')
-                            ->date()
-                            ->native(false),
-                        TextInput::make('initial_price')
-                            ->prefix(Setting::get('currency', 'IDR'))
-                            ->mask(RawJs::make('$money($input)'))
-                            ->lte('selling_price')
-                            ->stripCharacters(',')
-                            ->numeric()
-                            ->required()
-                            ->afterStateUpdated(function (Set $set, Get $get, ?string $state) {
-                                $set('total_initial_price', Str::of($state)->replace(',', '')->toInteger() * $get('stock'));
-                            })
-                            ->live(onBlur: true),
-                        TextInput::make('selling_price')
-                            ->prefix(Setting::get('currency', 'IDR'))
-                            ->mask(RawJs::make('$money($input)'))
-                            ->gte('initial_price')
-                            ->stripCharacters(',')
-                            ->numeric()
-                            ->required()
-                            ->afterStateUpdated(function (Set $set, Get $get, ?string $state) {
-                                $set('total_selling_price', Str::of($state)->replace(',', '')->toInteger() * $get('stock'));
-                            })
-                            ->live(onBlur: true),
-                        TextInput::make('total_selling_price')
-                            ->mask(RawJs::make('$money($input)'))
-                            ->stripCharacters(',')
-                            ->numeric()
-                            ->readOnly(),
-                        TextInput::make('total_initial_price')
-                            ->mask(RawJs::make('$money($input)'))
-                            ->stripCharacters(',')
-                            ->numeric()
-                            ->readOnly(),
-                    ])
+                    ->schema($self->get())
                     ->orderable(false)
                     ->visibleOn(['create'])
                     ->columnSpan('full'),
@@ -183,6 +126,14 @@ class PurchasingResource extends Resource
                 TextColumn::make('stocks_count')
                     ->label(__('Item amounts'))
                     ->counts('stocks'),
+                TextColumn::make('status')
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        PurchasingStatus::pending => 'gray',
+                        PurchasingStatus::reviewing => 'warning',
+                        PurchasingStatus::approved => 'success',
+                    })
+                    ->translateLabel(),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
@@ -193,6 +144,14 @@ class PurchasingResource extends Resource
     public static function infolist(Infolist $infolist): Infolist
     {
         return $infolist->schema([
+            TextEntry::make('status')
+                ->badge()
+                ->color(fn (string $state): string => match ($state) {
+                    PurchasingStatus::pending => 'gray',
+                    PurchasingStatus::reviewing => 'warning',
+                    PurchasingStatus::approved => 'success',
+                })
+                ->translateLabel(),
             TextEntry::make('supplier.name')
                 ->translateLabel(),
             TextEntry::make('supplier.phone_number')

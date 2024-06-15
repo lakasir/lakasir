@@ -3,14 +3,24 @@
 namespace App\Filament\Tenant\Resources\SellingResource\Pages;
 
 use App\Filament\Tenant\Resources\SellingResource;
+use App\Models\Tenants\About;
+use App\Models\Tenants\Selling;
 use Filament\Actions\Action;
-use Filament\Facades\Filament;
 use Filament\Resources\Pages\ViewRecord;
 use Illuminate\Contracts\Support\Htmlable;
 
 class ViewSelling extends ViewRecord
 {
     protected static string $resource = SellingResource::class;
+
+    public ?About $about = null;
+
+    public function mount(int|string $record): void
+    {
+        parent::mount($record);
+
+        $this->about = About::first();
+    }
 
     public function getTitle(): string|Htmlable
     {
@@ -22,13 +32,20 @@ class ViewSelling extends ViewRecord
         return [
             Action::make('print')
                 ->icon('heroicon-s-printer')
-                ->visible(Filament::auth()->user()->can('can print selling'))
-                ->action('printReceipt'),
+                ->extraAttributes([
+                    'id' => 'usbButton',
+                ])
+                ->visible(can('can print selling')),
         ];
     }
 
-    public function printReceipt()
+    public function getView(): string
     {
-        $this->redirectRoute('selling.print', $this->getRecord());
+        return 'filament.tenant.resources.sellings.pages.view-selling';
+    }
+
+    public function getRecord(): Selling
+    {
+        return $this->record->load('sellingDetails.product');
     }
 }

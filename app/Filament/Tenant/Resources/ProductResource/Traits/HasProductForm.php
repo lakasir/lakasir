@@ -9,6 +9,7 @@ use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Set;
 use Filament\Support\RawJs;
 
 trait HasProductForm
@@ -113,7 +114,7 @@ trait HasProductForm
             ->translateLabel()
             ->numeric()
             ->disabled(function ($get) {
-                return $get('is_non_stock');
+                return $get('is_non_stock') || $get('type') == 'service';
             })
             ->required();
     }
@@ -126,6 +127,12 @@ trait HasProductForm
                 'product' => 'Product',
                 'service' => 'Service',
             ])
+            ->afterStateUpdated(function (mixed $state, Set $set) {
+                if ($state == 'service') {
+                    $set('stock', 0);
+                }
+            })
+            ->live()
             ->default('product')
             ->columnSpan(2)
             ->required();

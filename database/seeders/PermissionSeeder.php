@@ -13,10 +13,13 @@ class PermissionSeeder extends Seeder
 {
     public function run()
     {
+        $this->deletePermission();
         $permissions = $this->getPermissions();
         $permissions->each(fn ($roles) => $this->savePermission($roles));
 
-        User::first()->assignRole(Role::admin);
+        if ($user = User::first()) {
+            $user->assignRole(Role::admin);
+        }
     }
 
     private function crudRolePermission(): array
@@ -76,12 +79,6 @@ class PermissionSeeder extends Seeder
                     'cash drawer' => [
                         'permission' => [
                             'open', 'enable', 'close',
-                        ],
-                        'guard' => ['web', 'sanctum'],
-                    ],
-                    'printer' => [
-                        'permission' => [
-                            'c', 'r', 'u', 'd',
                         ],
                         'guard' => ['web', 'sanctum'],
                     ],
@@ -165,13 +162,13 @@ class PermissionSeeder extends Seeder
                     ],
                     'purchasing' => [
                         'permission' => [
-                            'c', 'r', 'u', 'd',
+                            'c', 'r', 'u', 'd', 'approve',
                         ],
                         'guard' => ['web', 'sanctum'],
                     ],
                     'stock opname' => [
                         'permission' => [
-                            'c', 'r', 'u', 'd',
+                            'c', 'r', 'u', 'd', 'approve',
                         ],
                         'guard' => ['web', 'sanctum'],
                     ],
@@ -264,5 +261,13 @@ class PermissionSeeder extends Seeder
         /** @var ModelsRole $role */
         $role = ModelsRole::where('name', $role[0])->firstOrCreate(['name' => $role[0]]);
         $role->permissions()->syncWithoutDetaching($permission);
+    }
+
+    private function deletePermission()
+    {
+        Permission::query()
+            ->whereNotIn('name', $this->getPermissions()->pluck('action'))
+            ->where('guard_name', 'web')
+            ->delete();
     }
 }
