@@ -123,15 +123,7 @@ class TenantPanelProvider extends PanelProvider
             ->profile(EditProfile::class)
             ->discoverResources(in: app_path('Filament/Tenant/Resources'), for: 'App\\Filament\\Tenant\\Resources')
             ->discoverPages(in: app_path('Filament/Tenant/Pages'), for: 'App\\Filament\\Tenant\\Pages')
-            ->pages([
-                Pages\Dashboard::class,
-                Settings::class,
-                SellingReport::class,
-                CashierReport::class,
-            ])
             ->discoverWidgets(in: app_path('Filament/Tenant/Widgets'), for: 'App\\Filament\\Tenant\\Widgets')
-            ->widgets([
-            ])
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,

@@ -196,6 +196,24 @@ class PermissionSeeder extends Seeder
                         ],
                         'guard' => ['web'],
                     ],
+                    'revenue overview' => [
+                        'permission' => [
+                            'r',
+                        ],
+                        'guard' => ['web'],
+                    ],
+                    'sales overview' => [
+                        'permission' => [
+                            'r',
+                        ],
+                        'guard' => ['web'],
+                    ],
+                    'discount overview' => [
+                        'permission' => [
+                            'r',
+                        ],
+                        'guard' => ['web'],
+                    ],
                 ],
             ],
         ];

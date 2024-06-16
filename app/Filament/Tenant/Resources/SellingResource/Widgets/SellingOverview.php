@@ -4,6 +4,7 @@ namespace App\Filament\Tenant\Resources\SellingResource\Widgets;
 
 use App\Models\Tenants\Selling;
 use App\Models\Tenants\SellingDetail;
+use Filament\Widgets\Concerns\InteractsWithPageFilters;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 use Illuminate\Support\Facades\DB;
@@ -11,6 +12,8 @@ use Illuminate\Support\Number;
 
 class SellingOverview extends BaseWidget
 {
+    use InteractsWithPageFilters;
+
     protected static ?string $pollingInterval = null;
 
     protected function getStats(): array
@@ -20,13 +23,13 @@ class SellingOverview extends BaseWidget
         $discountToday = $this->getDiscountToday();
 
         return [
-            Stat::make(__('Today total revenue'), $totalRevenue['total_revenue'])
+            can('read revenue overview') ? Stat::make(__('Today total revenue'), $totalRevenue['total_revenue'])
                 ->descriptionIcon($totalRevenue['icon'])
                 ->description($totalRevenue['description'])
                 ->chart([$totalRevenue['yesterdayRevenue'], $totalRevenue['todayRevenue']])
-                ->color($totalRevenue['color']),
-            Stat::make(__('Sales today'), $todaySales),
-            Stat::make(__('Discount today'), $discountToday),
+                ->color($totalRevenue['color']) : null,
+            can('read sales overview') ? Stat::make(__('Sales today'), $todaySales) : null,
+            can('read sales overview') ? Stat::make(__('Discount today'), $discountToday) : null,
         ];
     }
 
