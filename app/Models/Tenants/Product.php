@@ -13,6 +13,8 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Number;
 use Illuminate\Support\Str;
 
+use function Pest\Laravel\get;
+
 /**
  * @mixin IdeHelperProduct
  */
@@ -149,14 +151,18 @@ class Product extends Model
         });
     }
 
-    public function scopeGetExpiredStock(Builder $builder)
+    public function expiredStock(): Attribute
     {
-        $nearestExpired = now()->addDay($this->expiredDay);
+        return Attribute::make(
+            get: function () {
+                $nearestExpired = now()->addDay($this->expiredDay);
 
-        return $this
-            ->stocks()
-            ->where('stock', '>', 0)
-            ->whereDate('expired', '<=', $nearestExpired)->latest()->first();
+                return $this
+                    ->stocks()
+                    ->where('stock', '>', 0)
+                    ->whereDate('expired', '<=', $nearestExpired)->latest()->first();
+            }
+        );
     }
 
     public function hasExpiredStock(): Attribute

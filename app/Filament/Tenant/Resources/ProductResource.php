@@ -74,10 +74,7 @@ class ProductResource extends Resource
                     ->toggle()
                     ->query(function (Builder $query) {
                         return $query
-                            ->whereHas('stocks', function (Builder $builder) {
-                                return $builder
-                                    ->whereDate('expired', '<=', now());
-                            });
+                            ->nearestExpiredProduct();
                     }),
             ])
             ->actions([
