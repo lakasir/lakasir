@@ -84,7 +84,7 @@ trait CartInteraction
         $this->mount();
     }
 
-    public function reducePricePerItem(CartItem $cartItem, $value)
+    public function addDiscountPricePerItem(CartItem $cartItem, $value)
     {
         if (! ($value && $value > 0) && $value > $cartItem->product->selling_price) {
             return;

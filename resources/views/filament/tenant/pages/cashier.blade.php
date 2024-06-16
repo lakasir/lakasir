@@ -85,7 +85,7 @@ use Filament\Facades\Filament;
                     type="text"
                     id="{{ $item->product->name }}-{{ $item->id }}"
                     value="{{ $item->discount_price == 0  ? '' : $item->discount_price }}"
-                    wire:keyup.debounce.500ms="reducePricePerItem({{  $item  }}, parseFloat($event.target.value.replace(/,/g, '')))"
+                    wire:keyup.debounce.500ms="addDiscountPricePerItem({{  $item  }}, parseFloat($event.target.value.replace(/,/g, '')))"
                     placeholder="{{ __('Discount') }}"
                     class="text-right w-1/2"
                     inputMode="numeric"

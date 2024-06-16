@@ -79,14 +79,15 @@ class Cashier extends Page implements HasForms, HasTable
 
         $this->sub_total = 0;
 
+        $this->discount_price = 0;
         $this->cartItems->each(function (CartItem $item) {
             $this->sub_total += $item->price;
             if ($item->discount_price && $item->discount_price > 0) {
-                $this->sub_total -= $item->discount_price;
+                $this->discount_price += $item->discount_price;
             }
         });
 
-        $this->total_price = $this->sub_total + ($this->sub_total * $this->tax / 100);
+        $this->total_price = $this->sub_total + ($this->sub_total * $this->tax / 100) - $this->discount_price;
 
         $this->paymentMethods = PaymentMethod::query()
             ->select('id', 'name', 'is_credit')
@@ -168,7 +169,12 @@ class Cashier extends Page implements HasForms, HasTable
     {
         if ($this->cartDetail['voucher']) {
             if ($voucher = $voucherService->applyable($this->cartDetail['voucher'], $this->total_price)) {
-                $this->discount_price = $voucher->calculate();
+                $this->cartItems->each(function (CartItem $item) {
+                    if ($item->discount_price && $item->discount_price > 0) {
+                        $this->discount_price += $item->discount_price;
+                    }
+                });
+                $this->discount_price += $voucher->calculate();
                 $this->total_price = $this->sub_total + ($this->sub_total * $this->tax / 100) - $this->discount_price;
             } else {
                 Notification::make('voucher_not_found')
@@ -177,9 +183,14 @@ class Cashier extends Page implements HasForms, HasTable
                     ->send();
             }
         }
+
         if ($discount_price = str_replace(',', '', $this->cartDetail['discount_price'])) {
-            $this->discount_price = floatval($discount_price);
-            // $this->cartDetail['discount_price'] = $this->discount_price;
+            $this->cartItems->each(function (CartItem $item) {
+                if ($item->discount_price && $item->discount_price > 0) {
+                    $this->discount_price += $item->discount_price;
+                }
+            });
+            $this->discount_price += floatval($discount_price);
             $this->total_price = $this->sub_total + ($this->sub_total * $this->tax / 100) - $this->discount_price;
         }
         $this->fillMember();
