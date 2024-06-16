@@ -344,29 +344,34 @@ use Filament\Facades\Filament;
   let index;
 
   $wire.on('open-modal', (event) => {
-    let inputId = event.inputId;
-    let title = event.title;
-    let titleModal = document.getElementById("titleEditDetail");
-    titleModal.innerHTML = title;
-    index = event.index;
-    input = document.getElementById(inputId);
-    const result = [...(input.parentNode.parentNode.parentNode.parentNode.parentNode.children)].forEach((child, i) => {
-      if (i != index) {
-        child.classList.add('hidden');
-      }
-    });
-    input.classList.remove('hidden');
+    if (event.inputId != undefined) {
+      let inputId = event.inputId;
+      let title = event.title;
+      let titleModal = document.getElementById("titleEditDetail");
+      titleModal.innerHTML = title;
+      index = event.index;
+      input = document.getElementById(inputId);
+      const result = [...(input.parentNode.parentNode.parentNode.parentNode.parentNode.children)].forEach((child, i) => {
+        if (i != index) {
+          child.classList.add('hidden');
+        }
+      });
+      input.classList.remove('hidden');
+    }
     modalOpened = true;
   });
   $wire.on('close-modal', (event) => {
-    let titleModal = document.getElementById("titleEditDetail");
-    titleModal.innerHTML = '@lang('Edit detail')';
-    const result = [...(input.parentNode.parentNode.parentNode.parentNode.parentNode.children)].forEach((child, i) => {
-      if (i != index) {
-        child.classList.remove('hidden');
-      }
-    });
-    input.classList.add('hidden');
+    if(input != undefined) {
+      let titleModal = document.getElementById("titleEditDetail");
+      titleModal.innerHTML = '@lang('Edit detail')';
+      const result = [...(input.parentNode.parentNode.parentNode.parentNode.parentNode.children)].forEach((child, i) => {
+        if (i != index) {
+          child.classList.remove('hidden');
+        }
+      });
+      input.classList.add('hidden');
+      input = undefined
+    }
     modalOpened = false;
   });
 
