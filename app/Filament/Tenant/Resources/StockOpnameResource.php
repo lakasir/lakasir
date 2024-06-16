@@ -76,14 +76,6 @@ class StockOpnameResource extends Resource
         return $table
             ->defaultSort('created_at', 'desc')
             ->columns([
-                TextColumn::make('status')
-                    ->translateLabel()
-                    ->badge()
-                    ->color(fn (string $state): string => match ($state) {
-                        StockOpnameStatus::pending => 'gray',
-                        StockOpnameStatus::reviewing => 'warning',
-                        StockOpnameStatus::approved => 'success',
-                    }),
                 TextColumn::make('number')
                     ->translateLabel()
                     ->searchable(),
@@ -92,6 +84,14 @@ class StockOpnameResource extends Resource
                     ->counts('stockOpnameItems'),
                 TextColumn::make('date')
                     ->date(),
+                TextColumn::make('status')
+                    ->translateLabel()
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        StockOpnameStatus::pending => 'gray',
+                        StockOpnameStatus::reviewing => 'warning',
+                        StockOpnameStatus::approved => 'success',
+                    }),
             ])
             ->filters([
                 SelectFilter::make('status')
