@@ -18,12 +18,13 @@ class ExpiredProduct extends BaseWidget
             ->columns([
                 TextColumn::make('name')
                     ->translateLabel(),
-                TextColumn::make('category.name')
-                    ->translateLabel(),
                 TextColumn::make('expired')
                     ->getStateUsing(fn (Product $product) => $product->expired_stock->expired)
                     ->date()
                     ->translateLabel(),
-            ]);
+            ])
+            ->recordUrl(function (Product $product) {
+                return '/member/products/'.$product->getKey().'/edit';
+            });
     }
 }

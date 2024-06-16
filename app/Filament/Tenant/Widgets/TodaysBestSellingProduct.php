@@ -37,9 +37,7 @@ class TodaysBestSellingProduct extends BaseWidget
                     ->translateLabel(),
                 TextColumn::make('total_qty')
                     ->translateLabel(),
-                TextColumn::make('selling.code')
-                    ->url('/member/sellings')
-                    ->translateLabel(),
-            ]);
+            ])
+            ->paginated(false);
     }
 }
