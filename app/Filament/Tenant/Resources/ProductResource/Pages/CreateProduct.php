@@ -31,5 +31,8 @@ class CreateProduct extends CreateRecord
                 $this->form->getState()['original_name']
             );
         $product->save();
+        $stock = $product->stocks->first();
+        $stock->expired = $this->data['expired'] ?? null;
+        $stock->save();
     }
 }
