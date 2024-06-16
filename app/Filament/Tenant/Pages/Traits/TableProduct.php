@@ -26,6 +26,7 @@ trait TableProduct
             ->query(
                 Product::query()
                     ->with('stocks')
+                    ->where('stock', '>', 0)
                     ->limit(12)
             )
             ->paginated(false)
