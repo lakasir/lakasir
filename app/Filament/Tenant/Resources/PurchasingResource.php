@@ -23,6 +23,7 @@ use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
 class PurchasingResource extends Resource
@@ -138,6 +139,10 @@ class PurchasingResource extends Resource
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
+            ])
+            ->filters([
+                SelectFilter::make('status')
+                    ->options(PurchasingStatus::all()),
             ]);
     }
 
