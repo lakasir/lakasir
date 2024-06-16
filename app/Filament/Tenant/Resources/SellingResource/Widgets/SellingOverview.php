@@ -104,16 +104,16 @@ class SellingOverview extends BaseWidget
             default => ''
         };
 
-        $trend = 'sideway';
+        $trend = __('sideway');
         $color = 'warning';
         $icon = 'heroicon-m-minus';
         if ($totalYesterdayRevenue > $totalTodayRevenue) {
-            $trend = 'decrease';
+            $trend = __('decrease');
             $color = 'danger';
             $icon = 'heroicon-m-arrow-trending-down';
         }
         if ($totalYesterdayRevenue < $totalTodayRevenue) {
-            $trend = 'increase';
+            $trend = __('increase');
             $color = 'success';
             $icon = 'heroicon-m-arrow-trending-up';
         }

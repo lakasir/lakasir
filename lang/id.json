@@ -277,5 +277,11 @@
     "Nominal": "Nominal",
     "Kuota": "Kuota",
     "Start date": "Tanggal aawal",
-    "Minimal buying": "Pembelian minimal"
+    "Minimal buying": "Pembelian minimal",
+    "Today total revenue": "Pendapatan hari ini",
+    "Sales today": "Penjualan hari ini",
+    "Discount today": "Diskon hari ini",
+    "decrease": "turun",
+    "increase": "naik",
+    "sideway": "tetap"
 }

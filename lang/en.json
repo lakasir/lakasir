@@ -277,5 +277,11 @@
     "Nominal": "Nominal",
     "Kuota": "Kuota",
     "Start date": "Start date",
-    "Minimal buying": "Minimal buying"
+    "Minimal buying": "Minimal buying",
+    "Today total revenue": "Today total revenue",
+    "Sales today": "Sales today",
+    "Discount today": "Discount today",
+    "decrease": "decrease",
+    "increase": "increase",
+    "sideway": "sideway"
 }
