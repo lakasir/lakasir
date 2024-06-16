@@ -12,17 +12,13 @@ use Filament\Facades\Filament;
         <div class="flex justify-between" x-data="fullscreen">
           <p class="text-2xl font-bold">{{ __('Orders details') }}</p>
           <div class="flex gap-x-2">
-            <x-filament::icon
-              x-on:click="document.location.reload()"
-              alias="panels::topbar.global-search.field"
-              icon="heroicon-m-arrow-path"
-              class="h-5 w-5 text-gray-300 dark:text-gray-900 cursor-pointer"
+            <x-heroicon-m-arrow-path
+              x-on:mousedown="document.location.reload()"
+              class="h-5 w-5 text-gray-900 dark:text-gray-300 cursor-pointer"
             />
-            <x-filament::icon
-              x-on:click="requestFullscreen"
-              alias="panels::topbar.global-search.field"
-              icon="heroicon-m-arrows-pointing-out"
-              class="h-5 w-5 text-gray-300 dark:text-gray-900 cursor-pointer"
+            <x-heroicon-o-arrows-pointing-out
+              x-on:mousedown="requestFullscreen"
+              class="h-5 w-5 text-gray-900 dark:text-gray-300 cursor-pointer"
             />
           </div>
         </div>
