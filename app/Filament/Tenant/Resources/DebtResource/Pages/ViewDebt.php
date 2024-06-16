@@ -9,7 +9,6 @@ use App\Models\Tenants\Debt;
 use App\Models\Tenants\DebtPayment;
 use App\Services\Tenants\DebtPaymentService;
 use Filament\Actions\Action;
-use Filament\Facades\Filament;
 use Filament\Resources\Pages\ViewRecord;
 use Illuminate\Contracts\Support\Htmlable;
 
@@ -30,10 +29,11 @@ class ViewDebt extends ViewRecord
     {
         return [
             Action::make('add_payment')
+                ->translateLabel()
                 ->icon('heroicon-s-credit-card')
                 ->model(DebtPayment::class)
                 ->visible(function () {
-                    if (! $this->record->status && Filament::auth()->user()->can('create debt payment')) {
+                    if (! $this->record->status && can('create debt payment')) {
                         return true;
                     }
 

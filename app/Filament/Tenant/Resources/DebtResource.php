@@ -5,20 +5,24 @@ namespace App\Filament\Tenant\Resources;
 use App\Filament\Tenant\Resources\DebtResource\Pages;
 use App\Filament\Tenant\Resources\DebtResource\RelationManagers\DebtItemsRelationManager;
 use App\Filament\Tenant\Resources\DebtResource\RelationManagers\DebtPaymentsRelationManager;
+use App\Filament\Tenant\Resources\DebtResource\Traits\HasDebtPaymentForm;
 use App\Models\Tenants\Debt;
+use App\Models\Tenants\DebtPayment;
 use App\Models\Tenants\Setting;
+use App\Services\Tenants\DebtPaymentService;
 use App\Traits\HasTranslatableResource;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
 use Filament\Resources\RelationManagers\RelationGroup;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\Action;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
 class DebtResource extends Resource
 {
-    use HasTranslatableResource;
+    use HasDebtPaymentForm, HasTranslatableResource;
 
     protected static ?string $model = Debt::class;
 
@@ -26,6 +30,8 @@ class DebtResource extends Resource
 
     public static function table(Table $table): Table
     {
+        $self = new self();
+
         return $table
             ->defaultSort('created_at', 'desc')
             ->columns([
@@ -60,6 +66,21 @@ class DebtResource extends Resource
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
+                Action::make('add_payment')
+                    ->translateLabel()
+                    ->icon('heroicon-s-credit-card')
+                    ->model(DebtPayment::class)
+                    ->visible(function ($record) {
+                        if (! $record->status && can('create debt payment')) {
+                            return true;
+                        }
+
+                        return false;
+                    })
+                    ->form(fn ($record) => $self->getFormPayment($record))
+                    ->action(function (array $data, Debt $debt, DebtPaymentService $dpService): void {
+                        $dpService->create($debt, $data);
+                    }),
             ]);
     }
 
