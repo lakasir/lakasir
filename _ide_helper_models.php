@@ -442,6 +442,7 @@ namespace App\Models\Tenants{
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Tenants\CartItem> $CartItems
  * @property-read int|null $cart_items_count
  * @property-read \App\Models\Tenants\Category $category
+ * @property-read mixed $expired_stock
  * @property-read mixed $has_expired_stock
  * @property-read mixed $hero_image
  * @property mixed $initial_price_calculate
@@ -452,7 +453,6 @@ namespace App\Models\Tenants{
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Tenants\Stock> $stocks
  * @property-read int|null $stocks_count
  * @method static \Database\Factories\Tenants\ProductFactory factory($count = null, $state = [])
- * @method static \Illuminate\Database\Eloquent\Builder|Product getExpiredStock()
  * @method static \Illuminate\Database\Eloquent\Builder|Product nearestExpiredProduct()
  * @method static \Illuminate\Database\Eloquent\Builder|Product newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Product newQuery()
@@ -554,6 +554,7 @@ namespace App\Models\Tenants{
  * @property float $total_initial_price
  * @property float $total_selling_price
  * @property float $tax
+ * @property string $status
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Tenants\Stock> $stocks
@@ -568,6 +569,7 @@ namespace App\Models\Tenants{
  * @method static \Illuminate\Database\Eloquent\Builder|Purchasing whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Purchasing whereImage($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Purchasing whereNumber($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Purchasing whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Purchasing whereSupplierId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Purchasing whereTax($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Purchasing whereTotalInitialPrice($value)
@@ -623,6 +625,7 @@ namespace App\Models\Tenants{
  * @property float $total_price
  * @property string $tax_price
  * @property float|null $total_cost
+ * @property float $total_discount_per_item
  * @property int $friend_price
  * @property int|null $payment_method_id
  * @property float $tax
@@ -661,6 +664,7 @@ namespace App\Models\Tenants{
  * @method static \Illuminate\Database\Eloquent\Builder|Selling whereTax($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Selling whereTaxPrice($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Selling whereTotalCost($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Selling whereTotalDiscountPerItem($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Selling whereTotalPrice($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Selling whereTotalQty($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Selling whereUpdatedAt($value)
@@ -736,6 +740,7 @@ namespace App\Models\Tenants{
  * @property int $id
  * @property int $product_id
  * @property int|null $purchasing_id
+ * @property int $is_ready
  * @property float $stock
  * @property float $init_stock
  * @property float|null $initial_price
@@ -763,6 +768,7 @@ namespace App\Models\Tenants{
  * @method static \Illuminate\Database\Eloquent\Builder|Stock whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Stock whereInitStock($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Stock whereInitialPrice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Stock whereIsReady($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Stock whereProductId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Stock wherePurchasingId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Stock whereSellingPrice($value)
@@ -780,6 +786,7 @@ namespace App\Models\Tenants{
  * 
  *
  * @property int $id
+ * @property string $status
  * @property string $number
  * @property string $pic
  * @property string $date
@@ -795,6 +802,7 @@ namespace App\Models\Tenants{
  * @method static \Illuminate\Database\Eloquent\Builder|StockOpname whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|StockOpname whereNumber($value)
  * @method static \Illuminate\Database\Eloquent\Builder|StockOpname wherePic($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|StockOpname whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|StockOpname whereUpdatedAt($value)
  * @mixin \Eloquent
  */
@@ -963,6 +971,7 @@ namespace App\Models\Tenants{
  * @property float $minimal_buying
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Database\Factories\Tenants\VoucherFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|Voucher newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Voucher newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Voucher query()
