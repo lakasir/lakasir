@@ -30,17 +30,15 @@ use Filament\Facades\Filament;
           <div class="flex gap-x-1">
             <a
               href="/member/sellings"
-              class="py-1 px-4 flex justify-center items-center bg-gray-100 rounded-lg">
-              <x-heroicon-o-arrow-left class="h-4 w-4 text-gray-500"/>
+              class="py-1 px-4 flex justify-center items-center bg-gray-100 rounded-lg gap-x-1 text-gray-500">
+                <x-heroicon-o-arrow-left class="h-4 w-4 text-gray-500"/>
+                <p>{{ __('Back') }} </p>
             </a>
-            <button
-              class="py-1 px-4 bg-[#ff6600] text-white rounded-lg"
-              x-on:click="$dispatch('open-modal', {id: 'edit-detail'})"
-              >{{ __('Edit Detail') }}</button>
-            <button class="py-1 px-4 bg-red-200 text-red-500 rounded-lg"
+            <button class="py-1 px-4 bg-red-200 text-red-500 rounded-lg flex gap-x-1 items-center"
               wire:confirm="Are you sure you want to clear all of the items?"
               wire:click.prevent="clearCart" >
-              <x-heroicon-o-trash class="h-4 w-4 text-red-500"/>
+                <x-heroicon-o-trash class="h-4 w-4 text-red-500"/>
+                <p>{{ __('Clear') }} </p>
             </button>
           </div>
         </div>
@@ -126,10 +124,12 @@ use Filament\Facades\Filament;
   </div>
   <x-filament::modal
     id="edit-detail"
-    width="2xl">
+    width="2xl"
+    x-ref="storeCartForm"
+    >
     <form wire:submit.prevent="storeCart">
       <x-slot name="heading">
-        {{ __('Edit detail') }}
+        <p id="titleEditDetail">{{ __('Edit detail') }}</p>
       </x-slot>
     {{ $this->storeCartForm }}
     <x-filament::button type="submit" class="mt-10">
@@ -340,11 +340,33 @@ use Filament\Facades\Filament;
   let barcodeTimeout;
   let scannerEnabled = true;
   let modalOpened = false;
+  let input;
+  let index;
 
   $wire.on('open-modal', (event) => {
+    let inputId = event.inputId;
+    let title = event.title;
+    let titleModal = document.getElementById("titleEditDetail");
+    titleModal.innerHTML = title;
+    index = event.index;
+    input = document.getElementById(inputId);
+    const result = [...(input.parentNode.parentNode.parentNode.parentNode.parentNode.children)].forEach((child, i) => {
+      if (i != index) {
+        child.classList.add('hidden');
+      }
+    });
+    input.classList.remove('hidden');
     modalOpened = true;
   });
   $wire.on('close-modal', (event) => {
+    let titleModal = document.getElementById("titleEditDetail");
+    titleModal.innerHTML = '@lang('Edit detail')';
+    const result = [...(input.parentNode.parentNode.parentNode.parentNode.parentNode.children)].forEach((child, i) => {
+      if (i != index) {
+        child.classList.remove('hidden');
+      }
+    });
+    input.classList.add('hidden');
     modalOpened = false;
   });
 

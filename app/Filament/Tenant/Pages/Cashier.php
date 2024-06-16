@@ -129,15 +129,35 @@ class Cashier extends Page implements HasForms, HasTable
                             ->pluck('name', 'id')
                             ->toArray();
                     })
+                    ->hiddenLabel()
+                    ->extraAttributes([
+                        'id' => 'memberSelect',
+                        'class' => 'hidden',
+                    ])
                     ->searchable(),
-                RichEditor::make('note'),
+                RichEditor::make('note')
+                    ->hiddenLabel()
+                    ->extraAttributes([
+                        'id' => 'noteInput',
+                        'class' => 'hidden',
+                    ]),
                 TextInput::make('voucher')
+                    ->hiddenLabel()
+                    ->extraAttributes([
+                        'id' => 'voucherInput',
+                        'class' => 'hidden',
+                    ])
                     ->visible(hasFeatureAndPermission(Voucher::class)),
                 TextInput::make('discount_price')
                     ->mask(RawJs::make('$money($input)'))
                     ->stripCharacters(',')
                     ->numeric()
                     ->prefix(Setting::get('currency', 'IDR'))
+                    ->extraAttributes([
+                        'id' => 'discountInput',
+                        'class' => 'hidden',
+                    ])
+                    ->hiddenLabel()
                     ->label(__('Manual Discount')),
             ])
             ->statePath('cartDetail')
