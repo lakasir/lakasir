@@ -3,9 +3,11 @@
 namespace App\Filament\Tenant\Resources\SellingResource\Widgets;
 
 use App\Models\Tenants\Selling;
+use App\Models\Tenants\SellingDetail;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Number;
 
 class SellingOverview extends BaseWidget
 {
@@ -14,6 +16,8 @@ class SellingOverview extends BaseWidget
     protected function getStats(): array
     {
         $totalRevenue = $this->getTotalRevenue();
+        $todaySales = $this->getSalesToday();
+        $discountToday = $this->getDiscountToday();
 
         return [
             Stat::make(__('Today total revenue'), $totalRevenue['total_revenue'])
@@ -21,7 +25,32 @@ class SellingOverview extends BaseWidget
                 ->description($totalRevenue['description'])
                 ->chart([$totalRevenue['yesterdayRevenue'], $totalRevenue['todayRevenue']])
                 ->color($totalRevenue['color']),
+            Stat::make(__('Sales today'), $todaySales),
+            Stat::make(__('Discount today'), $discountToday),
         ];
+    }
+
+    private function getDiscountToday()
+    {
+        $startDate = today()->startOfDay();
+        $endDate = today()->endOfDay();
+        $totalDiscountSellings = Selling::whereBetween('date', [$startDate, $endDate])
+            ->sum('discount_price');
+
+        $totalDiscountSellingDetails = SellingDetail::whereHas('selling', function ($query) use ($startDate, $endDate) {
+            $query->whereBetween('date', [$startDate, $endDate]);
+        })->sum('discount_price');
+
+        $totalDiscount = $totalDiscountSellings + $totalDiscountSellingDetails;
+
+        return Number::abbreviate($totalDiscount);
+    }
+
+    private function getSalesToday()
+    {
+        $salesToday = Selling::whereDate('date', today())->count();
+
+        return $salesToday;
     }
 
     private function getTotalRevenue()
@@ -96,7 +125,7 @@ class SellingOverview extends BaseWidget
 
         return [
             'total_revenue' => $totalTodayRevenue.$readable,
-            'description' => $prosentase.'% '.$trend,
+            'description' => round($prosentase).'% '.$trend,
             'yesterdayRevenue' => $totalYesterdayRevenue,
             'todayRevenue' => $totalTodayRevenue,
             'color' => $color,
