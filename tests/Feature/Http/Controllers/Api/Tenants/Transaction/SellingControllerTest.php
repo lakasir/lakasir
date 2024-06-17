@@ -311,6 +311,34 @@ test('cashier can create the seling with manual discount', function () {
     ]);
 });
 
+test('cashier can create the seling with manual discount using payed money less than total price', function () {
+    $user = User::first();
+
+    $response = actingAs($user)->postJson('/api/transaction/selling', [
+        'payed_money' => 19000,
+        'friend_price' => false,
+        'products' => [
+            [
+                'product_id' => $this->product->id,
+                'qty' => 1,
+            ],
+        ],
+        'discount_price' => 1000,
+    ]);
+
+    $response->assertOk()
+        ->assertJsonPath('message', 'success create selling');
+
+    $this->assertDatabaseHas('sellings', [
+        'discount_price' => 1000,
+        'total_price' => 20000,
+        'payed_money' => 19000,
+        'tax_price' => 0.00,
+        'tax' => 0,
+        'money_changes' => 0,
+    ]);
+});
+
 test('cashier can create the selling with discount per item', function () {
     $user = User::first();
 
@@ -342,6 +370,42 @@ test('cashier can create the selling with discount per item', function () {
     $this->assertDatabaseHas('selling_details', [
         'product_id' => $this->product->id,
         'discount_price' => 1000,
+        'price' => 20000,
+        'cost' => 10000,
+    ]);
+});
+
+test('cashier can create the selling with discount per item using payed money less than total price', function () {
+    $user = User::first();
+
+    $response = actingAs($user)->postJson('/api/transaction/selling', [
+        'payed_money' => 15000,
+        'friend_price' => false,
+        'products' => [
+            [
+                'product_id' => $this->product->id, // price 20000
+                'qty' => 1,
+                'discount_price' => 5000,
+            ],
+        ],
+    ]);
+
+    $response->assertOk()
+        ->assertJsonPath('message', 'success create selling');
+
+    $this->assertDatabaseHas('sellings', [
+        'payed_money' => 15000,
+        'discount_price' => 0,
+        'total_price' => 20000,
+        'tax_price' => 0.00,
+        'tax' => 0,
+        'money_changes' => 0,
+        'total_discount_per_item' => 5000,
+    ]);
+
+    $this->assertDatabaseHas('selling_details', [
+        'product_id' => $this->product->id,
+        'discount_price' => 5000,
         'price' => 20000,
         'cost' => 10000,
     ]);
