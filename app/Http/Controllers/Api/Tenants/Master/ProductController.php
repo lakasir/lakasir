@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Tenants\Master;
 
+use App\Filters\ComparisonFilter;
 use App\Http\Controllers\Controller;
 use App\Http\Filters\SearchFields;
 use App\Http\Requests\Tenants\Master\ProductRequest;
@@ -23,6 +24,7 @@ class ProductController extends Controller
                 'type',
                 'category.name',
                 'unit',
+                ...ComparisonFilter::setFilters('stock', ['gt', 'ge', 'lt', 'le', 'eq', 'ne']),
                 AllowedFilter::custom('global', new SearchFields, 'name,sku,barcode'),
             ])
             ->allowedIncludes(['category', 'images'])
