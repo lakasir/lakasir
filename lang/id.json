@@ -288,5 +288,7 @@
     "Insert amount": "Masukkan jumlah",
     "Amount": "Jumlah",
     "Back": "Kembali",
-    "Clear": "Bersihkan"
+    "Clear": "Bersihkan",
+    "Your transaction was successfull": "Transaksi berhasil",
+    "Success": "Sukses"
 }

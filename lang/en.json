@@ -288,5 +288,7 @@
     "Insert amount": "Insert amount",
     "Amount": "Amount",
     "Back": "Back",
-    "Clear": "Clear"
+    "Clear": "Clear",
+    "Your transaction was successfull": "Your transaction was successfull",
+    "Success": "Success"
 }
