@@ -1,2 +1,8 @@
 @import '/vendor/filament/filament/resources/css/theme.css';
 @config '../../../../tailwind.config.js';
+
+@layer components {
+  .fi-sidebar-nav {
+    @apply bg-white drop-shadow-md dark:bg-gray-900;
+  }
+}
