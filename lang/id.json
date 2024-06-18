@@ -284,5 +284,9 @@
     "decrease": "turun",
     "increase": "naik",
     "sideway": "tetap",
-    "Add payment": "Tagih pembayaran"
+    "Add payment": "Tagih pembayaran",
+    "Insert amount": "Masukkan jumlah",
+    "Amount": "Jumlah",
+    "Back": "Kembali",
+    "Clear": "Bersihkan"
 }

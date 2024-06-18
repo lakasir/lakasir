@@ -284,5 +284,9 @@
     "decrease": "decrease",
     "increase": "increase",
     "sideway": "sideway",
-    "Add payment": "Add payment"
+    "Add payment": "Add payment",
+    "Insert amount": "Insert amount",
+    "Amount": "Amount",
+    "Back": "Back",
+    "Clear": "Clear"
 }
