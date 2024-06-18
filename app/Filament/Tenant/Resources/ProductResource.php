@@ -2,13 +2,16 @@
 
 namespace App\Filament\Tenant\Resources;
 
+use App\Features\ProductInitialPrice;
+use App\Features\ProductSku;
+use App\Features\ProductStock;
+use App\Features\ProductType;
 use App\Filament\Tenant\Resources\ProductResource\Pages;
 use App\Filament\Tenant\Resources\ProductResource\Traits\HasProductForm;
 use App\Models\Tenants\Product;
 use App\Models\Tenants\Setting;
 use App\Traits\HasTranslatableResource;
 use Filament\Forms\Components\BaseFileUpload;
-use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -18,6 +21,7 @@ use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Laravel\Pennant\Feature;
 use League\Flysystem\UnableToCheckFileExistence;
 
 class ProductResource extends Resource
@@ -44,13 +48,16 @@ class ProductResource extends Resource
                     ->translateLabel()
                     ->searchable(),
                 TextColumn::make('sku')
+                    ->visible(Feature::active(ProductSku::class))
                     ->translateLabel(),
                 TextColumn::make('stock')
                     ->translateLabel()
+                    ->visible(Feature::active(ProductStock::class))
                     ->sortable(),
                 TextColumn::make('unit')
                     ->translateLabel(),
                 TextColumn::make('initial_price')
+                    ->visible(Feature::active(ProductInitialPrice::class))
                     ->translateLabel()
                     ->sortable()
                     ->money(Setting::get('currency', 'IDR')),
@@ -59,15 +66,16 @@ class ProductResource extends Resource
                     ->sortable()
                     ->money(Setting::get('currency', 'IDR')),
                 TextColumn::make('net_profit')
+                    ->visible(Feature::active(ProductInitialPrice::class))
                     ->translateLabel()
                     ->sortable()
                     ->money(Setting::get('currency', 'IDR')),
                 TextColumn::make('type')
+                    ->visible(Feature::active(ProductType::class))
                     ->translateLabel(),
                 ToggleColumn::make('is_non_stock')
-                    ->translateLabel()
-                    ->label('Non Stock'),
-
+                    ->visible(Feature::active(ProductStock::class))
+                    ->translateLabel(),
             ])
             ->filters([
                 Filter::make('expired')
@@ -135,11 +143,7 @@ class ProductResource extends Resource
             $this->generateCategoryFormComponent(),
             $this->generateStockFormComponent(),
             $this->generateUnitFormComponent(),
-            DatePicker::make('expired')
-                ->visible(fn (string $operation) => $operation == 'create')
-                ->rule('after:now')
-                ->required()
-                ->native(false),
+            $this->generateExpiredFormComponent(),
             $this->generateInitialPriceFormComponent(),
             $this->generateSellingPriceFormComponent(),
             $this->generateTypeFormComponent()

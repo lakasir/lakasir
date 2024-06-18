@@ -2,15 +2,23 @@
 
 namespace App\Filament\Tenant\Resources\ProductResource\Traits;
 
+use App\Features\ProductBarcode;
+use App\Features\ProductExpired;
+use App\Features\ProductInitialPrice;
+use App\Features\ProductSku;
+use App\Features\ProductStock;
+use App\Features\ProductType;
 use App\Models\Tenants\Category;
 use App\Models\Tenants\Product;
 use App\Models\Tenants\Setting;
 use Filament\Forms\Components\Checkbox;
+use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Set;
 use Filament\Support\RawJs;
+use Laravel\Pennant\Feature;
 
 trait HasProductForm
 {
@@ -84,9 +92,12 @@ trait HasProductForm
     public function generateInitialPriceFormComponent(): TextInput
     {
         return TextInput::make('initial_price')
+            ->visible(Feature::active(ProductInitialPrice::class))
             ->translateLabel()
             ->mask(RawJs::make('$money($input)'))
             ->lte('selling_price')
+            ->default(0)
+            // ->visible(Feature::active(Product))
             ->stripCharacters(',')
             ->numeric()
             ->prefix(Setting::get('currency', 'IDR'))
@@ -105,6 +116,7 @@ trait HasProductForm
     {
         return TextInput::make('sku')
             ->translateLabel()
+            ->visible(Feature::active(ProductSku::class))
             ->hint(__('Leave it blank to auto generate'));
     }
 
@@ -113,6 +125,7 @@ trait HasProductForm
         return TextInput::make('stock')
             ->translateLabel()
             ->numeric()
+            ->visible(Feature::active(ProductStock::class))
             ->disabled(function ($get) {
                 return $get('is_non_stock') || $get('type') == 'service';
             })
@@ -127,6 +140,7 @@ trait HasProductForm
                 'product' => 'Product',
                 'service' => 'Service',
             ])
+            ->visible(Feature::active(ProductType::class))
             ->afterStateUpdated(function (mixed $state, Set $set) {
                 if ($state == 'service') {
                     $set('stock', 0);
@@ -141,6 +155,7 @@ trait HasProductForm
     public function generateBarcodeFormComponent(): TextInput
     {
         return TextInput::make('barcode')
+            ->visible(Feature::active(ProductBarcode::class))
             ->translateLabel();
     }
 
@@ -148,11 +163,23 @@ trait HasProductForm
     {
         return Checkbox::make('is_non_stock')
             ->translateLabel()
+            ->visible(Feature::active(ProductStock::class))
             ->live()
             ->afterStateUpdated(function ($state, $set) {
                 if ($state) {
                     $set('stock', 0);
                 }
             });
+    }
+
+    public function generateExpiredFormComponent()
+    {
+        return DatePicker::make('expired')
+            ->visible(function (string $operation) {
+                return Feature::active(ProductExpired::class) && $operation == 'create';
+            })
+            ->rule('after:now')
+            ->required()
+            ->native(false);
     }
 }

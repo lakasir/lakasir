@@ -2,10 +2,12 @@
 
 namespace App\Observers;
 
+use App\Features\ProductStock;
 use App\Models\Tenants\Product;
 use App\Services\Tenants\StockService;
 use Illuminate\Contracts\Validation\DataAwareRule;
 use Illuminate\Support\Str;
+use Laravel\Pennant\Feature;
 
 class ProductObserver extends AbstractObserver implements DataAwareRule
 {
@@ -34,6 +36,9 @@ class ProductObserver extends AbstractObserver implements DataAwareRule
 
     public function created(Product $product)
     {
+        if (! Feature::active(ProductStock::class)) {
+            $product->is_non_stock = true;
+        }
         if (! $product->sku) {
             $product->sku = $this->generateSku($product);
         }
@@ -44,8 +49,8 @@ class ProductObserver extends AbstractObserver implements DataAwareRule
         $stockService = new StockService();
         $stockService->create([
             'product_id' => $product->getKey(),
-            'stock' => $product->stock,
-            'init_stock' => $product->stock,
+            'stock' => $product->stock ?? 0,
+            'init_stock' => $product->stock ?? 0,
             'initial_price' => $product->initial_price,
             'selling_price' => $product->selling_price,
             'type' => 'in',

@@ -24,9 +24,19 @@ trait TableProduct
     {
         return $table
             ->query(
+                // TODO: fix the query for product with this condition
+                // * hide the prodcut when the type is product but that has a 0 stock
+                // * show the product when the type is service but that has a 0 stock
+                // * show the product when the type is procut but that has a 0 stock and then has a is_non_stock true
                 Product::query()
-                    ->with('stocks')
-                    ->where('stock', '>', 0)
+                    ->where(function ($query) {
+                        $query->where('type', 'product')
+                            ->where(function ($query) {
+                                $query->where('stock', '>', 0)
+                                    ->orWhere('is_non_stock', true);
+                            });
+                    })
+                    ->orWhere('type', 'service')
                     ->limit(12)
             )
             ->paginated(false)
@@ -79,11 +89,13 @@ trait TableProduct
             ->headerActionsPosition(HeaderActionsPosition::Bottom)
             ->searchPlaceholder(__('Search (SKU, name, barcode)'))
             ->actions([
-                Action::make('add_item')
+                Action::make('insert_amount')
+                    ->translateLabel()
                     ->icon('heroicon-o-plus')
                     ->button()
                     ->form([
-                        TextInput::make('stock')
+                        TextInput::make('amount')
+                            ->translateLabel()
                             ->extraAttributes([
                                 'focus',
                             ])
