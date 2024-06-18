@@ -29,6 +29,7 @@
         "barryvdh/laravel-debugbar": "^3.13",
         "barryvdh/laravel-ide-helper": "^3.0",
         "fakerphp/faker": "^1.9.1",
+        "laradumps/laradumps": "^3.0",
         "laravel-lang/common": "^6.2",
         "laravel/breeze": "^1.9",
         "laravel/sail": "^1.0.1",
