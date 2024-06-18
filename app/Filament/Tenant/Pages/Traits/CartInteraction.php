@@ -35,7 +35,7 @@ trait CartInteraction
                 ->qty ?? 0
             ) + 1;
         } else {
-            $qty = $data['stock'];
+            $qty = $data['amount'];
         }
         if (! $this->validateStock($product, $qty)) {
             return;
