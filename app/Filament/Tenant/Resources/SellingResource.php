@@ -2,6 +2,7 @@
 
 namespace App\Filament\Tenant\Resources;
 
+use App\Features\ProductInitialPrice;
 use App\Filament\Tenant\Resources\SellingDetailResource\RelationManagers\SellingDetailsRelationManager;
 use App\Filament\Tenant\Resources\SellingResource\Pages;
 use App\Models\Tenants\Selling;
@@ -64,10 +65,12 @@ class SellingResource extends Resource
                 TextColumn::make('tax_price')
                     ->translateLabel()
                     ->sortable()
+                    ->visible(feature(ProductInitialPrice::class))
                     ->money(Setting::get('currency', 'IDR')),
                 TextColumn::make('total_cost')
                     ->translateLabel()
                     ->sortable()
+                    ->visible(feature(ProductInitialPrice::class))
                     ->money(Setting::get('currency', 'IDR')),
             ])
             ->searchPlaceholder('Search (Code, User, Customer Number')
