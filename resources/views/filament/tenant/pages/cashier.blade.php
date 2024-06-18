@@ -231,8 +231,11 @@ use App\Features\{PaymentShortcutButton};
     >
     <div class="flex justify-center items-center flex-col">
       <x-heroicon-o-check-circle style="color: rgb(34 197 94); width: 200px" />
-      <p class="font-bold text-4xl">@lang('Success')</p>
-      <p>@lang('Your transaction was successfull')</p>
+      <p class="">@lang('Success')</p>
+      <p class="font-bold text-3xl">
+        @lang('Change'):
+        <span id="changes"></span>
+      </p>
     </div>
     <x-slot name="footer">
       <div class="grid grid-cols-2 gap-x-2">
@@ -251,10 +254,13 @@ use App\Features\{PaymentShortcutButton};
 <script>
   let selling = null;
   $wire.on('selling-created', (event) => {
+    selling = event.selling;
     $wire.dispatch('close-modal', {id: 'proceed-the-payment'});
 
-    $wire.dispatch('open-modal', {id: 'success-modal'});
-    selling = event.selling;
+    $wire.dispatch('open-modal', {id: 'success-modal', money_changes: selling.money_changes });
+    setTimeout(() => {
+      document.getElementById('changes').innerHTML = moneyFormat(selling.money_changes);
+    }, 300);
   });
   document.getElementById("printReceiptButton").addEventListener('click', (event) => {
     let about = @js($about);
