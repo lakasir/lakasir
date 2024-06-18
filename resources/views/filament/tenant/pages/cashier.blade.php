@@ -54,7 +54,7 @@ use App\Features\{PaymentShortcutButton};
                   <p class="font-semibold"> {{ $item->product->name }}</p>
                   <div class="flex space-x-3 h-8">
                     <button
-                      class="!bg-primary rounded-lg px-2 py-1"
+                      class="!bg-lakasir-primary rounded-lg px-2 py-1"
                       wire:click.stop="addCart( {{ $item->product_id  }} )"
                       wire:loading.attr="disabled"
                       >
@@ -79,7 +79,7 @@ use App\Features\{PaymentShortcutButton};
                 </div>
               </div>
               <div class="items-center text-right space-y-2">
-                <p class="font-semibold text-primary">{{ $item->price_format_money }}</p>
+                <p class="font-semibold text-lakasir-primary">{{ $item->price_format_money }}</p>
                 <div class="flex justify-end">
                 <x-filament::input.wrapper class="w-1/2">
                   <x-filament::input
@@ -95,7 +95,7 @@ use App\Features\{PaymentShortcutButton};
                 </x-filament::input.wrapper>
                 </div>
                 @if($item->discount_price && $item->discount_price > 0)
-                  <p class="font-semibold text-primary">{{ $item->final_price_format }}</p>
+                  <p class="font-semibold text-lakasir-primary">{{ $item->final_price_format }}</p>
                 @endif
               </div>
             </div>
@@ -117,7 +117,7 @@ use App\Features\{PaymentShortcutButton};
           </div>
         </div>
         <button
-          class="py-4 px-2 bg-primary text-white rounded-lg w-full"
+          class="py-4 px-2 bg-lakasir-primary text-white rounded-lg w-full"
           x-on:mousedown="$dispatch('open-modal', {id: 'proceed-the-payment'})"
           >{{ __('Proceed to payment') }}</button>
       </div>
@@ -148,8 +148,8 @@ use App\Features\{PaymentShortcutButton};
             <template x-for="paymentMethod in paymentMethods">
               <div
                 x-on:click="cartDetail['payment_method_id'] = paymentMethod.id; $wire.cartDetail['payment_method_id'] = paymentMethod.id;"
-                class="cursor-pointer hover:scale-105 border border-primary rounded-md px-4 py-2 flex justify-center dark:text-white text-sm"
-                :class="cartDetail['payment_method_id']  == paymentMethod.id ? 'bg-primary text-white' : 'dark:bg-gray-900 '"
+                class="cursor-pointer hover:scale-105 border border-lakasir-primary rounded-md px-4 py-2 flex justify-center dark:text-white text-sm"
+                :class="cartDetail['payment_method_id']  == paymentMethod.id ? 'bg-lakasir-primary text-white' : 'dark:bg-gray-900 '"
                 x-text="paymentMethod.name.substring(0, 8)">
               </div>
             </template>
@@ -203,7 +203,7 @@ use App\Features\{PaymentShortcutButton};
             </button>
             <button
               wire:loading.attr="disabled"
-              type="submit" class="col-span-3 bg-primary hover:bg-[#ff6611] p-2 rounded-md text-white text-lg flex justify-center items-center gap-x-2">
+              type="submit" class="col-span-3 bg-lakasir-primary hover:bg-[#ff6611] p-2 rounded-md text-white text-lg flex justify-center items-center gap-x-2">
               <div wire:loading>
                 <x-filament::loading-indicator class="h-5 w-5"/>
               </div>

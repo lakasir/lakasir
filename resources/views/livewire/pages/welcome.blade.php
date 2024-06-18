@@ -104,14 +104,14 @@ state([
             <a href="https://wa.me/6289638706830?text=Halo%20dengan%20lakasir%2C%20saya%20ingin%20mengatur%20jadwal%20demo%20dengan%20Anda.%20Bisakah%20kita%20membicarakannya%20lebih%20lanjut%3F"
               class="bg-gray-100 text-gray-400 md:w-auto w-full px-8 py-3 rounded-full flex items-center justify-center font-medium text-lg focus:ring-offset-2 focus:ring-2 focus:ring-gray-100 focus:text-gray-700 hover:text-gray-700"
             >Jadwalkan Demo</a>
-            <a href="{{ route('auth.register') }}" class="bg-primary text-white md:w-auto w-full px-8 py-3 rounded-full flex items-center justify-center font-medium text-lg focus:ring-offset-2 focus:ring-2 focus:ring-primary">Daftar</a>
+            <a href="{{ route('auth.register') }}" class="bg-lakasir-primary text-white md:w-auto w-full px-8 py-3 rounded-full flex items-center justify-center font-medium text-lg focus:ring-offset-2 focus:ring-2 focus:ring-lakasir-primary">Daftar</a>
           </div>
 
           <!-- Sidebar -->
           <div class="md:hidden">
             <div>
               <div>
-                <button class="text-white hidden left-10 fixed top-20 text-2xl px-3 py-1 bg-primary rounded-lg"
+                <button class="text-white hidden left-10 fixed top-20 text-2xl px-3 py-1 bg-lakasir-primary rounded-lg"
                   x-ref="xButton"
                   x-on:click="$refs.menu.classList.toggle('hidden'); $refs.xButton.classList.toggle('hidden');"
                   >X</button>
@@ -152,7 +152,7 @@ state([
             <br/>
             <h1 class="mt-4 text-4xl tracking-tight font-extrabold text-gray-800 sm:mt-5 lg:text-left text-left md:text-center sm:text-6xl lg:mt-6 xl:text-7xl">
               <span class="block">Lakasir</span>
-              <span class="text-primary flex items-center justify-start lg:justify-start md:justify-center w-full">Free POS</span>
+              <span class="text-lakasir-primary flex items-center justify-start lg:justify-start md:justify-center w-full">Free POS</span>
             </h1>
             <p class="mt-3 text-base text-gray-400 sm:mt-5 sm:text-xl lg:text-lg  lg:text-left text-left md:text-center xl:text-xl">
               Lakasir merupakan aplikasi point of sale (POS) yang memudahkan pengelolaan bisnis Anda.
@@ -160,7 +160,7 @@ state([
             </p>
             <div class="mt-6 sm:mt-8">
               <div class="flex md:flex-row flex-col md:space-x-5 md:space-y-0 space-y-5 lg:justify-start justify-center">
-                <a href="https://github.com/lakasir/lakasir_flutter/releases" target="_blank" class="bg-primary text-white md:w-auto w-full px-8 py-4 rounded-full flex items-center justify-center font-medium text-lg focus:ring-offset-2 focus:ring-2 focus:ring-primary">Unduh Sekarang</a>
+                <a href="https://github.com/lakasir/lakasir_flutter/releases" target="_blank" class="bg-lakasir-primary text-white md:w-auto w-full px-8 py-4 rounded-full flex items-center justify-center font-medium text-lg focus:ring-offset-2 focus:ring-2 focus:ring-lakasir-primary">Unduh Sekarang</a>
                 <a href="#_"
                   class="bg-gray-800 text-white px-8 py-4 rounded-full flex items-center justify-center font-medium text-lg focus:ring-offset-2 focus:ring-2 focus:ring-gray-800"
                   x-on:click="$refs.overlay.classList.remove('hidden'); $refs.dialog.classList.remove('hidden');"
@@ -174,7 +174,7 @@ state([
         </div>
         <div class="w-full lg:w-1/2 lg:flex lg:justify-center lg:max-w-none max-w-md lg:mt-0 mt-20 mx-auto relative hidden hero-phone">
           <div class="w-auto sm:w-64 absolute bottom-0 transform md:bottom-auto md:top-1/2 p-8 translate-y-16 md:translate-y-24 md:ml-16 z-10 left-0 bg-white text-gray-400 rounded-xl shadow-2xl hidden md:block">
-            <div class="inline-flex absolute top-0 transform -translate-y-full bg-primary left-0  space-x-1 px-4 items-center h-9 w-auto rounded-full -mt-2">
+            <div class="inline-flex absolute top-0 transform -translate-y-full bg-lakasir-primary left-0  space-x-1 px-4 items-center h-9 w-auto rounded-full -mt-2">
 
               <svg class="w-4 h-4 text-white fill-current" viewBox="0 0 534 509" xmlns="http://www.w3.org/2000/svg"><path d="m409.8 313.24 114.8-94.637c16.238-13.441 7.84-39.762-13.441-40.879l-147.84-8.96c-8.96-.56-16.801-6.161-20.16-14.56l-54.32-138.88c-7.84-19.602-35.281-19.602-43.121 0l-54.32 138.32c-3.36 8.399-11.199 14-20.16 14.56l-148.4 8.96c-21.281 1.121-29.68 27.441-13.441 40.879l114.8 94.078c6.719 5.602 10.078 15.121 7.84 23.52l-37.52 143.92c-5.04 20.16 16.8 36.398 34.719 25.199l124.88-80.078c7.84-5.04 17.359-5.04 24.64 0l125.44 80.078c17.923 11.199 39.763-5.04 34.72-25.199l-37.52-143.36c-1.68-8.398 1.12-17.359 8.402-22.961h.002Z" fill-rule="nonzero"/></svg>
               <svg class="w-4 h-4 text-white fill-current" viewBox="0 0 534 509" xmlns="http://www.w3.org/2000/svg"><path d="m409.8 313.24 114.8-94.637c16.238-13.441 7.84-39.762-13.441-40.879l-147.84-8.96c-8.96-.56-16.801-6.161-20.16-14.56l-54.32-138.88c-7.84-19.602-35.281-19.602-43.121 0l-54.32 138.32c-3.36 8.399-11.199 14-20.16 14.56l-148.4 8.96c-21.281 1.121-29.68 27.441-13.441 40.879l114.8 94.078c6.719 5.602 10.078 15.121 7.84 23.52l-37.52 143.92c-5.04 20.16 16.8 36.398 34.719 25.199l124.88-80.078c7.84-5.04 17.359-5.04 24.64 0l125.44 80.078c17.923 11.199 39.763-5.04 34.72-25.199l-37.52-143.36c-1.68-8.398 1.12-17.359 8.402-22.961h.002Z" fill-rule="nonzero"/></svg>
@@ -207,7 +207,7 @@ state([
           @if ($loop->iteration % 2 == 0)
             <div class="grid grid-cols-2 lg:grid-cols-none lg:block my-10 md:my-0">
               <div class="flex gap-x-5 justify-items-center lg:mb-10 sm:my-auto ml-10 lg:ml-0">
-                <div class="h-10 min-w-2 bg-primary rounded-lg"></div>
+                <div class="h-10 min-w-2 bg-lakasir-primary rounded-lg"></div>
                 <div class="lg:grid lg:grid-cols-1 xl:gap-y-3 lg:gap-y-1">
                   <p class="text-2xl text-gray-800 font-bold">{{ $item['title'] }}</p>
                   <p class="text-gray-400 w-4/5">{{ $item['description'] }}</p>
@@ -223,7 +223,7 @@ state([
                 <img src="{{ $item['image'] }}" class="w-44">
               </div>
               <div class="flex gap-x-5 justify-items-center lg:mt-10 sm:my-auto">
-                <div class="h-10 min-w-2 bg-primary rounded-lg"></div>
+                <div class="h-10 min-w-2 bg-lakasir-primary rounded-lg"></div>
                 <div class="lg:grid lg:grid-cols-1 xl:gap-y-3 lg:gap-y-1">
                   <p class="text-2xl text-gray-800 font-bold">{{ $item['title'] }}</p>
                   <p class="text-gray-400 w-4/5">{{ $item['description'] }}</p>
@@ -244,7 +244,7 @@ state([
       <div class="grid sm:grid-cols-2 lg:gap-20 gap-10 px-10">
         @foreach($mainFeatures as $feature)
         <div class="flex gap-x-4">
-          <div class="bg-primary rounded-2xl flex justify-center items-center min-w-10 h-10">
+          <div class="bg-lakasir-primary rounded-2xl flex justify-center items-center min-w-10 h-10">
             {!! $feature['icon'] !!}
           </div>
           <div>
@@ -305,16 +305,16 @@ state([
     </div>
   </section>
   <section id="cta" class="xl:max-w-7xl lg:max-w-3xl md:px-10 mx-auto text-white">
-    <div class="bg-primary text-center rounded-2xl my-20 p-10">
+    <div class="bg-lakasir-primary text-center rounded-2xl my-20 p-10">
       <p class="font-extrabold text-3xl">Dapatkan pemberitahuan ketika ada pembaharuan dari kami</p>
       <p class="mt-5">Jangan lewatkan update terbaru dari kami, daftarkan email anda sekarang.</p>
       <form action="#" class="mt-5 sm:mx-auto sm:flex sm:max-w-lg">
         <div class="min-w-0 flex-1">
           <label for="cta-email" class="sr-only">Alamat email</label>
-          <input id="cta-email" type="email" class="block w-full rounded-md border border-transparent px-5 py-3 text-base text-gray-900 placeholder-gray-500 shadow-sm focus:border-transparent focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-primary" placeholder="Enter your email">
+          <input id="cta-email" type="email" class="block w-full rounded-md border border-transparent px-5 py-3 text-base text-gray-900 placeholder-gray-500 shadow-sm focus:border-transparent focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-lakasir-primary" placeholder="Enter your email">
         </div>
         <div class="mt-4 sm:mt-0 sm:ml-3">
-          <button type="submit" class="block w-full rounded-md border border-transparent bg-orange-600 px-5 py-3 text-base font-medium text-white shadow hover:bg-primary focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-primary sm:px-10">Notify me</button>
+          <button type="submit" class="block w-full rounded-md border border-transparent bg-orange-600 px-5 py-3 text-base font-medium text-white shadow hover:bg-lakasir-primary focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-lakasir-primary sm:px-10">Notify me</button>
         </div>
       </form>
     </div>

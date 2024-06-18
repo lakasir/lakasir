@@ -47,7 +47,7 @@
                 </div>
 
                 <div class="col-md-6 offset-md-4">
-                  <button type="submit" class="btn btn-primary">
+                  <button type="submit" class="btn btn-lakasir-primary">
                     Reset Password
                   </button>
                 </div>
