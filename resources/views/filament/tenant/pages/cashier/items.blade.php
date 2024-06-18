@@ -11,7 +11,7 @@
         </div>
       </div>
       <div class="flex items-center">
-        <p class="font-semibold text-[#ff6600]">{{ $item->price_format_money }}</p>
+        <p class="font-semibold text-primary">{{ $item->price_format_money }}</p>
       </div>
     </div>
   @empty
