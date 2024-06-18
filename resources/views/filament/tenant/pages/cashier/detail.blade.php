@@ -3,11 +3,6 @@
 @endphp
 
 <div class="space-y-3">
-  {{-- <div class="flex justify-between hover:underline cursor-pointer" --}}
-  {{--   x-on:click="$dispatch('open-modal', {id: 'edit-detail'})" > --}}
-  {{--   <p>{{ __('Payment Method') }}</p> --}}
-  {{--   <p class="font-bold">{{ $cartDetail['payment_method_label'] ?? 'No Payment Method Selected' }}</p> --}}
-  {{-- </div> --}}
   @feature(Member::class)
     <div class="flex justify-between hover:underline cursor-pointer"
       x-on:mousedown="$dispatch('open-modal', {

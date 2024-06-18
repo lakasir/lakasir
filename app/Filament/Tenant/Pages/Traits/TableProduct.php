@@ -36,7 +36,7 @@ trait TableProduct
                                     ->orWhere('is_non_stock', true);
                             });
                     })
-                    ->orWhere('type', 'service')
+                    // ->orWhere('type', 'service')
                     ->limit(12)
             )
             ->paginated(false)

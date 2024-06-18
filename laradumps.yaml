@@ -1,0 +1,36 @@
+app:
+  primary_host: 127.0.0.1
+  secondary_host: host.docker.internal
+  port: 9191
+  workdir: /var/www/html/
+  project_path: /Users/sheenazien8/Documents/Code/laksir_project/lakasir/
+  wsl_config: wsl+Ubuntu/
+config:
+  sleep: 0
+observers:
+  auto_invoke_app: false
+  enabled_in_testing: false
+  dump: false
+  original_dump: true
+  queries: false
+  slow_queries: false
+  mail: false
+  logs: false
+  http: false
+  jobs: false
+  commands: false
+  scheduled_commands: false
+  gate: false
+logs:
+  info: false
+  warning: false
+  emergency: false
+  alert: false
+  debug: false
+  error: true
+  critical: true
+  notice: true
+  vendor: false
+  deprecated_message: false
+slow_queries:
+  threshold_in_ms: 500

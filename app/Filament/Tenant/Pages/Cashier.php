@@ -233,7 +233,6 @@ class Cashier extends Page implements HasForms, HasTable
         ]);
         $pMethod = PaymentMethod::find($request['payment_method_id']);
         $validator = Validator::make($request, [
-            'payed_money' => ['required', 'min:1'],
             'fee' => ['numeric'],
             'member_id' => Rule::requiredIf(fn () => $pMethod->is_credit),
             'due_date' => Rule::requiredIf(fn () => $pMethod->is_credit),

@@ -18,7 +18,7 @@ use function Filament\Support\format_money;
   <hr/>
   <div class="flex justify-between">
     <p class="font-bold">{{ __('Total') }}</p>
-    <p class="font-bold text-[#ff6600]" x-ref="total">{{ format_money($total_price, $currency) }}</p>
+    <p class="font-bold text-[#ff6600]" x-ref="total" data-value="{{ $total_price }}">{{ format_money($total_price, $currency) }}</p>
   </div>
   <div class="flex justify-between">
     <p class="font-bold">{{ __('Money changes') }}</p>

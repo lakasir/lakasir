@@ -1,5 +1,6 @@
 @php
 use Filament\Facades\Filament;
+use App\Features\{PaymentShortcutButton};
 
 @endphp
 <div class="">
@@ -125,7 +126,6 @@ use Filament\Facades\Filament;
   <x-filament::modal
     id="edit-detail"
     width="2xl"
-    x-ref="storeCartForm"
     >
     <form wire:submit.prevent="storeCart">
       <x-slot name="heading">
@@ -180,7 +180,9 @@ use Filament\Facades\Filament;
             x-ref="payedMoney"
             inputMode="numeric"
           >
-          <div class="grid grid-cols-3 gap-4 mt-4">
+          <div class="grid grid-cols-3 gap-4 mt-4" id="calculator-button-shortcut">
+          </div>
+          <div class="grid grid-cols-3 gap-4 mt-4" id="calculator-button">
             <button type="button" class="col-span-3 bg-gray-300 hover:bg-gray-400 p-2 rounded-md text-lg" x-on:click="append('no_changes')">{{ __('No change') }}</button>
             <button type="button" class="bg-gray-300 hover:bg-gray-400 p-2 rounded-md text-lg" x-on:click="append(7)">7</button>
             <button type="button" class="bg-gray-300 hover:bg-gray-400 p-2 rounded-md text-lg" x-on:click="append(8)">8</button>
@@ -358,8 +360,27 @@ use Filament\Facades\Filament;
       });
       input.classList.remove('hidden');
     }
+    let calculatorBtn = document.getElementById('calculator-button-shortcut');
+    calculatorBtn.innerHTML = '';
+    let totalPrice = $refs.total.getAttribute('data-value');
+    const suggestionValues = [10000, 15000, 20000, 30000, 50000, 100000];
+    if("@js(feature(PaymentShortcutButton::class))" == 'true') {
+      if (totalPrice < 100000) {
+        suggestionValues.forEach(value => {
+          if (totalPrice < value) {
+            const button = document.createElement('button');
+            button.setAttribute('type', 'button')
+            button.setAttribute('x-on:click', `append(${value})`);
+            button.className = 'bg-gray-300 hover:bg-gray-400 p-2 rounded-md text-lg';
+            button.textContent = value;
+            calculatorBtn.appendChild(button);
+          }
+        });
+      }
+    }
     modalOpened = true;
   });
+
   $wire.on('close-modal', (event) => {
     if(input != undefined) {
       let titleModal = document.getElementById("titleEditDetail");
