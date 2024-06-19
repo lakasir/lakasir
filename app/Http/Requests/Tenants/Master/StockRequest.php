@@ -76,6 +76,10 @@ class StockRequest extends FormRequest
             $this->request->remove('initial_price');
             $this->request->remove('selling_price');
         }
+        $this->request->add([
+            'product_id' => $this->route('product')->id,
+            'is_ready' => true,
+        ]);
         $this->stockService->create($this->request->all());
     }
 }
