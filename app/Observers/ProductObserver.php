@@ -51,7 +51,7 @@ class ProductObserver extends AbstractObserver implements DataAwareRule
             'product_id' => $product->getKey(),
             'stock' => $product->stock ?? 0,
             'init_stock' => $product->stock ?? 0,
-            'initial_price' => $product->initial_price,
+            'initial_price' => $product->initial_price ?? 0,
             'selling_price' => $product->selling_price,
             'type' => 'in',
             'expired' => $this->data['expired'] ?? null,
