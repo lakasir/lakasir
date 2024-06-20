@@ -6,14 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Laravel\Pennant\Feature;
 
 class AuthenticatedSessionController extends Controller
 {
-    /**
-     * Handle an incoming authentication request.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function store(LoginRequest $request)
     {
         $request->authenticate();
@@ -27,15 +23,11 @@ class AuthenticatedSessionController extends Controller
             'data' => array_merge($user->toArray(), [
                 'token' => $token->plainTextToken,
                 'permissions' => $user->roles()->first()->permissions()->where('guard_name', 'sanctum')->pluck('name')->toArray(),
+                'features' => Feature::all(),
             ]),
         ]);
     }
 
-    /**
-     * Destroy an authenticated session.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Request $request)
     {
         Auth::guard('web')->logout();

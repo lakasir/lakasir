@@ -4,9 +4,8 @@ namespace App\Features;
 
 class ProductSku
 {
-    /**
-     * Resolve the feature's initial value.
-     */
+    public $name = 'product-sku';
+
     public function resolve(mixed $scope): mixed
     {
         return true;

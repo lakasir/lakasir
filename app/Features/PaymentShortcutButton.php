@@ -4,9 +4,8 @@ namespace App\Features;
 
 class PaymentShortcutButton
 {
-    /**
-     * Resolve the feature's initial value.
-     */
+    public $name = 'payment-shortcut-button';
+
     public function resolve(mixed $scope): mixed
     {
         return true;

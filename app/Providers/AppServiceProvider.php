@@ -68,5 +68,6 @@ class AppServiceProvider extends ServiceProvider
         ]);
 
         Feature::resolveScopeUsing(fn ($driver) => null);
+        Feature::discover();
     }
 }
