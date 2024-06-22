@@ -12,6 +12,7 @@ use App\Traits\HasTranslatableResource;
 use Filament\Forms\Components\DatePicker;
 use Filament\Infolists\Components\Card;
 use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Components\TextEntry\TextEntrySize;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables\Columns\TextColumn;
@@ -58,6 +59,10 @@ class SellingResource extends Resource
                     ->default('-'),
                 TextColumn::make('date')
                     ->translateLabel(),
+                TextColumn::make('grand_total_price')
+                    ->translateLabel()
+                    ->sortable()
+                    ->money(Setting::get('currency', 'IDR')),
                 TextColumn::make('total_price')
                     ->translateLabel()
                     ->sortable()
@@ -115,6 +120,10 @@ class SellingResource extends Resource
             ->schema([
                 Card::make()
                     ->schema([
+                        TextEntry::make('grand_total_price')
+                            ->translateLabel()
+                            ->size(TextEntrySize::Large)
+                            ->money(Setting::get('currency', 'IDR')),
                         TextEntry::make('voucher')
                             ->label(__('Voucher')),
                         TextEntry::make('discount_price')
@@ -130,8 +139,7 @@ class SellingResource extends Resource
                             ->label(__('Tax price'))
                             ->money(Setting::get('currency', 'IDR')),
                         TextEntry::make('tax')
-                            ->label(__('Tax'))
-                            ->money(Setting::get('currency', 'IDR')),
+                            ->translateLabel(),
                         TextEntry::make('payed_money')
                             ->label(__('Payed money'))
                             ->money(Setting::get('currency', 'IDR')),

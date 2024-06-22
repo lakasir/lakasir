@@ -634,6 +634,7 @@ namespace App\Models\Tenants{
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\Tenants\CashDrawer|null $cashDrawer
+ * @property-read mixed $grand_total_price
  * @property-read \App\Models\Tenants\Member|null $member
  * @property-read \App\Models\Tenants\PaymentMethod|null $paymentMethod
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Tenants\SellingDetail> $sellingDetails
@@ -743,7 +744,7 @@ namespace App\Models\Tenants{
  * @property int $is_ready
  * @property float $stock
  * @property float $init_stock
- * @property float|null $initial_price
+ * @property float $initial_price
  * @property float|null $selling_price
  * @property string $type
  * @property string $date
@@ -911,7 +912,7 @@ namespace App\Models\Tenants{
  * @property int $id
  * @property string|null $fcm_token
  * @property int $is_owner
- * @property string|null $name
+ * @property string $name
  * @property string $email
  * @property \Illuminate\Support\Carbon|null $email_verified_at
  * @property string $password

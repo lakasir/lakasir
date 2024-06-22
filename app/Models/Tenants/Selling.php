@@ -4,6 +4,7 @@ namespace App\Models\Tenants;
 
 use App\Traits\UseTimezoneAwareQuery;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -49,5 +50,10 @@ class Selling extends Model
     public function scopeIsNotPaid(Builder $builder): Builder
     {
         return $builder->where('is_paid', false);
+    }
+
+    public function grandTotalPrice(): Attribute
+    {
+        return Attribute::make(get: fn () => $this->total_price - $this->tax_price - $this->total_discount_per_item - $this->discount_price);
     }
 }

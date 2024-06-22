@@ -2,8 +2,12 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Tenants\Selling;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @mixin Selling
+ */
 class SellingCollection extends JsonResource
 {
     public function toArray($request)
@@ -17,12 +21,15 @@ class SellingCollection extends JsonResource
             'payed_money' => $this->payed_money,
             'money_changes' => $this->money_changes,
             'total_price' => $this->total_price,
+            'grand_total_price' => $this->grand_total_price,
             'total_cost' => $this->total_cost,
-            'discount_price' => $this->discount_price,
+            'discount' => $this->discount_price,
+            'discount_price' => $this->total_price - $this->discount_price,
             'total_discount_per_item' => $this->total_discount_per_item,
             'total_discount' => $this->discount_price + $this->total_discount_per_item,
             'friend_price' => $this->friend_price,
             'tax' => $this->tax,
+            'tax_price' => $this->tax_price,
             'total_qty' => $this->total_qty,
             'note' => $this->note,
             'created_at' => $this->created_at,
