@@ -1,8 +1,35 @@
 @import '/vendor/filament/filament/resources/css/theme.css';
 @config '../../../../tailwind.config.js';
 
-@layer components {
-  .fi-sidebar-nav {
-    @apply bg-white drop-shadow-md dark:bg-gray-900;
+
+.fi-sidebar-nav {
+  @apply bg-white drop-shadow-md dark:bg-gray-900;
+}
+
+.fi-sidebar-item a {
+  @apply py-2.5 px-2;
+}
+
+.fi-sidebar-item.fi-sidebar-item-active a {
+  @apply bg-lakasir-primary;
+}
+
+.fi-sidebar-item.fi-sidebar-item-active svg {
+  @apply text-white;
+}
+
+.fi-sidebar-item:not(.fi-sidebar-item-active):hover a {
+  .fi-sidebar-item-label {
+    @apply text-white;
   }
+
+  svg {
+    @apply text-white;
+  }
+
+  @apply bg-lakasir-primary text-white;
+}
+
+.fi-sidebar-item-active .fi-sidebar-item-label {
+  @apply text-white dark:text-white;
 }
