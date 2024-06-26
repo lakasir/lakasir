@@ -9,7 +9,7 @@ use App\Models\Tenants\Stock;
 
 class StockService
 {
-    public function reduceStock(Product $product, $qty): void
+    private function adjustStockPrepare(Product $product): Stock
     {
         if (Setting::get('selling_method', env('SELLING_METHOD', 'fifo')) == 'normal') {
             /** @var Stock $lastStock */
@@ -23,6 +23,34 @@ class StockService
             /** @var Stock $lastStock */
             $lastStock = $product->stockLatestCalculateIn()->first();
         }
+
+        return $lastStock;
+    }
+
+    public function addStock(Product $product, $qty): void
+    {
+        $lastStock = $this->adjustStockPrepare($product);
+
+        if ($lastStock) {
+            if ($lastStock->stock < $qty) {
+                $qty = $qty + $lastStock->stock;
+                $lastStock->stock = 0;
+                $lastStock->save();
+                $this->reduceStock($product, $qty);
+            } else {
+                $lastStock->stock = $lastStock->stock + $qty;
+                $lastStock->save();
+            }
+        } else {
+            $product->stock = $product->stock + $qty;
+            $product->save();
+        }
+    }
+
+    public function reduceStock(Product $product, $qty): void
+    {
+        $lastStock = $this->adjustStockPrepare($product);
+
         if ($lastStock) {
             if ($lastStock->stock < $qty) {
                 $qty = $qty - $lastStock->stock;

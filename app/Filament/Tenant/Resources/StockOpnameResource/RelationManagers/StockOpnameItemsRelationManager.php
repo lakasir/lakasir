@@ -47,7 +47,12 @@ class StockOpnameItemsRelationManager extends RelationManager
                     ->translateLabel()
                     ->disabled(fn () => $this->getOwnerRecord()->status == StockOpnameStatus::approved)
                     ->afterStateUpdated(function (StockOpnameItem $soi, $state) {
+                        $adjusment_stock = $soi->current_stock - $soi->amount;
+                        if ($state == 'manual_input') {
+                            $adjusment_stock = $soi->current_stock + $soi->amount;
+                        }
                         $this->soIService->update($soi, [
+                            'amount_after_adjustment' => $adjusment_stock,
                             'adjustment_type' => $state,
                         ]);
                     }),
@@ -57,15 +62,24 @@ class StockOpnameItemsRelationManager extends RelationManager
                     ->type('number')
                     ->translateLabel()
                     ->rules(function (StockOpnameItem $soI) {
+                        if ($soI->adjustment_type == 'manual_input') {
+
+                            return [];
+                        }
+
                         return [
                             'lte:'.$soI->current_stock,
                         ];
                     })
                     ->disabled(fn () => $this->getOwnerRecord()->status == StockOpnameStatus::approved)
                     ->afterStateUpdated(function (StockOpnameItem $soi, $state) {
+                        $adjusment_stock = $soi->current_stock - $state;
+                        if ($soi->adjustment_type == 'manual_input') {
+                            $adjusment_stock = $soi->current_stock + $state;
+                        }
                         $this->soIService->update($soi, [
                             'amount' => $state,
-                            'amount_after_adjustment' => $soi->current_stock - $state,
+                            'amount_after_adjustment' => $adjusment_stock,
                         ]);
                     }),
                 Tables\Columns\TextColumn::make('amount_after_adjustment')
