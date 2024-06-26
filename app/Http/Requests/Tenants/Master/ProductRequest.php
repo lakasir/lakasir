@@ -69,9 +69,12 @@ class ProductRequest extends FormRequest
             'is_non_stock' => ['boolean', 'required'],
             'expired' => [
                 Rule::requiredIf(function () {
-                    return feature(ProductExpired::class);
+                    return feature(ProductExpired::class) && $this->method() == 'POST';
                 }),
-                'date', 'after_or_equal:now',
+                $this->method() == 'POST' ? [
+                    'date',
+                    'after_or_equal:now',
+                ] : [],
             ],
         ];
     }

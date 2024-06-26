@@ -250,7 +250,7 @@ use App\Features\{PaymentShortcutButton};
   </x-filament::modal>
 </div>
 
-@script
+@script()
 <script>
   let selling = null;
   $wire.on('selling-created', (event) => {
