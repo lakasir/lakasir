@@ -2,7 +2,7 @@
 
 namespace App\Filament\Tenant\Resources\ProductResource\Pages;
 
-use App\Filament\Tenant\Resources\ProductResource;
+use App\Filament\Tenant\Resources\ProductsResource;
 use App\Filament\Tenant\Resources\Traits\RedirectToIndex;
 use App\Models\Tenants\Product;
 use App\Services\Tenants\ProductService;
@@ -12,7 +12,7 @@ class CreateProduct extends CreateRecord
 {
     use RedirectToIndex;
 
-    protected static string $resource = ProductResource::class;
+    protected static string $resource = ProductsResource::class;
 
     private ProductService $productService;
 

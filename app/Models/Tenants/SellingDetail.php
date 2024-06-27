@@ -2,6 +2,7 @@
 
 namespace App\Models\Tenants;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -22,5 +23,12 @@ class SellingDetail extends Model
     public function product()
     {
         return $this->belongsTo(Product::class);
+    }
+
+    public function totalPrice(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->price - $this->discount_price,
+        );
     }
 }

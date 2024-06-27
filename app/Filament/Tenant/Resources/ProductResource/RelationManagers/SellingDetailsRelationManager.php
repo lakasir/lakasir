@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Filament\Tenant\Resources\SellingDetailResource\RelationManagers;
+namespace App\Filament\Tenant\Resources\ProductResource\RelationManagers;
 
 use App\Features\ProductInitialPrice;
+use App\Filament\Tenant\Resources\SellingResource;
 use App\Models\Tenants\SellingDetail;
 use App\Models\Tenants\Setting;
 use Filament\Forms;
@@ -10,7 +11,6 @@ use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Number;
 
 class SellingDetailsRelationManager extends RelationManager
@@ -21,7 +21,7 @@ class SellingDetailsRelationManager extends RelationManager
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('product_id')
+                Forms\Components\TextInput::make('id')
                     ->required()
                     ->maxLength(255),
             ]);
@@ -30,10 +30,15 @@ class SellingDetailsRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
-            ->recordTitleAttribute('product_id')
+            ->recordTitleAttribute('id')
+            ->recordUrl(function (SellingDetail $record) {
+                return SellingResource::getUrl('view', ['record' => $record->selling_id]);
+            })
             ->columns([
-                Tables\Columns\TextColumn::make('product.name')
+                Tables\Columns\TextColumn::make('selling.code')
                     ->translateLabel(),
+                Tables\Columns\TextColumn::make('selling.date')
+                    ->label(__('Date')),
                 Tables\Columns\TextColumn::make('qty')
                     ->translateLabel(),
                 Tables\Columns\TextColumn::make('price')
@@ -60,11 +65,20 @@ class SellingDetailsRelationManager extends RelationManager
                     ->sortable()
                     ->money(Setting::get('currency', 'IDR')),
             ])
-            ->paginated(false);
-    }
-
-    public static function getTitle(Model $ownerRecord, string $pageClass): string
-    {
-        return __('Items');
+            ->filters([
+                //
+            ])
+            ->headerActions([
+                Tables\Actions\CreateAction::make(),
+            ])
+            ->actions([
+                Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
+            ])
+            ->bulkActions([
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
+                ]),
+            ]);
     }
 }

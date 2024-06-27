@@ -439,6 +439,7 @@ namespace App\Models\Tenants{
  * @property string|null $hero_images
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Tenants\CartItem> $CartItems
  * @property-read int|null $cart_items_count
  * @property-read \App\Models\Tenants\Category $category
@@ -447,6 +448,8 @@ namespace App\Models\Tenants{
  * @property-read mixed $hero_image
  * @property mixed $initial_price_calculate
  * @property-read mixed $net_profit
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Tenants\SellingDetail> $sellingDetails
+ * @property-read int|null $selling_details_count
  * @property mixed $selling_price_calculate
  * @property mixed $selling_price_label_calculate
  * @property mixed $stock_calculate
@@ -456,11 +459,13 @@ namespace App\Models\Tenants{
  * @method static \Illuminate\Database\Eloquent\Builder|Product nearestExpiredProduct()
  * @method static \Illuminate\Database\Eloquent\Builder|Product newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Product newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Product onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|Product query()
  * @method static \Illuminate\Database\Eloquent\Builder|Product stockLatestCalculateIn()
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereBarcode($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereCategoryId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Product whereDeletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereHeroImages($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereInitialPrice($value)
@@ -472,6 +477,8 @@ namespace App\Models\Tenants{
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereType($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereUnit($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Product withTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|Product withoutTrashed()
  * @mixin \Eloquent
  */
 	#[\AllowDynamicProperties]
@@ -692,6 +699,7 @@ namespace App\Models\Tenants{
  * @property float $discount_price
  * @property-read \App\Models\Tenants\Product $product
  * @property-read \App\Models\Tenants\Selling $selling
+ * @property-read mixed $total_price
  * @method static \Database\Factories\Tenants\SellingDetailFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|SellingDetail newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|SellingDetail newQuery()
@@ -912,7 +920,7 @@ namespace App\Models\Tenants{
  * @property int $id
  * @property string|null $fcm_token
  * @property int $is_owner
- * @property string $name
+ * @property string|null $name
  * @property string $email
  * @property \Illuminate\Support\Carbon|null $email_verified_at
  * @property string $password

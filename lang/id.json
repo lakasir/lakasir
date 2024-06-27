@@ -291,5 +291,7 @@
     "Clear": "Bersihkan",
     "Your transaction was successfull": "Transaksi berhasil",
     "Success": "Sukses" ,
-    "Grand total price": "Total harga keseluruhan"
+    "Grand total price": "Total harga keseluruhan",
+    "Sold": "Terjual",
+    "Revenue" : "Pendapatan"
 }

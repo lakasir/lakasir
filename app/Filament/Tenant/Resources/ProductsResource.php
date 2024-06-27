@@ -14,6 +14,9 @@ use App\Traits\HasTranslatableResource;
 use Filament\Forms\Components\BaseFileUpload;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Form;
+use Filament\Infolists;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
@@ -24,7 +27,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Laravel\Pennant\Feature;
 use League\Flysystem\UnableToCheckFileExistence;
 
-class ProductResource extends Resource
+class ProductsResource extends Resource
 {
     use HasProductForm, HasTranslatableResource;
 
@@ -84,10 +87,13 @@ class ProductResource extends Resource
                         return $query
                             ->nearestExpiredProduct();
                     }),
+                Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
+                Tables\Actions\RestoreAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -157,6 +163,40 @@ class ProductResource extends Resource
         return $form->schema((new self)->generateForm());
     }
 
+    public static function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist->schema([
+            Infolists\Components\ImageEntry::make('hero_images'),
+            Infolists\Components\TextEntry::make('name')
+                ->translateLabel(),
+            Infolists\Components\TextEntry::make('category.name')
+                ->translateLabel(),
+            Infolists\Components\TextEntry::make('sku')
+                ->translateLabel(),
+            Infolists\Components\TextEntry::make('barcode')
+                ->translateLabel(),
+            Infolists\Components\TextEntry::make('stock')
+                ->translateLabel(),
+            Infolists\Components\TextEntry::make('is_non_stock')
+                ->badge()
+                ->getStateUsing(function (Product $product) {
+                    return $product->is_non_stock ? __('Yes') : __('No');
+                })
+                ->color('primary')
+                ->translateLabel(),
+            Infolists\Components\TextEntry::make('unit')
+                ->translateLabel(),
+            Infolists\Components\TextEntry::make('initial_price')
+                ->money(Setting::get('currency', 'IDR'))
+                ->size(TextEntry\TextEntrySize::Large)
+                ->translateLabel(),
+            Infolists\Components\TextEntry::make('selling_price')
+                ->money(Setting::get('currency', 'IDR'))
+                ->size(TextEntry\TextEntrySize::Large)
+                ->translateLabel(),
+        ]);
+    }
+
     public static function getRelations(): array
     {
         return [
@@ -168,6 +208,7 @@ class ProductResource extends Resource
     {
         return [
             'index' => Pages\ListProducts::route('/'),
+            'view' => Pages\ViewProduct::route('/{record}'),
             'create' => Pages\CreateProduct::route('/create'),
             'edit' => Pages\EditProduct::route('/{record}/edit'),
         ];

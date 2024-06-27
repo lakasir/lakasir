@@ -24,7 +24,7 @@ use App\Filament\Tenant\Resources\DebtResource;
 use App\Filament\Tenant\Resources\MemberResource;
 use App\Filament\Tenant\Resources\PaymentMethodResource;
 use App\Filament\Tenant\Resources\PermissionResource;
-use App\Filament\Tenant\Resources\ProductResource;
+use App\Filament\Tenant\Resources\ProductsResource;
 use App\Filament\Tenant\Resources\PurchasingResource;
 use App\Filament\Tenant\Resources\RoleResource;
 use App\Filament\Tenant\Resources\SellingResource;
@@ -78,7 +78,7 @@ class TenantPanelProvider extends PanelProvider
                         ...(hasFeatureAndPermission(Member::class, 'read member') ? MemberResource::getNavigationItems() : []),
                         ...(can('read category') ? CategoryResource::getNavigationItems() : []),
                         ...(hasFeatureAndPermission(PaymentMethod::class, 'read payment method') ? PaymentMethodResource::getNavigationItems() : []),
-                        ...(can('read product') ? ProductResource::getNavigationItems() : []),
+                        ...(can('read product') ? ProductsResource::getNavigationItems() : []),
                         ...(hasFeatureAndPermission(Purchasing::class, 'read purchasing') ? PurchasingResource::getNavigationItems() : []),
                         ...(hasFeatureAndPermission(StockOpname::class, 'read stock opname') ? StockOpnameResource::getNavigationItems() : []),
                         ...(hasFeatureAndPermission(Debt::class, 'read debt') ? DebtResource::getNavigationItems() : []),

@@ -291,5 +291,7 @@
     "Clear": "Clear",
     "Your transaction was successfull": "Your transaction was successfull",
     "Success": "Success",
-    "Grand total price": "Grand total price"
+    "Grand total price": "Grand total price",
+    "Sold": "Sold",
+    "Revenue" : "Revenue"
 }
