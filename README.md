@@ -22,6 +22,15 @@
 * **Unit Price**: The product will have a different price base on the basic unit
 * **Friend Price**: You can sell the product with a lower price or the highest price
 
+## Screenshots
+
+<div style="display:inline-block" align="center">
+  <img src="./readme/Screenshot/cashier-menu.png" alt="Product Detail" width="490" />
+  &emsp;
+  <img src="./readme/Screenshot/product-detail.png" alt="Product Detail" width="490"/>  
+</div>
+<!-- ![Lakasir Screenshot](./readme/Screenshot/product-detail.png) -->
+
 ## Technologies Used
 * **Backend**: [Laravel](https://laravel.com)
 * **Frontend** (Web): [Filament Admin Panel](https://filamentphp.com)
