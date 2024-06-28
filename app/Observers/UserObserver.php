@@ -2,8 +2,6 @@
 
 namespace App\Observers;
 
-use App\Constants\Role;
-use App\Features\Role as FeaturesRole;
 use App\Models\Tenants\User;
 
 class UserObserver
@@ -13,8 +11,5 @@ class UserObserver
      */
     public function created(User $user): void
     {
-        if (! hasFeatureAndPermission(FeaturesRole::class)) {
-            $user->assignRole(Role::admin);
-        }
     }
 }
