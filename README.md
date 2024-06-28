@@ -25,9 +25,9 @@
 ## Screenshots
 
 <div style="display:inline-block" align="center">
-  <img src="./readme/Screenshot/cashier-menu.png" alt="Product Detail" width="490" />
+  <img src="./readme/Screenshot/cashier-menu.png" alt="Product Detail" width="400" />
   &emsp;
-  <img src="./readme/Screenshot/product-detail.png" alt="Product Detail" width="490"/>  
+  <img src="./readme/Screenshot/product-detail.png" alt="Product Detail" width="400"/>  
 </div>
 <!-- ![Lakasir Screenshot](./readme/Screenshot/product-detail.png) -->
 
