@@ -3,7 +3,6 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use Filament\Facades\Filament;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -17,10 +16,11 @@ class LocalizationMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         $locale = 'en';
-        $user = Filament::auth()->user() ?? auth()->user();
+        $user = auth()->user();
         if ($user) {
             $locale = $user->profile->locale ?? 'en';
         }
+        config(['app.locale' => $locale]);
         app()->setLocale($locale);
 
         return $next($request);
