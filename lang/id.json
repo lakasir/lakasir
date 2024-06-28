@@ -293,5 +293,7 @@
     "Success": "Sukses" ,
     "Grand total price": "Total harga keseluruhan",
     "Sold": "Terjual",
-    "Revenue" : "Pendapatan"
+    "Revenue" : "Pendapatan",
+    "Total debt" : "Total piutang",
+    "Total rest debt" : "Total sisa hutang"
 }

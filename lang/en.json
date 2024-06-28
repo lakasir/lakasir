@@ -293,5 +293,7 @@
     "Success": "Success",
     "Grand total price": "Grand total price",
     "Sold": "Sold",
-    "Revenue" : "Revenue"
+    "Revenue" : "Revenue",
+    "Total debt" : "Total debt",
+    "Total rest debt" : "Total rest debt"
 }
