@@ -7,8 +7,6 @@ env:
   DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
   DB_DATABASE_TESTING: ${{ secrets.DB_DATABASE }}
   DB_HOST: "127.0.0.1"
-  APP_CENTRAL_DOMAIN: "127.0.0.1"
-  APP_ADMIN_DOMAIN: "admin.127.0.0.1"
 on:
   push:
     branches:
