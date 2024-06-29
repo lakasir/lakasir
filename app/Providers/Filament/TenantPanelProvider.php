@@ -42,6 +42,7 @@ use Filament\Navigation\NavigationGroup;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
+use Filament\Support\Assets\Js;
 use Filament\Support\Colors\Color;
 use Filament\Support\Facades\FilamentView;
 use Filament\View\PanelsRenderHook;
@@ -66,6 +67,9 @@ class TenantPanelProvider extends PanelProvider
             ->viteTheme('resources/css/filament/tenant/theme.css')
             ->colors([
                 'primary' => Color::hex('#FF6600'),
+            ])
+            ->assets([
+                Js::make('custom-javascript', resource_path('js/app.js')),
             ])
             ->spa(config('app.spa_mode'))
             ->authGuard('web')

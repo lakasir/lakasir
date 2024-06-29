@@ -29,9 +29,11 @@ class CashierReport extends Page implements HasActions, HasForms
     {
         return $form->schema([
             DatePicker::make('start_date')
+                ->translateLabel()
                 ->date()
                 ->native(false),
             DatePicker::make('end_date')
+                ->translateLabel()
                 ->date()
                 ->native(false),
         ])
