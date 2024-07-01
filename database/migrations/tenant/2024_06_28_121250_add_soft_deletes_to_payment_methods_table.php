@@ -22,7 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('payment_methods', function (Blueprint $table) {
-            $table->softDeletes();
+            $table->dropSoftDeletes();
         });
     }
 };
