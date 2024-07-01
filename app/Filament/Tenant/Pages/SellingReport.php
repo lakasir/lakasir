@@ -30,11 +30,13 @@ class SellingReport extends Page implements HasActions, HasForms
         return $form->schema([
             DatePicker::make('start_date')
                 ->date()
+                ->translateLabel()
                 ->required()
                 ->default(now())
                 ->native(false),
             DatePicker::make('end_date')
                 ->date()
+                ->translateLabel()
                 ->required()
                 ->default(now())
                 ->native(false),

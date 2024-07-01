@@ -276,7 +276,8 @@
     "No change": "Tanpa kembalian",
     "Nominal": "Nominal",
     "Kuota": "Kuota",
-    "Start date": "Tanggal aawal",
+    "Start date": "Tanggal awal",
+    "End date": "Tanggal akhir",
     "Minimal buying": "Pembelian minimal",
     "Today total revenue": "Pendapatan hari ini",
     "Sales today": "Penjualan hari ini",
@@ -300,5 +301,6 @@
     "Inactivate": "Non-aktifkan",
     "Activate": "Aktifkan",
     "Inactive": "Non-aktif",
-    "Active": "Aktif"
+    "Active": "Aktif",
+    "Product Report": "Laporan produk"
 }

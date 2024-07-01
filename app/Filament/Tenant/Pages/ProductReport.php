@@ -12,13 +12,13 @@ use Filament\Forms\Form;
 use Filament\Pages\Concerns\InteractsWithFormActions;
 use Filament\Pages\Page;
 
-class CashierReport extends Page implements HasActions, HasForms
+class ProductReport extends Page implements HasActions, HasForms
 {
     use HasTranslatableResource, InteractsWithFormActions, InteractsWithForms;
 
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
 
-    protected static string $view = 'filament.tenant.pages.cashier-report';
+    protected static string $view = 'filament.tenant.pages.product-report';
 
     public ?array $data = [
         'start_date' => null,
@@ -29,14 +29,14 @@ class CashierReport extends Page implements HasActions, HasForms
     {
         return $form->schema([
             DatePicker::make('start_date')
-                ->date()
                 ->translateLabel()
+                ->date()
                 ->required()
                 ->default(now())
                 ->native(false),
             DatePicker::make('end_date')
-                ->date()
                 ->translateLabel()
+                ->date()
                 ->required()
                 ->default(now())
                 ->native(false),
@@ -60,6 +60,6 @@ class CashierReport extends Page implements HasActions, HasForms
             'data.end_date' => 'required',
         ]);
 
-        return $this->redirectRoute('cashier-report.generate', $this->data);
+        return $this->redirectRoute('product-report.generate', $this->data);
     }
 }

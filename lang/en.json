@@ -277,6 +277,7 @@
     "Nominal": "Nominal",
     "Kuota": "Kuota",
     "Start date": "Start date",
+    "End date": "End date",
     "Minimal buying": "Minimal buying",
     "Today total revenue": "Today total revenue",
     "Sales today": "Sales today",
@@ -300,5 +301,6 @@
     "Inactivate": "Inactivate",
     "Activate": "Activate",
     "Inactive": "Inactive",
-    "Active": "Active"
+    "Active": "Active",
+    "Product Report": "Product Report"
 }

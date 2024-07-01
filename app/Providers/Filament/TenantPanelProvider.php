@@ -16,6 +16,7 @@ use App\Filament\Tenant\Pages\Cashier;
 use App\Filament\Tenant\Pages\CashierReport;
 use App\Filament\Tenant\Pages\EditProfile;
 use App\Filament\Tenant\Pages\Printer;
+use App\Filament\Tenant\Pages\ProductReport;
 use App\Filament\Tenant\Pages\SellingReport;
 use App\Filament\Tenant\Pages\Settings;
 use App\Filament\Tenant\Pages\TenantLogin;
@@ -98,6 +99,7 @@ class TenantPanelProvider extends PanelProvider
                         NavigationGroup::make(__('Report'))
                             ->items([
                                 ...(can('generate selling report') ? SellingReport::getNavigationItems() : []),
+                                ...(can('generate product report') ? ProductReport::getNavigationItems() : []),
                                 ...(can('generate cashier report') ? CashierReport::getNavigationItems() : []),
                             ]),
                         NavigationGroup::make(__('General'))
