@@ -208,8 +208,8 @@ class ProductsResource extends Resource
     {
         return [
             'index' => Pages\ListProducts::route('/'),
-            'view' => Pages\ViewProduct::route('/{record}'),
             'create' => Pages\CreateProduct::route('/create'),
+            'view' => Pages\ViewProduct::route('/{record}'),
             'edit' => Pages\EditProduct::route('/{record}/edit'),
         ];
     }
