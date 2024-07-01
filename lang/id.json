@@ -295,5 +295,6 @@
     "Sold": "Terjual",
     "Revenue" : "Pendapatan",
     "Total debt" : "Total piutang",
-    "Total rest debt" : "Total sisa hutang"
+    "Total rest debt" : "Total sisa hutang",
+    "Total revenue" : "Total pendapatan"
 }

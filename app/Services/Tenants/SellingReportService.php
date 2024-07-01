@@ -3,6 +3,7 @@
 namespace App\Services\Tenants;
 
 use App\Models\Tenants\About;
+use App\Models\Tenants\Profile;
 use App\Models\Tenants\Selling;
 use App\Models\Tenants\SellingDetail;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -14,10 +15,12 @@ class SellingReportService
 {
     public function generate(array $data)
     {
+        $timezone = Profile::get()->timezone;
         $about = About::first();
         $tzName = Carbon::parse($data['start_date'])->getTimezone()->getName();
-        $startDate = Carbon::parse($data['start_date'])->setTimezone('UTC');
-        $endDate = Carbon::parse($data['end_date'])->setTimezone('UTC');
+        $startDate = Carbon::parse($data['start_date'], $timezone)->setTimezone('UTC');
+        $endDate = Carbon::parse($data['end_date'], $timezone)->addDay()->setTimezone('UTC');
+
         $sellings = Selling::query()
             ->select()
             ->with(
@@ -25,21 +28,19 @@ class SellingReportService
                 'sellingDetails.product:id,name,initial_price,selling_price,sku',
                 'user:id,name,email'
             )
-            ->when($data['start_date'] ?? '', function (Builder $query) use ($startDate) {
-                $query->whereDate('created_at', '>=', $startDate);
-            })
-            ->when($data['end_date'] ?? '', function (Builder $query) use ($endDate) {
-                $query->whereDate('created_at', '<=', $endDate);
+            ->when($data['start_date'] && $data['end_date'], function (Builder $query) use ($startDate, $endDate) {
+                $query->whereBetween('date', [$startDate, $endDate]);
             })
             ->orderBy('created_at', 'desc')
             ->get();
+
         $header = [
             'shop_name' => $about?->shop_name,
             'shop_location' => $about?->shop_location,
             'business_type' => $about?->business_type,
             'owner_name' => $about?->owner_name,
-            'start_date' => $startDate->format('d F Y h:i'),
-            'end_date' => $endDate->format('d F Y h:i'),
+            'start_date' => $startDate->setTimezone($timezone)->format('d F Y'),
+            'end_date' => $endDate->subDay()->setTimezone($timezone)->format('d F Y'),
         ];
         $reports = [];
 
