@@ -296,5 +296,9 @@
     "Revenue" : "Pendapatan",
     "Total debt" : "Total piutang",
     "Total rest debt" : "Total sisa hutang",
-    "Total revenue" : "Total pendapatan"
+    "Total revenue" : "Total pendapatan",
+    "Inactivate": "Non-aktifkan",
+    "Activate": "Aktifkan",
+    "Inactive": "Non-aktif",
+    "Active": "Aktif"
 }

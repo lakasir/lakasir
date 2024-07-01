@@ -22,6 +22,7 @@ use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Laravel\Pennant\Feature;
@@ -87,6 +88,12 @@ class ProductsResource extends Resource
                         return $query
                             ->nearestExpiredProduct();
                     }),
+                SelectFilter::make('show')
+                    ->label(__('Status'))
+                    ->options([
+                        0 => __('Inactive'),
+                        1 => __('Active'),
+                    ]),
                 Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([

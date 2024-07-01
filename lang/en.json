@@ -296,5 +296,9 @@
     "Revenue" : "Revenue",
     "Total debt" : "Total debt",
     "Total rest debt" : "Total rest debt",
-    "Total revenue" : "Total revenue"
+    "Total revenue" : "Total revenue",
+    "Inactivate": "Inactivate",
+    "Activate": "Activate",
+    "Inactive": "Inactive",
+    "Active": "Active"
 }
