@@ -28,7 +28,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Laravel\Pennant\Feature;
 use League\Flysystem\UnableToCheckFileExistence;
 
-class ProductsResource extends Resource
+class ProductResource extends Resource
 {
     use HasProductForm, HasTranslatableResource;
 

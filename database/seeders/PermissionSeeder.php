@@ -196,6 +196,12 @@ class PermissionSeeder extends Seeder
                         ],
                         'guard' => ['web'],
                     ],
+                    'print label' => [
+                        'permission' => [
+                            'can',
+                        ],
+                        'guard' => ['web', 'sanctum'],
+                    ],
                     'revenue overview' => [
                         'permission' => [
                             'r',

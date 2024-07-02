@@ -302,5 +302,11 @@
     "Activate": "Activate",
     "Inactive": "Inactive",
     "Active": "Active",
-    "Product Report": "Product Report"
+    "Product Report": "Product Report",
+    "More actions": "More actions",
+    "View": "View",
+    "Lists": "Lists",
+    "Count": "Count",
+    "Status active": "Status active",
+    "Status inactive": "Status inactive"
 }
