@@ -2,11 +2,13 @@
 
 namespace App\Filament\Tenant\Resources\SellingResource\Widgets;
 
+use App\Models\Tenants\Profile;
 use App\Models\Tenants\Selling;
 use App\Models\Tenants\SellingDetail;
 use Filament\Widgets\Concerns\InteractsWithPageFilters;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Number;
 
@@ -35,8 +37,10 @@ class SellingOverview extends BaseWidget
 
     private function getDiscountToday()
     {
-        $startDate = today()->startOfDay();
-        $endDate = today()->endOfDay();
+        $carbon = now(Profile::get()->timezone);
+        $today = $carbon->startOfDay()->format('Y-m-d H:i:s e');
+        $startDate = Carbon::parse($today)->setTimezone('UTC');
+        $endDate = Carbon::parse($today)->setTimezone('UTC')->addDay();
         $totalDiscountSellings = Selling::whereBetween('date', [$startDate, $endDate])
             ->sum('discount_price');
 
@@ -51,13 +55,18 @@ class SellingOverview extends BaseWidget
 
     private function getSalesToday()
     {
-        $salesToday = Selling::whereDate('date', today())->count();
+        $carbon = now(Profile::get()->timezone);
+        $today = $carbon->startOfDay()->format('Y-m-d H:i:s e');
+
+        $salesToday = Selling::whereDate('date', $today)->count();
 
         return $salesToday;
     }
 
     private function getTotalRevenue()
     {
+        $carbon = now(Profile::get()->timezone);
+        $today = $carbon->startOfDay()->format('Y-m-d H:i:s e');
         $yesterdayRevenue = Selling::query()
             ->select(
                 DB::raw('(COALESCE(SUM(sellings.discount_price), 0) / 1000) as total_discount_selling'),
@@ -73,8 +82,8 @@ class SellingOverview extends BaseWidget
             )
             ->isPaid()
             ->whereBetween('created_at', [
-                now()->subDay(1)->startOfDay(),
-                now()->subDay(1)->endOfDay(),
+                Carbon::parse($today)->setTimezone('UTC')->subDay(),
+                Carbon::parse($today)->setTimezone('UTC'),
             ])
             ->first();
         $todayRevenue = Selling::query()
@@ -92,8 +101,8 @@ class SellingOverview extends BaseWidget
             )
             ->isPaid()
             ->whereBetween('created_at', [
-                now()->startOfDay(),
-                now()->endOfDay(),
+                Carbon::parse($today)->setTimezone('UTC'),
+                Carbon::parse($today)->setTimezone('UTC')->addDay(),
             ])
             ->first();
 

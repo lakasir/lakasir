@@ -3,15 +3,13 @@
 namespace App\Services\Tenants;
 
 use App\Models\Tenants\About;
+use App\Models\Tenants\Product;
 use App\Models\Tenants\Profile;
-use App\Models\Tenants\Selling;
-use App\Models\Tenants\SellingDetail;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Number;
 
-class SellingReportService
+class ProductReportService
 {
     public function generate(array $data)
     {
@@ -21,17 +19,19 @@ class SellingReportService
         $startDate = Carbon::parse($data['start_date'], $timezone)->setTimezone('UTC');
         $endDate = Carbon::parse($data['end_date'], $timezone)->addDay()->setTimezone('UTC');
 
-        $sellings = Selling::query()
-            ->select()
+        $products = Product::query()
             ->with(
-                'sellingDetails:id,selling_id,product_id,qty,price,cost,discount_price',
-                'sellingDetails.product:id,name,initial_price,selling_price,sku',
-                'user:id,name,email'
+                ['sellingDetails' => function ($builder) use ($startDate, $endDate) {
+                    $builder->whereHas('selling', function ($query) use ($startDate, $endDate) {
+                        $query->whereBetween('date', [$startDate, $endDate]);
+                    });
+                }],
             )
-            ->when($data['start_date'] && $data['end_date'], function (Builder $query) use ($startDate, $endDate) {
-                $query->whereBetween('date', [$startDate, $endDate]);
+            ->whereHas('sellingDetails', function ($query) use ($startDate, $endDate) {
+                $query->whereHas('selling', function ($query) use ($startDate, $endDate) {
+                    $query->whereBetween('date', [$startDate, $endDate]);
+                });
             })
-            ->orderBy('created_at', 'desc')
             ->get();
 
         $header = [
@@ -54,42 +54,34 @@ class SellingReportService
         $totalNetProfitBeforeDiscountSelling = 0;
         $totalNetProfitAfterDiscountSelling = 0;
 
-        /** @var Selling $selling */
-        foreach ($sellings as $selling) {
-            $totalDiscountPerItem = 0;
-            $totalBeforeDiscountPerSelling = 0;
-            $totalAfterDiscountPerSelling = 0;
-            $totalNetProfitPerSelling = 0;
-            $totalGrossProfitPerSelling = 0;
-            $totalCostPerSelling = 0;
-            $totalQtyPerSelling = 0;
+        /** @var Product $product */
+        foreach ($products as $product) {
+            $sellingDetails = $product->sellingDetails;
 
-            /** @var SellingDetail $detail */
-            foreach ($selling->sellingDetails as $detail) {
-                $totalDiscountPerItem += ($detail->discount_price ?? 0);
-                $totalBeforeDiscountPerSelling += $detail->price;
-                $totalAfterDiscountPerSelling += ($detail->price - ($detail->discount_price ?? 0));
-                $totalNetProfitPerSelling += (($detail->price - $detail->cost) - ($detail->discount_price ?? 0));
-                $totalGrossProfitPerSelling += ($detail->price - $detail->cost);
-                $totalCostPerSelling += $detail->cost;
-                $totalQtyPerSelling += $detail->qty;
+            $totalCostPerSelling = $sellingDetails->sum('cost');
+            $totalDiscountPerItem = $sellingDetails->sum('discount_price');
+            $totalBeforeDiscountPerSelling = $sellingDetails->sum('price');
+            $totalAfterDiscountPerSelling = $totalBeforeDiscountPerSelling - $totalDiscountPerItem;
+            $totalNetProfitPerSelling = (($totalBeforeDiscountPerSelling - $totalCostPerSelling) - $totalDiscountPerItem);
+            $totalGrossProfitPerSelling = $totalBeforeDiscountPerSelling - $totalCostPerSelling;
+            $totalQtyPerSelling = $sellingDetails->sum('qty');
 
-                $reports[] = [
-                    'code' => $selling->code,
-                    'sku' => $detail->product->sku,
-                    'name' => $detail->product->name,
-                    'selling_price' => $this->formatCurrency($detail->price / $detail->qty),
-                    'selling' => $this->formatCurrency($detail->price - ($detail->discount_price ?? 0)),
-                    'discount_price' => $this->formatCurrency($detail->discount_price ?? 0),
-                    'initial_price' => $this->formatCurrency($detail->cost / $detail->qty),
-                    'qty' => $detail->qty,
-                    'cost' => $detail->cost,
-                    'total_after_discount' => $this->formatCurrency($detail->price - ($detail->discount_price ?? 0)),
-                    'net_profit' => $this->formatCurrency(($detail->price - ($detail->discount_price ?? 0)) - $detail->cost),
-                    'gross_profit' => $this->formatCurrency($detail->price - $detail->cost),
-                ];
-            }
+            $reports[] = [
+                'code' => $product->sellingDetails->first()->selling->code,
+                'sku' => $product->sku,
+                'name' => $product->name,
+                'selling_price' => $this->formatCurrency($product->sellingDetails->sum('price') / $product->sellingDetails->sum('qty')),
+                'selling' => $this->formatCurrency($totalBeforeDiscountPerSelling - $totalDiscountPerItem),
+                'discount_price' => $this->formatCurrency($totalDiscountPerItem),
+                'initial_price' => $this->formatCurrency($totalCostPerSelling / $totalQtyPerSelling),
+                'qty' => $totalQtyPerSelling,
+                'cost' => $totalCostPerSelling,
+                'total_after_discount' => $this->formatCurrency($totalAfterDiscountPerSelling - $totalDiscountPerItem),
+                'net_profit' => $this->formatCurrency($totalBeforeDiscountPerSelling - $totalDiscountPerItem - $totalCostPerSelling),
+                'gross_profit' => $this->formatCurrency($totalBeforeDiscountPerSelling - $totalCostPerSelling),
+            ];
 
+            $selling = $sellingDetails->first()->selling;
             $totalCost += $totalCostPerSelling;
             $totalDiscount += ($selling->discount_price ?? 0);
             $totalGross += $totalBeforeDiscountPerSelling;
@@ -113,7 +105,7 @@ class SellingReportService
             'total_qty' => $totalQty,
         ];
 
-        $pdf = Pdf::loadView('reports.selling', compact('reports', 'footer', 'header'))
+        $pdf = Pdf::loadView('reports.product', compact('reports', 'footer', 'header'))
             ->setPaper('a4', 'landscape');
         $pdf->output();
         $domPdf = $pdf->getDomPDF();

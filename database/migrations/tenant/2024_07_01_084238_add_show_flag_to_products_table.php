@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('payment_methods', function (Blueprint $table) {
-            $table->softDeletes();
+        Schema::table('products', function (Blueprint $table) {
+            $table->boolean('show')->default(true)->after('hero_images');
         });
     }
 
@@ -21,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('payment_methods', function (Blueprint $table) {
-            $table->dropSoftDeletes();
+        Schema::table('products', function (Blueprint $table) {
+            $table->dropColumn('show');
         });
     }
 };

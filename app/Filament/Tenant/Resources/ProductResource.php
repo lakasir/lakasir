@@ -22,12 +22,13 @@ use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Laravel\Pennant\Feature;
 use League\Flysystem\UnableToCheckFileExistence;
 
-class ProductsResource extends Resource
+class ProductResource extends Resource
 {
     use HasProductForm, HasTranslatableResource;
 
@@ -87,6 +88,12 @@ class ProductsResource extends Resource
                         return $query
                             ->nearestExpiredProduct();
                     }),
+                SelectFilter::make('show')
+                    ->label(__('Status'))
+                    ->options([
+                        0 => __('Inactive'),
+                        1 => __('Active'),
+                    ]),
                 Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([
@@ -208,8 +215,8 @@ class ProductsResource extends Resource
     {
         return [
             'index' => Pages\ListProducts::route('/'),
-            'view' => Pages\ViewProduct::route('/{record}'),
             'create' => Pages\CreateProduct::route('/create'),
+            'view' => Pages\ViewProduct::route('/{record}'),
             'edit' => Pages\EditProduct::route('/{record}/edit'),
         ];
     }

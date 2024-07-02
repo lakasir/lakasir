@@ -190,9 +190,10 @@ function padText(text, length, alignRight = false, center = false, textSize = 'n
   return paddedText;
 }
 
-function moneyFormat(number) {
+function moneyFormat(number, currency = null) {
   const formatter = new Intl.NumberFormat({
     style: 'currency',
+    currency: currency,
   });
 
   return formatter.format(number);

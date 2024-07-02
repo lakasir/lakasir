@@ -22,7 +22,7 @@ class SellingObserver extends AbstractObserver implements DataAwareRule
     public function creating(Selling $selling)
     {
         if (! $selling->date) {
-            $selling->date = now()->format('Y-m-d');
+            $selling->date = now()->format('Y-m-d H:i:s');
         }
         $sellings = Selling::all();
         $lastCount = $sellings->count();

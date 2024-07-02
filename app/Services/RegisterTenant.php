@@ -18,7 +18,9 @@ class RegisterTenant
         $tenant = Tenant::create([
             'id' => $name,
             'tenancy_db_name' => 'lakasir_'.$name,
+            'tenancy_email' => $data['email'],
         ]);
+
         $tenant->domains()->create([
             'domain' => $data['domain'],
         ]);

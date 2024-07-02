@@ -5,6 +5,7 @@ namespace App\Filament\Tenant\Resources;
 use App\Features\ProductInitialPrice;
 use App\Filament\Tenant\Resources\SellingDetailResource\RelationManagers\SellingDetailsRelationManager;
 use App\Filament\Tenant\Resources\SellingResource\Pages;
+use App\Models\Tenants\Profile;
 use App\Models\Tenants\Selling;
 use App\Models\Tenants\Setting;
 use App\Models\Tenants\User;
@@ -58,6 +59,7 @@ class SellingResource extends Resource
                     ->translateLabel()
                     ->default('-'),
                 TextColumn::make('date')
+                    ->dateTime(timezone: Profile::get()->timezone)
                     ->translateLabel(),
                 TextColumn::make('grand_total_price')
                     ->translateLabel()
@@ -79,6 +81,10 @@ class SellingResource extends Resource
                     ->money(Setting::get('currency', 'IDR')),
             ])
             ->searchPlaceholder('Search (Code, User, Customer Number')
+            ->header(view('filament.tenant.resources.sellings.headers.overview', [
+                'start_date' => request()->input('tableFilters.date.start_date'),
+                'end_date' => request()->input('tableFilters.date.end_date'),
+            ]))
             ->filters([
                 SelectFilter::make('user_id')
                     ->label(__('Cashier'))
@@ -88,11 +94,13 @@ class SellingResource extends Resource
                         DatePicker::make('start_date')
                             ->native(false)
                             ->format('Y-m-d')
+                            ->timezone(Profile::get()->timezone)
                             ->date()
                             ->closeOnDateSelection(),
                         DatePicker::make('end_date')
                             ->native(false)
                             ->format('Y-m-d')
+                            ->timezone(Profile::get()->timezone)
                             ->date()
                             ->closeOnDateSelection(),
                     ])
@@ -106,6 +114,13 @@ class SellingResource extends Resource
                     ->query(function (Builder $query, array $data): Builder {
                         $startDate = $data['start_date'];
                         $endDate = $data['end_date'];
+                        if ($timezone = Profile::get()->timezone) {
+                            if (! $startDate && ! $endDate) {
+                                return $query;
+                            }
+                            $startDate = Carbon::parse($startDate, $timezone)->setTimezone('UTC');
+                            $endDate = Carbon::parse($endDate, $timezone)->addDay()->setTimezone('UTC');
+                        }
 
                         return $query
                             ->when($startDate && $endDate, fn (Builder $builder) => $builder->whereBetween('date', [$startDate, $endDate]));

@@ -16,6 +16,7 @@ use App\Filament\Tenant\Pages\Cashier;
 use App\Filament\Tenant\Pages\CashierReport;
 use App\Filament\Tenant\Pages\EditProfile;
 use App\Filament\Tenant\Pages\Printer;
+use App\Filament\Tenant\Pages\ProductReport;
 use App\Filament\Tenant\Pages\SellingReport;
 use App\Filament\Tenant\Pages\Settings;
 use App\Filament\Tenant\Pages\TenantLogin;
@@ -24,7 +25,7 @@ use App\Filament\Tenant\Resources\DebtResource;
 use App\Filament\Tenant\Resources\MemberResource;
 use App\Filament\Tenant\Resources\PaymentMethodResource;
 use App\Filament\Tenant\Resources\PermissionResource;
-use App\Filament\Tenant\Resources\ProductsResource;
+use App\Filament\Tenant\Resources\ProductResource;
 use App\Filament\Tenant\Resources\PurchasingResource;
 use App\Filament\Tenant\Resources\RoleResource;
 use App\Filament\Tenant\Resources\SellingResource;
@@ -71,6 +72,7 @@ class TenantPanelProvider extends PanelProvider
             ->assets([
                 Js::make('custom-javascript', resource_path('js/app.js')),
             ])
+            ->favicon(url('favicon.ico'))
             ->spa(config('app.spa_mode'))
             ->authGuard('web')
             ->path('/member')
@@ -82,7 +84,7 @@ class TenantPanelProvider extends PanelProvider
                         ...(hasFeatureAndPermission(Member::class, 'read member') ? MemberResource::getNavigationItems() : []),
                         ...(can('read category') ? CategoryResource::getNavigationItems() : []),
                         ...(hasFeatureAndPermission(PaymentMethod::class, 'read payment method') ? PaymentMethodResource::getNavigationItems() : []),
-                        ...(can('read product') ? ProductsResource::getNavigationItems() : []),
+                        ...(can('read product') ? ProductResource::getNavigationItems() : []),
                         ...(hasFeatureAndPermission(Purchasing::class, 'read purchasing') ? PurchasingResource::getNavigationItems() : []),
                         ...(hasFeatureAndPermission(StockOpname::class, 'read stock opname') ? StockOpnameResource::getNavigationItems() : []),
                         ...(hasFeatureAndPermission(Debt::class, 'read debt') ? DebtResource::getNavigationItems() : []),
@@ -102,6 +104,7 @@ class TenantPanelProvider extends PanelProvider
                         NavigationGroup::make(__('Report'))
                             ->items([
                                 ...(can('generate selling report') ? SellingReport::getNavigationItems() : []),
+                                ...(can('generate product report') ? ProductReport::getNavigationItems() : []),
                                 ...(can('generate cashier report') ? CashierReport::getNavigationItems() : []),
                             ]),
                         NavigationGroup::make(__('General'))

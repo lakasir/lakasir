@@ -277,6 +277,7 @@
     "Nominal": "Nominal",
     "Kuota": "Kuota",
     "Start date": "Start date",
+    "End date": "End date",
     "Minimal buying": "Minimal buying",
     "Today total revenue": "Today total revenue",
     "Sales today": "Sales today",
@@ -295,5 +296,19 @@
     "Sold": "Sold",
     "Revenue" : "Revenue",
     "Total debt" : "Total debt",
-    "Total rest debt" : "Total rest debt"
+    "Total rest debt" : "Total rest debt",
+    "Total revenue" : "Total revenue",
+    "Inactivate": "Inactivate",
+    "Activate": "Activate",
+    "Inactive": "Inactive",
+    "Active": "Active",
+    "Product Report": "Product Report",
+    "More actions": "More actions",
+    "View": "View",
+    "Lists": "Lists",
+    "Count": "Count",
+    "Status active": "Status active",
+    "Status inactive": "Status inactive",
+    "Images": "Images",
+    "Preview image": "Preview image"
 }

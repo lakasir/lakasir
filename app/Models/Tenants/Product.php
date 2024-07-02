@@ -199,4 +199,9 @@ class Product extends Model
     {
         return $this->hasMany(SellingDetail::class);
     }
+
+    public function scopeInActivate(Builder $builder): Builder
+    {
+        return $builder->where('show', false);
+    }
 }

@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('payment_methods', function (Blueprint $table) {
-            $table->softDeletes();
+        Schema::table('sellings', function (Blueprint $table) {
+            $table->dateTimeTz('date')->change();
         });
     }
 
@@ -21,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('payment_methods', function (Blueprint $table) {
-            $table->dropSoftDeletes();
+        Schema::table('sellings', function (Blueprint $table) {
+            $table->date('date')->change();
         });
     }
 };

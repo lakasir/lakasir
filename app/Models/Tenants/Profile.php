@@ -25,4 +25,9 @@ class Profile extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public static function get(array $key = ['*']): Profile
+    {
+        return Profile::select($key)->whereUserId(auth()->id())->first();
+    }
 }
