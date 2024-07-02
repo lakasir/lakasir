@@ -68,6 +68,7 @@ class TenantPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::hex('#FF6600'),
             ])
+            ->favicon(url('favicon.ico'))
             ->spa(config('app.spa_mode'))
             ->authGuard('web')
             ->path('/member')
