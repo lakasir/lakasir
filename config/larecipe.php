@@ -33,9 +33,10 @@ return [
     */
 
     'versions' => [
-        'default' => '1.0',
+        'default' => '1.0-en',
         'published' => [
-            '1.0',
+            '1.0-en',
+            '1.0-id',
         ],
     ],
 

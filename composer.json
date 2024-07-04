@@ -10,6 +10,7 @@
         "aymanalhattami/filament-date-scopes-filter": "^1.0",
         "barryvdh/laravel-dompdf": "^2.0",
         "binarytorch/larecipe": "^2.7",
+        "binarytorch/larecipe-dark-theme": "^0.1.5",
         "filament/filament": "^3.1",
         "guzzlehttp/guzzle": "^7.2",
         "kreait/laravel-firebase": "^5.8",

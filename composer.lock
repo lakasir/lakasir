@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7b5614ae8d1022a6d4493a6e2ba1f8f0",
+    "content-hash": "def5d62000ca522a055cdfec8bd73c8d",
     "packages": [
         {
             "name": "anourvalar/eloquent-serialize",
@@ -488,6 +488,54 @@
                 }
             ],
             "time": "2024-03-26T11:57:09+00:00"
+        },
+        {
+            "name": "binarytorch/larecipe-dark-theme",
+            "version": "v0.1.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/larecipe/larecipe-dark-theme.git",
+                "reference": "9cf48afc89445141df4599512e01446f623f3a38"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/larecipe/larecipe-dark-theme/zipball/9cf48afc89445141df4599512e01446f623f3a38",
+                "reference": "9cf48afc89445141df4599512e01446f623f3a38",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "BinaryTorch\\LaRecipeDarkTheme\\LaRecipeDarkThemeServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "BinaryTorch\\LaRecipeDarkTheme\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Official LaRecipe Dark Theme Mode.",
+            "keywords": [
+                "docs",
+                "documentation",
+                "laravel",
+                "larecipe"
+            ],
+            "support": {
+                "issues": "https://github.com/larecipe/larecipe-dark-theme/issues",
+                "source": "https://github.com/larecipe/larecipe-dark-theme/tree/v0.1.5"
+            },
+            "abandoned": true,
+            "time": "2020-10-24T08:08:47+00:00"
         },
         {
             "name": "blade-ui-kit/blade-heroicons",
