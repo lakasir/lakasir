@@ -68,14 +68,19 @@
         }
         try {
           const printer = new Printer($wire.data.printerId);
-          await printer.font('a')
+          printerAction = printer.font('a')
             .size(1)
             .align('center')
             .text('Toko Mitra Susu')
             .size(0)
-            .text('Jl. cipinang raya no 156')
-            .text($wire.data.header)
-            .align('left')
+            .text('Jl. cipinang raya no 156');
+
+          if($wire.data.header != undefined) {
+            printerAction
+              .text($wire.data.header);
+          }
+
+          printerAction.align('left')
             .text('-------------------------------')
             .table(['Cashier', 'Nama kasir'])
             .table(['Payment method', 'Cash'])
@@ -106,9 +111,12 @@
               { text: moneyFormat(5000) + ' x 1', style: 'B'}
             ])
             .newLine()
-            .align('center')
-            .text($wire.data.footer)
-            .cut()
+            .align('center');
+          if($wire.data.footer != undefined) {
+            printerAction
+              .text($wire.data.footer);
+          }
+          await printerAction.cut()
             .print();
         } catch (e) {
           console.error(e)

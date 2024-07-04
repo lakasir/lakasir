@@ -42,13 +42,16 @@
         let printerAction = printer.font('a');
         if(about != undefined || about != null) {
           printerAction.size(1)
-          .align('center')
-          .text(about.shop_name)
-          .size(0)
-          .text(about.shop_location)
-          .text(printerData.header)
-          .align('left')
-          .text('-------------------------------');
+            .align('center')
+            .text(about.shop_name)
+            .size(0)
+            .text(about.shop_location);
+          if(printerData.header != undefined) {
+            printerAction
+              .text(printerData.header);
+          }
+          printerAction.align('left')
+            .text('-------------------------------');
         }
         printerAction.table(['@lang('Cashier')', selling.user.name])
           .table(['@lang('Payment method')', selling.payment_method.name]);
@@ -77,7 +80,7 @@
           .text('-------------------------------');
         if("@js(feature(SellingTax::class))" == 'true') {
           printerAction.table(['@lang('Tax')', `${selling.tax}%`])
-            .table(['@lang('Tax price')', moneyFormat(selling.tax_price)])
+            .table(['@lang('Tax price')', moneyFormat(selling.tax_price)]);
         }
         printerAction
           .table(['@lang('Subtotal')', moneyFormat(selling.total_price)])
@@ -86,9 +89,12 @@
           .text('-------------------------------')
           .table(['@lang('Payed money')', moneyFormat(selling.payed_money)])
           .table(['@lang('Change')', moneyFormat(selling.money_changes)])
-          .align('center')
-          .text(printerData.footer)
-          .align('left')
+          .align('center');
+        if(printerData.footer != undefined) {
+          printerAction
+            .text(printerData.footer);
+        }
+        printerAction.align('left')
           .text('copy');
 
         await printerAction

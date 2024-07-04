@@ -1,6 +1,6 @@
 @php
 use Filament\Facades\Filament;
-use App\Features\{PaymentShortcutButton};
+use App\Features\{PaymentShortcutButton, SellingTax};
 
 @endphp
 <div class="">
@@ -286,9 +286,12 @@ use App\Features\{PaymentShortcutButton};
             .align('center')
             .text(about.shop_name)
             .size(0)
-            .text(about.shop_location)
-            .text(printerData.header)
-            .align('left')
+            .text(about.shop_location);
+          if(printerData.header != undefined) {
+            printerAction
+              .text(printerData.header);
+          }
+          printerAction.align('left')
             .text('-------------------------------');
         }
         printerAction.table(['@lang('Cashier')', selling.user.name])
@@ -318,7 +321,7 @@ use App\Features\{PaymentShortcutButton};
           .text('-------------------------------');
         if("@js(feature(SellingTax::class))" == 'true') {
           printerAction.table(['@lang('Tax')', `${selling.tax}%`])
-            .table(['@lang('Tax price')', moneyFormat(selling.tax_price)])
+            .table(['@lang('Tax price')', moneyFormat(selling.tax_price)]);
         }
         printerAction
           .table(['@lang('Subtotal')', moneyFormat(selling.total_price)])
@@ -327,8 +330,11 @@ use App\Features\{PaymentShortcutButton};
           .text('-------------------------------')
           .table(['@lang('Payed money')', moneyFormat(selling.payed_money)])
           .table(['@lang('Change')', moneyFormat(selling.money_changes)])
-          .align('center')
-          .text(printerData.footer);
+          .align('center');
+        if(printerData.footer != undefined) {
+          printerAction
+            .text(printerData.footer);
+        }
 
         await printerAction
           .cut()
