@@ -12,5 +12,5 @@ class Printer extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
+    protected $guarded = ['id'];
 }

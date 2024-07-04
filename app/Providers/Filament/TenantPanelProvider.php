@@ -54,6 +54,7 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Stancl\Tenancy\Bootstrappers\DatabaseTenancyBootstrapper;
 
@@ -71,6 +72,7 @@ class TenantPanelProvider extends PanelProvider
             ])
             ->assets([
                 Js::make('custom-javascript', resource_path('js/app.js')),
+                Js::make('printer', resource_path('js/printer.js')),
             ])
             ->favicon(url('favicon.ico'))
             ->spa(config('app.spa_mode'))
@@ -152,6 +154,12 @@ class TenantPanelProvider extends PanelProvider
         );
         $url = request()->getHost();
         if (config('tenancy.central_domains')[0] === null) {
+            if (Schema::hasTable('abouts') && $about = About::first()) {
+                $panel
+                    ->brandName($about->shop_name ?? 'Your Brand')
+                    ->brandLogo($about->photo ?? null);
+            }
+
             return $panel;
         }
         $tenant = Tenant::whereHas('domains', function ($query) use ($url) {

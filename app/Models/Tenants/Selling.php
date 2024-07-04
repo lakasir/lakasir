@@ -17,6 +17,10 @@ class Selling extends Model
 
     protected $guarded = ['friend_price'];
 
+    protected $appends = [
+        'grand_total_price',
+    ];
+
     public function sellingDetails()
     {
         return $this->hasMany(SellingDetail::class);

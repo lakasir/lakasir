@@ -3,6 +3,7 @@
 namespace App\Filament\Tenant\Resources;
 
 use App\Features\ProductInitialPrice;
+use App\Features\SellingTax;
 use App\Filament\Tenant\Resources\SellingDetailResource\RelationManagers\SellingDetailsRelationManager;
 use App\Filament\Tenant\Resources\SellingResource\Pages;
 use App\Models\Tenants\Profile;
@@ -151,9 +152,11 @@ class SellingResource extends Resource
                             ->label(__('Total cost'))
                             ->money(Setting::get('currency', 'IDR')),
                         TextEntry::make('tax_price')
+                            ->visible(feature(SellingTax::class))
                             ->label(__('Tax price'))
                             ->money(Setting::get('currency', 'IDR')),
                         TextEntry::make('tax')
+                            ->visible(feature(SellingTax::class))
                             ->translateLabel(),
                         TextEntry::make('payed_money')
                             ->label(__('Payed money'))
