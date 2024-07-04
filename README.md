@@ -14,13 +14,20 @@
 
 
 ## Features
-* **Role Management**: Define roles and permissions for users.
-* **Transaction Management**: Handle sales transactions seamlessly.
-* **Product Management**: Manage your inventory and products effectively.
-* **Simple Reporting**: Generate reports for insights into sales and performance.
-* **Simple Accounting**: Basic accounting features for financial tracking.
-* **Unit Price**: The product will have a different price base on the basic unit
-* **Friend Price**: You can sell the product with a lower price or the highest price
+- **Role Management**: Define roles and permissions for users.
+- **Transaction Management**: Handle sales transactions seamlessly.
+- **Product Management**: Manage your inventory and products effectively.
+- **Unit Price**: The product will have a different price base on the basic unit.
+- **Discount**: You can sell the product with a discount per item or global discount.
+- **Purchasing**: Manage purchase orders and supplier relationships.
+- **Stock Opname**: Conduct stock taking and inventory audits to ensure accuracy.
+- **Debt Management**: Track and manage debts owed by and to your business.
+- **Payment Method Management**: Define and manage various payment methods.
+- **Voucher Management**: Create, distribute, and track the usage of vouchers.
+- **Reporting**: Generate reports for insights into sales and performance.
+- **Simple Accounting**: Basic accounting features to track income, expenses, and profits.
+- **Real-time Dashboard**: Monitor business metrics and performance in real-time.
+- **Web usb direct printing**: support the thermal printer using usb feature from browser (Chrome, Firefox)
 
 ## Screenshots
 
