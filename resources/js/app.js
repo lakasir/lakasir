@@ -1,47 +1,16 @@
 let selectedDevice = null;
 
-async function printToUSBPrinter(selling, about, copy = false) {
-  console.log(selling, about);
-  let header = ``;
-  let detail = ``;
-  if (about != undefined || about != null) {
-    header += `${padText(about.shop_name, 32, false, true)}\n`
-    header += `${padText(about.shop_location, 32, false, true)}\n\n`
-    header += `${padText('-------------------------------', 32)}\n`;
+function getPrinter() {
+  if (localStorage.printer == undefined) {
+    console.error('printer didn\'t set');
+    return Error('printer didn\'t set');
   }
-  detail += `${padText('Cashier', 16)}${padText(selling.user.name ?? selling.user.email, 16, true)}\n`;
-  if (selling.member != null) {
-    detail += `${padText('Member', 16)}${padText(selling.member.name, 16, true)}\n`;
-  }
-  detail += `${padText('Payment method', 16)}${padText(selling.payment_method.name, 16, true)}\n`;
-  detail += `${padText('-------------------------------', 32)}\n`;
-  selling.selling_details.forEach((sellingDetail) => {
-    detail += `${padText(sellingDetail.product.name, 16)}${padText(moneyFormat(sellingDetail.price / sellingDetail.qty) + ' x ' + sellingDetail.qty.toString(), 16, true)}\n`;
-    let price = sellingDetail.price;
-    if (sellingDetail.discount_price > 0) {
-      price = price - sellingDetail.discount_price;
-      detail += `${padText('Discount', 16)}${padText(moneyFormat(sellingDetail.discount_price), 16, true)}\n`;
-    }
-    detail += `${padText(moneyFormat(price), 32, true)}\n`;
-  });
-  detail += `${padText('-------------------------------', 32)}\n`;
-  detail += `${padText('Subtotal', 16)}${padText(moneyFormat(selling.total_price), 16, true)}\n`;
-  let totalPrice = selling.total_price;
-  if (selling.discount_price > 0) {
-    detail += `${padText('Discount', 16)}${padText(moneyFormat(selling.discount_price), 16, true)}\n`;
-  }
-  detail += `${padText('Tax', 16)}${padText(selling.tax.toString(), 16, true)}\n`;
-  detail += `${padText('Total price', 16)}${padText(moneyFormat(((totalPrice * selling.tax / 100) + totalPrice) - selling.discount_price), 16, true)}\n`;
-  detail += `${padText('-------------------------------', 32)}\n`;
-  detail += `${padText('Payed money', 16)}${padText(moneyFormat(selling.payed_money), 16, true)}\n`;
-  detail += `${padText('Change', 16)}${padText(moneyFormat(selling.money_changes), 16, true)}\n`;
-  detail += `${padText('-------------------------------', 32)}\n`;
-  if (copy) {
-    detail += `${padText('Copy', 32)}\n`;
-  }
-  detail += `${padText('    ', 32)}\n`;
-  detail += `${padText('    ', 32)}\n`;
-  let receiptText = header + detail;
+
+  return JSON.parse(localStorage.printer);
+}
+
+async function printToUSBPrinter(text) {
+  let receiptText = text;
   console.log(receiptText);
 
   try {
@@ -88,7 +57,7 @@ function padText(text, length, alignRight = false, center = false, textSize = 'n
   const sizes = {
     'normal': '\x1D\x21\x00', // Normal text
     'large': '\x1D\x21\x11', // Large text
-  };
+  }[textSize];
   let paddedText = text;
 
   if (center) {

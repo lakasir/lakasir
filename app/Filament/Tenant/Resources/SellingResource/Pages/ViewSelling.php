@@ -42,7 +42,7 @@ class ViewSelling extends ViewRecord
             Action::make('print')
                 ->icon('heroicon-s-printer')
                 ->extraAttributes([
-                    'id' => 'usbButton',
+                    'id' => 'printButton',
                 ])
                 ->visible(can('can print selling')),
         ];
