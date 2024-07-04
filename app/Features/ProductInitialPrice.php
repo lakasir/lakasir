@@ -4,9 +4,8 @@ namespace App\Features;
 
 class ProductInitialPrice
 {
-    /**
-     * Resolve the feature's initial value.
-     */
+    public $name = 'product-initial-price';
+
     public function resolve(mixed $scope): mixed
     {
         return true;

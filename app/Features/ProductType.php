@@ -4,9 +4,8 @@ namespace App\Features;
 
 class ProductType
 {
-    /**
-     * Resolve the feature's initial value.
-     */
+    public $name = 'product-type';
+
     public function resolve(mixed $scope): mixed
     {
         return true;

@@ -33,11 +33,11 @@ class SellingDetailsRelationManager extends RelationManager
             ->recordTitleAttribute('product_id')
             ->columns([
                 Tables\Columns\TextColumn::make('product.name')
-                    ->label(__('Item name')),
+                    ->translateLabel(),
                 Tables\Columns\TextColumn::make('qty')
-                    ->label(__('Qty')),
+                    ->translateLabel(),
                 Tables\Columns\TextColumn::make('price')
-                    ->label(__('Price'))
+                    ->translateLabel()
                     ->sortable()
                     ->money(Setting::get('currency', 'IDR')),
                 Tables\Columns\TextColumn::make('discount')

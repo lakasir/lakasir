@@ -4,9 +4,8 @@ namespace App\Features;
 
 class Purchasing
 {
-    /**
-     * Resolve the feature's initial value.
-     */
+    public $name = 'purchasing';
+
     public function resolve(): mixed
     {
         return true;

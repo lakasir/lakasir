@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests\Tenants\Master;
 
+use App\Features\ProductExpired;
+use App\Features\ProductStock;
 use App\Models\Tenants\Category;
 use App\Models\Tenants\Product;
 use App\Models\Tenants\ProductImage;
@@ -25,7 +27,14 @@ class ProductRequest extends FormRequest
         if ($this->method() == 'DELETE') {
             return [];
         }
-        if ($this->is_non_stock) {
+
+        if (! feature(ProductStock::class)) {
+            $this->merge([
+                'is_non_stock' => true,
+            ]);
+        }
+
+        if ($this->get('is_non_stock', false)) {
             $this->merge([
                 'stock' => 0,
             ]);
@@ -58,6 +67,15 @@ class ProductRequest extends FormRequest
             'type' => [Rule::in('product', 'service'), 'required'],
             'hero_images_url' => ['string'],
             'is_non_stock' => ['boolean', 'required'],
+            'expired' => [
+                Rule::requiredIf(function () {
+                    return feature(ProductExpired::class) && $this->method() == 'POST';
+                }),
+                $this->method() == 'POST' ? [
+                    'date',
+                    'after_or_equal:now',
+                ] : [],
+            ],
         ];
     }
 

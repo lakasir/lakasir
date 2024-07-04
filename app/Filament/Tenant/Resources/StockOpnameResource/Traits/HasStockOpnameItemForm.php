@@ -21,7 +21,7 @@ trait HasStockOpnameItemForm
                 ->native(false)
                 ->placeholder(__('Search...'))
                 ->relationship(name: $product, titleAttribute: 'name')
-                ->searchable()
+                ->searchable(['name', 'barcode', 'sku'])
                 ->live()
                 ->afterStateUpdated(function (Set $set, ?string $state) {
                     $product = Product::find($state);
@@ -36,6 +36,31 @@ trait HasStockOpnameItemForm
             Select::make('adjustment_type')
                 ->translateLabel()
                 ->default('broken')
+                ->live()
+                ->afterStateUpdated(function (Set $set, Get $get, ?string $state) {
+                    if (! $state) {
+                        $set('amount_after_adjustment', $get('current_stock'));
+
+                        return;
+                    }
+                    $product = Product::find($get('product_id'));
+                    if (! $product) {
+                        Notification::make()
+                            ->title(__('Please select the product first'))
+                            ->warning()
+                            ->send();
+                        $set('amount', 0);
+
+                        return;
+                    }
+                    if ($state == 'manual_input') {
+                        $set('amount_after_adjustment', $product->stock + $get('amount'));
+
+                        return;
+                    }
+
+                    $set('amount_after_adjustment', $product->stock - $get('amount'));
+                })
                 ->options([
                     'broken' => __('Broken'),
                     'lost' => __('Lost'),
@@ -45,7 +70,8 @@ trait HasStockOpnameItemForm
             TextInput::make('amount')
                 ->translateLabel()
                 ->required()
-                ->lte('current_stock')
+                ->lte(fn (Get $get) => $get('adjustment_type') != 'manual_input' ? 'current_stock' : '')
+                ->disabled(fn (Get $get) => ! $get('adjustment_type'))
                 ->live(onBlur: true)
                 ->afterStateUpdated(function (Set $set, Get $get, ?string $state) {
                     $product = Product::find($get('product_id'));
@@ -55,6 +81,11 @@ trait HasStockOpnameItemForm
                             ->warning()
                             ->send();
                         $set('amount', 0);
+
+                        return;
+                    }
+                    if ($get('adjustment_type') == 'manual_input') {
+                        $set('amount_after_adjustment', $product->stock + $state);
 
                         return;
                     }

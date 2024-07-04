@@ -16,6 +16,7 @@ use App\Filament\Tenant\Pages\Cashier;
 use App\Filament\Tenant\Pages\CashierReport;
 use App\Filament\Tenant\Pages\EditProfile;
 use App\Filament\Tenant\Pages\Printer;
+use App\Filament\Tenant\Pages\ProductReport;
 use App\Filament\Tenant\Pages\SellingReport;
 use App\Filament\Tenant\Pages\Settings;
 use App\Filament\Tenant\Pages\TenantLogin;
@@ -42,6 +43,7 @@ use Filament\Navigation\NavigationGroup;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
+use Filament\Support\Assets\Js;
 use Filament\Support\Colors\Color;
 use Filament\Support\Facades\FilamentView;
 use Filament\View\PanelsRenderHook;
@@ -52,6 +54,7 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Stancl\Tenancy\Bootstrappers\DatabaseTenancyBootstrapper;
 
@@ -67,6 +70,11 @@ class TenantPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::hex('#FF6600'),
             ])
+            ->assets([
+                Js::make('custom-javascript', resource_path('js/app.js')),
+                Js::make('printer', resource_path('js/printer.js')),
+            ])
+            ->favicon(url('favicon.ico'))
             ->spa(config('app.spa_mode'))
             ->authGuard('web')
             ->path('/member')
@@ -98,6 +106,7 @@ class TenantPanelProvider extends PanelProvider
                         NavigationGroup::make(__('Report'))
                             ->items([
                                 ...(can('generate selling report') ? SellingReport::getNavigationItems() : []),
+                                ...(can('generate product report') ? ProductReport::getNavigationItems() : []),
                                 ...(can('generate cashier report') ? CashierReport::getNavigationItems() : []),
                             ]),
                         NavigationGroup::make(__('General'))
@@ -145,6 +154,12 @@ class TenantPanelProvider extends PanelProvider
         );
         $url = request()->getHost();
         if (config('tenancy.central_domains')[0] === null) {
+            if (Schema::hasTable('abouts') && $about = About::first()) {
+                $panel
+                    ->brandName($about->shop_name ?? 'Your Brand')
+                    ->brandLogo($about->photo ?? null);
+            }
+
             return $panel;
         }
         $tenant = Tenant::whereHas('domains', function ($query) use ($url) {

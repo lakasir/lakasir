@@ -4,9 +4,8 @@ namespace App\Features;
 
 class ProductStock
 {
-    /**
-     * Resolve the feature's initial value.
-     */
+    public $name = 'product-stock';
+
     public function resolve(mixed $scope): mixed
     {
         return true;

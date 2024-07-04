@@ -19,7 +19,7 @@ class ExpiredProduct extends BaseWidget
                 TextColumn::make('name')
                     ->translateLabel(),
                 TextColumn::make('expired')
-                    ->getStateUsing(fn (Product $product) => $product->expired_stock->expired)
+                    ->getStateUsing(fn (Product $product) => $product->expired_stock?->expired)
                     ->date()
                     ->translateLabel(),
             ])

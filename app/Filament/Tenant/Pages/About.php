@@ -2,6 +2,8 @@
 
 namespace App\Filament\Tenant\Pages;
 
+use App\Filament\Tenant\Resources\Traits\RefreshThePage;
+use App\Forms\Components\ImagePreview;
 use App\Models\Tenants\About as TenantsAbout;
 use Filament\Actions\Action;
 use Filament\Actions\Contracts\HasActions;
@@ -15,10 +17,12 @@ use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Pages\Concerns\InteractsWithFormActions;
 use Filament\Pages\Page;
+use Illuminate\Support\Facades\Storage;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 class About extends Page implements HasActions, HasForms
 {
-    use InteractsWithFormActions, InteractsWithForms;
+    use InteractsWithFormActions, InteractsWithForms, RefreshThePage;
 
     protected static ?string $navigationIcon = 'heroicon-o-building-storefront';
 
@@ -31,11 +35,16 @@ class About extends Page implements HasActions, HasForms
         'business_type' => null,
         'other_business_type' => null,
         'photo' => null,
+        'preview' => null,
+        'images' => null,
     ];
 
     public function mount(): void
     {
-        $this->data = TenantsAbout::first()?->toArray() ?? $this->data;
+        $data = TenantsAbout::first()?->toArray() ?? $this->data;
+        $data['preview_image'] = $data['photo'];
+
+        $this->data = $data;
     }
 
     public function form(Form $form): Form
@@ -53,9 +62,15 @@ class About extends Page implements HasActions, HasForms
                     'IDR' => 'IDR',
                 ])
                 ->translateLabel(),
-            // FileUpload::make('photo')
-            //     ->translateLabel(),
-
+            ImagePreview::make('preview_image')
+                ->translateLabel(),
+            FileUpload::make('images')
+                ->imageResizeMode('cover')
+                ->imageCropAspectRatio('1:1')
+                ->imageEditor()
+                ->image()
+                ->imageEditorMode(2)
+                ->translateLabel(),
         ])
             ->statePath('data');
     }
@@ -70,7 +85,22 @@ class About extends Page implements HasActions, HasForms
 
     public function save(): void
     {
+        $this->validate([
+            'data.shop_name' => 'required',
+            'data.shop_location' => 'required',
+            'data.currency' => 'required',
+            // 'data.images' => 'required',
+        ]);
+
         $about = TenantsAbout::first();
+        if ($this->data['images'] != null && array_values($this->data['images'])[0] instanceof TemporaryUploadedFile) {
+            /** @var TemporaryUploadedFile $image */
+            $image = array_values($this->data['images'])[0];
+            $image->storePubliclyAs('public', $image->getFilename());
+            $url = optional(Storage::disk('public'))->url($image->getFilename());
+            $this->data['photo'] = $url;
+        }
+
         if (! $about) {
             TenantsAbout::create($this->data);
         } else {
@@ -82,5 +112,6 @@ class About extends Page implements HasActions, HasForms
             ->title(__('Success'))
             ->success()
             ->send();
+        $this->mount();
     }
 }

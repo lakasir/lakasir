@@ -24,6 +24,7 @@ class ProductController extends Controller
                 'type',
                 'category.name',
                 'unit',
+                'show',
                 ...ComparisonFilter::setFilters('stock', ['gt', 'ge', 'lt', 'le', 'eq', 'ne']),
                 AllowedFilter::custom('global', new SearchFields, 'name,sku,barcode'),
             ])

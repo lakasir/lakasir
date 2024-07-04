@@ -65,7 +65,11 @@ class StockOpnameService
         $so->save();
         if ($status == StockOpnameStatus::approved) {
             foreach ($so->stockOpnameItems as $soItem) {
-                $this->stockService->reduceStock($soItem->product, $soItem->amount);
+                if ($soItem->adjustment_type == 'manual_input') {
+                    $this->stockService->addStock($soItem->product, $soItem->amount);
+                } else {
+                    $this->stockService->reduceStock($soItem->product, $soItem->amount);
+                }
             }
             RecalculateEvent::dispatch(Product::whereIn('id', $so->stockOpnameItems->pluck('product_id'))->get(), []);
         }

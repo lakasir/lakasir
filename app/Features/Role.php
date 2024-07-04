@@ -4,9 +4,8 @@ namespace App\Features;
 
 class Role
 {
-    /**
-     * Resolve the feature's initial value.
-     */
+    public $name = 'role';
+
     public function resolve(): mixed
     {
         return true;

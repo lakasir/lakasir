@@ -4,9 +4,8 @@ namespace App\Features;
 
 class ProductExpired
 {
-    /**
-     * Resolve the feature's initial value.
-     */
+    public $name = 'product-expired';
+
     public function resolve(mixed $scope): mixed
     {
         return true;

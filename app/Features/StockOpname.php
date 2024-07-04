@@ -4,9 +4,8 @@ namespace App\Features;
 
 class StockOpname
 {
-    /**
-     * Resolve the feature's initial value.
-     */
+    public $name = 'stock-opname';
+
     public function resolve(): mixed
     {
         return true;

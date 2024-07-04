@@ -4,9 +4,8 @@ namespace App\Features;
 
 class Setting
 {
-    /**
-     * Resolve the feature's initial value.
-     */
+    public $name = 'setting';
+
     public function resolve(): mixed
     {
         return false;

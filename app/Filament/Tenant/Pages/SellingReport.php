@@ -29,10 +29,18 @@ class SellingReport extends Page implements HasActions, HasForms
     {
         return $form->schema([
             DatePicker::make('start_date')
+                ->translateLabel()
                 ->date()
+                ->translateLabel()
+                ->required()
+                ->default(now())
                 ->native(false),
             DatePicker::make('end_date')
+                ->translateLabel()
                 ->date()
+                ->translateLabel()
+                ->required()
+                ->default(now())
                 ->native(false),
         ])
             ->columns(2)
@@ -49,6 +57,11 @@ class SellingReport extends Page implements HasActions, HasForms
 
     public function generate()
     {
+        $this->validate([
+            'data.start_date' => 'required',
+            'data.end_date' => 'required',
+        ]);
+
         return $this->redirectRoute('selling-report.generate', $this->data);
     }
 }

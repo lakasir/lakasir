@@ -4,6 +4,7 @@ namespace App\Traits;
 
 use Filament\Navigation\NavigationItem;
 use Filament\Pages\Page;
+use Illuminate\Contracts\Support\Htmlable;
 
 trait HasTranslatableResource
 {
@@ -71,5 +72,13 @@ trait HasTranslatableResource
             ->kebab()
             ->replace('-', ' ')
             ->title()->value());
+    }
+
+    public function getTitle(): string|Htmlable
+    {
+        return __(static::$title ?? (string) str(class_basename(static::class))
+            ->kebab()
+            ->replace('-', ' ')
+            ->title());
     }
 }

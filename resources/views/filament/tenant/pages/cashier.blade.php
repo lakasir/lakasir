@@ -1,6 +1,6 @@
 @php
 use Filament\Facades\Filament;
-use App\Features\{PaymentShortcutButton};
+use App\Features\{PaymentShortcutButton, SellingTax};
 
 @endphp
 <div class="">
@@ -250,7 +250,7 @@ use App\Features\{PaymentShortcutButton};
   </x-filament::modal>
 </div>
 
-@script
+@script()
 <script>
   let selling = null;
   $wire.on('selling-created', (event) => {
@@ -262,23 +262,83 @@ use App\Features\{PaymentShortcutButton};
       document.getElementById('changes').innerHTML = moneyFormat(selling.money_changes);
     }, 300);
   });
-  document.getElementById("printReceiptButton").addEventListener('click', (event) => {
+  document.getElementById("printReceiptButton").addEventListener('click', async (event) => {
     let about = @js($about);
+    const printerData = getPrinter();
 
     try {
-      if (localStorage.printer == undefined) {
+      if (!printerData) {
         new FilamentNotification()
           .title('@lang('You should choose the printer first in printer setting')')
           .danger()
           .actions([
             new FilamentNotificationAction('Setting')
-              .icon('heroicon-o-cog-6-tooth')
-              .button()
-              .url('/member/printer'),
+            .icon('heroicon-o-cog-6-tooth')
+            .button()
+            .url('/member/printer'),
           ])
           .send()
       } else {
-        printToUSBPrinter(selling, about);
+        const printer = new Printer(printerData.printerId);
+        let printerAction = printer.font('a');
+        if(about != undefined || about != null) {
+          printerAction.size(1)
+            .align('center')
+            .text(about.shop_name)
+            .size(0)
+            .text(about.shop_location);
+          if(printerData.header != undefined) {
+            printerAction
+              .text(printerData.header);
+          }
+          printerAction.align('left')
+            .text('-------------------------------');
+        }
+        printerAction.table(['@lang('Cashier')', selling.user.name])
+          .table(['@lang('Payment method')', selling.payment_method.name]);
+        if(selling.member != undefined && selling.member != null) {
+          printerAction
+            .table(['Member', selling.member.name]);
+        }
+        printerAction
+          .text('-------------------------------');
+        selling.selling_details.forEach(sellingDetail => {
+          let price = sellingDetail.price;
+          let text = moneyFormat(sellingDetail.price / sellingDetail.qty) + ' x ' + sellingDetail.qty.toString();
+          printerAction.table([sellingDetail.product.name, moneyFormat(sellingDetail.price / sellingDetail.qty) + ' x ' + sellingDetail.qty.toString()])
+          if (sellingDetail.discount_price > 0) {
+            price = price - sellingDetail.discount_price;
+            printerAction
+              .align('right')
+              .text(`(${moneyFormat(sellingDetail.discount_price)})`)
+          }
+          printerAction
+            .align('right')
+            .text(moneyFormat(price))
+            .align('left')
+        });
+        printerAction
+          .text('-------------------------------');
+        if("@js(feature(SellingTax::class))" == 'true') {
+          printerAction.table(['@lang('Tax')', `${selling.tax}%`])
+            .table(['@lang('Tax price')', moneyFormat(selling.tax_price)]);
+        }
+        printerAction
+          .table(['@lang('Subtotal')', moneyFormat(selling.total_price)])
+          .table(['@lang('Discount')', `(${moneyFormat(selling.total_discount_per_item + selling.discount_price)})`])
+          .table(['@lang('Total price')', moneyFormat(selling.grand_total_price)])
+          .text('-------------------------------')
+          .table(['@lang('Payed money')', moneyFormat(selling.payed_money)])
+          .table(['@lang('Change')', moneyFormat(selling.money_changes)])
+          .align('center');
+        if(printerData.footer != undefined) {
+          printerAction
+            .text(printerData.footer);
+        }
+
+        await printerAction
+          .cut()
+          .print();
       }
     } catch (error) {
       console.error(error);
@@ -311,40 +371,32 @@ use App\Features\{PaymentShortcutButton};
       cartDetail: @js($cartDetail),
       subtotal: $wire.entangle('total_price'),
       shortcut(number) {
-        this.$refs.payedMoney.value = this.moneyFormat(number);
+        this.$refs.payedMoney.value = moneyFormat(number);
         this.changes();
         return;
       },
       append(number) {
         if(number == 'no_changes') {
-          this.$refs.payedMoney.value = this.moneyFormat(this.subtotal);
+          this.$refs.payedMoney.value = moneyFormat(this.subtotal);
           this.changes();
           return;
         }
         if(number == 'backspace') {
           this.displayValue = this.displayValue.slice(0, -1);
-          this.$refs.payedMoney.value = this.moneyFormat(this.displayValue);
+          this.$refs.payedMoney.value = moneyFormat(this.displayValue);
           this.changes();
           return;
         }
         this.displayValue += number;
-        this.$refs.payedMoney.value = this.moneyFormat(this.displayValue);
+        this.$refs.payedMoney.value = moneyFormat(this.displayValue);
         this.changes();
-      },
-      moneyFormat(number) {
-        const formatter = new Intl.NumberFormat({
-          style: 'currency',
-          currency: '{{ $currency }}',
-        });
-
-        return formatter.format(number);
       },
       changes() {
         let num = parseFloat(this.$refs.payedMoney.value.replace(/,/g, ''));
         num = isNaN(num) ? 0 : num;
         $wire.cartDetail['money_changes'] = num - (this.subtotal);
         $wire.cartDetail['payed_money'] = num;
-        this.$refs.moneyChanges.textContent = this.moneyFormat($wire.cartDetail['money_changes']);
+        this.$refs.moneyChanges.textContent = moneyFormat($wire.cartDetail['money_changes']);
       }
     }
   });
@@ -355,6 +407,39 @@ use App\Features\{PaymentShortcutButton};
   let modalOpened = false;
   let input;
   let index;
+
+  function generateSuggestedPayments(totalPrice) {
+    const denominations = [500, 1000, 2000, 5000, 10000, 20000, 50000, 100000];
+    const suggestions = [];
+
+    for (let denom of denominations) {
+      const suggestion = Math.ceil(totalPrice / denom) * denom;
+      if (!suggestions.includes(suggestion)) {
+        suggestions.push(suggestion);
+      }
+    }
+    console.log(suggestions);
+
+    suggestions.sort((a, b) => a - b);
+    console.log(suggestions);
+
+    return suggestions;
+  }
+
+  function generateButton(totalPrice) {
+    const shortcutSuggestion = generateSuggestedPayments(totalPrice);
+    let calculatorBtn = document.getElementById('calculator-button-shortcut');
+    calculatorBtn.innerHTML = '';
+
+    for (let suggestion of shortcutSuggestion) {
+      const button = document.createElement('button');
+      button.textContent = moneyFormat(suggestion);
+      button.setAttribute('type', 'button')
+      button.setAttribute('x-on:click', `shortcut(${suggestion})`);
+      button.className = 'bg-gray-300 hover:bg-gray-400 p-2 rounded-md text-lg';
+      calculatorBtn.appendChild(button);
+    }
+  }
 
   $wire.on('open-modal', (event) => {
     if (event.inputId != undefined) {
@@ -371,23 +456,9 @@ use App\Features\{PaymentShortcutButton};
       });
       input.classList.remove('hidden');
     }
-    let calculatorBtn = document.getElementById('calculator-button-shortcut');
-    calculatorBtn.innerHTML = '';
     let totalPrice = $refs.total.getAttribute('data-value');
-    const suggestionValues = [10000, 15000, 20000, 30000, 50000, 100000];
     if("@js(feature(PaymentShortcutButton::class))" == 'true') {
-      if (totalPrice < 100000) {
-        suggestionValues.forEach(value => {
-          if (totalPrice < value) {
-            const button = document.createElement('button');
-            button.setAttribute('type', 'button')
-            button.setAttribute('x-on:click', `shortcut(${value})`);
-            button.className = 'bg-gray-300 hover:bg-gray-400 p-2 rounded-md text-lg';
-            button.textContent = value;
-            calculatorBtn.appendChild(button);
-          }
-        });
-      }
+      generateButton(totalPrice);
     }
     modalOpened = true;
   });

@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Constants\Role;
 use App\Models\Tenants\About;
 use App\Models\Tenants\User;
 use App\Notifications\DomainCreated;
@@ -17,7 +18,9 @@ class RegisterTenant
         $tenant = Tenant::create([
             'id' => $name,
             'tenancy_db_name' => 'lakasir_'.$name,
+            'tenancy_email' => $data['email'],
         ]);
+
         $tenant->domains()->create([
             'domain' => $data['domain'],
         ]);
@@ -46,6 +49,7 @@ class RegisterTenant
             Artisan::call('db:seed', [
                 '--class' => 'CategorySeeder',
             ]);
+            $user->assignRole(Role::admin);
         });
 
         return $tenant;

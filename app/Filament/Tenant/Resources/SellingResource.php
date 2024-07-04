@@ -3,8 +3,10 @@
 namespace App\Filament\Tenant\Resources;
 
 use App\Features\ProductInitialPrice;
+use App\Features\SellingTax;
 use App\Filament\Tenant\Resources\SellingDetailResource\RelationManagers\SellingDetailsRelationManager;
 use App\Filament\Tenant\Resources\SellingResource\Pages;
+use App\Models\Tenants\Profile;
 use App\Models\Tenants\Selling;
 use App\Models\Tenants\Setting;
 use App\Models\Tenants\User;
@@ -12,6 +14,7 @@ use App\Traits\HasTranslatableResource;
 use Filament\Forms\Components\DatePicker;
 use Filament\Infolists\Components\Card;
 use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Components\TextEntry\TextEntrySize;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables\Columns\TextColumn;
@@ -57,7 +60,12 @@ class SellingResource extends Resource
                     ->translateLabel()
                     ->default('-'),
                 TextColumn::make('date')
+                    ->dateTime(timezone: Profile::get()->timezone)
                     ->translateLabel(),
+                TextColumn::make('grand_total_price')
+                    ->translateLabel()
+                    ->sortable()
+                    ->money(Setting::get('currency', 'IDR')),
                 TextColumn::make('total_price')
                     ->translateLabel()
                     ->sortable()
@@ -74,6 +82,10 @@ class SellingResource extends Resource
                     ->money(Setting::get('currency', 'IDR')),
             ])
             ->searchPlaceholder('Search (Code, User, Customer Number')
+            ->header(view('filament.tenant.resources.sellings.headers.overview', [
+                'start_date' => request()->input('tableFilters.date.start_date'),
+                'end_date' => request()->input('tableFilters.date.end_date'),
+            ]))
             ->filters([
                 SelectFilter::make('user_id')
                     ->label(__('Cashier'))
@@ -83,11 +95,13 @@ class SellingResource extends Resource
                         DatePicker::make('start_date')
                             ->native(false)
                             ->format('Y-m-d')
+                            ->timezone(Profile::get()->timezone)
                             ->date()
                             ->closeOnDateSelection(),
                         DatePicker::make('end_date')
                             ->native(false)
                             ->format('Y-m-d')
+                            ->timezone(Profile::get()->timezone)
                             ->date()
                             ->closeOnDateSelection(),
                     ])
@@ -101,6 +115,13 @@ class SellingResource extends Resource
                     ->query(function (Builder $query, array $data): Builder {
                         $startDate = $data['start_date'];
                         $endDate = $data['end_date'];
+                        if ($timezone = Profile::get()->timezone) {
+                            if (! $startDate && ! $endDate) {
+                                return $query;
+                            }
+                            $startDate = Carbon::parse($startDate, $timezone)->setTimezone('UTC');
+                            $endDate = Carbon::parse($endDate, $timezone)->addDay()->setTimezone('UTC');
+                        }
 
                         return $query
                             ->when($startDate && $endDate, fn (Builder $builder) => $builder->whereBetween('date', [$startDate, $endDate]));
@@ -115,6 +136,10 @@ class SellingResource extends Resource
             ->schema([
                 Card::make()
                     ->schema([
+                        TextEntry::make('grand_total_price')
+                            ->translateLabel()
+                            ->size(TextEntrySize::Large)
+                            ->money(Setting::get('currency', 'IDR')),
                         TextEntry::make('voucher')
                             ->label(__('Voucher')),
                         TextEntry::make('discount_price')
@@ -127,11 +152,12 @@ class SellingResource extends Resource
                             ->label(__('Total cost'))
                             ->money(Setting::get('currency', 'IDR')),
                         TextEntry::make('tax_price')
+                            ->visible(feature(SellingTax::class))
                             ->label(__('Tax price'))
                             ->money(Setting::get('currency', 'IDR')),
                         TextEntry::make('tax')
-                            ->label(__('Tax'))
-                            ->money(Setting::get('currency', 'IDR')),
+                            ->visible(feature(SellingTax::class))
+                            ->translateLabel(),
                         TextEntry::make('payed_money')
                             ->label(__('Payed money'))
                             ->money(Setting::get('currency', 'IDR')),
