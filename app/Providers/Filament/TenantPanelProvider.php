@@ -10,6 +10,7 @@ use App\Features\Purchasing;
 use App\Features\Role;
 use App\Features\Setting;
 use App\Features\StockOpname;
+use App\Features\User;
 use App\Features\Voucher;
 use App\Filament\Tenant\Pages\About as PagesAbout;
 use App\Filament\Tenant\Pages\Cashier;
@@ -99,7 +100,7 @@ class TenantPanelProvider extends PanelProvider
                             ]),
                         NavigationGroup::make(__('User'))
                             ->items([
-                                ...(can('read user') ? UserResource::getNavigationItems() : []),
+                                ...(hasFeatureAndPermission(User::class, 'read user') ? UserResource::getNavigationItems() : []),
                                 ...(hasFeatureAndPermission(Role::class, 'read role') ? RoleResource::getNavigationItems() : []),
                                 ...(hasFeatureAndPermission(Permission::class, 'read permission') ? PermissionResource::getNavigationItems() : []),
                             ]),
