@@ -5,7 +5,6 @@
     - [Requirement](/{{route}}/{{version}}/requirement)
     - [Installation](/{{route}}/{{version}}/installation)
 - ## User Guide
-    - [Category](/{{route}}/{{version}}/user-guide/category)
     - [Product](/{{route}}/{{version}}/user-guide/product)
     - [Selling](/{{route}}/{{version}}/user-guide/selling)
     - [Purchasing](/{{route}}/{{version}}/user-guide/purchasing)
@@ -15,6 +14,7 @@
     - [Debt](/{{route}}/{{version}}/user-guide/debt)
     - [Voucher](/{{route}}/{{version}}/user-guide/voucher)
     - [Report](/{{route}}/{{version}}/user-guide/report)
+    - [Dashboard](/{{route}}/{{version}}/user-guide/dashboard)
 - ## FAQ
     - [Common Issues and Solutions](/{{route}}/{{version}}/faq)
 - ## Contact Information

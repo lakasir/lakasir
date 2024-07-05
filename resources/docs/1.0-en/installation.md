@@ -2,10 +2,23 @@
 
 ---
 
-- [What is lakasir?](#what)
+- [Windows](#windows)
+- [Mac os](#mac-os)
+- [Linux server](#linux-server)
+- [Shared hosting](#shared-hosting)
+- [Android](#android)
 
-<a name="what"></a>
-## What is lakasir?
+<a name="windows"></a>
+## Windows
 
-Lakasir is an organization dedicated to developing and maintaining a comprehensive Point of Sale (POS) system. Our mission is to simplify and streamline business transactions for small and medium-sized enterprises through innovative and reliable software solutions.
+<a name="mac-os"></a>
+## Mac os
 
+<a name="linux-server"></a>
+## Linux server
+
+<a name="shared-hosting"></a>
+## Shared hosting
+
+<a name="android"></a>
+## Android
