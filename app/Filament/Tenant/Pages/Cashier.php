@@ -12,6 +12,7 @@ use App\Models\Tenants\Member;
 use App\Models\Tenants\PaymentMethod;
 use App\Models\Tenants\Selling;
 use App\Models\Tenants\Setting;
+use App\Models\Tenants\Voucher as TenantsVoucher;
 use App\Rules\CheckProductStock;
 use App\Rules\ShouldSameWithSellingDetail;
 use App\Services\Tenants\SellingService;
@@ -41,6 +42,8 @@ class Cashier extends Page implements HasForms, HasTable
     protected static string $view = 'filament.tenant.pages.cashier';
 
     public Collection $cartItems;
+
+    public Collection $availableVoucher;
 
     protected static string $layout = 'filament-panels::components.layout.base';
 
@@ -76,18 +79,15 @@ class Cashier extends Page implements HasForms, HasTable
             ->orderByDesc('created_at')
             ->cashier()
             ->get();
+        $vouchers = TenantsVoucher::query()
+            ->where('minimal_buying', '<=', $this->cartItems->sum('price'))
+            ->where('start_date', '<=', today()->format('Y-m-d'))
+            ->where('expired', '>=', today()->format('Y-m-d'))
+            ->get();
 
-        $this->sub_total = 0;
+        $this->availableVoucher = $vouchers;
 
-        $this->discount_price = 0;
-        $this->cartItems->each(function (CartItem $item) {
-            $this->sub_total += $item->price;
-            if ($item->discount_price && $item->discount_price > 0) {
-                $this->discount_price += $item->discount_price;
-            }
-        });
-
-        $this->total_price = $this->sub_total + ($this->sub_total * $this->tax / 100) - $this->discount_price;
+        $this->calculateTotalPrice();
 
         $this->paymentMethods = PaymentMethod::query()
             ->select('id', 'name', 'is_credit')
@@ -165,23 +165,10 @@ class Cashier extends Page implements HasForms, HasTable
             ->model(Selling::class);
     }
 
-    public function storeCart(VoucherService $voucherService): void
+    public function storeCart(): void
     {
         if ($this->cartDetail['voucher']) {
-            if ($voucher = $voucherService->applyable($this->cartDetail['voucher'], $this->total_price)) {
-                $this->cartItems->each(function (CartItem $item) {
-                    if ($item->discount_price && $item->discount_price > 0) {
-                        $this->discount_price += $item->discount_price;
-                    }
-                });
-                $this->discount_price += $voucher->calculate();
-                $this->total_price = $this->sub_total + ($this->sub_total * $this->tax / 100) - $this->discount_price;
-            } else {
-                Notification::make('voucher_not_found')
-                    ->title(__('Voucher not found'))
-                    ->warning()
-                    ->send();
-            }
+            $this->validateVoucher($this->cartDetail['voucher']);
         }
 
         if ($discount_price = str_replace(',', '', $this->cartDetail['discount_price'])) {
@@ -267,5 +254,56 @@ class Cashier extends Page implements HasForms, HasTable
         $this->mount();
 
         $this->dispatch('selling-created', selling: $selling->load('sellingDetails.product'));
+    }
+
+    public function assignVoucher(string $code)
+    {
+        $this->validateVoucher($code) ? $this->cartDetail['voucher'] = $code : null;
+    }
+
+    public function removeVoucher()
+    {
+        $this->cartDetail['voucher'] = null;
+        $this->discount_price = 0;
+        $this->calculateTotalPrice();
+    }
+
+    private function validateVoucher(string $code): bool
+    {
+        $voucherService = new VoucherService();
+        $voucher = $voucherService->applyable($code, $this->total_price);
+        if (! $voucher) {
+            Notification::make('voucher_not_found')
+                ->title(__('Voucher not found'))
+                ->warning()
+                ->send();
+
+            return false;
+        }
+
+        $this->cartItems->each(function (CartItem $item) {
+            if ($item->discount_price && $item->discount_price > 0) {
+                $this->discount_price += $item->discount_price;
+            }
+        });
+        $this->discount_price += $voucher->calculate();
+        $this->total_price = $this->sub_total + ($this->sub_total * $this->tax / 100) - $this->discount_price;
+
+        return true;
+    }
+
+    private function calculateTotalPrice()
+    {
+        $this->sub_total = 0;
+
+        $this->discount_price = 0;
+        $this->cartItems->each(function (CartItem $item) {
+            $this->sub_total += $item->price;
+            if ($item->discount_price && $item->discount_price > 0) {
+                $this->discount_price += $item->discount_price;
+            }
+        });
+
+        $this->total_price = $this->sub_total + ($this->sub_total * $this->tax / 100) - $this->discount_price;
     }
 }
