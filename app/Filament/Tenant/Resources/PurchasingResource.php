@@ -43,25 +43,11 @@ class PurchasingResource extends Resource
         return $form
             ->schema([
                 Select::make('supplier_id')
+                    ->relationship(name: 'supplier', titleAttribute: 'name')
                     ->translateLabel()
-                    ->options(Supplier::pluck('name', 'id'))
                     ->native(false)
-                    ->searchable()
                     ->required()
-                    ->createOptionForm([
-                        TextInput::make('name')
-                            ->required(),
-                        TextInput::make('phone_number')
-                            ->rule('regex:/^(\+?\d{1,3}[-.\s]?)?(\(?\d{3}\)?[-.\s]?)?\d{3}[-.\s]?\d{4}$/')
-                            ->required(),
-                    ])
-                    ->createOptionUsing(function (array $data): int {
-                        $category = new Supplier();
-                        $category->fill($data);
-                        $category->save();
-
-                        return $category->getKey();
-                    })
+                    ->createOptionForm(Supplier::form())
                     ->afterStateUpdated(fn (Set $set, ?string $state) => $set('supplier_phone_number', Supplier::find($state)?->phone_number ?? ''))
                     ->live(),
                 TextInput::make('supplier_phone_number')

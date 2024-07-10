@@ -10,6 +10,7 @@ use App\Features\Purchasing;
 use App\Features\Role;
 use App\Features\Setting;
 use App\Features\StockOpname;
+use App\Features\Supplier;
 use App\Features\User;
 use App\Features\Voucher;
 use App\Filament\Tenant\Pages\About as PagesAbout;
@@ -31,6 +32,7 @@ use App\Filament\Tenant\Resources\PurchasingResource;
 use App\Filament\Tenant\Resources\RoleResource;
 use App\Filament\Tenant\Resources\SellingResource;
 use App\Filament\Tenant\Resources\StockOpnameResource;
+use App\Filament\Tenant\Resources\SupplierResource;
 use App\Filament\Tenant\Resources\UserResource;
 use App\Filament\Tenant\Resources\VoucherResource;
 use App\Models\Tenants\About;
@@ -84,6 +86,7 @@ class TenantPanelProvider extends PanelProvider
                 return $navigationBuilder
                     ->items([
                         ...Pages\Dashboard::getNavigationItems(),
+                        ...(hasFeatureAndPermission(Supplier::class, 'read supplier') ? SupplierResource::getNavigationItems() : []),
                         ...(hasFeatureAndPermission(Member::class, 'read member') ? MemberResource::getNavigationItems() : []),
                         ...(can('read category') ? CategoryResource::getNavigationItems() : []),
                         ...(hasFeatureAndPermission(PaymentMethod::class, 'read payment method') ? PaymentMethodResource::getNavigationItems() : []),

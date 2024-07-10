@@ -466,7 +466,10 @@ namespace App\Models\Tenants{
  *
  * @method static \Illuminate\Database\Eloquent\Builder|Supplier newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Supplier newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Supplier onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|Supplier query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Supplier withTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|Supplier withoutTrashed()
  * @mixin \Eloquent
  */
 	#[\AllowDynamicProperties]
