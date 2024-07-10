@@ -28,6 +28,7 @@ trait HasDebtPaymentForm
                 ->required(),
             DatePicker::make('date')
                 ->translateLabel()
+                ->closeOnDateSelection()
                 ->native(false)
                 ->required(),
         ];

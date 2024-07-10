@@ -101,6 +101,7 @@ class DebtResource extends Resource
                 ->translateLabel()
                 ->date(),
             TextEntry::make('total_billing_via_whatsapp')
+                ->hidden()
                 ->translateLabel(),
             TextEntry::make('last_billing_date')
                 ->translateLabel()
