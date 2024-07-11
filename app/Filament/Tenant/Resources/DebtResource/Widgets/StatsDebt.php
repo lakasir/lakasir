@@ -24,8 +24,8 @@ class StatsDebt extends BaseWidget
             ->count();
 
         return [
-            Stat::make(__('Total debt'), Number::abbreviate($debt->total_debt)),
-            Stat::make(__('Total rest debt'), Number::abbreviate($debt->rest_debt)),
+            Stat::make(__('Total debt'), Number::abbreviate($debt->total_debt ?? 0)),
+            Stat::make(__('Total rest debt'), Number::abbreviate($debt->rest_debt ?? 0)),
             Stat::make(__('Member'), $member),
         ];
     }

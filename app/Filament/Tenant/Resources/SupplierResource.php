@@ -4,6 +4,7 @@ namespace App\Filament\Tenant\Resources;
 
 use App\Filament\Tenant\Resources\SupplierResource\Pages;
 use App\Models\Tenants\Supplier;
+use App\Traits\HasTranslatableResource;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -11,6 +12,8 @@ use Filament\Tables\Table;
 
 class SupplierResource extends Resource
 {
+    use HasTranslatableResource;
+
     protected static ?string $model = Supplier::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-queue-list';

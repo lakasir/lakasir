@@ -191,7 +191,9 @@ class Cashier extends Page implements HasForms, HasTable
         $paymentMethod = collect($this->paymentMethods)->filter(function ($value, int $key) {
             return $value['id'] == $this->cartDetail['payment_method_id'];
         })->first();
-        $this->cartDetail['payment_method_label'] = $paymentMethod['name'];
+        if (isset($paymentMethod['name'])) {
+            $this->cartDetail['payment_method_label'] = $paymentMethod['name'];
+        }
     }
 
     private function fillMember()
@@ -219,8 +221,19 @@ class Cashier extends Page implements HasForms, HasTable
             })->toArray(),
         ]);
         $pMethod = PaymentMethod::find($request['payment_method_id']);
+        if (! $pMethod) {
+            $pMethod = PaymentMethod::create([
+                'name' => 'Cash',
+                'is_cash' => true,
+                'is_debit' => false,
+                'is_credit' => false,
+                'is_wallet' => false,
+                'icon' => 'assets/images/payment-methods/cash.png',
+            ]);
+        }
         $validator = Validator::make($request, [
             'fee' => ['numeric'],
+            'payment_method_id' => ['required'],
             'member_id' => Rule::requiredIf(fn () => $pMethod->is_credit),
             'due_date' => Rule::requiredIf(fn () => $pMethod->is_credit),
             'payed_money' => [

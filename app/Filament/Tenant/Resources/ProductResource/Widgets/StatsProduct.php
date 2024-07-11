@@ -27,12 +27,12 @@ class StatsProduct extends BaseWidget
             ->first();
 
         return [
-            Stat::make(__('Sold'), $selingDetail->sold),
+            Stat::make(__('Sold'), $selingDetail->sold ?? 0),
             Stat::make(__('Revenue'), Number::abbreviate(
-                $selingDetail->price - $selingDetail->cost,
+                ($selingDetail->price ?? 0) - ($selingDetail->cost ?? 0),
             )),
             Stat::make(__('Discount'), Number::abbreviate(
-                $selingDetail->discount_price
+                $selingDetail->discount_price ?? 0
             )),
         ];
     }
