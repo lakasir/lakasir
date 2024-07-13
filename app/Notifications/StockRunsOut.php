@@ -42,11 +42,16 @@ class StockRunsOut extends Notification
                 panel: 'tenant'
             );
 
+            $productName = [
+                'product' => $data['name'],
+            ];
+            $description = $data['stock'] > 0
+                ? __('notifications.stocks.single-runs-out', $productName)
+                : __('notifications.stocks.single-out-of-stock', $productName);
+
             $notifiable->notify(
                 NotificationsNotification::make()
-                    ->title(__('notifications.stocks.single-runs-out', [
-                        'product' => $data['name'],
-                    ]))
+                    ->title($description)
                     ->body(__('notifications.stocks.field_stock', [
                         'stock' => $data['stock'],
                     ]))
@@ -60,9 +65,7 @@ class StockRunsOut extends Notification
                     ->toDatabase(),
             );
             $data = array_merge($data, [
-                'name' => __('notifications.stocks.single-runs-out', [
-                    'product' => $data['name'],
-                ]),
+                'name' => $description,
                 'stock' => __('notifications.stocks.field_stock', [
                     'stock' => $data['stock'],
                 ]),
@@ -79,9 +82,14 @@ class StockRunsOut extends Notification
         if ($notifiable->fcm_token) {
             $locale = $notifiable?->profile?->locale ?? 'en';
             App::setLocale($locale);
-            $body = __('notifications.stocks.single-runs-out', [
+            $productName = [
                 'product' => $this->data[0]['name'],
-            ]);
+            ];
+            $description = $this->data[0]['stock'] > 0
+                ? __('notifications.stocks.single-runs-out', $productName)
+                : __('notifications.stocks.single-out-of-stock', $productName);
+            $body = $description;
+
             $title = __('notifications.stocks.title');
             if (count($this->data) > 0) {
                 $body = __('notifications.stocks.multiple-runs-out', [

@@ -13,13 +13,13 @@ use Illuminate\Support\Number;
 
 class StatsProduct extends BaseWidget
 {
-    public $recordId;
+    public Product $product;
 
     protected int|string|array $columnSpan = 'full';
 
     protected function getStats(): array
     {
-        $product = Product::find($this->recordId);
+        $product = $this->product;
         $selingDetail = SellingDetail::query()
             ->addSelect(
                 DB::raw('sum(cost) as cost'),
@@ -27,7 +27,7 @@ class StatsProduct extends BaseWidget
                 DB::raw('sum(price - discount_price) as price'),
                 DB::raw('sum(discount_price) as discount_price')
             )
-            ->whereProductId($this->recordId)->groupBy('product_id')
+            ->whereProductId($product->id)->groupBy('product_id')
             ->first();
 
         $stock = null;
@@ -35,9 +35,12 @@ class StatsProduct extends BaseWidget
             $minStock = Setting::get('minimum_stock_nofication', 0);
             $description = null;
             if ($product->stock <= $minStock) {
-                $description = __('notifications.stocks.single-runs-out', [
+                $productName = [
                     'product' => $product->name,
-                ]);
+                ];
+                $description = $product->stock > 0
+                    ? __('notifications.stocks.single-runs-out', $productName)
+                    : __('notifications.stocks.single-out-of-stock', $productName);
             }
             $stock = Stat::make(__('Stock'), $product->stock)
                 ->description($description)

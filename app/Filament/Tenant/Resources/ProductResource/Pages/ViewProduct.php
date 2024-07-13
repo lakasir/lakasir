@@ -78,7 +78,7 @@ class ViewProduct extends ViewRecord
     protected function getHeaderWidgets(): array
     {
         return [
-            StatsProduct::make(['recordId' => $this->record->id]),
+            StatsProduct::make(['product' => $this->record]),
         ];
     }
 
