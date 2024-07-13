@@ -15,13 +15,16 @@ class LocalizationMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $locale = 'en';
-        $user = auth()->user();
-        if ($user) {
-            $locale = $user->profile->locale ?? 'en';
+        $centralDomain = config('tenancy.central_domains')[0];
+        if ($centralDomain !== null && $request->host() != $centralDomain) {
+            $locale = 'en';
+            $user = auth()->user();
+            if ($user) {
+                $locale = $user->profile->locale ?? 'en';
+            }
+            config(['app.locale' => $locale]);
+            app()->setLocale($locale);
         }
-        config(['app.locale' => $locale]);
-        app()->setLocale($locale);
 
         return $next($request);
     }

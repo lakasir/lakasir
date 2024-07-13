@@ -4,14 +4,14 @@ namespace App\Livewire\Forms\Global;
 
 use App\Models\Tenants\User;
 use Filament\Facades\Filament;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
 use Illuminate\Contracts\View\View;
 use Livewire\Component;
-use Tapp\FilamentTimezoneField\Forms\Components\TimezoneSelect as ComponentsTimezoneSelect;
 
-class TimezoneSelect extends Component implements HasForms
+class LocalizationSelector extends Component implements HasForms
 {
     use InteractsWithForms;
 
@@ -22,7 +22,7 @@ class TimezoneSelect extends Component implements HasForms
         /** @var User $user */
         $user = Filament::auth()->user();
         $this->form->fill([
-            'timezone' => $user->profile?->timezone,
+            'locale' => $user->profile?->locale,
         ]);
     }
 
@@ -30,9 +30,13 @@ class TimezoneSelect extends Component implements HasForms
     {
         return $form
             ->schema([
-                ComponentsTimezoneSelect::make('timezone')
+                Select::make('locale')
                     ->hiddenLabel()
-                    ->searchable()
+                    ->selectablePlaceholder(false)
+                    ->options([
+                        'id' => 'Bahasa Indonesia',
+                        'en' => 'English',
+                    ])
                     ->extraInputAttributes(['wire:change' => 'submit']),
             ])
             ->statePath('data');
@@ -48,13 +52,15 @@ class TimezoneSelect extends Component implements HasForms
                 'user_id' => $user->getKey(),
             ],
             [
-                'timezone' => $data['timezone'],
+                'locale' => $data['locale'],
             ]
         );
+
+        $this->redirect('/member');
     }
 
     public function render(): View
     {
-        return view('livewire.forms.global.timezone-select');
+        return view('livewire.forms.global.localization-selector');
     }
 }

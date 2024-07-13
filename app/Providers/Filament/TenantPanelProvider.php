@@ -35,6 +35,7 @@ use App\Filament\Tenant\Resources\StockOpnameResource;
 use App\Filament\Tenant\Resources\SupplierResource;
 use App\Filament\Tenant\Resources\UserResource;
 use App\Filament\Tenant\Resources\VoucherResource;
+use App\Http\Middleware\LocalizationMiddleware;
 use App\Models\Tenants\About;
 use App\Tenant;
 use Filament\Http\Middleware\Authenticate;
@@ -151,11 +152,16 @@ class TenantPanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
+                LocalizationMiddleware::class,
             ])
             ->authMiddleware([
                 Authenticate::class,
             ]);
 
+        FilamentView::registerRenderHook(
+            PanelsRenderHook::GLOBAL_SEARCH_AFTER,
+            fn (): string => Blade::render('@livewire(\'forms.global.localization-selector\')'),
+        );
         FilamentView::registerRenderHook(
             PanelsRenderHook::GLOBAL_SEARCH_AFTER,
             fn (): string => Blade::render('@livewire(\'forms.global.timezone-select\')'),
