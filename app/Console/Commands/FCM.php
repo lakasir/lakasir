@@ -40,8 +40,9 @@ class FCM extends Command
                 return $product->stock <= $minStockSetting;
             })
             ->values();
+
         if ($runsOutStock->count() > 0) {
-            $users = User::whereNotNull('fcm_token')->get();
+            $users = User::get();
             foreach ($users as $user) {
                 $user->notify(new StockRunsOut($runsOutStock->toArray()));
             }

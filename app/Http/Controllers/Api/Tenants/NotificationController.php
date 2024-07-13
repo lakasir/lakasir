@@ -16,7 +16,12 @@ class NotificationController extends Controller
     public function index()
     {
         return $this->buildResponse()
-            ->setData(NotificationCollection::collection(auth()->user()->unreadNotifications))
+            ->setData(NotificationCollection::collection(
+                auth()->user()
+                    ->unreadNotifications()
+                    ->where('type', '!=', 'Filament\Notifications\DatabaseNotification')
+                    ->get()
+            ))
             ->setMessage('success get notification')
             ->present();
     }

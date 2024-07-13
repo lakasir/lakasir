@@ -43,6 +43,7 @@ use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Navigation\MenuItem;
 use Filament\Navigation\NavigationBuilder;
 use Filament\Navigation\NavigationGroup;
+use Filament\Navigation\NavigationItem;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
@@ -57,7 +58,9 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Str;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Stancl\Tenancy\Bootstrappers\DatabaseTenancyBootstrapper;
 
@@ -68,6 +71,7 @@ class TenantPanelProvider extends PanelProvider
     public function panel(Panel $panel): Panel
     {
         $panel = $panel
+            ->databaseNotifications()
             ->id('tenant')
             ->viteTheme('resources/css/filament/tenant/theme.css')
             ->colors([
@@ -86,43 +90,43 @@ class TenantPanelProvider extends PanelProvider
                 return $navigationBuilder
                     ->items([
                         ...Pages\Dashboard::getNavigationItems(),
-                        ...(hasFeatureAndPermission(Supplier::class, 'read supplier') ? SupplierResource::getNavigationItems() : []),
-                        ...(hasFeatureAndPermission(Member::class, 'read member') ? MemberResource::getNavigationItems() : []),
-                        ...(can('read category') ? CategoryResource::getNavigationItems() : []),
-                        ...(hasFeatureAndPermission(PaymentMethod::class, 'read payment method') ? PaymentMethodResource::getNavigationItems() : []),
-                        ...(can('read product') ? ProductResource::getNavigationItems() : []),
-                        ...(hasFeatureAndPermission(Purchasing::class, 'read purchasing') ? PurchasingResource::getNavigationItems() : []),
-                        ...(hasFeatureAndPermission(StockOpname::class, 'read stock opname') ? StockOpnameResource::getNavigationItems() : []),
-                        ...(hasFeatureAndPermission(Debt::class, 'read debt') ? DebtResource::getNavigationItems() : []),
+                        $this->generateNavigationItem(SupplierResource::class, Supplier::class),
+                        $this->generateNavigationItem(MemberResource::class, Member::class),
+                        $this->generateNavigationItem(CategoryResource::class),
+                        $this->generateNavigationItem(PaymentMethodResource::class, PaymentMethod::class),
+                        $this->generateNavigationItem(ProductResource::class),
+                        $this->generateNavigationItem(PurchasingResource::class, Purchasing::class),
+                        $this->generateNavigationItem(StockOpnameResource::class, StockOpname::class),
+                        $this->generateNavigationItem(DebtResource::class, Debt::class),
                     ])
                     ->groups([
                         NavigationGroup::make('Transaction')
                             ->items([
-                                ...(can('read selling') ? SellingResource::getNavigationItems() : []),
-                                ...(can('create selling') ? Cashier::getNavigationItems() : []),
+                                $this->generateNavigationItem(SellingResource::class),
+                                $this->generateNavigationItem(Cashier::class),
                             ]),
                         NavigationGroup::make(__('User'))
                             ->items([
-                                ...(hasFeatureAndPermission(User::class, 'read user') ? UserResource::getNavigationItems() : []),
-                                ...(hasFeatureAndPermission(Role::class, 'read role') ? RoleResource::getNavigationItems() : []),
-                                ...(hasFeatureAndPermission(Permission::class, 'read permission') ? PermissionResource::getNavigationItems() : []),
+                                $this->generateNavigationItem(UserResource::class, User::class),
+                                $this->generateNavigationItem(RoleResource::class, Role::class),
+                                $this->generateNavigationItem(PermissionResource::class, Permission::class),
                             ]),
                         NavigationGroup::make(__('Report'))
                             ->items([
-                                ...(can('generate selling report') ? SellingReport::getNavigationItems() : []),
-                                ...(can('generate product report') ? ProductReport::getNavigationItems() : []),
-                                ...(can('generate cashier report') ? CashierReport::getNavigationItems() : []),
+                                $this->generateNavigationItem(SellingReport::class),
+                                $this->generateNavigationItem(ProductReport::class),
+                                $this->generateNavigationItem(CashierReport::class),
                             ]),
                         NavigationGroup::make(__('General'))
                             ->collapsible(false)
                             ->items([
-                                ...(hasFeatureAndPermission(Voucher::class, 'read voucher') ? VoucherResource::getNavigationItems() : []),
+                                $this->generateNavigationItem(VoucherResource::class, Voucher::class),
                             ]),
                         NavigationGroup::make(__('Setting'))
                             ->collapsible(false)
                             ->items([
-                                ...Printer::getNavigationItems(),
-                                ...(hasFeatureAndPermission(Setting::class) ? Settings::getNavigationItems() : []),
+                                $this->generateNavigationItem(Printer::class),
+                                $this->generateNavigationItem(Settings::class, Setting::class),
                             ]),
                     ]);
 
@@ -194,5 +198,21 @@ class TenantPanelProvider extends PanelProvider
         }
 
         return $panel;
+    }
+
+    private function generateNavigationItem(string $resource, ?string $feature = null): NavigationItem
+    {
+        $canAccess = $resource::canAccess();
+        if ($feature != null) {
+            $canAccess = feature($feature) && $resource::canAccess();
+        }
+
+        return NavigationItem::make($resource::getLabel())
+            ->visible($canAccess)
+            ->icon($resource::getNavigationIcon())
+            ->isActiveWhen(fn (): bool => Str::of(Route::currentRouteName())->contains(
+                method_exists($resource, 'getRouteBaseName') ? $resource::getRouteBaseName() : $resource::getRoutePath()
+            ))
+            ->url(fn (): string => $resource::getUrl());
     }
 }

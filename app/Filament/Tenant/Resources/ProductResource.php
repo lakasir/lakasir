@@ -18,6 +18,7 @@ use Filament\Infolists;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
+use Filament\Support\Colors\Color;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
@@ -183,6 +184,8 @@ class ProductResource extends Resource
             Infolists\Components\TextEntry::make('barcode')
                 ->translateLabel(),
             Infolists\Components\TextEntry::make('stock')
+                ->icon(fn (int $state) => $state <= Setting::get('minimum_stock_nofication', 0) ? 'heroicon-s-exclamation-triangle' : '')
+                ->iconColor(Color::Yellow)
                 ->translateLabel(),
             Infolists\Components\TextEntry::make('is_non_stock')
                 ->badge()

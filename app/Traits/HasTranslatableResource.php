@@ -68,6 +68,10 @@ trait HasTranslatableResource
 
     public static function getLabel(): ?string
     {
+        if (new self instanceof Page) {
+            return self::getPageNavigationLabel();
+        }
+
         return __(str(class_basename(static::$navigationLabel ?? static::$model))
             ->kebab()
             ->replace('-', ' ')
