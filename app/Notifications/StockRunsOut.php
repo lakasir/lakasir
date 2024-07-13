@@ -21,7 +21,9 @@ class StockRunsOut extends Notification
     public function via(User $user)
     {
         if ($user->fcm_token) {
-            return [FcmChannel::class, 'database'];
+            if (env('FIREBASE_CREDENTIALS')) {
+                return [FcmChannel::class, 'database'];
+            }
         }
 
         return ['database'];
@@ -36,8 +38,10 @@ class StockRunsOut extends Notification
                 parameters: [
                     'record' => $data['id'],
                 ],
+                isAbsolute: false,
                 panel: 'tenant'
             );
+
             $notifiable->notify(
                 NotificationsNotification::make()
                     ->title(__('notifications.stocks.single-runs-out', [

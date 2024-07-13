@@ -6,7 +6,6 @@ use App\Models\Tenants\Product;
 use App\Models\Tenants\Setting;
 use App\Models\Tenants\User;
 use App\Notifications\StockRunsOut;
-use App\Tenant;
 use Illuminate\Console\Command;
 
 class FCM extends Command
@@ -15,18 +14,7 @@ class FCM extends Command
 
     public function handle(): void
     {
-        if (config('tenancy.central_domains')[0] === null) {
-            $this->sentTheStockAlert();
-
-            return;
-        }
-        $chunkTenants = Tenant::all()
-            ->chunk(100);
-        foreach ($chunkTenants as $tenants) {
-            $tenants->runForEach(function () {
-                $this->sentTheStockAlert();
-            });
-        }
+        $this->sentTheStockAlert();
     }
 
     private function sentTheStockAlert(): void
