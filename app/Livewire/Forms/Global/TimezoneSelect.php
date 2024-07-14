@@ -22,7 +22,7 @@ class TimezoneSelect extends Component implements HasForms
         /** @var User $user */
         $user = Filament::auth()->user();
         $this->form->fill([
-            'timezone' => $user->profile?->timezone,
+            'timezone' => $user->profile?->timezone ?? 'UTC',
         ]);
     }
 

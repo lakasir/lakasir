@@ -24,7 +24,7 @@ class LocalizationSelector extends Component implements HasForms
         /** @var User $user */
         $user = Filament::auth()->user();
         $this->form->fill([
-            'locale' => $user->profile?->locale,
+            'locale' => $user->profile?->locale ?? 'en',
             'currentRoute' => Route::currentRouteName(),
         ]);
     }
