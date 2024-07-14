@@ -4,11 +4,13 @@ namespace App\Livewire\Forms\Global;
 
 use App\Models\Tenants\User;
 use Filament\Facades\Filament;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Route;
 use Livewire\Component;
 
 class LocalizationSelector extends Component implements HasForms
@@ -23,6 +25,7 @@ class LocalizationSelector extends Component implements HasForms
         $user = Filament::auth()->user();
         $this->form->fill([
             'locale' => $user->profile?->locale,
+            'currentRoute' => Route::currentRouteName(),
         ]);
     }
 
@@ -38,6 +41,7 @@ class LocalizationSelector extends Component implements HasForms
                         'en' => 'English',
                     ])
                     ->extraInputAttributes(['wire:change' => 'submit']),
+                Hidden::make('currentRoute'),
             ])
             ->statePath('data');
     }
@@ -56,7 +60,7 @@ class LocalizationSelector extends Component implements HasForms
             ]
         );
 
-        $this->redirect('/member');
+        $this->redirectRoute($data['currentRoute']);
     }
 
     public function render(): View
