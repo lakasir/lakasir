@@ -211,6 +211,9 @@ class TenantPanelProvider extends PanelProvider
 
             tenant()->run(fn () => $this->configureTenantBrand($panel));
         } else {
+            if (in_array($url, config('tenancy.central_domains'))) {
+                return;
+            }
             abort(404);
         }
     }
@@ -237,11 +240,10 @@ class TenantPanelProvider extends PanelProvider
 
         $active = false;
         if ((new $resource) instanceof Page) {
-            $active = Str::of($resource::getUrl())->contains(Route::getCurrentRoute()->uri());
+            $active = Str::of($resource::getRouteName())->exactly(Route::current()->getName());
         }
 
         if ((new $resource) instanceof Resource) {
-            // dd($resource::getRoutePath(), Route::currentRouteName());
             $active = Str::of(Route::currentRouteName())->contains($resource::getRouteBaseName());
         }
 
