@@ -5,6 +5,7 @@ namespace App\Filament\Tenant\Resources;
 use App\Constants\PurchasingStatus;
 use App\Filament\Tenant\Resources\PurchasingResource\Pages;
 use App\Filament\Tenant\Resources\PurchasingResource\Traits\HasPurchasingForm;
+use App\Models\Tenants\Profile;
 use App\Models\Tenants\Purchasing;
 use App\Models\Tenants\Setting;
 use App\Models\Tenants\Supplier;
@@ -23,8 +24,11 @@ use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Carbon;
 
 class PurchasingResource extends Resource
 {
@@ -129,7 +133,44 @@ class PurchasingResource extends Resource
             ->filters([
                 SelectFilter::make('status')
                     ->options(PurchasingStatus::all()),
-            ]);
+                Filter::make('date')
+                    ->form([
+                        DatePicker::make('start_date')
+                            ->native(false)
+                            ->format('Y-m-d')
+                            ->timezone(Profile::get()->timezone)
+                            ->date()
+                            ->closeOnDateSelection(),
+                        DatePicker::make('end_date')
+                            ->native(false)
+                            ->format('Y-m-d')
+                            ->timezone(Profile::get()->timezone)
+                            ->date()
+                            ->closeOnDateSelection(),
+                    ])
+                    ->indicateUsing(function (array $data): ?string {
+                        if (! ($data['start_date'] && $data['end_date'])) {
+                            return null;
+                        }
+
+                        return Carbon::parse($data['start_date'])->toFormattedDateString().' s/d '.Carbon::parse($data['end_date'])->toFormattedDateString();
+                    })
+                    ->query(function (Builder $query, array $data): Builder {
+                        $startDate = $data['start_date'];
+                        $endDate = $data['end_date'];
+                        if ($timezone = Profile::get()->timezone) {
+                            if (! $startDate && ! $endDate) {
+                                return $query;
+                            }
+                            $startDate = Carbon::parse($startDate, $timezone)->setTimezone('UTC');
+                            $endDate = Carbon::parse($endDate, $timezone)->addDay()->setTimezone('UTC');
+                        }
+
+                        return $query
+                            ->when($startDate && $endDate, fn (Builder $builder) => $builder->whereBetween('date', [$startDate, $endDate]));
+                    }),
+            ])
+            ->deferFilters();
     }
 
     public static function infolist(Infolist $infolist): Infolist
