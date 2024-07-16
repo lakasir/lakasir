@@ -46,8 +46,10 @@ use Filament\Navigation\NavigationBuilder;
 use Filament\Navigation\NavigationGroup;
 use Filament\Navigation\NavigationItem;
 use Filament\Pages;
+use Filament\Pages\Page;
 use Filament\Panel;
 use Filament\PanelProvider;
+use Filament\Resources\Resource;
 use Filament\Support\Assets\Js;
 use Filament\Support\Colors\Color;
 use Filament\Support\Facades\FilamentView;
@@ -67,17 +69,27 @@ use Stancl\Tenancy\Bootstrappers\DatabaseTenancyBootstrapper;
 
 class TenantPanelProvider extends PanelProvider
 {
-    public static $abortRequest;
-
     public function panel(Panel $panel): Panel
     {
-        $panel = $panel
+        $panel = $this->configurePanel($panel);
+
+        $url = request()->getHost();
+        if ($this->isCentralDomainConfigured()) {
+            $this->initializeTenantPanel($panel, $url);
+        } else {
+            $this->initializeDefaultPanel($panel);
+        }
+
+        return $panel;
+    }
+
+    private function configurePanel(Panel $panel): Panel
+    {
+        $panel
             ->databaseNotifications()
             ->id('tenant')
             ->viteTheme('resources/css/filament/tenant/theme.css')
-            ->colors([
-                'primary' => Color::hex('#FF6600'),
-            ])
+            ->colors(['primary' => Color::hex('#FF6600')])
             ->assets([
                 Js::make('custom-javascript', resource_path('js/app.js')),
                 Js::make('printer', resource_path('js/printer.js')),
@@ -87,51 +99,7 @@ class TenantPanelProvider extends PanelProvider
             ->authGuard('web')
             ->path('/member')
             ->login(TenantLogin::class)
-            ->navigation(function (NavigationBuilder $navigationBuilder) {
-                return $navigationBuilder
-                    ->items([
-                        ...Pages\Dashboard::getNavigationItems(),
-                        $this->generateNavigationItem(SupplierResource::class, Supplier::class),
-                        $this->generateNavigationItem(MemberResource::class, Member::class),
-                        $this->generateNavigationItem(CategoryResource::class),
-                        $this->generateNavigationItem(PaymentMethodResource::class, PaymentMethod::class),
-                        $this->generateNavigationItem(ProductResource::class),
-                        $this->generateNavigationItem(PurchasingResource::class, Purchasing::class),
-                        $this->generateNavigationItem(StockOpnameResource::class, StockOpname::class),
-                        $this->generateNavigationItem(DebtResource::class, Debt::class),
-                    ])
-                    ->groups([
-                        NavigationGroup::make('Transaction')
-                            ->items([
-                                $this->generateNavigationItem(SellingResource::class),
-                                $this->generateNavigationItem(Cashier::class),
-                            ]),
-                        NavigationGroup::make(__('User'))
-                            ->items([
-                                $this->generateNavigationItem(UserResource::class, User::class),
-                                $this->generateNavigationItem(RoleResource::class, Role::class),
-                                $this->generateNavigationItem(PermissionResource::class, Permission::class),
-                            ]),
-                        NavigationGroup::make(__('Report'))
-                            ->items([
-                                $this->generateNavigationItem(SellingReport::class),
-                                $this->generateNavigationItem(ProductReport::class),
-                                $this->generateNavigationItem(CashierReport::class),
-                            ]),
-                        NavigationGroup::make(__('General'))
-                            ->collapsible(false)
-                            ->items([
-                                $this->generateNavigationItem(VoucherResource::class, Voucher::class),
-                            ]),
-                        NavigationGroup::make(__('Setting'))
-                            ->collapsible(false)
-                            ->items([
-                                $this->generateNavigationItem(Printer::class),
-                                $this->generateNavigationItem(Settings::class, Setting::class),
-                            ]),
-                    ]);
-
-            })
+            ->navigation(fn (NavigationBuilder $navigationBuilder) => $this->buildNavigation($navigationBuilder))
             ->userMenuItems([
                 MenuItem::make()
                     ->label(fn (): string => PagesAbout::getNavigationLabel())
@@ -142,83 +110,145 @@ class TenantPanelProvider extends PanelProvider
             ->discoverResources(in: app_path('Filament/Tenant/Resources'), for: 'App\\Filament\\Tenant\\Resources')
             ->discoverPages(in: app_path('Filament/Tenant/Pages'), for: 'App\\Filament\\Tenant\\Pages')
             ->discoverWidgets(in: app_path('Filament/Tenant/Widgets'), for: 'App\\Filament\\Tenant\\Widgets')
-            ->middleware([
-                EncryptCookies::class,
-                AddQueuedCookiesToResponse::class,
-                StartSession::class,
-                AuthenticateSession::class,
-                ShareErrorsFromSession::class,
-                VerifyCsrfToken::class,
-                SubstituteBindings::class,
-                DisableBladeIconComponents::class,
-                DispatchServingFilamentEvent::class,
-                LocalizationMiddleware::class,
-            ])
-            ->authMiddleware([
-                Authenticate::class,
-            ]);
+            ->middleware($this->getMiddleware())
+            ->authMiddleware([Authenticate::class]);
 
         FilamentView::registerRenderHook(
             PanelsRenderHook::GLOBAL_SEARCH_AFTER,
-            fn (): string => Blade::render('@livewire(\'forms.global.localization-selector\')'),
+            fn (): string => Blade::render('@livewire(\'forms.global.localization-selector\')')
         );
+
         FilamentView::registerRenderHook(
             PanelsRenderHook::GLOBAL_SEARCH_AFTER,
-            fn (): string => Blade::render('@livewire(\'forms.global.timezone-select\')'),
+            fn (): string => Blade::render('@livewire(\'forms.global.timezone-select\')')
         );
-        $url = request()->getHost();
-        if (config('tenancy.central_domains')[0] === null) {
-            if (Schema::hasTable('abouts') && $about = About::first()) {
-                $panel
-                    ->brandName($about->shop_name ?? 'Your Brand')
-                    ->brandLogo($about->photo ?? null);
-            }
-
-            return $panel;
-        }
-        $tenant = Tenant::whereHas('domains', function ($query) use ($url) {
-            $query->where('domain', $url);
-        })->first();
-
-        if ($tenant) {
-            if (! $tenant) {
-                abort(404);
-            }
-            tenancy()->initialize($tenant->id);
-            $subdomain = $tenant?->domains()->where('domain', $url)->first()?->domain;
-            $panel
-                ->domain($subdomain);
-            config(['cache.prefix' => $subdomain.'_']);
-
-            $db = app(DatabaseTenancyBootstrapper::class);
-            $db->bootstrap($tenant);
-
-            tenant()->run(function () use ($panel) {
-                $about = About::first();
-
-                $panel
-                    ->brandName($about->shop_name ?? 'Your Brand')
-                    ->brandLogo($about->photo ?? null);
-            });
-
-        }
 
         return $panel;
     }
 
+    private function buildNavigation(NavigationBuilder $navigationBuilder): NavigationBuilder
+    {
+        return $navigationBuilder
+            ->items($this->getNavigationItems())
+            ->groups($this->getNavigationGroups());
+    }
+
+    private function getNavigationItems(): array
+    {
+        return [
+            ...Pages\Dashboard::getNavigationItems(),
+            $this->generateNavigationItem(SupplierResource::class, Supplier::class),
+            $this->generateNavigationItem(MemberResource::class, Member::class),
+            $this->generateNavigationItem(CategoryResource::class),
+            $this->generateNavigationItem(PaymentMethodResource::class, PaymentMethod::class),
+            $this->generateNavigationItem(ProductResource::class),
+            $this->generateNavigationItem(PurchasingResource::class, Purchasing::class),
+            $this->generateNavigationItem(StockOpnameResource::class, StockOpname::class),
+            $this->generateNavigationItem(DebtResource::class, Debt::class),
+        ];
+    }
+
+    private function getNavigationGroups(): array
+    {
+        return [
+            NavigationGroup::make('Transaction')->items([
+                $this->generateNavigationItem(SellingResource::class),
+                $this->generateNavigationItem(Cashier::class),
+            ]),
+            NavigationGroup::make(__('User'))->items([
+                $this->generateNavigationItem(UserResource::class, User::class),
+                $this->generateNavigationItem(RoleResource::class, Role::class),
+                $this->generateNavigationItem(PermissionResource::class, Permission::class),
+            ]),
+            NavigationGroup::make(__('Report'))->items([
+                $this->generateNavigationItem(SellingReport::class),
+                $this->generateNavigationItem(ProductReport::class),
+                $this->generateNavigationItem(CashierReport::class),
+            ]),
+            NavigationGroup::make(__('General'))->collapsible(false)->items([
+                $this->generateNavigationItem(VoucherResource::class, Voucher::class),
+            ]),
+            NavigationGroup::make(__('Setting'))->collapsible(false)->items([
+                $this->generateNavigationItem(Printer::class),
+                $this->generateNavigationItem(Settings::class, Setting::class),
+            ]),
+        ];
+    }
+
+    private function getMiddleware(): array
+    {
+        return [
+            EncryptCookies::class,
+            AddQueuedCookiesToResponse::class,
+            StartSession::class,
+            AuthenticateSession::class,
+            ShareErrorsFromSession::class,
+            VerifyCsrfToken::class,
+            SubstituteBindings::class,
+            DisableBladeIconComponents::class,
+            DispatchServingFilamentEvent::class,
+            LocalizationMiddleware::class,
+        ];
+    }
+
+    private function isCentralDomainConfigured(): bool
+    {
+        return config('tenancy.central_domains')[0] !== null;
+    }
+
+    private function initializeTenantPanel(Panel $panel, string $url): void
+    {
+        $tenant = Tenant::whereHas('domains', fn ($query) => $query->where('domain', $url))->first();
+
+        if ($tenant) {
+            tenancy()->initialize($tenant->id);
+            $subdomain = $tenant->domains()->where('domain', $url)->first()?->domain;
+
+            $panel->domain($subdomain);
+            config(['cache.prefix' => $subdomain.'_']);
+
+            app(DatabaseTenancyBootstrapper::class)->bootstrap($tenant);
+
+            tenant()->run(fn () => $this->configureTenantBrand($panel));
+        } else {
+            abort(404);
+        }
+    }
+
+    private function initializeDefaultPanel(Panel $panel): void
+    {
+        if (Schema::hasTable('abouts') && $about = About::first()) {
+            $panel->brandName($about->shop_name ?? 'Your Brand')
+                ->brandLogo($about->photo ?? null);
+        }
+    }
+
+    private function configureTenantBrand(Panel $panel): void
+    {
+        $about = About::first();
+
+        $panel->brandName($about->shop_name ?? 'Your Brand')
+            ->brandLogo($about->photo ?? null);
+    }
+
     private function generateNavigationItem(string $resource, ?string $feature = null): NavigationItem
     {
-        $canAccess = $resource::canAccess();
-        if ($feature != null) {
-            $canAccess = feature($feature) && $resource::canAccess();
+        $canAccess = $feature ? feature($feature) && $resource::canAccess() : $resource::canAccess();
+
+        $active = false;
+        if ((new $resource) instanceof Page) {
+            $active = Str::of($resource::getUrl())->contains(Route::getCurrentRoute()->uri());
+        }
+
+        if ((new $resource) instanceof Resource) {
+            // dd($resource::getRoutePath(), Route::currentRouteName());
+            $active = Str::of(Route::currentRouteName())->contains($resource::getRouteBaseName());
         }
 
         return NavigationItem::make($resource::getLabel())
             ->visible($canAccess)
             ->icon($resource::getNavigationIcon())
-            ->isActiveWhen(fn (): bool => Str::of(Route::currentRouteName())->contains(
-                method_exists($resource, 'getRouteBaseName') ? $resource::getRouteBaseName() : $resource::getRoutePath()
-            ))
+            ->isActiveWhen(fn (): bool => $active)
             ->url(fn (): string => $resource::getUrl());
     }
 }
