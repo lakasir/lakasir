@@ -147,7 +147,7 @@ return [
     */
 
     'seo' => [
-        'author' => 'sheenazien',
+        'author' => 'lakasir',
         'description' => '',
         'keywords' => '',
         'og' => [

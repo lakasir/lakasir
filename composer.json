@@ -9,8 +9,8 @@
         "awcodes/filament-table-repeater": "^3.0",
         "aymanalhattami/filament-date-scopes-filter": "^1.0",
         "barryvdh/laravel-dompdf": "^2.0",
-        "binarytorch/larecipe": "^2.7",
         "binarytorch/larecipe-dark-theme": "^0.1.5",
+        "erusev/parsedown-extra": "^0.8.1",
         "filament/filament": "^3.1",
         "guzzlehttp/guzzle": "^7.2",
         "kreait/laravel-firebase": "^5.8",
@@ -26,6 +26,7 @@
         "spatie/laravel-permission": "^5.5",
         "spatie/laravel-query-builder": "^5.6",
         "stancl/tenancy": "^3.6",
+        "symfony/dom-crawler": "^7.1",
         "tapp/filament-timezone-field": "^3.0"
     },
     "require-dev": {
@@ -46,6 +47,7 @@
     "autoload": {
         "psr-4": {
             "App\\": "app/",
+            "BinaryTorch\\LaRecipe\\": "packages/binarytorch/larecipe/src",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
         },

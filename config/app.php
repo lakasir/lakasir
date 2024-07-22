@@ -1,5 +1,6 @@
 <?php
 
+use BinaryTorch\LaRecipe\LaRecipeServiceProvider;
 use Illuminate\Support\Facades\Facade;
 
 return [
@@ -202,6 +203,7 @@ return [
         App\Providers\TenancyServiceProvider::class,
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
         App\Providers\Filament\TenantPanelProvider::class,
+        LaRecipeServiceProvider::class,
     ],
 
     /*

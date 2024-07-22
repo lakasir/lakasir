@@ -1,6 +1,8 @@
 # Installation
 
 ---
+Clone the webapp repository: `git clone https://github.com/lakasir/lakasir` <br/>
+Download the latest version of the app: `https://github.com/lakasir/lakasir_flutter/releases`
 
 - [Windows](#windows)
 - [Mac os](#mac-os)
@@ -10,9 +12,15 @@
 
 <a name="windows"></a>
 ## Windows
+#### 🚀 Soon 
 
 <a name="mac-os"></a>
 ## Mac os
+- #### Laravel herd
+[Herd](https://herd.laravel.com/getting-started?ref=herd)
+- #### Laravel valet
+[Valet](https://laravel.com/docs/11.x/valet)
+
 
 <a name="linux-server"></a>
 ## Linux server
