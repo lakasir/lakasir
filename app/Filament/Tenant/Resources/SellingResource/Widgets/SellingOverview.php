@@ -57,8 +57,9 @@ class SellingOverview extends BaseWidget
     {
         $carbon = now(Profile::get()->timezone);
         $today = $carbon->startOfDay()->format('Y-m-d H:i:s e');
+        $startDate = Carbon::parse($today)->setTimezone('UTC');
 
-        $salesToday = Selling::whereDate('date', $today)->count();
+        $salesToday = Selling::whereDate('date', $startDate)->count();
 
         return $salesToday;
     }
