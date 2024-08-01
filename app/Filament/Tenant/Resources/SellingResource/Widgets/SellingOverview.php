@@ -66,82 +66,83 @@ class SellingOverview extends BaseWidget
     private function getTotalRevenue()
     {
         $carbon = now(Profile::get()->timezone);
-        $today = $carbon->startOfDay()->format('Y-m-d H:i:s e');
-        $yesterdayRevenue = Selling::query()
+        $startOfDay = $carbon->startOfDay();
+        $startOfYesterday = $startOfDay->copy()->subDay();
+
+        $yesterdayRevenue = $this->calculateRevenue($startOfYesterday, $startOfDay);
+        $todayRevenue = $this->calculateRevenue($startOfDay, $startOfDay->copy()->addDay());
+
+        $totalYesterdayRevenue = $this->calculateTotalRevenue($yesterdayRevenue);
+        $totalTodayRevenue = $this->calculateTotalRevenue($todayRevenue);
+
+        $readable = $this->getReadableSuffix($totalTodayRevenue);
+
+        $trendData = $this->getTrendData($totalYesterdayRevenue, $totalTodayRevenue);
+
+        $percentage = $totalYesterdayRevenue ? (($totalTodayRevenue - $totalYesterdayRevenue) / $totalYesterdayRevenue) * 100 : 0;
+
+        return [
+            'total_revenue' => $readable,
+            'description' => round($percentage).'% '.$trendData['trend'],
+            'yesterdayRevenue' => $totalYesterdayRevenue,
+            'todayRevenue' => $totalTodayRevenue,
+            'color' => $trendData['color'],
+            'icon' => $trendData['icon'],
+        ];
+    }
+
+    private function calculateRevenue($start, $end)
+    {
+        return Selling::query()
             ->select(
-                DB::raw('(COALESCE(SUM(sellings.discount_price), 0) / 1000) as total_discount_selling'),
-            )
-            ->addSelect(
-                DB::raw('COALESCE(SUM(COALESCE((SELECT SUM(selling_details.cost) as total_cost FROM selling_details WHERE selling_details.selling_id = sellings.id), 0) / 1000), 0) as total_cost')
-            )
-            ->addSelect(
-                DB::raw('COALESCE(SUM(COALESCE((SELECT SUM(selling_details.price) FROM selling_details WHERE selling_details.selling_id = sellings.id), 0) / 1000), 0) as total_price')
-            )
-            ->addSelect(
-                DB::raw('COALESCE(SUM(COALESCE((SELECT COALESCE(SUM(selling_details.discount_price), 0) FROM selling_details WHERE selling_details.selling_id = sellings.id), 0) / 1000), 0) as total_discount_per_item')
+                DB::raw('SUM(sellings.discount_price) as discount_price'),
+                DB::raw('SUM(sellings.total_discount_per_item) as total_discount_per_item'),
+                DB::raw('SUM(sellings.tax_price) as tax_price'),
+                DB::raw('SUM(sellings.total_price) as total_price'),
+                DB::raw('SUM(sellings.total_cost) as total_cost'),
             )
             ->isPaid()
-            ->whereBetween('created_at', [
-                Carbon::parse($today)->setTimezone('UTC')->subDay(),
-                Carbon::parse($today)->setTimezone('UTC'),
+            ->whereBetween('sellings.created_at', [
+                $start->setTimezone('UTC'),
+                $end->setTimezone('UTC'),
             ])
             ->first();
-        $todayRevenue = Selling::query()
-            ->select(
-                DB::raw('(COALESCE(SUM(sellings.discount_price), 0) / 1000) as total_discount_selling'),
-            )
-            ->addSelect(
-                DB::raw('COALESCE(SUM(COALESCE((SELECT SUM(selling_details.cost) as total_cost FROM selling_details WHERE selling_details.selling_id = sellings.id), 0) / 1000), 0) as total_cost')
-            )
-            ->addSelect(
-                DB::raw('COALESCE(SUM(COALESCE((SELECT SUM(selling_details.price) FROM selling_details WHERE selling_details.selling_id = sellings.id), 0) / 1000), 0) as total_price')
-            )
-            ->addSelect(
-                DB::raw('COALESCE(SUM(COALESCE((SELECT COALESCE(SUM(selling_details.discount_price), 0) FROM selling_details WHERE selling_details.selling_id = sellings.id), 0) / 1000), 0) as total_discount_per_item')
-            )
-            ->isPaid()
-            ->whereBetween('created_at', [
-                Carbon::parse($today)->setTimezone('UTC'),
-                Carbon::parse($today)->setTimezone('UTC')->addDay(),
-            ])
-            ->first();
+    }
 
-        $totalYesterdayRevenue = $yesterdayRevenue->total_price - $yesterdayRevenue->total_cost - $yesterdayRevenue->total_discount_per_item - $yesterdayRevenue->total_discount_selling;
-        $totalTodayRevenue = $todayRevenue->total_price - $todayRevenue->total_cost - $todayRevenue->total_discount_per_item - $todayRevenue->total_discount_selling;
+    private function calculateTotalRevenue($revenue)
+    {
+        $grossProfit = $revenue->total_price - $revenue->tax_price - $revenue->total_discount_per_item - $revenue->discount_price;
 
-        $readable = match (true) {
-            $totalTodayRevenue >= 1 => 'K',
-            $totalTodayRevenue >= 1000 => 'M',
-            $totalTodayRevenue >= 1000000 => 'B',
-            default => ''
-        };
+        return $grossProfit - $revenue->total_cost;
+    }
 
-        $trend = __('sideway');
-        $color = 'warning';
-        $icon = 'heroicon-m-minus';
+    private function getReadableSuffix($totalRevenue)
+    {
+        return Number::abbreviate($totalRevenue);
+    }
+
+    private function getTrendData($totalYesterdayRevenue, $totalTodayRevenue)
+    {
         if ($totalYesterdayRevenue > $totalTodayRevenue) {
-            $trend = __('decrease');
-            $color = 'danger';
-            $icon = 'heroicon-m-arrow-trending-down';
-        }
-        if ($totalYesterdayRevenue < $totalTodayRevenue) {
-            $trend = __('increase');
-            $color = 'success';
-            $icon = 'heroicon-m-arrow-trending-up';
+            return [
+                'trend' => __('decrease'),
+                'color' => 'danger',
+                'icon' => 'heroicon-m-arrow-trending-down',
+            ];
         }
 
-        $prosentase = 0;
-        if ($totalYesterdayRevenue) {
-            $prosentase = (($totalTodayRevenue - $totalYesterdayRevenue) / $totalYesterdayRevenue) * 100;
+        if ($totalYesterdayRevenue < $totalTodayRevenue) {
+            return [
+                'trend' => __('increase'),
+                'color' => 'success',
+                'icon' => 'heroicon-m-arrow-trending-up',
+            ];
         }
 
         return [
-            'total_revenue' => $totalTodayRevenue.$readable,
-            'description' => round($prosentase).'% '.$trend,
-            'yesterdayRevenue' => $totalYesterdayRevenue,
-            'todayRevenue' => $totalTodayRevenue,
-            'color' => $color,
-            'icon' => $icon,
+            'trend' => __('sideway'),
+            'color' => 'warning',
+            'icon' => 'heroicon-m-minus',
         ];
     }
 }
