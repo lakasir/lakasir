@@ -28,44 +28,46 @@ class RegisterTenantForm extends Component implements HasForms
         return $form
             ->schema([
                 Wizard::make([
-                    Wizard\Step::make('Akun pemilik')
+                    Wizard\Step::make(__('Owner\'s Account'))
                         ->schema([
                             TextInput::make('full_name')
-                                ->label('Nama Lengkap')
+                                ->label(__('Full Name'))
                                 ->string()
                                 ->required(),
                             TextInput::make('email')
-                                ->label('Email')
+                                ->label(__('Email'))
                                 ->email()
                                 ->rules('unique:tenant_users,email')
                                 ->required(),
                             TextInput::make('password')
+                                ->label(__('Password'))
                                 ->password()
                                 ->required()
                                 ->rules(['confirmed', Password::defaults()]),
                             TextInput::make('password_confirmation')
+                                ->label(__('Password Confirmation'))
                                 ->password(),
                         ])
                         ->columns(1)
                         ->icon('heroicon-o-user'),
-                    Wizard\Step::make('Detail Toko')
+                    Wizard\Step::make(__('Shop Detail'))
                         ->schema([
                             TextInput::make('shop_name')
-                                ->label('Nama Toko')
+                                ->label(__('Shop Name'))
                                 ->string()
                                 ->required(),
                             TextInput::make('shop_location')
-                                ->label('Alamat Toko')
+                                ->label(__('Shop Location'))
                                 ->string(),
                             Select::make('business_type')
-                                ->label('Jenis Bisnis')
+                                ->label(__('Business Type'))
                                 ->options([
-                                    'retail' => 'Retail',
-                                    'wholesale' => 'Wholesale',
-                                    'fnb' => 'F&B',
-                                    'fashion' => 'Fashion',
-                                    'pharmacy' => 'Pharmacy',
-                                    'other' => 'Other',
+                                    'retail' => __('Retail'),
+                                    'wholesale' => __('Wholesale'),
+                                    'fnb' => __('F&B'),
+                                    'fashion' => __('Fashion'),
+                                    'pharmacy' => __('Pharmacy'),
+                                    'other' => __('Other'),
                                 ])
                                 ->live()
                                 ->required(),
@@ -76,7 +78,7 @@ class RegisterTenantForm extends Component implements HasForms
                                 ->string(),
                         ])
                         ->icon('heroicon-o-shopping-bag'),
-                    Wizard\Step::make('Domain Toko')
+                    Wizard\Step::make(__('Shop Domain'))
                         ->schema([
                             TextInput::make('domain')
                                 ->label('Domain')
@@ -88,7 +90,6 @@ class RegisterTenantForm extends Component implements HasForms
                     ->submitAction(new HtmlString(
                         Blade::render(<<<'BLADE'
                                     <x-filament::button
-                                        type="submit"
                                         size="sm"
                                         wire:click="create"
                                     >

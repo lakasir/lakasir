@@ -4,10 +4,11 @@ namespace App\Notifications;
 
 use App\Models\Tenants\User;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class DomainCreated extends Notification
+class DomainCreated extends Notification implements ShouldQueue
 {
     use Queueable;
 
