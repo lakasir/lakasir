@@ -25,6 +25,15 @@
     <p>{{ __('Note') }}</p>
     <div>{!! $cartDetail['note'] ?? '-' !!}</div>
   </div>
+  @if($about->business_type == 'fnb')
+    <div class="flex justify-between hover:underline cursor-pointer"
+        x-on:mousedown="$dispatch('open-modal', {
+          id: 'modal-selected-table'
+        })">
+      <p>{{ __('Table') }}</p>
+      <div>{!! $cartDetail['table_id'] ?? '-' !!}</div>
+    </div>
+  @endif
   @feature(Voucher::class)
   <div class="flex justify-between">
     <div>

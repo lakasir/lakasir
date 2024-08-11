@@ -33,6 +33,7 @@ use App\Filament\Tenant\Resources\RoleResource;
 use App\Filament\Tenant\Resources\SellingResource;
 use App\Filament\Tenant\Resources\StockOpnameResource;
 use App\Filament\Tenant\Resources\SupplierResource;
+use App\Filament\Tenant\Resources\TableResource;
 use App\Filament\Tenant\Resources\UserResource;
 use App\Filament\Tenant\Resources\VoucherResource;
 use App\Http\Middleware\LocalizationMiddleware;
@@ -129,7 +130,7 @@ class TenantPanelProvider extends PanelProvider
     private function buildNavigation(NavigationBuilder $navigationBuilder): NavigationBuilder
     {
         return $navigationBuilder
-            ->items($this->getNavigationItems())
+            ->items(array_filter($this->getNavigationItems(), fn ($item) => $item != null))
             ->groups($this->getNavigationGroups());
     }
 
@@ -142,6 +143,7 @@ class TenantPanelProvider extends PanelProvider
             $this->generateNavigationItem(CategoryResource::class),
             $this->generateNavigationItem(PaymentMethodResource::class, PaymentMethod::class),
             $this->generateNavigationItem(ProductResource::class),
+            About::first()->business_type == 'fnb' ? $this->generateNavigationItem(TableResource::class) : null,
             $this->generateNavigationItem(PurchasingResource::class, Purchasing::class),
             $this->generateNavigationItem(StockOpnameResource::class, StockOpname::class),
             $this->generateNavigationItem(DebtResource::class, Debt::class),

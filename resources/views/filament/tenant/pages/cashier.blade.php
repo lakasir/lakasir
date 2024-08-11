@@ -248,6 +248,37 @@ use App\Features\{PaymentShortcutButton, SellingTax};
       </div>
     </x-slot>
   </x-filament::modal>
+  <x-filament::modal
+    id="modal-selected-table"
+    width="xl"
+    :close-by-clicking-away="false"
+    :close-by-escaping="false"
+    >
+    <div class="grid grid-cols-4 gap-4">
+      @foreach($tableOption as $table)
+      <div
+        x-on:click="$wire.cartDetail['table_id'] = {{ $table->id }};"
+        class="cursor-pointer hover:scale-105 border border-lakasir-primary rounded-md px-4 py-2 flex justify-center dark:text-white text-sm"
+        :class="$wire.cartDetail['table_id']  == {{ $table->id }} ? 'bg-lakasir-primary text-white' : 'dark:bg-gray-900 '"
+      >
+        {{ $table->number }}
+      </div>
+      @endforeach
+    </div>
+    <x-slot name="footer">
+      <x-slot name="heading">
+        <p id="titleEditDetail">{{ __('Choose the table') }}</p>
+      </x-slot>
+      <div class="grid grid-cols-2 gap-x-2">
+        <x-filament::button id="saveSelectedTable" x-on:click="$dispatch('close-modal', {id: 'modal-selected-table'}); $wire.storeCart()">
+          {{ __('Save') }}
+        </x-filament::button>
+        <x-filament::button color="gray" x-on:click="$dispatch('close-modal', {id: 'modal-selected-table'})">
+          {{ __('Close') }}
+        </x-filament::button>
+      </div>
+    </x-slot>
+  </x-filament::modal>
 </div>
 
 @script()
@@ -295,6 +326,7 @@ use App\Features\{PaymentShortcutButton, SellingTax};
             .text('-------------------------------');
         }
         printerAction.table(['@lang('Cashier')', selling.user.name])
+          .table(['@lang('Table')', selling.table.number])
           .table(['@lang('Payment method')', selling.payment_method.name]);
         if(selling.member != undefined && selling.member != null) {
           printerAction

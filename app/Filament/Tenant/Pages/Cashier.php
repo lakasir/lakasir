@@ -12,6 +12,7 @@ use App\Models\Tenants\Member;
 use App\Models\Tenants\PaymentMethod;
 use App\Models\Tenants\Selling;
 use App\Models\Tenants\Setting;
+use App\Models\Tenants\Table;
 use App\Models\Tenants\Voucher as TenantsVoucher;
 use App\Rules\CheckProductStock;
 use App\Rules\ShouldSameWithSellingDetail;
@@ -63,6 +64,8 @@ class Cashier extends Page implements HasForms, HasTable
 
     public ?About $about;
 
+    public ?Collection $tableOption;
+
     private float $discount_price = 0;
 
     public function mount()
@@ -98,6 +101,8 @@ class Cashier extends Page implements HasForms, HasTable
             ->select('id', 'name')
             ->get()
             ->pluck('name', 'id');
+
+        $this->tableOption = Table::select('id', 'number')->get();
 
         $this->storeCartForm->fill([
             'payment_method_id' => 1,
@@ -266,7 +271,7 @@ class Cashier extends Page implements HasForms, HasTable
 
         $this->mount();
 
-        $this->dispatch('selling-created', selling: $selling->load('sellingDetails.product'));
+        $this->dispatch('selling-created', selling: $selling->load('sellingDetails.product', 'table'));
     }
 
     public function assignVoucher(string $code)

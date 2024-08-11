@@ -627,6 +627,7 @@ namespace App\Models\Tenants{
  * @property int $id
  * @property int|null $user_id
  * @property int|null $member_id
+ * @property int|null $table_id
  * @property string|null $customer_number
  * @property int|null $cash_drawer_id
  * @property string|null $note
@@ -654,6 +655,7 @@ namespace App\Models\Tenants{
  * @property-read \App\Models\Tenants\PaymentMethod|null $paymentMethod
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Tenants\SellingDetail> $sellingDetails
  * @property-read int|null $selling_details_count
+ * @property-read \App\Models\Tenants\Table|null $table
  * @property-read \App\Models\Tenants\User|null $user
  * @method static \Database\Factories\Tenants\SellingFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|Selling isNotPaid()
@@ -677,6 +679,7 @@ namespace App\Models\Tenants{
  * @method static \Illuminate\Database\Eloquent\Builder|Selling whereNote($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Selling wherePayedMoney($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Selling wherePaymentMethodId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Selling whereTableId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Selling whereTax($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Selling whereTaxPrice($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Selling whereTotalCost($value)
@@ -888,6 +891,34 @@ namespace App\Models\Tenants{
  */
 	#[\AllowDynamicProperties]
 	class IdeHelperSupplier {}
+}
+
+namespace App\Models\Tenants{
+/**
+ * 
+ *
+ * @property int $id
+ * @property string $number
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Tenants\Selling> $Sellings
+ * @property-read int|null $sellings_count
+ * @method static \Illuminate\Database\Eloquent\Builder|Table newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Table newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Table onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|Table query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Table whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Table whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Table whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Table whereNumber($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Table whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Table withTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|Table withoutTrashed()
+ * @mixin \Eloquent
+ */
+	#[\AllowDynamicProperties]
+	class IdeHelperTable {}
 }
 
 namespace App\Models\Tenants{

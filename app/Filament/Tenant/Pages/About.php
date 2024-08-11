@@ -14,6 +14,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
 use Filament\Notifications\Notification;
 use Filament\Pages\Concerns\InteractsWithFormActions;
 use Filament\Pages\Page;
@@ -53,6 +54,23 @@ class About extends Page implements HasActions, HasForms
             TextInput::make('shop_name')
                 ->required()
                 ->translateLabel(),
+            Select::make('business_type')
+                ->label(__('Business Type'))
+                ->options([
+                    'retail' => __('Retail'),
+                    'wholesale' => __('Wholesale'),
+                    'fnb' => __('F&B'),
+                    'fashion' => __('Fashion'),
+                    'pharmacy' => __('Pharmacy'),
+                    'other' => __('Other'),
+                ])
+                ->live()
+                ->required(),
+            TextInput::make('other_business_type')
+                ->label('Lainnya')
+                ->visible(fn (Get $get): bool => $get('business_type') == 'other')
+                ->required(fn (Get $get): bool => $get('business_type') == 'other')
+                ->string(),
             Textarea::make('shop_location')
                 ->required()
                 ->translateLabel(),
@@ -93,7 +111,7 @@ class About extends Page implements HasActions, HasForms
         ]);
 
         $about = TenantsAbout::first();
-        if ($this->data['images'] != null && array_values($this->data['images'])[0] instanceof TemporaryUploadedFile) {
+        if (isset($this->data['images']) && $this->data['images'] != null && array_values($this->data['images'])[0] instanceof TemporaryUploadedFile) {
             /** @var TemporaryUploadedFile $image */
             $image = array_values($this->data['images'])[0];
             $image->storePubliclyAs('public', $image->getFilename());
