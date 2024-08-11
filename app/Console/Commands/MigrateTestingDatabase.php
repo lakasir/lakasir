@@ -21,6 +21,6 @@ class MigrateTestingDatabase extends Command
     public function handle()
     {
         DB::setDefaultConnection('testing');
-        Artisan::call('migrate:fresh');
+        Artisan::call('migrate:refresh');
     }
 }
