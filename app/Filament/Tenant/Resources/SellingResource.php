@@ -6,13 +6,14 @@ use App\Features\ProductInitialPrice;
 use App\Features\SellingTax;
 use App\Filament\Tenant\Resources\SellingDetailResource\RelationManagers\SellingDetailsRelationManager;
 use App\Filament\Tenant\Resources\SellingResource\Pages;
+use App\Models\Tenants\About;
 use App\Models\Tenants\Profile;
 use App\Models\Tenants\Selling;
 use App\Models\Tenants\Setting;
 use App\Models\Tenants\User;
 use App\Traits\HasTranslatableResource;
 use Filament\Forms\Components\DatePicker;
-use Filament\Infolists\Components\Card;
+use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Components\TextEntry\TextEntrySize;
 use Filament\Infolists\Infolist;
@@ -134,7 +135,7 @@ class SellingResource extends Resource
     {
         return $infolist
             ->schema([
-                Card::make()
+                Section::make()
                     ->schema([
                         TextEntry::make('grand_total_price')
                             ->translateLabel()
@@ -183,6 +184,7 @@ class SellingResource extends Resource
                         TextEntry::make('note')
                             ->label(__('Note')),
                         TextEntry::make('table.number')
+                            ->hidden(About::first()->business_type != 'fnb')
                             ->label(__('Table')),
                     ])
                     ->columns(2),
