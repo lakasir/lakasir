@@ -3,6 +3,7 @@
 namespace App\Filament\Tenant\Resources\SellingResource\Pages;
 
 use App\Features\PrintSellingA5;
+use App\Filament\Tenant\Resources\SellingDetailResource\RelationManagers\SellingDetailsRelationManager;
 use App\Filament\Tenant\Resources\SellingResource;
 use App\Models\Tenants\About;
 use App\Models\Tenants\Selling;
@@ -37,6 +38,9 @@ class ViewSelling extends ViewRecord
                 ->extraAttributes([
                     'id' => 'printA5button',
                 ])
+                ->url($this->getResource()::getUrl('print-invoice', [
+                    'record' => $this->getRecord()->id,
+                ]))
                 ->color(Color::Teal)
                 ->visible(can('can print selling') && feature(PrintSellingA5::class)),
             Action::make('print')
@@ -56,5 +60,12 @@ class ViewSelling extends ViewRecord
     public function getRecord(): Selling
     {
         return $this->record->load('sellingDetails.product');
+    }
+
+    public function getRelationManagers(): array
+    {
+        return [
+            SellingDetailsRelationManager::make(),
+        ];
     }
 }

@@ -4,7 +4,6 @@ namespace App\Filament\Tenant\Resources;
 
 use App\Features\ProductInitialPrice;
 use App\Features\SellingTax;
-use App\Filament\Tenant\Resources\SellingDetailResource\RelationManagers\SellingDetailsRelationManager;
 use App\Filament\Tenant\Resources\SellingResource\Pages;
 use App\Models\Tenants\About;
 use App\Models\Tenants\Profile;
@@ -191,17 +190,11 @@ class SellingResource extends Resource
             ]);
     }
 
-    public static function getRelations(): array
-    {
-        return [
-            SellingDetailsRelationManager::make(),
-        ];
-    }
-
     public static function getPages(): array
     {
         return [
             'index' => Pages\ListSellings::route('/'),
+            'print-invoice' => Pages\PrintInvoice::route('/{record}/print-invoice'),
             'view' => Pages\ViewSelling::route('/{record}'),
         ];
     }
