@@ -182,6 +182,8 @@ class SellingResource extends Resource
                             ->label(__('Payment method')),
                         TextEntry::make('note')
                             ->label(__('Note')),
+                        TextEntry::make('table.number')
+                            ->label(__('Table')),
                     ])
                     ->columns(2),
             ]);

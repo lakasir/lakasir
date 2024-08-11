@@ -54,7 +54,10 @@
             .text('-------------------------------');
         }
         printerAction.table(['@lang('Cashier')', selling.user.name])
-          .table(['@lang('Payment method')', selling.payment_method.name]);
+        if(selling.table != undefined && selling.table != null) {
+          printerAction.table(['@lang('Table')', selling.table.number])
+        }
+        printerAction.table(['@lang('Payment method')', selling.payment_method.name]);
         if(selling.member != undefined && selling.member != null) {
           printerAction
             .table(['Member', selling.member.name]);
