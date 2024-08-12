@@ -218,6 +218,7 @@
     "Leave it blank to auto generate": "Biarkan kosong untuk otomatis menghasilkan",
     "Stock": "Stok",
     "Unit": "Satuan",
+    "Unit price": "Harga satuan",
     "Expired": "Kadaluarsa",
     "Initial price": "Harga beli",
     "Selling price": "Harga jual",
@@ -316,5 +317,9 @@
     "Empty": "Kosong",
     "Full Name": "Nama lengkap",
     "Table": "Meja",
-    "Choose the table": "Pilih meja"
+    "Choose the table": "Pilih meja",
+    "Selling details": "Detail penjualan",
+    "Member details": "Detail member",
+    "Print invoice": "Cetak faktur",
+    "Print receipt": "Cetak nota"
 }

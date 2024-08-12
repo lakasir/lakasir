@@ -3,6 +3,7 @@
 namespace App\Filament\Tenant\Resources\SellingResource\Pages;
 
 use App\Features\PrintSellingA5;
+use App\Filament\Tenant\Resources\SellingDetailResource\RelationManagers\SellingDetailsRelationManager;
 use App\Filament\Tenant\Resources\SellingResource;
 use App\Models\Tenants\About;
 use App\Models\Tenants\Selling;
@@ -32,14 +33,14 @@ class ViewSelling extends ViewRecord
     protected function getHeaderActions(): array
     {
         return [
-            Action::make(__('Print A5'))
+            Action::make(__('Print invoice'))
                 ->icon('heroicon-s-printer')
                 ->extraAttributes([
-                    'id' => 'printA5button',
+                    'id' => 'printInvoice',
                 ])
                 ->color(Color::Teal)
                 ->visible(can('can print selling') && feature(PrintSellingA5::class)),
-            Action::make('print')
+            Action::make(__('Print receipt'))
                 ->icon('heroicon-s-printer')
                 ->extraAttributes([
                     'id' => 'printButton',
@@ -56,5 +57,12 @@ class ViewSelling extends ViewRecord
     public function getRecord(): Selling
     {
         return $this->record->load('sellingDetails.product');
+    }
+
+    public function getRelationManagers(): array
+    {
+        return [
+            SellingDetailsRelationManager::make(),
+        ];
     }
 }
