@@ -62,7 +62,7 @@ class ApiResponseService
 
     private function setPaginator($data): self
     {
-        $resource = isset($this->data->resource) ? $this->data->resource : $this->data;
+        $resource = $this->data->resource ?? $this->data;
 
         $data = [
             'data' => $resource->items(),
@@ -86,7 +86,7 @@ class ApiResponseService
 
     private function setLengthAwarePaginator(): self
     {
-        $resource = isset($this->data->resource) ? $this->data->resource : $this->data;
+        $resource = $this->data->resource ?? $this->data;
 
         $data = [
             'data' => $resource->items(),

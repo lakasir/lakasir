@@ -48,11 +48,8 @@ class ProductReportService
         $totalCost = 0;
         $totalGross = 0;
         $totalNet = 0;
-        $totalGrossProfit = 0;
         $totalDiscount = 0;
         $totalDiscountPerItem = 0;
-        $totalNetProfitBeforeDiscountSelling = 0;
-        $totalNetProfitAfterDiscountSelling = 0;
 
         /** @var Product $product */
         foreach ($products as $product) {
@@ -62,8 +59,6 @@ class ProductReportService
             $totalDiscountPerItem = $sellingDetails->sum('discount_price');
             $totalBeforeDiscountPerSelling = $sellingDetails->sum('price');
             $totalAfterDiscountPerSelling = $totalBeforeDiscountPerSelling - $totalDiscountPerItem;
-            $totalNetProfitPerSelling = (($totalBeforeDiscountPerSelling - $totalCostPerSelling) - $totalDiscountPerItem);
-            $totalGrossProfitPerSelling = $totalBeforeDiscountPerSelling - $totalCostPerSelling;
             $totalQtyPerSelling = $sellingDetails->sum('qty');
 
             $reports[] = [
@@ -86,9 +81,6 @@ class ProductReportService
             $totalDiscount += ($selling->discount_price ?? 0);
             $totalGross += $totalBeforeDiscountPerSelling;
             $totalNet += $totalAfterDiscountPerSelling;
-            $totalNetProfitBeforeDiscountSelling += $totalNetProfitPerSelling;
-            $totalNetProfitAfterDiscountSelling += ($totalNetProfitPerSelling - ($selling->discount_price ?? 0));
-            $totalGrossProfit += $totalGrossProfitPerSelling;
             $totalDiscountPerItem += $totalDiscountPerItem;
             $totalQty += $totalQtyPerSelling;
         }
