@@ -3,19 +3,13 @@
 namespace App\Filament\Tenant\Resources;
 
 use App\Features\ProductInitialPrice;
-use App\Features\SellingTax;
 use App\Filament\Tenant\Resources\SellingResource\Pages;
-use App\Models\Tenants\About;
 use App\Models\Tenants\Profile;
 use App\Models\Tenants\Selling;
 use App\Models\Tenants\Setting;
 use App\Models\Tenants\User;
 use App\Traits\HasTranslatableResource;
 use Filament\Forms\Components\DatePicker;
-use Filament\Infolists\Components\Section;
-use Filament\Infolists\Components\TextEntry;
-use Filament\Infolists\Components\TextEntry\TextEntrySize;
-use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
@@ -34,7 +28,10 @@ class SellingResource extends Resource
 
     protected static ?string $navigationLabel = 'Selling History';
 
-    protected static ?string $breadcrumb = 'Selling History';
+    public static function getBreadcrumb(): string
+    {
+        return __('Selling History');
+    }
 
     public static function table(Table $table): Table
     {
@@ -130,71 +127,10 @@ class SellingResource extends Resource
             ->deferFilters();
     }
 
-    public static function infolist(Infolist $infolist): Infolist
-    {
-        return $infolist
-            ->schema([
-                Section::make()
-                    ->schema([
-                        TextEntry::make('grand_total_price')
-                            ->translateLabel()
-                            ->size(TextEntrySize::Large)
-                            ->money(Setting::get('currency', 'IDR')),
-                        TextEntry::make('voucher')
-                            ->label(__('Voucher')),
-                        TextEntry::make('discount_price')
-                            ->label(__('Discount price'))
-                            ->money(Setting::get('currency', 'IDR')),
-                        TextEntry::make('total_price')
-                            ->label(__('Total price'))
-                            ->money(Setting::get('currency', 'IDR')),
-                        TextEntry::make('total_cost')
-                            ->label(__('Total cost'))
-                            ->money(Setting::get('currency', 'IDR')),
-                        TextEntry::make('tax_price')
-                            ->visible(feature(SellingTax::class))
-                            ->label(__('Tax price'))
-                            ->money(Setting::get('currency', 'IDR')),
-                        TextEntry::make('tax')
-                            ->visible(feature(SellingTax::class))
-                            ->translateLabel(),
-                        TextEntry::make('payed_money')
-                            ->label(__('Payed money'))
-                            ->money(Setting::get('currency', 'IDR')),
-                        TextEntry::make('money_changes')
-                            ->label(__('Money changes'))
-                            ->money(Setting::get('currency', 'IDR')),
-                        TextEntry::make('user')
-                            ->getStateUsing(function (Selling $selling) {
-                                return $selling->user->name ?? $selling->user->email;
-                            })
-                            ->label(__('Cashier')),
-                        TextEntry::make('member.name')
-                            ->label(__('Member'))
-                            ->default('-'),
-                        TextEntry::make('customer_number')
-                            ->label(__('Customer number'))
-                            ->default('-'),
-                        TextEntry::make('cashDrawer.cash')
-                            ->label(__('Cash drawer'))
-                            ->default('-'),
-                        TextEntry::make('paymentMethod.name')
-                            ->label(__('Payment method')),
-                        TextEntry::make('note')
-                            ->label(__('Note')),
-                        TextEntry::make('table.number')
-                            ->hidden(About::first()->business_type != 'fnb')
-                            ->label(__('Table')),
-                    ])
-                    ->columns(2),
-            ]);
-    }
-
     public static function getPages(): array
     {
         return [
             'index' => Pages\ListSellings::route('/'),
-            'print-invoice' => Pages\PrintInvoice::route('/{record}/print-invoice'),
             'view' => Pages\ViewSelling::route('/{record}'),
         ];
     }

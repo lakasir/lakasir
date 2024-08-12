@@ -33,17 +33,14 @@ class ViewSelling extends ViewRecord
     protected function getHeaderActions(): array
     {
         return [
-            Action::make(__('Print A5'))
+            Action::make(__('Print invoice'))
                 ->icon('heroicon-s-printer')
                 ->extraAttributes([
-                    'id' => 'printA5button',
+                    'id' => 'printInvoice',
                 ])
-                ->url($this->getResource()::getUrl('print-invoice', [
-                    'record' => $this->getRecord()->id,
-                ]))
                 ->color(Color::Teal)
                 ->visible(can('can print selling') && feature(PrintSellingA5::class)),
-            Action::make('print')
+            Action::make(__('Print receipt'))
                 ->icon('heroicon-s-printer')
                 ->extraAttributes([
                     'id' => 'printButton',

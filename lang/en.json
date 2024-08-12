@@ -316,5 +316,9 @@
     "Empty": "Empty",
     "Full Name": "Full name",
     "Table": "Table",
-    "Choose the table": "Choose the table"
+    "Choose the table": "Choose the table",
+    "Selling details": "Selling details",
+    "Member details": "Member details",
+    "Print invoice": "Print invoice",
+    "Print receipt": "Print receipt",
 }

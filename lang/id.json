@@ -317,5 +317,9 @@
     "Empty": "Kosong",
     "Full Name": "Nama lengkap",
     "Table": "Meja",
-    "Choose the table": "Pilih meja"
+    "Choose the table": "Pilih meja",
+    "Selling details": "Detail penjualan",
+    "Member details": "Detail member",
+    "Print invoice": "Cetak faktur",
+    "Print receipt": "Cetak nota"
 }
