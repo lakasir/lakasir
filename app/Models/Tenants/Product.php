@@ -46,9 +46,9 @@ class Product extends Model
 
     public function scopeStockLatestCalculateIn()
     {
-        $usingFifoPrice = Setting::get('selling_method', env('SELLING_METHOD', 'fifo')) == 'fifo';
-        $usingNormalPrice = Setting::get('selling_method', env('SELLING_METHOD', 'fifo')) == 'normal';
-        $usingLifoPrice = Setting::get('selling_method', env('SELLING_METHOD', 'fifo')) == 'lifo';
+        $usingFifoPrice = Setting::get('selling_method', config('method.selling_method', 'fifo')) == 'fifo';
+        $usingNormalPrice = Setting::get('selling_method', config('method.selling_method', 'fifo')) == 'normal';
+        $usingLifoPrice = Setting::get('selling_method', config('method.selling_method', 'fifo')) == 'lifo';
 
         return $this
             ->stocks()
@@ -66,15 +66,6 @@ class Product extends Model
     {
         return Attribute::make(
             get: function () {
-                // $usingNormalPrice = Setting::get('selling_method', env('SELLING_METHOD', 'fifo')) == 'normal';
-                // if ($usingNormalPrice) {
-                //     $lastStock = $this->stocks()->where('stock', '>', 0)
-                //         ->orderBy('date', 'asc')
-                //         ->first();
-                //     dd($lastStock);
-                //
-                //     return $lastStock ? $lastStock->stock : 0;
-                // }
                 $stock = $this
                     ->stockLatestCalculateIn()
                     ->sum('stock');

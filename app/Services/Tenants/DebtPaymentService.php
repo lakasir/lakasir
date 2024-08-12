@@ -37,7 +37,7 @@ class DebtPaymentService
         return null;
     }
 
-    public function update(DebtPayment $debtPayment, array $data)
+    public function update(DebtPayment $debtPayment, array $data): ?Debt
     {
         try {
             DB::beginTransaction();
@@ -62,8 +62,6 @@ class DebtPaymentService
             DB::rollBack();
             throw $e;
         }
-
-        return null;
     }
 
     public function destroy(DebtPayment $debtPayment): void

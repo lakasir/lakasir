@@ -52,12 +52,6 @@ class CashierReportService
         $totalNetProfitAfterDiscountSelling = 0;
 
         foreach ($sellings as $selling) {
-            $totalDiscountPerItem = 0;
-            $totalBeforeDiscountPerSelling = 0;
-            $totalAfterDiscountPerSelling = 0;
-            $totalNetProfitPerSelling = 0;
-            $totalGrossProfitPerSelling = 0;
-            $totalCostPerSelling = 0;
 
             $reports[] = [
                 'id' => $selling->id,
