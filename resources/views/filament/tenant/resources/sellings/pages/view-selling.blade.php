@@ -11,7 +11,7 @@
           <div class="details">
             <ul class="my-1">
               <li class="flex justify-between text-secondary text-sm mb-1"><span class="font-semibold">@lang('Code')</span><span>#{{ $record->code }}</span></li>
-              @if(About::first()->business_type != 'fnb')
+              @if(About::first()->business_type == 'fnb')
                 <li class="flex justify-between text-secondary text-sm mb-1"><span class="font-semibold">@lang('Table')</span><span>{{ $record->table?->number ?? 'N/A' }}</span></li>
               @endif
               <li class="flex justify-between text-secondary text-sm mb-1"><span class="font-semibold">@lang('Cashier')</span><span>{{ $record->user->name }}</span></li>
