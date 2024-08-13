@@ -11,7 +11,7 @@ class StockService
 {
     private function adjustStockPrepare(Product $product): Stock
     {
-        if (Setting::get('selling_method', config('method.selling_method', 'fifo')) == 'normal') {
+        if (Setting::get('selling_method', config('method.selling_method')) == 'normal') {
             /** @var Stock $lastStock */
             $lastStock = $product
                 ->stocks()
