@@ -4,6 +4,7 @@ namespace App\Filament\Tenant\Resources\ProductResource\Pages;
 
 use App\Filament\Tenant\Resources\ProductResource;
 use App\Models\Tenants\Product;
+use App\Models\Tenants\Setting;
 use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
@@ -13,6 +14,8 @@ use Filament\Forms\Form;
 use Filament\Resources\Pages\Page;
 use Filament\Support\Colors\Color;
 use Filament\Support\Enums\Alignment;
+use Illuminate\Support\Number;
+use Picqer\Barcode\BarcodeGeneratorSVG;
 
 class PrintLabel extends Page implements HasForms
 {
@@ -23,6 +26,8 @@ class PrintLabel extends Page implements HasForms
     public $record;
 
     public $data = [];
+
+    public $products = [];
 
     public function getBreadcrumbs(): array
     {
@@ -35,8 +40,34 @@ class PrintLabel extends Page implements HasForms
 
     public function mount($record)
     {
-        $this->record = $record;
+        if ($record) {
+            $this->record = Product::find($record);
+        }
         $this->form->fill();
+    }
+
+    public function applySetting()
+    {
+        $data = $this->form->getState();
+        $generator = new BarcodeGeneratorSVG();
+
+        $product = $this->record;
+        $fillable = collect();
+        $barcodeString = $product->barcode ?? $product->sku;
+        $barcode = $generator
+            ->getBarcode($barcodeString, $generator::TYPE_CODE_128, 1, 30);
+        for ($i = 0; $i < $data['qty']; $i++) {
+            $fillable->push([
+                'barcode' => $barcodeString,
+                'barcode_html' => $barcode,
+                'name' => $product->name,
+                'sku' => $product->sku,
+                'unit' => $product->unit,
+                'price' => Number::currency($product->selling_price, Setting::get('currency', 'IDR')),
+            ]);
+        }
+
+        $this->products = $fillable->toArray();
     }
 
     public function form(Form $form): Form
@@ -44,55 +75,66 @@ class PrintLabel extends Page implements HasForms
         return $form
             ->statePath('data')
             ->schema([
-                Section::make('Product setting')
-                    ->translateLabel()
+                Section::make(__('Product setting'))
                     ->footerActions([
                         Action::make('print')
                             ->hiddenLabel()
                             ->icon('heroicon-s-printer')
-                            ->translateLabel()
-                            ->action(function () {
-                                dd($this->form->getState());
-                            }),
+                            ->extraAttributes([
+                                'id' => 'printLabelButton',
+                            ])
+                            ->translateLabel(),
                         Action::make('Apply setting')
                             ->color(Color::Green)
+                            ->action('applySetting')
                             ->icon('heroicon-s-cog-6-tooth')
-                            ->translateLabel()
-                            ->action(function () {
-                                dd($this->data);
-                            }),
+                            ->translateLabel(),
                     ])
                     ->footerActionsAlignment(Alignment::Between)
                     ->schema([
+                        TextInput::make('product')
+                            ->default($this->record->name)
+                            ->readOnly(),
                         Select::make('product')
-                            ->required()
+                            ->hidden($this->record != null)
+                            ->required($this->record != null)
                             ->translateLabel()
                             ->options(Product::pluck('name', 'id'))
-                            ->searchable(),
+                            ->searchable(['name']),
                         TextInput::make('qty')
                             ->numeric()
+                            ->extraAttributes([
+                                'x-on:click' => '(e) => e.target.select()',
+                            ])
                             ->default(0)
                             ->helperText(__('Define how many time the product will be printed'))
                             ->translateLabel(),
                     ]),
-                Section::make('Print setting')
-                    ->translateLabel()
+                Section::make(__('Print setting'))
                     ->schema([
-                        TextInput::make('items_per_row')
-                            ->numeric()
+                        Select::make('items_per_row')
+                            ->options([
+                                1 => 1,
+                                2 => 2,
+                                3 => 3,
+                                4 => 4,
+                            ])
                             ->default(3)
-                            ->maxValue(4)
                             ->translateLabel(),
                         TextInput::make('vertical_gap')
+                            ->hint(__('Pixels'))
+                            ->extraAttributes([
+                                'x-on:click' => '(e) => e.target.select()',
+                            ])
                             ->numeric()
+                            ->default(0)
                             ->translateLabel(),
                         TextInput::make('horizontal_gap')
-                            ->numeric()
-                            ->translateLabel(),
-                        TextInput::make('barcode_height')
-                            ->numeric()
-                            ->translateLabel(),
-                        TextInput::make('document_size')
+                            ->hint(__('Pixels'))
+                            ->extraAttributes([
+                                'x-on:click' => '(e) => e.target.select()',
+                            ])
+                            ->default(0)
                             ->numeric()
                             ->translateLabel(),
                     ]),

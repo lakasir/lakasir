@@ -153,7 +153,11 @@ class TenantPanelProvider extends PanelProvider
     private function getNavigationGroups(): array
     {
         return [
-            NavigationGroup::make('Transaction')->items([
+            NavigationGroup::make(__('Inventory'))->items([
+                $this->generateNavigationItem(SellingResource::class),
+                $this->generateNavigationItem(Cashier::class),
+            ]),
+            NavigationGroup::make(__('Transaction'))->items([
                 $this->generateNavigationItem(SellingResource::class),
                 $this->generateNavigationItem(Cashier::class),
             ]),
