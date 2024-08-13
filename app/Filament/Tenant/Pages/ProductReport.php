@@ -16,6 +16,8 @@ class ProductReport extends Page implements HasActions, HasForms
 {
     use HasTranslatableResource, InteractsWithFormActions, InteractsWithForms;
 
+    public static ?string $label = 'Product Report';
+
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
 
     protected static string $view = 'filament.tenant.pages.product-report';

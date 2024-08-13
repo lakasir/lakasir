@@ -38,6 +38,8 @@ class Cashier extends Page implements HasForms, HasTable
 {
     use CartInteraction, HasTranslatableResource, TableProduct;
 
+    public static ?string $label = 'POS';
+
     protected static ?string $navigationIcon = 'heroicon-o-bolt';
 
     protected static string $view = 'filament.tenant.pages.cashier';

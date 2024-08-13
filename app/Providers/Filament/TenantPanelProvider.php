@@ -138,14 +138,11 @@ class TenantPanelProvider extends PanelProvider
     {
         return [
             ...Pages\Dashboard::getNavigationItems(),
+            $this->generateNavigationItem(Cashier::class),
+            $this->generateNavigationItem(SellingResource::class),
             $this->generateNavigationItem(SupplierResource::class, Supplier::class),
             $this->generateNavigationItem(MemberResource::class, Member::class),
-            $this->generateNavigationItem(CategoryResource::class),
             $this->generateNavigationItem(PaymentMethodResource::class, PaymentMethod::class),
-            $this->generateNavigationItem(ProductResource::class),
-            About::first() && About::first()->business_type == 'fnb' ? $this->generateNavigationItem(TableResource::class) : null,
-            $this->generateNavigationItem(PurchasingResource::class, Purchasing::class),
-            $this->generateNavigationItem(StockOpnameResource::class, StockOpname::class),
             $this->generateNavigationItem(DebtResource::class, Debt::class),
         ];
     }
@@ -153,9 +150,12 @@ class TenantPanelProvider extends PanelProvider
     private function getNavigationGroups(): array
     {
         return [
-            NavigationGroup::make(__('Transaction'))->items([
-                $this->generateNavigationItem(SellingResource::class),
-                $this->generateNavigationItem(Cashier::class),
+            NavigationGroup::make(__('Inventory'))->items([
+                $this->generateNavigationItem(PurchasingResource::class, Purchasing::class),
+                $this->generateNavigationItem(StockOpnameResource::class, StockOpname::class),
+                $this->generateNavigationItem(ProductResource::class),
+                $this->generateNavigationItem(CategoryResource::class),
+                $this->generateNavigationItem(TableResource::class)->hidden(About::first() && About::first()->business_type != 'fnb'),
             ]),
             NavigationGroup::make(__('User'))->items([
                 $this->generateNavigationItem(UserResource::class, User::class),

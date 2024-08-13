@@ -16,6 +16,8 @@ class SellingReport extends Page implements HasActions, HasForms
 {
     use HasTranslatableResource, InteractsWithFormActions, InteractsWithForms;
 
+    public static ?string $label = 'Selling Report';
+
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
 
     protected static string $view = 'filament.tenant.pages.selling-report';
