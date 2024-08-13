@@ -143,7 +143,7 @@ class TenantPanelProvider extends PanelProvider
             $this->generateNavigationItem(CategoryResource::class),
             $this->generateNavigationItem(PaymentMethodResource::class, PaymentMethod::class),
             $this->generateNavigationItem(ProductResource::class),
-            About::first()->business_type == 'fnb' ? $this->generateNavigationItem(TableResource::class) : null,
+            About::first() && About::first()->business_type == 'fnb' ? $this->generateNavigationItem(TableResource::class) : null,
             $this->generateNavigationItem(PurchasingResource::class, Purchasing::class),
             $this->generateNavigationItem(StockOpnameResource::class, StockOpname::class),
             $this->generateNavigationItem(DebtResource::class, Debt::class),
