@@ -14,6 +14,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Pages\Page;
 use Filament\Support\Colors\Color;
 use Filament\Support\Enums\Alignment;
+use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\Number;
 use Picqer\Barcode\BarcodeGeneratorSVG;
 
@@ -139,5 +140,10 @@ class PrintLabel extends Page implements HasForms
                             ->translateLabel(),
                     ]),
             ]);
+    }
+
+    public function getTitle(): string|Htmlable
+    {
+        return __('Print Label');
     }
 }
