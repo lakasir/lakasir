@@ -16,6 +16,8 @@ class CreateStockOpname extends CreateRecord
 
     protected static string $resource = StockOpnameResource::class;
 
+    protected static string $view = 'filament.tenant.resources.stock-opname.pages.create-record';
+
     private StockOpnameService $stockOpnameService;
 
     private string $prefix;

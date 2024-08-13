@@ -533,7 +533,7 @@ use App\Features\{PaymentShortcutButton, SellingTax};
 
       setTimeout(() => {
         scannerEnabled = true;
-      }, 2000);
+      }, 1000);
     } else {
       barcodeData += event.key;
     }

@@ -44,9 +44,11 @@ class StockOpnameResource extends Resource
                 DatePicker::make('date')
                     ->required()
                     ->default(now())
+                    ->closeOnDateSelection()
                     ->native(false)
                     ->label(__('Date')),
                 TableRepeater::make('stock_opname_items')
+                    ->defaultItems(0)
                     ->translateLabel()
                     ->headers([
                         Header::make('product_name')
@@ -70,7 +72,7 @@ class StockOpnameResource extends Resource
                     ])
                     ->schema($self->get())
                     ->visibleOn(['create'])
-                    ->orderable(false)
+                    ->orderColumn(false)
                     ->columnSpan('full'),
             ]);
     }
