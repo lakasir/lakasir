@@ -60,7 +60,7 @@ class LocalizationSelector extends Component implements HasForms
             ]
         );
 
-        $this->redirectRoute($data['currentRoute']);
+        $this->redirectIntended();
     }
 
     public function render(): View

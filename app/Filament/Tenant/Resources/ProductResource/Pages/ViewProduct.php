@@ -11,7 +11,6 @@ use App\Filament\Tenant\Resources\Traits\RefreshThePage;
 use Filament\Actions;
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
-use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ViewRecord;
 use Filament\Resources\RelationManagers\RelationGroup;
@@ -32,19 +31,14 @@ class ViewProduct extends ViewRecord
                 ->badgeColor(Color::Red),
             ActionGroup::make([
                 Actions\EditAction::make(),
-                Actions\DeleteAction::make(),
                 Action::make(__('Print label'))
                     ->icon('heroicon-s-printer')
                     ->visible(can('can print label') && feature(PrintProductLabel::class))
-                    ->form([
-                        TextInput::make('count')
-                            ->translateLabel()
-                            ->default(0),
-                    ])
                     ->action(fn ($data) => $this->printLabel($data)),
                 Action::make($this->record->show ? __('Inactivate') : __('Activate'))
                     ->icon($this->record->show ? 'heroicon-s-x-circle' : 'heroicon-s-rocket-launch')
                     ->action('toggleShow'),
+                Actions\DeleteAction::make(),
             ])
                 ->label(__('More actions'))
                 ->icon('heroicon-m-ellipsis-vertical')
@@ -54,11 +48,10 @@ class ViewProduct extends ViewRecord
         ];
     }
 
-    public function printLabel($data): void
+    public function printLabel(): void
     {
-        $this->redirect(route('product-label.generate', [
-            'product' => $this->record,
-            'count' => $data['count'],
+        $this->redirect($this->getResource()::getUrl('print-label', [
+            'record' => $this->record,
         ]));
     }
 
