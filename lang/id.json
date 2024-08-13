@@ -321,5 +321,14 @@
     "Selling details": "Detail penjualan",
     "Member details": "Detail member",
     "Print invoice": "Cetak faktur",
-    "Print receipt": "Cetak nota"
+    "Print receipt": "Cetak nota",
+    "Product setting" : "Pengaturan produk",
+    "Define how many time the product will be printed" : "Definisikan berapa kali produk akan diprint",
+    "Apply setting" : "Terapkan pengaturan",
+    "Print setting" : "Pengaturan print",
+    "Items per row": "Item per baris",
+    "Vertical gap": "Vertikal gap",
+    "Horizontal gap": "Horisontal gap",
+    "Pixels": "Pixel",
+    "Print Label": "Cetak label"
 }

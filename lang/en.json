@@ -320,5 +320,14 @@
     "Selling details": "Selling details",
     "Member details": "Member details",
     "Print invoice": "Print invoice",
-    "Print receipt": "Print receipt"
+    "Print receipt": "Print receipt",
+    "Product setting" : "Product setting",
+    "Define how many time the product will be printed" : "Define how many time the product will be printed",
+    "Apply setting" : "Apply setting",
+    "Print setting" : "Print setting",
+    "Items per row": "Items per row",
+    "Vertical gap": "Vertical gap",
+    "Horizontal gap": "Horizontal gap",
+    "Pixels": "Pixels",
+    "Print Label": "Print Label"
 }
