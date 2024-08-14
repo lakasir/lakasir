@@ -34,6 +34,7 @@ class StockOpnameItemsRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
+            ->defaultSort('created_at', 'desc')
             ->columns([
                 Tables\Columns\TextColumn::make('product.name')
                     ->translateLabel(),
@@ -47,42 +48,27 @@ class StockOpnameItemsRelationManager extends RelationManager
                     ->translateLabel()
                     ->disabled(fn () => $this->getOwnerRecord()->status == StockOpnameStatus::approved)
                     ->afterStateUpdated(function (StockOpnameItem $soi, $state) {
-                        $adjusment_stock = $soi->current_stock - $soi->amount;
-                        if ($state == 'manual_input') {
-                            $adjusment_stock = $soi->current_stock + $soi->amount;
-                        }
+                        $adjusment_stock = $soi->current_stock - $soi->actual_stock;
+
                         $this->soIService->update($soi, [
-                            'amount_after_adjustment' => $adjusment_stock,
+                            'missing_stock' => $adjusment_stock,
                             'adjustment_type' => $state,
                         ]);
                     }),
                 Tables\Columns\TextColumn::make('current_stock')
                     ->translateLabel(),
-                Tables\Columns\TextInputColumn::make('amount')
+                Tables\Columns\TextInputColumn::make('actual_stock')
                     ->type('number')
                     ->translateLabel()
-                    ->rules(function (StockOpnameItem $soI) {
-                        if ($soI->adjustment_type == 'manual_input') {
-
-                            return [];
-                        }
-
-                        return [
-                            'lte:'.$soI->current_stock,
-                        ];
-                    })
                     ->disabled(fn () => $this->getOwnerRecord()->status == StockOpnameStatus::approved)
                     ->afterStateUpdated(function (StockOpnameItem $soi, $state) {
                         $adjusment_stock = $soi->current_stock - $state;
-                        if ($soi->adjustment_type == 'manual_input') {
-                            $adjusment_stock = $soi->current_stock + $state;
-                        }
                         $this->soIService->update($soi, [
-                            'amount' => $state,
-                            'amount_after_adjustment' => $adjusment_stock,
+                            'actual_stock' => $state,
+                            'missing_stock' => $adjusment_stock,
                         ]);
                     }),
-                Tables\Columns\TextColumn::make('amount_after_adjustment')
+                Tables\Columns\TextColumn::make('missing_stock')
                     ->translateLabel(),
                 Tables\Columns\ImageColumn::make('attachment')
                     ->translateLabel(),

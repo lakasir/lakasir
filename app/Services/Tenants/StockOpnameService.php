@@ -8,6 +8,7 @@ use App\Models\Tenants\Product;
 use App\Models\Tenants\StockOpname;
 use App\Models\Tenants\StockOpnameItem;
 use App\Services\Tenants\Traits\HasNumber;
+use Filament\Notifications\Notification;
 
 class StockOpnameService
 {
@@ -27,15 +28,6 @@ class StockOpnameService
         $stockOpname = new StockOpname();
         $stockOpname->fill($data);
         $stockOpname->save();
-        $collection = collect($data['stock_opname_items']);
-        $collection->map(function ($item) use ($stockOpname) {
-            $product = Product::find($item['product_id']);
-            $sItem = new StockOpnameItem();
-            $sItem->fill($item);
-            $sItem->product()->associate($product);
-            $sItem->stockOpname()->associate($stockOpname);
-            $sItem->save();
-        });
 
         return $stockOpname;
     }
@@ -51,7 +43,7 @@ class StockOpnameService
     public function delete(StockOpname $stockOpname): void
     {
         $stockOpname->stockOpnameItems->each(function (StockOpnameItem $sOItem) {
-            $sOItem->product->stock = $sOItem->product->stock + $sOItem->amount;
+            $sOItem->product->stock = $sOItem->product->stock + $sOItem->actual_stock;
             $sOItem->product->save();
         });
         $stockOpname->delete();
@@ -59,19 +51,26 @@ class StockOpnameService
 
     public function updateStatus(StockOpname $so, $status)
     {
-        $so->fill([
-            'status' => $status,
-        ]);
-        $so->save();
+        $so->status = $status;
         if ($status == StockOpnameStatus::approved) {
+            $so->approved_at = now();
+            if ($so->stockOpnameItems->isEmpty()) {
+                Notification::make()
+                    ->title(__('Stock Opname Item is required'))
+                    ->warning()
+                    ->send();
+
+                return;
+            }
             foreach ($so->stockOpnameItems as $soItem) {
-                if ($soItem->adjustment_type == 'manual_input') {
-                    $this->stockService->addStock($soItem->product, $soItem->amount);
+                if ($soItem->missing_stock < 0) {
+                    $this->stockService->addStock($soItem->product, $soItem->missing_stock * -1);
                 } else {
-                    $this->stockService->reduceStock($soItem->product, $soItem->amount);
+                    $this->stockService->reduceStock($soItem->product, $soItem->missing_stock);
                 }
             }
             RecalculateEvent::dispatch(Product::whereIn('id', $so->stockOpnameItems->pluck('product_id'))->get(), []);
         }
+        $so->save();
     }
 }

@@ -8,8 +8,6 @@ use App\Filament\Tenant\Resources\StockOpnameResource\Traits\HasStockOpnameItemF
 use App\Models\Tenants\Profile;
 use App\Models\Tenants\StockOpname;
 use App\Traits\HasTranslatableResource;
-use Awcodes\TableRepeater\Components\TableRepeater;
-use Awcodes\TableRepeater\Header;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -34,12 +32,12 @@ class StockOpnameResource extends Resource
 
     public static function form(Form $form): Form
     {
-        $self = new self();
-
         return $form
             ->schema([
                 TextInput::make('pic')
                     ->required()
+                    ->readOnly()
+                    ->default(auth()->user()->name)
                     ->label(__('PIC')),
                 DatePicker::make('date')
                     ->required()
@@ -47,33 +45,6 @@ class StockOpnameResource extends Resource
                     ->closeOnDateSelection()
                     ->native(false)
                     ->label(__('Date')),
-                TableRepeater::make('stock_opname_items')
-                    ->defaultItems(0)
-                    ->translateLabel()
-                    ->headers([
-                        Header::make('product_name')
-                            ->label(__('Product name'))
-                            ->width('150px'),
-                        Header::make('current_stock')
-                            ->label(__('Current stock'))
-                            ->width('150px'),
-                        Header::make('adjustment_type')
-                            ->label(__('Adjustment type'))
-                            ->width('150px'),
-                        Header::make('amount')
-                            ->label(__('Amount'))
-                            ->width('150px'),
-                        Header::make('amount_after_adjustment')
-                            ->label(__('Amount after adjustment'))
-                            ->width('150px'),
-                        Header::make('image')
-                            ->label(__('Image'))
-                            ->width('150px'),
-                    ])
-                    ->schema($self->get())
-                    ->visibleOn(['create'])
-                    ->orderColumn(false)
-                    ->columnSpan('full'),
             ]);
     }
 
@@ -90,6 +61,8 @@ class StockOpnameResource extends Resource
                     ->counts('stockOpnameItems'),
                 TextColumn::make('date')
                     ->date(),
+                TextColumn::make('approved_at')
+                    ->dateTime(timezone: Profile::get()->timezone),
                 TextColumn::make('status')
                     ->translateLabel()
                     ->badge()
@@ -160,6 +133,7 @@ class StockOpnameResource extends Resource
             TextEntry::make('pic')
                 ->translateLabel(),
             TextEntry::make('date')
+                ->date()
                 ->translateLabel(),
         ]);
     }

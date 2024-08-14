@@ -3,7 +3,6 @@
 namespace App\Filament\Tenant\Resources\StockOpnameResource\Pages;
 
 use App\Filament\Tenant\Resources\StockOpnameResource;
-use App\Filament\Tenant\Resources\Traits\RedirectToIndex;
 use App\Models\Tenants\StockOpname;
 use App\Services\Tenants\StockOpnameService;
 use Filament\Resources\Pages\CreateRecord;
@@ -12,13 +11,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class CreateStockOpname extends CreateRecord
 {
-    use RedirectToIndex;
-
     protected static string $resource = StockOpnameResource::class;
 
-    protected static string $view = 'filament.tenant.resources.stock-opname.pages.create-record';
-
     private StockOpnameService $stockOpnameService;
+
+    protected static bool $canCreateAnother = false;
 
     private string $prefix;
 

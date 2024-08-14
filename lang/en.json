@@ -330,5 +330,11 @@
     "Horizontal gap": "Horizontal gap",
     "Pixels": "Pixels",
     "Print Label": "Print Label",
-    "Inventory": "Inventory"
+    "Inventory": "Inventory",
+    "Actual stock": "Actual stock",
+    "Missing stock": "Missing stock",
+    "Broken": "Broken",
+    "Lost": "Lost",
+    "Product not found": "Product not found",
+    "PIC should be same with logged user": "PIC should be same with"
 }

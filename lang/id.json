@@ -238,7 +238,7 @@
     "Total selling price": "Total Harga Jual",
     "Product name": "Nama produk",
     "Number": "Nomor",
-    "Item amounts": "Jumlah item",
+    "Item fmounts": "Jumlah item",
     "Current stock": "Stok saat ini",
     "Adjustment type": "Tipe penyesuaian",
     "Amount": "Jumlah",
@@ -331,5 +331,11 @@
     "Horizontal gap": "Horisontal gap",
     "Pixels": "Pixel",
     "Print Label": "Cetak label",
-    "Inventory": "Inventaris"
+    "Inventory": "Inventaris",
+    "Actual stock": "Stok aktual",
+    "Missing stock": "Stock yang kurang",
+    "Broken": "Rusak",
+    "Lost": "Hilang",
+    "Product not found": "Produk tidak ditemukan",
+    "PIC should be same with logged user": "PIC harus sama dengan user yang login"
 }

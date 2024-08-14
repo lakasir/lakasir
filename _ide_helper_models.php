@@ -437,6 +437,7 @@ namespace App\Models\Tenants{
  *
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Tenants\StockOpnameItem> $stockOpnameItems
  * @property-read int|null $stock_opname_items_count
+ * @property-read \App\Models\Tenants\User|null $user
  * @method static \Illuminate\Database\Eloquent\Builder|StockOpname newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|StockOpname newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|StockOpname query()
