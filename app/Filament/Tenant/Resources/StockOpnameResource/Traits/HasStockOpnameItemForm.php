@@ -39,7 +39,7 @@ trait HasStockOpnameItemForm
                 ->live()
                 ->afterStateUpdated(function (Set $set, Get $get, ?string $state) {
                     if (! $state) {
-                        $set('amount_after_adjustment', $get('current_stock'));
+                        $set('missing_stock', $get('current_stock'));
 
                         return;
                     }
@@ -49,17 +49,12 @@ trait HasStockOpnameItemForm
                             ->title(__('Please select the product first'))
                             ->warning()
                             ->send();
-                        $set('amount', 0);
-
-                        return;
-                    }
-                    if ($state == 'manual_input') {
-                        $set('amount_after_adjustment', $product->stock + $get('amount'));
+                        $set('actual_stock', 0);
 
                         return;
                     }
 
-                    $set('amount_after_adjustment', $product->stock - $get('amount'));
+                    $set('missing_stock', $product->stock - $get('actual_stock'));
                 })
                 ->options([
                     'broken' => __('Broken'),
@@ -67,10 +62,9 @@ trait HasStockOpnameItemForm
                     'expired' => __('Expired'),
                     'manual_input' => __('Manual Input'),
                 ]),
-            TextInput::make('amount')
+            TextInput::make('actual_stock')
                 ->translateLabel()
                 ->required()
-                ->lte(fn (Get $get) => $get('adjustment_type') != 'manual_input' ? 'current_stock' : '')
                 ->disabled(fn (Get $get) => ! $get('adjustment_type'))
                 ->live(onBlur: true)
                 ->afterStateUpdated(function (Set $set, Get $get, ?string $state) {
@@ -80,20 +74,15 @@ trait HasStockOpnameItemForm
                             ->title(__('Please select the product first'))
                             ->warning()
                             ->send();
-                        $set('amount', 0);
-
-                        return;
-                    }
-                    if ($get('adjustment_type') == 'manual_input') {
-                        $set('amount_after_adjustment', $product->stock + $state);
+                        $set('actual_stock', 0);
 
                         return;
                     }
 
-                    $set('amount_after_adjustment', $product->stock - $state);
+                    $set('missing_stock', $product->stock - $state);
                 })
                 ->numeric(),
-            TextInput::make('amount_after_adjustment')
+            TextInput::make('missing_stock')
                 ->translateLabel()
                 ->readOnly()
                 ->numeric(),

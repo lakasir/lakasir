@@ -8,7 +8,9 @@ use App\Filament\Tenant\Resources\StockOpnameResource\RelationManagers\StockOpna
 use App\Filament\Tenant\Resources\Traits\HasItemData;
 use App\Filament\Tenant\Resources\Traits\RedirectToIndex;
 use App\Filament\Tenant\Resources\Traits\RefreshThePage;
+use App\Models\Tenants\Product;
 use App\Models\Tenants\StockOpname;
+use App\Models\Tenants\StockOpnameItem;
 use App\Services\Tenants\StockOpnameService;
 use Filament\Actions;
 use Filament\Actions\Action;
@@ -23,6 +25,8 @@ class ViewStockOpname extends ViewRecord
     use HasItemData, RedirectToIndex, RefreshThePage;
 
     protected static string $resource = StockOpnameResource::class;
+
+    protected static string $view = 'filament.tenant.resources.stock-opname.pages.view-record';
 
     private StockOpnameService $sOService;
 
@@ -70,7 +74,18 @@ class ViewStockOpname extends ViewRecord
                 ->visible(function (StockOpname $so) {
                     return $so->status != StockOpnameStatus::approved;
                 })
-                ->action(fn (StockOpname $sO) => $this->sOService->delete($sO)),
+                ->action(function (StockOpname $sO) {
+                    if ($this->record->user_id != auth()->id()) {
+                        Notification::make()
+                            ->title(__('PIC should be same with logged user'))
+                            ->warning()
+                            ->send();
+
+                        return;
+                    }
+                    $this->sOService->delete($sO);
+                    $this->redirect(static::getResource()::getUrl('index'));
+                }),
             Actions\EditAction::make()
                 ->visible(function (StockOpname $so) {
                     return $so->status != StockOpnameStatus::approved;
@@ -88,5 +103,50 @@ class ViewStockOpname extends ViewRecord
         return [
             StockOpnameItemsRelationManager::make(),
         ];
+    }
+
+    public function storeProductUsingBarcode(string $barcode): void
+    {
+        /** @var StockOpname $stockOpname */
+        $stockOpname = $this->getRecord();
+        if ($stockOpname->user_id != auth()->id()) {
+            Notification::make()
+                ->title(__('PIC should be same with logged user'))
+                ->warning()
+                ->send();
+
+            return;
+        }
+
+        /** @var Product $product */
+        $product = Product::where('barcode', $barcode)->orWhere('sku', $barcode)->first();
+        if (! $product) {
+            Notification::make()
+                ->title(__('Product not found'))
+                ->warning()
+                ->send();
+
+            return;
+        }
+        $actual_stock = 1;
+
+        $sOProductId = $stockOpname->stockOpnameItems()->where('product_id', $product->id);
+        $sItem = new StockOpnameItem();
+        if ($sOProductId->exists()) {
+            $sItem = $sOProductId->first();
+            $actual_stock = $sItem->actual_stock + 1;
+        }
+        $adjusment_stock = $product->stock - $actual_stock;
+        $sItem->fill([
+            'current_stock' => $product->stock,
+            'actual_stock' => $actual_stock,
+            'missing_stock' => $adjusment_stock,
+            'adjustment_type' => 'manual_input',
+        ]);
+        $sItem->product()->associate($product);
+        $sItem->stockOpname()->associate($stockOpname);
+        $sItem->save();
+
+        $this->refreshPage();
     }
 }

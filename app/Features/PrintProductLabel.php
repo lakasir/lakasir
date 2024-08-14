@@ -8,6 +8,6 @@ class PrintProductLabel
 
     public function resolve(mixed $scope): mixed
     {
-        return false;
+        return true;
     }
 }
