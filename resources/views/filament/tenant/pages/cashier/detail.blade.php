@@ -25,7 +25,7 @@
     <p>{{ __('Note') }}</p>
     <div>{!! $cartDetail['note'] ?? '-' !!}</div>
   </div>
-  @if($about->business_type == 'fnb')
+  @if($about && $about->business_type == 'fnb')
     <div class="flex justify-between hover:underline cursor-pointer"
         x-on:mousedown="$dispatch('open-modal', {
           id: 'modal-selected-table'
