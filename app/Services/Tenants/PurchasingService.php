@@ -8,8 +8,7 @@ use App\Models\Tenants\Product;
 use App\Models\Tenants\Purchasing;
 use App\Models\Tenants\Stock;
 use App\Services\Tenants\Traits\HasNumber;
-use Exception;
-use Illuminate\Support\Facades\DB;
+use Filament\Notifications\Notification;
 
 class PurchasingService
 {
@@ -26,28 +25,11 @@ class PurchasingService
 
     public function create(array $data): Purchasing
     {
-        try {
-            DB::beginTransaction();
-            $collection = collect($data['stocks']);
-            $total_selling_price = $collection->sum('total_selling_price');
-            $total_initial_price = $collection->sum('total_initial_price');
-            $data['total_initial_price'] = $total_initial_price;
-            $data['total_selling_price'] = $total_selling_price;
-            /** @var Purchasing $purchasing */
-            $purchasing = Purchasing::create($data);
-            $collection->each(function ($item) use ($data, $purchasing) {
-                $item['date'] = $data['date'] ?? now();
-                $this->stockService->create($item, $purchasing);
-            });
+        $data['total_initial_price'] = 0;
+        $data['total_selling_price'] = 0;
+        $purchasing = Purchasing::create($data);
 
-            DB::commit();
-
-            return $purchasing;
-        } catch (Exception $e) {
-            DB::rollBack();
-
-            throw $e;
-        }
+        return $purchasing;
     }
 
     public function update(mixed $id, $data): Purchasing
@@ -77,11 +59,17 @@ class PurchasingService
 
     public function updateStatus(Purchasing $purchasing, $status): void
     {
-        $purchasing->fill([
-            'status' => $status,
-        ]);
-        $purchasing->save();
+        if ($purchasing->stocks->isEmpty()) {
+            Notification::make()
+                ->title(__('Stocks is empty'))
+                ->warning()
+                ->send();
+
+            return;
+        }
+        $purchasing->status = $status;
         if ($status == PurchasingStatus::approved) {
+            $purchasing->approved_at = now();
             foreach ($purchasing->stocks as $stock) {
                 $stock->is_ready = true;
                 $stock->save();
@@ -89,5 +77,10 @@ class PurchasingService
             $products = Product::find($purchasing->stocks()->pluck('product_id'));
             RecalculateEvent::dispatch($products, []);
         }
+        $purchasing->save();
+        Notification::make('success')
+            ->title(__('Status updated'))
+            ->success()
+            ->send();
     }
 }

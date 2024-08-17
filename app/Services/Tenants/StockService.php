@@ -69,6 +69,7 @@ class StockService
 
     public function create($data, ?Purchasing $purchasing = null): Stock
     {
+        $data['stock'] = $data['stock'] ?? 0;
         $data['date'] = $data['date'] ?? now();
         $stock = new Stock();
         $data['init_stock'] = $data['stock'];
