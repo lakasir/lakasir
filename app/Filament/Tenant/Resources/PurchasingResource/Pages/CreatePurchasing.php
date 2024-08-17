@@ -16,6 +16,8 @@ class CreatePurchasing extends CreateRecord
 
     private PurchasingService $purchasingService;
 
+    protected static bool $canCreateAnother = false;
+
     private string $prefix;
 
     public function __construct()
@@ -27,6 +29,7 @@ class CreatePurchasing extends CreateRecord
     protected function handleRecordCreation(array $data): Model|Purchasing
     {
         try {
+            $data['user_id'] = auth()->id();
             $data['number'] = $this->purchasingService->generateNumber($this->prefix);
             $purchasing = $this->purchasingService->create($data);
         } catch (Exception $e) {
@@ -43,6 +46,8 @@ class CreatePurchasing extends CreateRecord
 
     protected function getRedirectUrl(): string
     {
-        return PurchasingResource::getNavigationUrl();
+        return PurchasingResource::getUrl('view', [
+            'record' => $this->record,
+        ]);
     }
 }

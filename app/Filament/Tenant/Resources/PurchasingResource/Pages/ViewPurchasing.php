@@ -3,11 +3,14 @@
 namespace App\Filament\Tenant\Resources\PurchasingResource\Pages;
 
 use App\Constants\PurchasingStatus;
+use App\Constants\StockOpnameStatus;
 use App\Filament\Tenant\Resources\PurchasingResource;
 use App\Filament\Tenant\Resources\PurchasingResource\RelationManagers\StocksRelationManager;
 use App\Filament\Tenant\Resources\Traits\RefreshThePage;
+use App\Models\Tenants\Product;
 use App\Models\Tenants\Purchasing;
 use App\Services\Tenants\PurchasingService;
+use App\Services\Tenants\StockService;
 use Filament\Actions;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Select;
@@ -22,6 +25,8 @@ class ViewPurchasing extends ViewRecord
 
     protected static string $resource = PurchasingResource::class;
 
+    protected static string $view = 'filament.tenant.resources.purchasings.pages.view-record';
+
     protected function getHeaderActions(): array
     {
         return [
@@ -30,7 +35,7 @@ class ViewPurchasing extends ViewRecord
                     Select::make('status')
                         ->required()
                         ->default($this->record->status)
-                        ->options(Arr::where(PurchasingStatus::all(), function ($data, $key) {
+                        ->options(Arr::where(PurchasingStatus::all(), function ($key) {
                             if ($key == PurchasingStatus::approved) {
                                 return can('approve purchasing');
                             }
@@ -40,10 +45,7 @@ class ViewPurchasing extends ViewRecord
                 ])
                 ->action(function ($data, Purchasing $purchasing, PurchasingService $purchasingService) {
                     $purchasingService->updateStatus($purchasing, $data['status']);
-                    Notification::make('success')
-                        ->title(__('Status updated'))
-                        ->success()
-                        ->send();
+
                     $this->refreshPage();
                 })
                 ->color('warning')
@@ -67,5 +69,68 @@ class ViewPurchasing extends ViewRecord
         return [
             StocksRelationManager::make(),
         ];
+    }
+
+    public function storeProductUsingBarcode(string $barcode, PurchasingService $purchasingService, StockService $stockService): void
+    {
+        if ($this->getRecord()->status == StockOpnameStatus::approved) {
+            Notification::make()
+                ->title(__('This purchasing has been approved'))
+                ->warning()
+                ->send();
+
+            return;
+        }
+
+        /** @var StockOpname $purchasing */
+        $purchasing = $this->getRecord();
+        if ($purchasing->user_id != auth()->id()) {
+            Notification::make()
+                ->title(__('PIC should be same with logged user'))
+                ->warning()
+                ->send();
+
+            return;
+        }
+
+        /** @var Product $product */
+        $product = Product::where('barcode', $barcode)->orWhere('sku', $barcode)->first();
+        if (! $product) {
+            Notification::make()
+                ->title(__('Product not found'))
+                ->warning()
+                ->send();
+
+            return;
+        }
+
+        /** @var Purchasing $purchasing */
+        $purchasing = $this->record;
+        $init_stock = 1;
+
+        $pPProductId = $purchasing->stocks()->where('product_id', $product->getKey());
+        if ($pPProductId->exists()) {
+            $stock = $pPProductId->first();
+            $init_stock = $stock->init_stock + 1;
+            $stockService->update($stock, [
+                'init_stock' => $init_stock,
+                'stock' => $init_stock,
+                'product_id' => $product->getKey(),
+            ], $purchasing);
+        } else {
+            $stockService->create([
+                'init_stock' => $init_stock,
+                'stock' => $init_stock,
+                'product_id' => $product->getKey(),
+                'initial_price' => $product->initial_price,
+                'selling_price' => $product->selling_price,
+            ], $purchasing);
+        }
+
+        $purchasingService->update(
+            $purchasing->getKey(),
+            $purchasingService->getUpdatedPrice($purchasing)
+        );
+        $this->refreshPage();
     }
 }

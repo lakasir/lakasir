@@ -336,5 +336,8 @@
     "Broken": "Broken",
     "Lost": "Lost",
     "Product not found": "Product not found",
-    "PIC should be same with logged user": "PIC should be same with"
+    "PIC should be same with logged user": "PIC should be same with",
+    "Stocks is empty": "Stocks is empty",
+    "This purchasing has been approved": "This purchasing has been approved",
+    "This stock opname has been approved": "This stock opname has been approved"
 }

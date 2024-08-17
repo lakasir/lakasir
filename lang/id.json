@@ -234,8 +234,8 @@
     "Stocks": "Stok",
     "Quantity": "Kuantitas",
     "Qty": "Kuantitas",
-    "Total initial price": "Total Harga Awal",
-    "Total selling price": "Total Harga Jual",
+    "Total initial price": "Total harga beli",
+    "Total selling price": "Total harga jual",
     "Product name": "Nama produk",
     "Number": "Nomor",
     "Item fmounts": "Jumlah item",
@@ -337,5 +337,8 @@
     "Broken": "Rusak",
     "Lost": "Hilang",
     "Product not found": "Produk tidak ditemukan",
-    "PIC should be same with logged user": "PIC harus sama dengan user yang login"
+    "PIC should be same with logged user": "PIC harus sama dengan user yang login",
+    "Stocks is empty": "Stock kosong",
+    "This purchasing has been approved": "Pembelian ini sudah disetujui",
+    "This stock opname has been approved": "Stok opname ini sudah disetujui"
 }

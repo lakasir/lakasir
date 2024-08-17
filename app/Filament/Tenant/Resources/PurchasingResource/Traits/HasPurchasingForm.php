@@ -22,7 +22,7 @@ trait HasPurchasingForm
                 ->native(false)
                 ->placeholder(__('Search...'))
                 ->relationship(name: $product, titleAttribute: 'name')
-                ->searchable()
+                ->searchable(['sku', 'name', 'barcode'])
                 ->live()
                 ->afterStateUpdated(function (Set $set, ?string $state) {
                     $product = Product::find($state);
@@ -40,8 +40,9 @@ trait HasPurchasingForm
                 ->live(onBlur: true),
             DatePicker::make('expired')
                 ->rule('after:now')
-                ->date()
-                ->native(false),
+                ->closeOnDateSelection()
+                ->native(false)
+                ->date(),
             TextInput::make('initial_price')
                 ->prefix(Setting::get('currency', 'IDR'))
                 ->mask(RawJs::make('$money($input)'))
@@ -65,11 +66,14 @@ trait HasPurchasingForm
                 })
                 ->live(onBlur: true),
             TextInput::make('total_initial_price')
+                ->prefix(Setting::get('currency', 'IDR'))
                 ->mask(RawJs::make('$money($input)'))
                 ->stripCharacters(',')
                 ->numeric()
                 ->readOnly(),
             TextInput::make('total_selling_price')
+                ->live()
+                ->prefix(Setting::get('currency', 'IDR'))
                 ->mask(RawJs::make('$money($input)'))
                 ->stripCharacters(',')
                 ->numeric()
