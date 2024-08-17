@@ -107,6 +107,14 @@ class ViewStockOpname extends ViewRecord
 
     public function storeProductUsingBarcode(string $barcode): void
     {
+        if ($this->getRecord()->status == StockOpnameStatus::approved) {
+            Notification::make()
+                ->title(__('This stock opname has been approved'))
+                ->warning()
+                ->send();
+
+            return;
+        }
         /** @var StockOpname $stockOpname */
         $stockOpname = $this->getRecord();
         if ($stockOpname->user_id != auth()->id()) {
