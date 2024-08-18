@@ -15,13 +15,13 @@ use App\Models\Tenants\Table;
 use App\Models\Tenants\User;
 use App\Models\Tenants\Voucher;
 use App\Policies\Tenants\CategoryPolicy;
-use App\Policies\Tenants\ReceivablePolicy;
 use App\Policies\Tenants\MemberPolicy;
 use App\Policies\Tenants\PaymentMethodPolicy;
 use App\Policies\Tenants\PermissionPolicy;
 use App\Policies\Tenants\ProductPolicy;
 use App\Policies\Tenants\PurchasingPolicy;
 use App\Policies\Tenants\ReceivablePaymentPolicy;
+use App\Policies\Tenants\ReceivablePolicy;
 use App\Policies\Tenants\RolePolicy;
 use App\Policies\Tenants\StockOpnamePolicy;
 use App\Policies\Tenants\TablePolicy;
@@ -72,8 +72,10 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerPolicies();
-
         Gate::after(function (User|Admin $user, $ability) {
+            if ($user->is_owner) {
+                return true;
+            }
             if (in_array($ability, $this->defaultAbility)) {
                 return true;
             }
