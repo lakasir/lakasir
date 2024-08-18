@@ -2,9 +2,9 @@
 
 namespace App\Features;
 
-class Debt
+class Receivable
 {
-    public $name = 'debt';
+    public $name = 'receivable';
 
     public function resolve(): mixed
     {

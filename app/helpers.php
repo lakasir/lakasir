@@ -26,3 +26,17 @@ if (! function_exists('can')) {
         return $user->can($permission);
     }
 }
+
+if (! function_exists('isMultiTenant')) {
+    function isMultiTenant(): bool
+    {
+        $central_domains = config('tenancy.central_domains');
+        $admin_domains = config('tenancy.admin_domains');
+
+        if (count($central_domains) > 0 && $central_domains[0] == request()->getHost()) {
+            return in_array(request()->getHost(), $admin_domains);
+        }
+
+        return false;
+    }
+}

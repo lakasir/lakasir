@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Filament\Tenant\Resources\DebtResource\RelationManagers;
+namespace App\Filament\Tenant\Resources\ReceivableResource\RelationManagers;
 
-use App\Filament\Tenant\Resources\DebtResource\Traits\HasDebtPaymentForm;
+use App\Filament\Tenant\Resources\ReceivableResource\Traits\HasReceivablePaymentForm;
 use App\Filament\Tenant\Resources\Traits\RefreshThePage;
-use App\Models\Tenants\Debt;
-use App\Models\Tenants\DebtPayment;
+use App\Models\Tenants\Receivable;
+use App\Models\Tenants\ReceivablePayment;
 use App\Models\Tenants\Setting;
 use App\Models\Tenants\User;
-use App\Services\Tenants\DebtPaymentService;
+use App\Services\Tenants\ReceivablePaymentService;
 use Filament\Facades\Filament;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -16,11 +16,11 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
 
-class DebtPaymentsRelationManager extends RelationManager
+class ReceivablePaymentsRelationManager extends RelationManager
 {
-    use HasDebtPaymentForm, RefreshThePage;
+    use HasReceivablePaymentForm, RefreshThePage;
 
-    protected static string $relationship = 'debtPayments';
+    protected static string $relationship = 'receivablePayments';
 
     protected static bool $isLazy = false;
 
@@ -28,12 +28,12 @@ class DebtPaymentsRelationManager extends RelationManager
 
     public function __construct()
     {
-        $this->dPService = new DebtPaymentService();
+        $this->dPService = new ReceivablePaymentService();
     }
 
-    public static function canViewForRecord(Model|Debt $ownerRecord, string $pageClass): bool
+    public static function canViewForRecord(Model|Receivable $ownerRecord, string $pageClass): bool
     {
-        return User::query()->find(Filament::auth()->id())->can('read debt payment');
+        return User::query()->find(Filament::auth()->id())->can('read receivable payment');
     }
 
     public function form(Form $form): Form
@@ -52,7 +52,7 @@ class DebtPaymentsRelationManager extends RelationManager
                     ->money(Setting::get('currency', 'IDR')),
                 Tables\Columns\TextColumn::make('paymentMethod.name')
                     ->translateLabel(),
-                Tables\Columns\TextColumn::make('last_debt')
+                Tables\Columns\TextColumn::make('last_receivable')
                     ->translateLabel()
                     ->money(Setting::get('currency', 'IDR')),
                 Tables\Columns\TextColumn::make('date')
@@ -61,13 +61,13 @@ class DebtPaymentsRelationManager extends RelationManager
             ])
             ->actions([
                 Tables\Actions\EditAction::make()
-                    ->action(function (array $data, DebtPayment $debtPayment): void {
-                        $this->dPService->update($debtPayment, $data);
+                    ->action(function (array $data, ReceivablePayment $receivablePayment): void {
+                        $this->dPService->update($receivablePayment, $data);
                         $this->refreshPage();
                     }),
                 Tables\Actions\DeleteAction::make()
-                    ->action(function (DebtPayment $debtPayment): void {
-                        $this->dPService->destroy($debtPayment);
+                    ->action(function (ReceivablePayment $receivablePayment): void {
+                        $this->dPService->destroy($receivablePayment);
                         $this->refreshPage();
                     }),
             ]);

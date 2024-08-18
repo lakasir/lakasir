@@ -172,13 +172,13 @@ class PermissionSeeder extends Seeder
                         ],
                         'guard' => ['web', 'sanctum'],
                     ],
-                    'debt' => [
+                    'receivable' => [
                         'permission' => [
                             'r',
                         ],
                         'guard' => ['web', 'sanctum'],
                     ],
-                    'debt payment' => [
+                    'receivable payment' => [
                         'permission' => [
                             'c', 'r', 'u', 'd',
                         ],

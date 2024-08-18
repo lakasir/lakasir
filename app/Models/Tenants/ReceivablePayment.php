@@ -7,17 +7,17 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * @mixin IdeHelperDebtPayment
+ * @mixin IdeHelperReceivablePayment
  */
-class DebtPayment extends Model
+class ReceivablePayment extends Model
 {
     use HasFactory;
 
     protected $guarded = ['id'];
 
-    public function debt(): BelongsTo
+    public function receivable(): BelongsTo
     {
-        return $this->belongsTo(Debt::class);
+        return $this->belongsTo(Receivable::class);
     }
 
     public function user(): BelongsTo

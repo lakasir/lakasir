@@ -21,7 +21,7 @@
 - **Discount**: You can sell the product with a discount per item or global discount.
 - **Purchasing**: Manage purchase orders and supplier relationships.
 - **Stock Opname**: Conduct stock taking and inventory audits to ensure accuracy.
-- **Debt Management**: Track and manage debts owed by and to your business.
+- **Receivable Management**: Track and manage receivables owed by and to your business.
 - **Payment Method Management**: Define and manage various payment methods.
 - **Voucher Management**: Create, distribute, and track the usage of vouchers.
 - **Reporting**: Generate reports for insights into sales and performance.
