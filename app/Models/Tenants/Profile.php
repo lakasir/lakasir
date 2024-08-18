@@ -28,6 +28,6 @@ class Profile extends Model
 
     public static function get(array $key = ['*']): Profile
     {
-        return Profile::select($key)->whereUserId(auth()->id())->first();
+        return Profile::select($key)->whereUserId(auth()->id())->first() ?? new Profile();
     }
 }

@@ -7,11 +7,8 @@ use App\Filament\Tenant\Resources\PurchasingResource\Pages;
 use App\Filament\Tenant\Resources\PurchasingResource\Traits\HasPurchasingForm;
 use App\Models\Tenants\Profile;
 use App\Models\Tenants\Purchasing;
-use App\Models\Tenants\Setting;
 use App\Models\Tenants\Supplier;
 use App\Traits\HasTranslatableResource;
-use Awcodes\TableRepeater\Components\TableRepeater;
-use Awcodes\TableRepeater\Header;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
@@ -42,8 +39,6 @@ class PurchasingResource extends Resource
 
     public static function form(Form $form): Form
     {
-        $self = new self();
-
         return $form
             ->schema([
                 Select::make('supplier_id')
@@ -57,46 +52,20 @@ class PurchasingResource extends Resource
                 TextInput::make('supplier_phone_number')
                     ->translateLabel()
                     ->readOnly(),
-                DatePicker::make('due_date')
+                DatePicker::make('date')
+                    ->closeOnDateSelection()
+                    ->default(now())
                     ->translateLabel()
                     ->native(false)
                     ->required(),
-                DatePicker::make('date')
-                    ->default(now())
+                DatePicker::make('due_date')
                     ->translateLabel()
+                    ->closeOnDateSelection()
                     ->native(false)
                     ->required(),
                 FileUpload::make('image')
                     ->translateLabel()
                     ->image(),
-                TableRepeater::make('stocks')
-                    ->headers([
-                        Header::make('product_name')
-                            ->label(__('Product name'))
-                            ->width('150px'),
-                        Header::make('quantity')
-                            ->label(__('Quantity'))
-                            ->width('150px'),
-                        Header::make('expired')
-                            ->label(__('Expired'))
-                            ->width('150px'),
-                        Header::make('initial_price')
-                            ->label(__('Initial price'))
-                            ->width('150px'),
-                        Header::make('selling_price')
-                            ->label(__('Selling price'))
-                            ->width('150px'),
-                        Header::make('total_initial_price')
-                            ->label(__('Total initial price'))
-                            ->width('150px'),
-                        Header::make('total_selling_price')
-                            ->label(__('Total selling price'))
-                            ->width('150px'),
-                    ])
-                    ->schema($self->get())
-                    ->orderable(false)
-                    ->visibleOn(['create'])
-                    ->columnSpan('full'),
             ]);
     }
 
@@ -117,6 +86,9 @@ class PurchasingResource extends Resource
                 TextColumn::make('stocks_count')
                     ->label(__('Item amounts'))
                     ->counts('stocks'),
+                TextColumn::make('approved_at')
+                    ->dateTime(timezone: Profile::get()->timezone)
+                    ->translateLabel(),
                 TextColumn::make('status')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
@@ -193,12 +165,6 @@ class PurchasingResource extends Resource
                 ->translateLabel(),
             TextEntry::make('date')
                 ->date()
-                ->translateLabel(),
-            TextEntry::make('total_initial_price')
-                ->money(Setting::get('currency', 'IDR'))
-                ->translateLabel(),
-            TextEntry::make('total_selling_price')
-                ->money(Setting::get('currency', 'IDR'))
                 ->translateLabel(),
             ImageEntry::make('image')
                 ->translateLabel(),
