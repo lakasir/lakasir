@@ -2,14 +2,14 @@
 
 namespace App\Filament\Tenant\Resources;
 
-use App\Filament\Tenant\Resources\DebtResource\Pages;
-use App\Filament\Tenant\Resources\DebtResource\RelationManagers\DebtItemsRelationManager;
-use App\Filament\Tenant\Resources\DebtResource\RelationManagers\DebtPaymentsRelationManager;
-use App\Filament\Tenant\Resources\DebtResource\Traits\HasDebtPaymentForm;
-use App\Models\Tenants\Debt;
-use App\Models\Tenants\DebtPayment;
+use App\Filament\Tenant\Resources\ReceivableResource\Pages;
+use App\Filament\Tenant\Resources\ReceivableResource\RelationManagers\ReceivableItemsRelationManager;
+use App\Filament\Tenant\Resources\ReceivableResource\RelationManagers\ReceivablePaymentsRelationManager;
+use App\Filament\Tenant\Resources\ReceivableResource\Traits\HasReceivablePaymentForm;
+use App\Models\Tenants\Receivable;
+use App\Models\Tenants\ReceivablePayment;
 use App\Models\Tenants\Setting;
-use App\Services\Tenants\DebtPaymentService;
+use App\Services\Tenants\ReceivablePaymentService;
 use App\Traits\HasTranslatableResource;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
@@ -20,11 +20,11 @@ use Filament\Tables\Actions\Action;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
-class DebtResource extends Resource
+class ReceivableResource extends Resource
 {
-    use HasDebtPaymentForm, HasTranslatableResource;
+    use HasReceivablePaymentForm, HasTranslatableResource;
 
-    protected static ?string $model = Debt::class;
+    protected static ?string $model = Receivable::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-calendar';
 
@@ -42,10 +42,10 @@ class DebtResource extends Resource
                 TextColumn::make('member.name')
                     ->translateLabel()
                     ->searchable(),
-                TextColumn::make('total_debt')
+                TextColumn::make('total_receivable')
                     ->money(Setting::get('currency', 'IDR'))
                     ->translateLabel(),
-                TextColumn::make('rest_debt')
+                TextColumn::make('rest_receivable')
                     ->money(Setting::get('currency', 'IDR'))
                     ->translateLabel(),
                 TextColumn::make('due_date')
@@ -56,12 +56,20 @@ class DebtResource extends Resource
                     ->date(),
                 TextColumn::make('status')
                     ->badge()
-                    ->getStateUsing(function (Debt $debt) {
-                        return $debt->status ? 'Paid off' : 'Unpaid';
+                    ->getStateUsing(function (Receivable $receivable) {
+                        return $receivable->status ? __('Paid off') : __('Unpaid');
+                    })
+                    ->iconColor(fn (string $state): string => match ($state) {
+                        __('Unpaid') => 'danger',
+                        __('Paid off') => 'success',
+                    })
+                    ->icon(fn (string $state): string => match ($state) {
+                        __('Paid off') => 'heroicon-o-check-circle',
+                        __('Unpaid') => 'heroicon-o-exclamation-circle',
                     })
                     ->color(fn (string $state): string => match ($state) {
-                        'Unpaid' => 'danger',
-                        'Paid off' => 'success',
+                        __('Unpaid') => 'danger',
+                        __('Paid off') => 'success',
                     }),
             ])
             ->actions([
@@ -69,17 +77,17 @@ class DebtResource extends Resource
                 Action::make('add_payment')
                     ->translateLabel()
                     ->icon('heroicon-s-credit-card')
-                    ->model(DebtPayment::class)
+                    ->model(ReceivablePayment::class)
                     ->visible(function ($record) {
-                        if (! $record->status && can('create debt payment')) {
+                        if (! $record->status && can('create receivable payment')) {
                             return true;
                         }
 
                         return false;
                     })
                     ->form(fn ($record) => $self->getFormPayment($record))
-                    ->action(function (array $data, Debt $debt, DebtPaymentService $dpService): void {
-                        $dpService->create($debt, $data);
+                    ->action(function (array $data, Receivable $receivable, ReceivablePaymentService $dpService): void {
+                        $dpService->create($receivable, $data);
                     }),
             ]);
     }
@@ -91,10 +99,10 @@ class DebtResource extends Resource
                 ->translateLabel(),
             TextEntry::make('member.email')
                 ->translateLabel(),
-            TextEntry::make('total_debt')
+            TextEntry::make('total_receivable')
                 ->translateLabel()
                 ->money(Setting::get('currency', 'IDR')),
-            TextEntry::make('rest_debt')
+            TextEntry::make('rest_receivable')
                 ->translateLabel()
                 ->money(Setting::get('currency', 'IDR')),
             TextEntry::make('due_date')
@@ -108,21 +116,21 @@ class DebtResource extends Resource
                 ->date(),
             TextEntry::make('status')
                 ->translateLabel()
-                ->getStateUsing(function (Debt $debt) {
-                    return $debt->status ? 'Paid off' : 'Unpaid';
+                ->getStateUsing(function (Receivable $receivable) {
+                    return $receivable->status ? __('Paid off') : __('Unpaid');
+                })
+                ->color(fn (string $state): string => match ($state) {
+                    __('Unpaid') => 'danger',
+                    __('Paid off') => 'success',
                 })
                 ->badge()
                 ->iconColor(fn (string $state): string => match ($state) {
-                    'Unpaid' => 'danger',
-                    'Paid off' => 'success',
-                })
-                ->color(fn (string $state): string => match ($state) {
-                    'Unpaid' => 'danger',
-                    'Paid off' => 'success',
+                    __('Unpaid') => 'danger',
+                    __('Paid off') => 'success',
                 })
                 ->icon(fn (string $state): string => match ($state) {
-                    'Paid off' => 'heroicon-o-check-circle',
-                    'Unpaid' => 'heroicon-o-exclamation-circle',
+                    __('Paid off') => 'heroicon-o-check-circle',
+                    __('Unpaid') => 'heroicon-o-exclamation-circle',
                 }),
         ]);
 
@@ -132,8 +140,8 @@ class DebtResource extends Resource
     {
         return [
             RelationGroup::make('', [
-                DebtItemsRelationManager::make(),
-                DebtPaymentsRelationManager::make(),
+                ReceivableItemsRelationManager::make(),
+                ReceivablePaymentsRelationManager::make(),
             ]),
         ];
     }
@@ -141,8 +149,8 @@ class DebtResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListDebts::route('/'),
-            'view' => Pages\ViewDebt::route('/{record}'),
+            'index' => Pages\ListReceivables::route('/'),
+            'view' => Pages\ViewReceivable::route('/{record}'),
         ];
     }
 }

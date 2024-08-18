@@ -1,30 +1,30 @@
 <?php
 
-namespace App\Filament\Tenant\Resources\DebtResource\Traits;
+namespace App\Filament\Tenant\Resources\ReceivableResource\Traits;
 
-use App\Models\Tenants\Debt;
 use App\Models\Tenants\PaymentMethod;
+use App\Models\Tenants\Receivable;
 use App\Models\Tenants\Setting;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Support\RawJs;
 
-trait HasDebtPaymentForm
+trait HasReceivablePaymentForm
 {
-    public function getFormPayment(Debt $debt): array
+    public function getFormPayment(Receivable $receivable): array
     {
         return [
             Select::make('payment_method_id')
                 ->label(__('Payment method'))
-                ->options(PaymentMethod::query()->pluck('name', 'id'))
+                ->options(PaymentMethod::query()->where('is_credit', 'false')->pluck('name', 'id'))
                 ->required(),
             TextInput::make('amount')
                 ->translateLabel()
                 ->mask(RawJs::make('$money($input)'))
                 ->stripCharacters(',')
                 ->prefix(Setting::get('currency', 'IDR'))
-                ->lte($debt->rest_debt, true)
+                ->lte($receivable->rest_receivable, true)
                 ->required(),
             DatePicker::make('date')
                 ->translateLabel()

@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Filament\Tenant\Resources\DebtResource\RelationManagers;
+namespace App\Filament\Tenant\Resources\ReceivableResource\RelationManagers;
 
 use App\Models\Tenants\Setting;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
 
-class DebtItemsRelationManager extends RelationManager
+class ReceivableItemsRelationManager extends RelationManager
 {
-    protected static string $relationship = 'debtItems';
+    protected static string $relationship = 'receivableItems';
 
     public function table(Table $table): Table
     {

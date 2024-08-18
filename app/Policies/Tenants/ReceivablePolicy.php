@@ -2,25 +2,25 @@
 
 namespace App\Policies\Tenants;
 
-use App\Models\Tenants\DebtPayment;
+use App\Models\Tenants\Receivable;
 use App\Models\Tenants\User;
 
-class DebtPaymentPolicy
+class ReceivablePolicy
 {
     /**
      * Determine whether the user can view any models.
      */
     public function viewAny(User $user): bool
     {
-        return $user->can('read debt');
+        return $user->can('read receivable');
     }
 
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, DebtPayment $debtPayment): bool
+    public function view(User $user, Receivable $receivable): bool
     {
-        return $user->can('read debt payment');
+        return $user->can('read receivable');
     }
 
     /**
@@ -28,22 +28,22 @@ class DebtPaymentPolicy
      */
     public function create(User $user): bool
     {
-        return $user->can('create debt payment');
+        return false;
     }
 
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, DebtPayment $debtPayment): bool
+    public function update(User $user, Receivable $receivable): bool
     {
-        return $user->can('update debt payment');
+        return false;
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, DebtPayment $debtPayment): bool
+    public function delete(User $user, Receivable $receivable): bool
     {
-        return $user->can('delete debt payment');
+        return false;
     }
 }

@@ -15,8 +15,8 @@ class Member extends Model
 
     protected $guarded = ['id'];
 
-    public function debts(): HasMany
+    public function receivables(): HasMany
     {
-        return $this->hasMany(Debt::class);
+        return $this->hasMany(Receivable::class);
     }
 }

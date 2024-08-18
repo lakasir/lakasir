@@ -156,58 +156,8 @@ namespace App\Models\Tenants{
 /**
  * 
  *
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Tenants\DebtItem> $debtItems
- * @property-read int|null $debt_items_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Tenants\DebtPayment> $debtPayments
- * @property-read int|null $debt_payments_count
- * @property-read \App\Models\Tenants\Member|null $member
- * @property-read \App\Models\Tenants\Selling|null $selling
- * @method static \Illuminate\Database\Eloquent\Builder|Debt newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Debt newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Debt query()
- * @mixin \Eloquent
- */
-	#[\AllowDynamicProperties]
-	class IdeHelperDebt {}
-}
-
-namespace App\Models\Tenants{
-/**
- * 
- *
- * @property-read \App\Models\Tenants\Debt|null $debt
- * @property-read \App\Models\Tenants\Product|null $product
- * @method static \Illuminate\Database\Eloquent\Builder|DebtItem newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|DebtItem newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|DebtItem query()
- * @mixin \Eloquent
- */
-	#[\AllowDynamicProperties]
-	class IdeHelperDebtItem {}
-}
-
-namespace App\Models\Tenants{
-/**
- * 
- *
- * @property-read \App\Models\Tenants\Debt|null $debt
- * @property-read \App\Models\Tenants\PaymentMethod|null $paymentMethod
- * @property-read \App\Models\Tenants\User|null $user
- * @method static \Illuminate\Database\Eloquent\Builder|DebtPayment newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|DebtPayment newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|DebtPayment query()
- * @mixin \Eloquent
- */
-	#[\AllowDynamicProperties]
-	class IdeHelperDebtPayment {}
-}
-
-namespace App\Models\Tenants{
-/**
- * 
- *
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Tenants\Debt> $debts
- * @property-read int|null $debts_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Tenants\Receivable> $receivables
+ * @property-read int|null $receivables_count
  * @method static \Database\Factories\Tenants\MemberFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|Member newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Member newQuery()
@@ -338,6 +288,56 @@ namespace App\Models\Tenants{
  */
 	#[\AllowDynamicProperties]
 	class IdeHelperPurchasing {}
+}
+
+namespace App\Models\Tenants{
+/**
+ * 
+ *
+ * @property-read \App\Models\Tenants\Member|null $member
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Tenants\ReceivableItem> $receivableItems
+ * @property-read int|null $receivable_items_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Tenants\ReceivablePayment> $receivablePayments
+ * @property-read int|null $receivable_payments_count
+ * @property-read \App\Models\Tenants\Selling|null $selling
+ * @method static \Illuminate\Database\Eloquent\Builder|Receivable newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Receivable newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Receivable query()
+ * @mixin \Eloquent
+ */
+	#[\AllowDynamicProperties]
+	class IdeHelperReceivable {}
+}
+
+namespace App\Models\Tenants{
+/**
+ * 
+ *
+ * @property-read \App\Models\Tenants\Product|null $product
+ * @property-read \App\Models\Tenants\Receivable|null $receivable
+ * @method static \Illuminate\Database\Eloquent\Builder|ReceivableItem newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|ReceivableItem newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|ReceivableItem query()
+ * @mixin \Eloquent
+ */
+	#[\AllowDynamicProperties]
+	class IdeHelperReceivableItem {}
+}
+
+namespace App\Models\Tenants{
+/**
+ * 
+ *
+ * @property-read \App\Models\Tenants\PaymentMethod|null $paymentMethod
+ * @property-read \App\Models\Tenants\Receivable|null $receivable
+ * @property-read \App\Models\Tenants\User|null $user
+ * @method static \Illuminate\Database\Eloquent\Builder|ReceivablePayment newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|ReceivablePayment newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|ReceivablePayment query()
+ * @mixin \Eloquent
+ */
+	#[\AllowDynamicProperties]
+	class IdeHelperReceivablePayment {}
 }
 
 namespace App\Models\Tenants{

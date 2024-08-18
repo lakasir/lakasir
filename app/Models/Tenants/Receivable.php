@@ -8,9 +8,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- * @mixin IdeHelperDebt
+ * @mixin IdeHelperReceivable
  */
-class Debt extends Model
+class Receivable extends Model
 {
     use HasFactory;
 
@@ -26,13 +26,13 @@ class Debt extends Model
         return $this->belongsTo(Selling::class);
     }
 
-    public function debtItems(): HasMany
+    public function receivableItems(): HasMany
     {
-        return $this->hasMany(DebtItem::class);
+        return $this->hasMany(ReceivableItem::class);
     }
 
-    public function debtPayments(): HasMany
+    public function receivablePayments(): HasMany
     {
-        return $this->hasMany(DebtPayment::class);
+        return $this->hasMany(ReceivablePayment::class);
     }
 }

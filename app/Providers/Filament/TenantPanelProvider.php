@@ -2,11 +2,11 @@
 
 namespace App\Providers\Filament;
 
-use App\Features\Debt;
 use App\Features\Member;
 use App\Features\PaymentMethod;
 use App\Features\Permission;
 use App\Features\Purchasing;
+use App\Features\Receivable;
 use App\Features\Role;
 use App\Features\Setting;
 use App\Features\StockOpname;
@@ -23,12 +23,12 @@ use App\Filament\Tenant\Pages\SellingReport;
 use App\Filament\Tenant\Pages\Settings;
 use App\Filament\Tenant\Pages\TenantLogin;
 use App\Filament\Tenant\Resources\CategoryResource;
-use App\Filament\Tenant\Resources\DebtResource;
 use App\Filament\Tenant\Resources\MemberResource;
 use App\Filament\Tenant\Resources\PaymentMethodResource;
 use App\Filament\Tenant\Resources\PermissionResource;
 use App\Filament\Tenant\Resources\ProductResource;
 use App\Filament\Tenant\Resources\PurchasingResource;
+use App\Filament\Tenant\Resources\ReceivableResource;
 use App\Filament\Tenant\Resources\RoleResource;
 use App\Filament\Tenant\Resources\SellingResource;
 use App\Filament\Tenant\Resources\StockOpnameResource;
@@ -143,7 +143,7 @@ class TenantPanelProvider extends PanelProvider
             $this->generateNavigationItem(SupplierResource::class, Supplier::class),
             $this->generateNavigationItem(MemberResource::class, Member::class),
             $this->generateNavigationItem(PaymentMethodResource::class, PaymentMethod::class),
-            $this->generateNavigationItem(DebtResource::class, Debt::class),
+            $this->generateNavigationItem(ReceivableResource::class, Receivable::class),
         ];
     }
 
