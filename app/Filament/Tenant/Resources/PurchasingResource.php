@@ -8,6 +8,7 @@ use App\Filament\Tenant\Resources\PurchasingResource\Traits\HasPurchasingForm;
 use App\Models\Tenants\Profile;
 use App\Models\Tenants\Purchasing;
 use App\Models\Tenants\Supplier;
+use App\Services\Tenants\PurchasingService;
 use App\Traits\HasTranslatableResource;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
@@ -19,12 +20,16 @@ use Filament\Infolists\Components\ImageEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
+use Filament\Support\Enums\ActionSize;
 use Filament\Tables;
+use Filament\Tables\Actions\Action;
+use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 
 class PurchasingResource extends Resource
@@ -49,6 +54,10 @@ class PurchasingResource extends Resource
                     ->createOptionForm(Supplier::form())
                     ->afterStateUpdated(fn (Set $set, ?string $state) => $set('supplier_phone_number', Supplier::find($state)?->phone_number ?? ''))
                     ->live(),
+                Select::make('payment_method_id')
+                    ->relationship(name: 'paymentMethod', titleAttribute: 'name')
+                    ->translateLabel()
+                    ->required(),
                 TextInput::make('supplier_phone_number')
                     ->translateLabel()
                     ->readOnly(),
@@ -77,6 +86,10 @@ class PurchasingResource extends Resource
                 TextColumn::make('supplier.name')
                     ->translateLabel()
                     ->searchable(),
+                TextColumn::make('paymentMethod.name')
+                    ->default('-')
+                    ->translateLabel()
+                    ->searchable(),
                 TextColumn::make('number')
                     ->translateLabel()
                     ->searchable(),
@@ -89,6 +102,14 @@ class PurchasingResource extends Resource
                 TextColumn::make('approved_at')
                     ->dateTime(timezone: Profile::get()->timezone)
                     ->translateLabel(),
+                TextColumn::make('payment_status')
+                    ->badge()
+                    ->color(fn (bool $state): string => match ($state) {
+                        false => 'gray',
+                        true => 'success',
+                    })
+                    ->formatStateUsing(fn ($state) => $state ? __('Paid') : __('Unpaid'))
+                    ->translateLabel(),
                 TextColumn::make('status')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
@@ -99,8 +120,43 @@ class PurchasingResource extends Resource
                     ->translateLabel(),
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
+                ActionGroup::make([
+                    Tables\Actions\ViewAction::make(),
+                    Tables\Actions\EditAction::make(),
+                    Action::make('set_paid')
+                        ->translateLabel()
+                        ->label(function (Purchasing $purchasing) {
+                            return $purchasing->payment_status ? 'Set unpaid' : 'Set paid';
+                        })
+                        ->action(function (Purchasing $purchasing) {
+                            $purchasing->payment_status = ! $purchasing->payment_status;
+                            $purchasing->save();
+                        })
+                        ->icon('heroicon-s-pencil-square'),
+                    Action::make('update_status')
+                        ->form([
+                            Select::make('status')
+                                ->required()
+                                ->options(Arr::where(PurchasingStatus::all(), function ($key) {
+                                    if ($key == PurchasingStatus::approved) {
+                                        return can('approve purchasing');
+                                    }
+
+                                    return true;
+                                })),
+                        ])
+                        ->action(function ($data, Purchasing $purchasing, PurchasingService $purchasingService) {
+                            $purchasingService->updateStatus($purchasing, $data['status']);
+                        })
+                        ->icon('heroicon-s-pencil-square')
+                        ->visible(function (Purchasing $purchasing) {
+                            return $purchasing->status != PurchasingStatus::approved;
+                        }),
+                ])
+                    ->icon('heroicon-m-ellipsis-vertical')
+                    ->size(ActionSize::Small)
+                    ->button()
+                    ->translateLabel(),
             ])
             ->filters([
                 SelectFilter::make('status')
