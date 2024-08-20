@@ -8,10 +8,10 @@ use App\Features\ProductStock;
 use App\Features\ProductType;
 use App\Filament\Tenant\Resources\ProductResource\Pages;
 use App\Filament\Tenant\Resources\ProductResource\Traits\HasProductForm;
+use App\Filament\Tenant\Resources\Traits\HasUploadFileField;
 use App\Models\Tenants\Product;
 use App\Models\Tenants\Setting;
 use App\Traits\HasTranslatableResource;
-use Filament\Forms\Components\BaseFileUpload;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Form;
 use Filament\Infolists;
@@ -27,11 +27,10 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Laravel\Pennant\Feature;
-use League\Flysystem\UnableToCheckFileExistence;
 
 class ProductResource extends Resource
 {
-    use HasProductForm, HasTranslatableResource;
+    use HasProductForm, HasTranslatableResource, HasUploadFileField;
 
     protected static ?string $model = Product::class;
 
@@ -113,31 +112,6 @@ class ProductResource extends Resource
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
-    }
-
-    private function getUploadedFileUsing(BaseFileUpload $component, string $file, string|array|null $storedFileNames)
-    {
-        /** @var Storage $storage */
-        $storage = $component->getDisk();
-
-        $shouldFetchFileInformation = $component->shouldFetchFileInformation();
-
-        if ($shouldFetchFileInformation) {
-            try {
-                if (! $storage->exists($file)) {
-                    return null;
-                }
-            } catch (UnableToCheckFileExistence) {
-                return null;
-            }
-        }
-
-        return [
-            'name' => $file,
-            'size' => $shouldFetchFileInformation ? $storage->size($file) : 0,
-            'type' => $shouldFetchFileInformation ? $storage->mimeType($file) : null,
-            'url' => '/storage'.$file,
-        ];
     }
 
     private function generateForm(): array

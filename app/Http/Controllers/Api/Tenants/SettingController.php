@@ -15,15 +15,7 @@ class SettingController extends Controller
             'key' => [
                 'required',
                 'string',
-                Rule::in([
-                    'currency',
-                    'selling_method',
-                    'cash_drawer_enabled',
-                    'secure_initial_price_enabled',
-                    'secure_initial_price_using_pin',
-                    'default_tax',
-                    'minimum_stock_nofication',
-                ]),
+                Rule::in(config('setting.key')),
                 function ($attribute, $value, $fail) use ($request) {
                     if ($value == 'default_tax') {
                         if (! is_numeric($request->value)) {
@@ -65,16 +57,7 @@ class SettingController extends Controller
 
     public function show(string $key)
     {
-        if (! in_array($key, [
-            'currency',
-            'selling_method',
-            'cash_drawer_enabled',
-            'secure_initial_price_enabled',
-            'secure_initial_price_using_pin',
-            'default_tax',
-            'minimum_stock_nofication',
-            'all',
-        ])) {
+        if (! in_array($key, array_merge(config('setting.key'), ['all']))) {
             return $this->buildResponse()
                 ->setMessage('key not found')
                 ->setCode(404)

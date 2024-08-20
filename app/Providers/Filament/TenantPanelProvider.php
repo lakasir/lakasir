@@ -8,19 +8,17 @@ use App\Features\Permission;
 use App\Features\Purchasing;
 use App\Features\Receivable;
 use App\Features\Role;
-use App\Features\Setting;
 use App\Features\StockOpname;
 use App\Features\Supplier;
 use App\Features\User;
 use App\Features\Voucher;
-use App\Filament\Tenant\Pages\About as PagesAbout;
 use App\Filament\Tenant\Pages\Cashier;
 use App\Filament\Tenant\Pages\CashierReport;
 use App\Filament\Tenant\Pages\EditProfile;
+use App\Filament\Tenant\Pages\GeneralSetting;
 use App\Filament\Tenant\Pages\Printer;
 use App\Filament\Tenant\Pages\ProductReport;
 use App\Filament\Tenant\Pages\SellingReport;
-use App\Filament\Tenant\Pages\Settings;
 use App\Filament\Tenant\Pages\TenantLogin;
 use App\Filament\Tenant\Resources\CategoryResource;
 use App\Filament\Tenant\Resources\MemberResource;
@@ -42,7 +40,6 @@ use App\Tenant;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
-use Filament\Navigation\MenuItem;
 use Filament\Navigation\NavigationBuilder;
 use Filament\Navigation\NavigationGroup;
 use Filament\Navigation\NavigationItem;
@@ -101,12 +98,6 @@ class TenantPanelProvider extends PanelProvider
             ->path('/member')
             ->login(TenantLogin::class)
             ->navigation(fn (NavigationBuilder $navigationBuilder) => $this->buildNavigation($navigationBuilder))
-            ->userMenuItems([
-                MenuItem::make()
-                    ->label(fn (): string => PagesAbout::getNavigationLabel())
-                    ->url(fn (): string => PagesAbout::getUrl())
-                    ->icon(PagesAbout::getNavigationIcon()),
-            ])
             ->profile(EditProfile::class)
             ->discoverResources(in: app_path('Filament/Tenant/Resources'), for: 'App\\Filament\\Tenant\\Resources')
             ->discoverPages(in: app_path('Filament/Tenant/Pages'), for: 'App\\Filament\\Tenant\\Pages')
@@ -171,8 +162,8 @@ class TenantPanelProvider extends PanelProvider
                 $this->generateNavigationItem(VoucherResource::class, Voucher::class),
             ]),
             NavigationGroup::make(__('Setting'))->collapsible(false)->items([
+                $this->generateNavigationItem(GeneralSetting::class),
                 $this->generateNavigationItem(Printer::class),
-                $this->generateNavigationItem(Settings::class, Setting::class),
             ]),
         ];
     }
