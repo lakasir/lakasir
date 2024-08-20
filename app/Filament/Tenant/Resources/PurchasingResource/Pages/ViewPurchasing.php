@@ -13,9 +13,11 @@ use App\Services\Tenants\PurchasingService;
 use App\Services\Tenants\StockService;
 use Filament\Actions;
 use Filament\Actions\Action;
+use Filament\Actions\ActionGroup;
 use Filament\Forms\Components\Select;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ViewRecord;
+use Filament\Support\Enums\ActionSize;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\Arr;
 
@@ -30,32 +32,40 @@ class ViewPurchasing extends ViewRecord
     protected function getHeaderActions(): array
     {
         return [
-            Action::make('update_status')
-                ->form([
-                    Select::make('status')
-                        ->required()
-                        ->default($this->record->status)
-                        ->options(Arr::where(PurchasingStatus::all(), function ($key) {
-                            if ($key == PurchasingStatus::approved) {
-                                return can('approve purchasing');
-                            }
+            ActionGroup::make([
+                Action::make('update_status')
+                    ->form([
+                        Select::make('status')
+                            ->required()
+                            ->default($this->record->status)
+                            ->options(Arr::where(PurchasingStatus::all(), function ($key) {
+                                if ($key == PurchasingStatus::approved) {
+                                    return can('approve purchasing');
+                                }
 
-                            return true;
-                        })),
-                ])
-                ->action(function ($data, Purchasing $purchasing, PurchasingService $purchasingService) {
-                    $purchasingService->updateStatus($purchasing, $data['status']);
+                                return true;
+                            })),
+                    ])
+                    ->action(function ($data, Purchasing $purchasing, PurchasingService $purchasingService) {
+                        $purchasingService->updateStatus($purchasing, $data['status']);
 
-                    $this->refreshPage();
-                })
-                ->color('warning')
-                ->visible(function (Purchasing $purchasing) {
-                    return $purchasing->status != PurchasingStatus::approved;
-                }),
-            Actions\EditAction::make()
-                ->visible(fn (Purchasing $purchasing) => $purchasing->status != PurchasingStatus::approved),
-            Actions\DeleteAction::make()
-                ->visible(fn (Purchasing $purchasing) => $purchasing->status != PurchasingStatus::approved),
+                        $this->refreshPage();
+                    })
+                    ->icon('heroicon-s-pencil-square')
+                    ->visible(function (Purchasing $purchasing) {
+                        return $purchasing->status != PurchasingStatus::approved;
+                    }),
+                Actions\EditAction::make()
+                    ->visible(fn (Purchasing $purchasing) => $purchasing->status != PurchasingStatus::approved),
+                Actions\DeleteAction::make()
+                    ->visible(fn (Purchasing $purchasing) => $purchasing->status != PurchasingStatus::approved),
+
+            ])
+                ->label(__('More actions'))
+                ->icon('heroicon-m-ellipsis-vertical')
+                ->size(ActionSize::Small)
+                ->color('primary')
+                ->button(),
         ];
     }
 

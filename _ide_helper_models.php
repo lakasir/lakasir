@@ -278,6 +278,7 @@ namespace App\Models\Tenants{
 /**
  * 
  *
+ * @property-read \App\Models\Tenants\PaymentMethod|null $paymentMethod
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Tenants\Stock> $stocks
  * @property-read int|null $stocks_count
  * @property-read \App\Models\Tenants\Supplier|null $supplier
