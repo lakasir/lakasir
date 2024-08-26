@@ -29,6 +29,8 @@ class GeneralSetting extends Page implements HasActions, HasForms
         InteractsWithForms,
         RefreshThePage;
 
+    public static ?string $label = 'General Setting';
+
     protected static ?string $navigationIcon = 'heroicon-o-cog-6-tooth';
 
     protected static string $view = 'filament.tenant.pages.general-setting';

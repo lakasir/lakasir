@@ -342,5 +342,15 @@
     "Unpaid": "Belum lunas",
     "Stocks is empty": "Stock kosong",
     "This purchasing has been approved": "Pembelian ini sudah disetujui",
-    "This stock opname has been approved": "Stok opname ini sudah disetujui"
+    "This stock opname has been approved": "Stok opname ini sudah disetujui",
+    "General Setting": "Pengaturan Umum",
+    "About": "Tentang",
+    "Shop name": "Nama Toko",
+    "Business type": "Tipe bisnis",
+    "Shop location": "Lokasi toko",
+    "Currency": "Mata uang",
+    "Photo": "Foto",
+    "App": "Aplikasi",
+    "Minimum stock nofication": "Pemberitahuan minimal stok",
+    "Default tax": "Pajak default"
 }

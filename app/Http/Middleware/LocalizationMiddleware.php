@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Schema;
 use Symfony\Component\HttpFoundation\Response;
 
 class LocalizationMiddleware
@@ -15,16 +16,16 @@ class LocalizationMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $centralDomain = config('tenancy.central_domains')[0];
-        if ($centralDomain !== null && $request->host() != $centralDomain) {
-            $locale = 'en';
-            $user = auth()->user();
-            if ($user) {
-                $locale = $user->profile->locale ?? 'en';
-            }
-            config(['app.locale' => $locale]);
-            app()->setLocale($locale);
+        if (! Schema::hasTable('users')) {
+            return $next($request);
         }
+        $locale = 'en';
+        $user = auth()->user();
+        if ($user) {
+            $locale = $user->profile->locale ?? 'en';
+        }
+        config(['app.locale' => $locale]);
+        app()->setLocale($locale);
 
         return $next($request);
     }

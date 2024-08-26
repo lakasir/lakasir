@@ -30,7 +30,7 @@ class About extends Model
                 ->required()
                 ->translateLabel(),
             Select::make('business_type')
-                ->label(__('Business Type'))
+                ->translateLabel()
                 ->options([
                     'retail' => __('Retail'),
                     'wholesale' => __('Wholesale'),
