@@ -352,5 +352,11 @@
     "Photo": "Foto",
     "App": "Aplikasi",
     "Minimum stock nofication": "Pemberitahuan minimal stok",
-    "Default tax": "Pajak default"
+    "Default tax": "Pajak default",
+    "Retail": "Pengecer",
+    "Wholesale": "Grosir",
+    "F&B": "Restoran dan kafe",
+    "Fashion": "Baju dan pakaian",
+    "Pharmacy": "Apotek",
+    "Other": "Lainnya"
 }
