@@ -2,6 +2,7 @@
 
 namespace App\Filament\Tenant\Pages;
 
+use App\Services\Tenants\SellingReportService;
 use App\Traits\HasTranslatableResource;
 use Filament\Actions\Action;
 use Filament\Actions\Contracts\HasActions;
@@ -11,6 +12,7 @@ use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
 use Filament\Pages\Concerns\InteractsWithFormActions;
 use Filament\Pages\Page;
+use Livewire\Attributes\Url;
 
 class SellingReport extends Page implements HasActions, HasForms
 {
@@ -22,10 +24,18 @@ class SellingReport extends Page implements HasActions, HasForms
 
     protected static string $view = 'filament.tenant.pages.selling-report';
 
+    #[Url]
     public ?array $data = [
         'start_date' => null,
         'end_date' => null,
     ];
+
+    public $reports = null;
+
+    public function mount()
+    {
+        $this->generate(new SellingReportService);
+    }
 
     public function form(Form $form): Form
     {
@@ -35,12 +45,14 @@ class SellingReport extends Page implements HasActions, HasForms
                 ->date()
                 ->translateLabel()
                 ->required()
+                ->closeOnDateSelection()
                 ->default(now())
                 ->native(false),
             DatePicker::make('end_date')
                 ->translateLabel()
                 ->date()
                 ->translateLabel()
+                ->closeOnDateSelection()
                 ->required()
                 ->default(now())
                 ->native(false),
@@ -54,16 +66,22 @@ class SellingReport extends Page implements HasActions, HasForms
         return [
             Action::make(__('Generate'))
                 ->action('generate'),
+            Action::make(__('Print'))
+                ->color('warning')
+                ->extraAttributes([
+                    'id' => 'print-btn',
+                ])
+                ->icon('heroicon-o-printer'),
         ];
     }
 
-    public function generate()
+    public function generate(SellingReportService $sellingReportService)
     {
         $this->validate([
             'data.start_date' => 'required',
             'data.end_date' => 'required',
         ]);
 
-        return $this->redirectRoute('selling-report.generate', $this->data);
+        $this->reports = $sellingReportService->generate($this->data);
     }
 }
