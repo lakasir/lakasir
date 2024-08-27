@@ -2,6 +2,7 @@
 
 namespace App\Filament\Tenant\Pages;
 
+use App\Services\Tenants\ProductReportService;
 use App\Traits\HasTranslatableResource;
 use Filament\Actions\Action;
 use Filament\Actions\Contracts\HasActions;
@@ -11,6 +12,7 @@ use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
 use Filament\Pages\Concerns\InteractsWithFormActions;
 use Filament\Pages\Page;
+use Livewire\Attributes\Url;
 
 class ProductReport extends Page implements HasActions, HasForms
 {
@@ -22,10 +24,18 @@ class ProductReport extends Page implements HasActions, HasForms
 
     protected static string $view = 'filament.tenant.pages.product-report';
 
+    #[Url]
     public ?array $data = [
         'start_date' => null,
         'end_date' => null,
     ];
+
+    public $reports = null;
+
+    public function mount()
+    {
+        $this->generate(new ProductReportService);
+    }
 
     public function form(Form $form): Form
     {
@@ -33,6 +43,7 @@ class ProductReport extends Page implements HasActions, HasForms
             DatePicker::make('start_date')
                 ->translateLabel()
                 ->date()
+                ->closeOnDateSelection()
                 ->required()
                 ->default(now())
                 ->native(false),
@@ -40,6 +51,7 @@ class ProductReport extends Page implements HasActions, HasForms
                 ->translateLabel()
                 ->date()
                 ->required()
+                ->closeOnDateSelection()
                 ->default(now())
                 ->native(false),
         ])
@@ -52,10 +64,31 @@ class ProductReport extends Page implements HasActions, HasForms
         return [
             Action::make(__('Generate'))
                 ->action('generate'),
+            Action::make(__('Print'))
+                ->color('warning')
+                ->extraAttributes([
+                    'id' => 'print-btn',
+                ])
+                ->icon('heroicon-o-printer'),
+            Action::make('download-pdf')
+                ->label(__('Download as PDF'))
+                ->action('downloadPdf')
+                ->color('warning')
+                ->icon('heroicon-o-arrow-down-on-square'),
         ];
     }
 
-    public function generate()
+    public function generate(ProductReportService $productReportService)
+    {
+        $this->validate([
+            'data.start_date' => 'required',
+            'data.end_date' => 'required',
+        ]);
+
+        $this->reports = $productReportService->generate($this->data);
+    }
+
+    public function downloadPdf()
     {
         $this->validate([
             'data.start_date' => 'required',

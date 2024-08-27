@@ -6,7 +6,6 @@ use App\Models\Tenants\About;
 use App\Models\Tenants\Profile;
 use App\Models\Tenants\Selling;
 use App\Models\Tenants\SellingDetail;
-use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Number;
@@ -113,14 +112,11 @@ class SellingReportService
             'total_qty' => $totalQty,
         ];
 
-        $pdf = Pdf::loadView('reports.selling', compact('reports', 'footer', 'header'))
-            ->setPaper('a4', 'landscape');
-        $pdf->output();
-        $domPdf = $pdf->getDomPDF();
-        $canvas = $domPdf->getCanvas();
-        $canvas->page_text(720, 570, 'Halaman {PAGE_NUM} dari {PAGE_COUNT}', null, 10, [0, 0, 0]);
-
-        return $pdf;
+        return [
+            'reports' => $reports,
+            'footer' => $footer,
+            'header' => $header,
+        ];
     }
 
     private function formatCurrency($value)

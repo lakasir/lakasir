@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\Tenants\CashierReportService;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 
 class CashierReportController extends Controller
@@ -14,11 +15,22 @@ class CashierReportController extends Controller
             'end_date' => 'nullable|date',
         ]);
 
-        $generate = $cashierReportService->generate($request->all());
+        $reportData = $cashierReportService->generate($request->all());
+        $reports = $reportData['reports'];
+        $footer = $reportData['footer'];
+        $header = $reportData['header'];
+
+        $pdf = Pdf::loadView('reports.cashier', compact('reports', 'footer', 'header'))
+            ->setPaper('a4', 'landscape');
+        $pdf->output();
+        $domPdf = $pdf->getDomPDF();
+        $canvas = $domPdf->getCanvas();
+        $canvas->page_text(720, 570, 'Halaman {PAGE_NUM} dari {PAGE_COUNT}', null, 10, [0, 0, 0]);
+
         if ($request->ajax()) {
-            return $generate->download();
+            return $pdf->download();
         }
 
-        return $generate->stream();
+        return $pdf->stream();
     }
 }
