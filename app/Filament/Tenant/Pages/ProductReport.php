@@ -70,6 +70,11 @@ class ProductReport extends Page implements HasActions, HasForms
                     'id' => 'print-btn',
                 ])
                 ->icon('heroicon-o-printer'),
+            Action::make('download-pdf')
+                ->label(__('Download as PDF'))
+                ->action('downloadPdf')
+                ->color('warning')
+                ->icon('heroicon-o-arrow-down-on-square'),
         ];
     }
 
@@ -81,5 +86,15 @@ class ProductReport extends Page implements HasActions, HasForms
         ]);
 
         $this->reports = $productReportService->generate($this->data);
+    }
+
+    public function downloadPdf()
+    {
+        $this->validate([
+            'data.start_date' => 'required',
+            'data.end_date' => 'required',
+        ]);
+
+        return $this->redirectRoute('product-report.generate', $this->data);
     }
 }
