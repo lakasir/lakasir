@@ -23,6 +23,7 @@ class FCM extends Command
         $runsOutStock = Product::select('id', 'name', 'stock')
             ->where('type', 'product')
             ->where('is_non_stock', false)
+            ->where('show', 1)
             ->get()
             ->filter(function (Product $product) use ($minStockSetting) {
                 return $product->stock <= $minStockSetting;
