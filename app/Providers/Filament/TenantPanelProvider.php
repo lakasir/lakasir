@@ -84,6 +84,7 @@ class TenantPanelProvider extends PanelProvider
     private function configurePanel(Panel $panel): Panel
     {
         $panel
+            ->darkMode(config('app.dark_mode'))
             ->databaseNotifications()
             ->id('tenant')
             ->viteTheme('resources/css/filament/tenant/theme.css')
