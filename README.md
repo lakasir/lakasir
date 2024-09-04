@@ -28,6 +28,7 @@
 - **Simple Accounting**: Basic accounting features to track income, expenses, and profits.
 - **Real-time Dashboard**: Monitor business metrics and performance in real-time.
 - **Web usb direct printing**: support the thermal printer using usb feature from browser (Chrome, Firefox)
+- **Barcode support**: we can use the barcode on stock opname, purchasing, and POS feature
 
 ## Screenshots
 
