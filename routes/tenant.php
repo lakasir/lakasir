@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\Tenants\NotificationController;
 use App\Http\Controllers\Api\Tenants\PaymentMethodController;
 use App\Http\Controllers\Api\Tenants\ProfileController;
 use App\Http\Controllers\Api\Tenants\RegisterFCMTokenController;
+use App\Http\Controllers\Api\Tenants\Reports\PurchasingReportController;
 use App\Http\Controllers\Api\Tenants\Settings\SecureInitialPriceController;
 use App\Http\Controllers\Api\Tenants\Transaction\CashDrawerController;
 use App\Http\Controllers\Api\Tenants\Transaction\DashboardController;
@@ -39,6 +40,8 @@ Route::middleware([
         Route::get('/', function () {
             return redirect()->to('/member');
         });
+        Route::get('/member/purchasing-report/generate', PurchasingReportController::class)
+            ->name('purchasing-report.generate');
         Route::get('/member/selling-report/generate', SellingReportController::class)
             ->name('selling-report.generate');
         Route::get('/member/product-report/generate', ProductReportController::class)

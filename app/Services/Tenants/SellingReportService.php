@@ -16,7 +16,6 @@ class SellingReportService
     {
         $timezone = Profile::get()->timezone;
         $about = About::first();
-        $tzName = Carbon::parse($data['start_date'])->getTimezone()->getName();
         $startDate = Carbon::parse($data['start_date'], $timezone)->setTimezone('UTC');
         $endDate = Carbon::parse($data['end_date'], $timezone)->addDay()->setTimezone('UTC');
 

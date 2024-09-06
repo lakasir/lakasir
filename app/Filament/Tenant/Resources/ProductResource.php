@@ -19,6 +19,7 @@ use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Support\Colors\Color;
+use Filament\Support\Enums\ActionSize;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
@@ -105,7 +106,11 @@ class ProductResource extends Resource
                         ->url(fn (Product $record) => static::getUrl('print-label', ['record' => $record])),
                     Tables\Actions\DeleteAction::make(),
                     Tables\Actions\RestoreAction::make(),
-                ]),
+                ])
+                    ->icon('heroicon-m-ellipsis-vertical')
+                    ->size(ActionSize::Small)
+                    ->button()
+                    ->translateLabel(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
