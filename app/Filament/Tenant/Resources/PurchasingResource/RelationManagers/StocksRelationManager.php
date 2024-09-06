@@ -51,6 +51,7 @@ class StocksRelationManager extends RelationManager
                     'total_initial_price' => Number::format($this->ownerRecord->total_initial_price),
                 ]);
             })
+            ->paginated(false)
             ->columns([
                 TextColumn::make('product.name')
                     ->translateLabel(),
