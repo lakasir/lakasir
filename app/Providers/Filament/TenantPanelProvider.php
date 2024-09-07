@@ -19,6 +19,7 @@ use App\Filament\Tenant\Pages\GeneralSetting;
 use App\Filament\Tenant\Pages\Printer;
 use App\Filament\Tenant\Pages\ProductReport;
 use App\Filament\Tenant\Pages\PurchasingReport;
+use App\Filament\Tenant\Pages\Report;
 use App\Filament\Tenant\Pages\SellingReport;
 use App\Filament\Tenant\Pages\TenantLogin;
 use App\Filament\Tenant\Resources\CategoryResource;
@@ -155,13 +156,18 @@ class TenantPanelProvider extends PanelProvider
                 $this->generateNavigationItem(RoleResource::class, Role::class),
                 $this->generateNavigationItem(PermissionResource::class, Permission::class),
             ]),
-            NavigationGroup::make(__('Report'))->items([
-                $this->generateNavigationItem(SellingReport::class),
-                $this->generateNavigationItem(ProductReport::class),
-                $this->generateNavigationItem(CashierReport::class),
-                $this->generateNavigationItem(PurchasingReport::class),
+            NavigationGroup::make(__('Report'))->label('')->collapsible(false)->items([
+                $this->generateNavigationItem(
+                    resource: Report::class,
+                    activeWhen: [
+                        SellingReport::class,
+                        ProductReport::class,
+                        CashierReport::class,
+                        PurchasingReport::class,
+                    ]
+                ),
             ]),
-            NavigationGroup::make(__('General'))->collapsible(false)->items([
+            NavigationGroup::make(__('General'))->label('')->collapsible(false)->items([
                 $this->generateNavigationItem(VoucherResource::class, Voucher::class),
             ]),
             NavigationGroup::make(__('Setting'))->collapsible(false)->items([
@@ -230,7 +236,7 @@ class TenantPanelProvider extends PanelProvider
             ->brandLogo($about->photo ?? null);
     }
 
-    private function generateNavigationItem(string $resource, ?string $feature = null): NavigationItem
+    private function generateNavigationItem(string $resource, ?string $feature = null, ?array $activeWhen = []): NavigationItem
     {
         $canAccess = $feature ? feature($feature) && $resource::canAccess() : $resource::canAccess();
 
@@ -241,6 +247,15 @@ class TenantPanelProvider extends PanelProvider
 
         if ((new $resource) instanceof Resource) {
             $active = Str::of(Route::currentRouteName())->contains($resource::getRouteBaseName());
+        }
+
+        if (count($activeWhen) > 0) {
+            $activatedRoute = [];
+            foreach ($activeWhen as $resourceClass) {
+                $activatedRoute[] = $resourceClass::getRouteName();
+            }
+            $activatedRoute[] = $resource::getRouteName();
+            $active = in_array(Route::current()->getName(), $activatedRoute);
         }
 
         return NavigationItem::make($resource::getLabel())
