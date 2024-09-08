@@ -32,7 +32,6 @@ use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
-use Laravel\Sanctum\Sanctum;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
@@ -66,7 +65,6 @@ class AuthServiceProvider extends ServiceProvider
 
     public function register()
     {
-        Sanctum::ignoreMigrations();
     }
 
     public function boot()
