@@ -2,7 +2,11 @@
 
 namespace App\Providers;
 
+use App\Http\Middleware\InitializeTenancyByDomain;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 
 class ModuleServiceProvider extends ServiceProvider
 {
@@ -18,6 +22,8 @@ class ModuleServiceProvider extends ServiceProvider
             $provider = $this->getModuleServiceProvider($module);
             if ($provider) {
                 $this->app->register($provider);
+
+                $this->loadModuleRoute($module);
             }
         }
     }
@@ -36,5 +42,23 @@ class ModuleServiceProvider extends ServiceProvider
         $providerClass = "Modules\\{$moduleName}\\{$moduleName}ServiceProvider";
 
         return class_exists($providerClass) ? $providerClass : null;
+    }
+
+    private function loadModuleRoute($module)
+    {
+        $routes = File::files($module.'/routes');
+        foreach ($routes as $route) {
+            $routeFile = $route->getPathname();
+
+            if (file_exists($routeFile)) {
+                Route::prefix('modules')
+                    ->middleware([
+                        'web',
+                        InitializeTenancyByDomain::class,
+                        PreventAccessFromCentralDomains::class,
+                    ])
+                    ->group($routeFile);
+            }
+        }
     }
 }
