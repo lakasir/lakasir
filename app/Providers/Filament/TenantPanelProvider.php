@@ -86,6 +86,8 @@ class TenantPanelProvider extends PanelProvider
 
     private function configurePanel(Panel $panel): Panel
     {
+        $modules = array_map(fn ($module) => $this->loadResourceFromModule($module), $this->loadModules());
+
         $panel
             ->darkMode(config('app.dark_mode', true))
             ->databaseNotifications()
@@ -103,9 +105,7 @@ class TenantPanelProvider extends PanelProvider
             ->login(TenantLogin::class)
             ->navigation(fn (NavigationBuilder $navigationBuilder) => $this->buildNavigation($navigationBuilder))
             ->profile(EditProfile::class)
-            ->resources([
-                ...$this->loadResourceFromModule(),
-            ])
+            ->resources(...$modules)
             ->discoverResources(in: app_path('Filament/Tenant/Resources'), for: 'App\\Filament\\Tenant\\Resources')
             ->discoverPages(in: app_path('Filament/Tenant/Pages'), for: 'App\\Filament\\Tenant\\Pages')
             ->discoverWidgets(in: app_path('Filament/Tenant/Widgets'), for: 'App\\Filament\\Tenant\\Widgets')
@@ -174,9 +174,11 @@ class TenantPanelProvider extends PanelProvider
             NavigationGroup::make(__('General'))->label('')->collapsible(false)->items([
                 $this->generateNavigationItem(VoucherResource::class, Voucher::class),
             ]),
-            NavigationGroup::make(__('Module'))->items(
-                array_map(fn ($item) => $this->generateNavigationItem($item), $this->loadResourceFromModule()),
-            ),
+            ...array_map(function ($module) {
+                return NavigationGroup::make($module)->items([
+                    ...array_map(fn ($resource) => $this->generateNavigationItem($resource), $this->loadResourceFromModule($module)),
+                ]);
+            }, $this->loadModules()),
             NavigationGroup::make(__('Setting'))->collapsible(false)->items([
                 $this->generateNavigationItem(GeneralSetting::class),
                 $this->generateNavigationItem(Printer::class),
@@ -272,24 +274,23 @@ class TenantPanelProvider extends PanelProvider
             ->url(fn (): string => $resource::getUrl());
     }
 
-    private function loadResourceFromModule(): array
+    private function loadResourceFromModule($module): array
     {
-        $moduleClases = [];
-
-        $modules = getModules();
-
-        foreach ($modules as $module) {
-            $basename = basename($module);
-            $resourcesNamespace = "$basename\\Filament\\Resources";
-            $resourcesPath = File::directories(base_path("modules/$basename/src/Filament/Resources"));
-            foreach ($resourcesPath as $path) {
-                $path = basename($path);
-                if (class_exists("Modules\\$resourcesNamespace\\$path")) {
-                    $moduleClases[] = "Modules\\$resourcesNamespace\\$path";
-                }
+        $moduleResource = [];
+        $resourcesNamespace = "$module\\Filament\\Resources";
+        $resourcesPath = File::directories(base_path("modules/$module/src/Filament/Resources"));
+        foreach ($resourcesPath as $path) {
+            $path = basename($path);
+            if (class_exists("Modules\\$resourcesNamespace\\$path")) {
+                $moduleResource[] = "Modules\\$resourcesNamespace\\$path";
             }
         }
 
-        return $moduleClases;
+        return $moduleResource;
+    }
+
+    private function loadModules(): array
+    {
+        return array_map(fn ($module) => basename($module), getModules());
     }
 }
