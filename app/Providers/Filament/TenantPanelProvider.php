@@ -61,6 +61,7 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
@@ -102,6 +103,9 @@ class TenantPanelProvider extends PanelProvider
             ->login(TenantLogin::class)
             ->navigation(fn (NavigationBuilder $navigationBuilder) => $this->buildNavigation($navigationBuilder))
             ->profile(EditProfile::class)
+            ->resources([
+                ...$this->loadResourceFromModule(),
+            ])
             ->discoverResources(in: app_path('Filament/Tenant/Resources'), for: 'App\\Filament\\Tenant\\Resources')
             ->discoverPages(in: app_path('Filament/Tenant/Pages'), for: 'App\\Filament\\Tenant\\Pages')
             ->discoverWidgets(in: app_path('Filament/Tenant/Widgets'), for: 'App\\Filament\\Tenant\\Widgets')
@@ -170,6 +174,9 @@ class TenantPanelProvider extends PanelProvider
             NavigationGroup::make(__('General'))->label('')->collapsible(false)->items([
                 $this->generateNavigationItem(VoucherResource::class, Voucher::class),
             ]),
+            NavigationGroup::make(__('Module'))->items(
+                array_map(fn ($item) => $this->generateNavigationItem($item), $this->loadResourceFromModule()),
+            ),
             NavigationGroup::make(__('Setting'))->collapsible(false)->items([
                 $this->generateNavigationItem(GeneralSetting::class),
                 $this->generateNavigationItem(Printer::class),
@@ -263,5 +270,26 @@ class TenantPanelProvider extends PanelProvider
             ->icon($resource::getNavigationIcon())
             ->isActiveWhen(fn (): bool => $active)
             ->url(fn (): string => $resource::getUrl());
+    }
+
+    private function loadResourceFromModule(): array
+    {
+        $moduleClases = [];
+
+        $modules = getModules();
+
+        foreach ($modules as $module) {
+            $basename = basename($module);
+            $resourcesNamespace = "$basename\\Filament\\Resources";
+            $resourcesPath = File::directories(base_path("modules/$basename/src/Filament/Resources"));
+            foreach ($resourcesPath as $path) {
+                $path = basename($path);
+                if (class_exists("Modules\\$resourcesNamespace\\$path")) {
+                    $moduleClases[] = "Modules\\$resourcesNamespace\\$path";
+                }
+            }
+        }
+
+        return $moduleClases;
     }
 }
