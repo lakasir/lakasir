@@ -38,6 +38,7 @@ use App\Filament\Tenant\Resources\UserResource;
 use App\Filament\Tenant\Resources\VoucherResource;
 use App\Http\Middleware\LocalizationMiddleware;
 use App\Models\Tenants\About;
+use App\Modules\Abstracts\ModuleResource;
 use App\Tenant;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -86,8 +87,6 @@ class TenantPanelProvider extends PanelProvider
 
     private function configurePanel(Panel $panel): Panel
     {
-        $modules = array_map(fn ($module) => $this->loadResourceFromModule($module), $this->loadModules());
-
         $panel
             ->darkMode(config('app.dark_mode', true))
             ->databaseNotifications()
@@ -105,12 +104,16 @@ class TenantPanelProvider extends PanelProvider
             ->login(TenantLogin::class)
             ->navigation(fn (NavigationBuilder $navigationBuilder) => $this->buildNavigation($navigationBuilder))
             ->profile(EditProfile::class)
-            ->resources(...$modules)
             ->discoverResources(in: app_path('Filament/Tenant/Resources'), for: 'App\\Filament\\Tenant\\Resources')
             ->discoverPages(in: app_path('Filament/Tenant/Pages'), for: 'App\\Filament\\Tenant\\Pages')
             ->discoverWidgets(in: app_path('Filament/Tenant/Widgets'), for: 'App\\Filament\\Tenant\\Widgets')
             ->middleware($this->getMiddleware())
             ->authMiddleware([Authenticate::class]);
+
+        $modules = array_map(fn ($module) => $this->loadResourceFromModule($module), $this->loadModules());
+        if (! empty($modules)) {
+            $panel->resources(...$modules);
+        }
 
         FilamentView::registerRenderHook(
             PanelsRenderHook::GLOBAL_SEARCH_AFTER,
@@ -176,7 +179,9 @@ class TenantPanelProvider extends PanelProvider
             ]),
             ...array_map(function ($module) {
                 return NavigationGroup::make($module)->items([
-                    ...array_map(fn ($resource) => $this->generateNavigationItem($resource), $this->loadResourceFromModule($module)),
+                    ...array_map(function ($resource) {
+                        return $this->generateNavigationItem($resource);
+                    }, $this->loadResourceFromModule($module)),
                 ]);
             }, $this->loadModules()),
             NavigationGroup::make(__('Setting'))->collapsible(false)->items([
@@ -255,6 +260,10 @@ class TenantPanelProvider extends PanelProvider
         }
 
         if ((new $resource) instanceof Resource) {
+            $active = Str::of(Route::currentRouteName())->contains($resource::getRouteBaseName());
+        }
+
+        if ((new $resource) instanceof ModuleResource) {
             $active = Str::of(Route::currentRouteName())->contains($resource::getRouteBaseName());
         }
 

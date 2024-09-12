@@ -51,7 +51,7 @@ class ModuleServiceProvider extends ServiceProvider
             $routeFile = $route->getPathname();
 
             if (file_exists($routeFile)) {
-                Route::prefix('modules')
+                Route::prefix('modules/'.str(basename($module))->snake('-'))
                     ->middleware([
                         'web',
                         InitializeTenancyByDomain::class,
