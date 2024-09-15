@@ -287,6 +287,10 @@ class TenantPanelProvider extends PanelProvider
     {
         $moduleResource = [];
         $resourcesNamespace = "$module\\Filament\\Resources";
+        $resourcesPath = File::isDirectory(base_path("modules/$module/src/Filament/Resources"));
+        if (! $resourcesPath) {
+            return [];
+        }
         $resourcesPath = File::directories(base_path("modules/$module/src/Filament/Resources"));
         foreach ($resourcesPath as $path) {
             $path = basename($path);
