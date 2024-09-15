@@ -180,6 +180,8 @@ class TenantPanelProvider extends PanelProvider
             ...array_map(function ($module) {
                 return NavigationGroup::make($module)->items([
                     ...array_map(function ($resource) {
+                        dd($resource);
+
                         return $this->generateNavigationItem($resource);
                     }, $this->loadResourceFromModule($module)),
                 ]);
@@ -287,11 +289,12 @@ class TenantPanelProvider extends PanelProvider
     {
         $moduleResource = [];
         $resourcesNamespace = "$module\\Filament\\Resources";
-        $resourcesPath = File::isDirectory(base_path("modules/$module/src/Filament/Resources"));
-        if (! $resourcesPath) {
+        $dir = base_path("modules/$module/src/Filament/Resources");
+        $directoryExists = File::isDirectory($dir);
+        if (! $directoryExists) {
             return [];
         }
-        $resourcesPath = File::directories(base_path("modules/$module/src/Filament/Resources"));
+        $resourcesPath = File::directories($dir);
         foreach ($resourcesPath as $path) {
             $path = basename($path);
             if (class_exists("Modules\\$resourcesNamespace\\$path")) {
