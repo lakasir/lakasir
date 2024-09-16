@@ -38,7 +38,6 @@ use App\Filament\Tenant\Resources\UserResource;
 use App\Filament\Tenant\Resources\VoucherResource;
 use App\Http\Middleware\LocalizationMiddleware;
 use App\Models\Tenants\About;
-use App\Modules\Abstracts\ModuleResource;
 use App\Tenant;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -249,10 +248,6 @@ class TenantPanelProvider extends PanelProvider
         }
 
         if ((new $resource) instanceof Resource) {
-            $active = Str::of(Route::currentRouteName())->contains($resource::getRouteBaseName());
-        }
-
-        if ((new $resource) instanceof ModuleResource) {
             $active = Str::of(Route::currentRouteName())->contains($resource::getRouteBaseName());
         }
 
