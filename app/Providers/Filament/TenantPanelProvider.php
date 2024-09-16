@@ -62,11 +62,11 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\Facades\Blade;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Lakasir\LakasirModule\LakasirModulePlugin;
 use Stancl\Tenancy\Bootstrappers\DatabaseTenancyBootstrapper;
 
 class TenantPanelProvider extends PanelProvider
@@ -82,7 +82,7 @@ class TenantPanelProvider extends PanelProvider
             $this->initializeDefaultPanel($panel);
         }
 
-        return $panel;
+        return $panel->plugin(LakasirModulePlugin::make());
     }
 
     private function configurePanel(Panel $panel): Panel
@@ -110,11 +110,6 @@ class TenantPanelProvider extends PanelProvider
             ->middleware($this->getMiddleware())
             ->authMiddleware([Authenticate::class]);
 
-        $modules = array_map(fn ($module) => $this->loadResourceFromModule($module), $this->loadModules());
-        if (! empty($modules)) {
-            $panel->resources(...$modules);
-        }
-
         FilamentView::registerRenderHook(
             PanelsRenderHook::GLOBAL_SEARCH_AFTER,
             fn (): string => Blade::render('@livewire(\'forms.global.localization-selector\')')
@@ -132,6 +127,7 @@ class TenantPanelProvider extends PanelProvider
     {
         return $navigationBuilder
             ->items(array_filter($this->getNavigationItems(), fn ($item) => $item != null))
+            ->groups(LakasirModulePlugin::make()->navigationGroups())
             ->groups($this->getNavigationGroups());
     }
 
@@ -177,15 +173,6 @@ class TenantPanelProvider extends PanelProvider
             NavigationGroup::make(__('General'))->label('')->collapsible(false)->items([
                 $this->generateNavigationItem(VoucherResource::class, Voucher::class),
             ]),
-            ...array_map(function ($module) {
-                return NavigationGroup::make($module)->items([
-                    ...array_map(function ($resource) {
-                        dd($resource);
-
-                        return $this->generateNavigationItem($resource);
-                    }, $this->loadResourceFromModule($module)),
-                ]);
-            }, $this->loadModules()),
             NavigationGroup::make(__('Setting'))->collapsible(false)->items([
                 $this->generateNavigationItem(GeneralSetting::class),
                 $this->generateNavigationItem(Printer::class),
@@ -283,30 +270,5 @@ class TenantPanelProvider extends PanelProvider
             ->icon($resource::getNavigationIcon())
             ->isActiveWhen(fn (): bool => $active)
             ->url(fn (): string => $resource::getUrl());
-    }
-
-    private function loadResourceFromModule($module): array
-    {
-        $moduleResource = [];
-        $resourcesNamespace = "$module\\Filament\\Resources";
-        $dir = base_path("modules/$module/src/Filament/Resources");
-        $directoryExists = File::isDirectory($dir);
-        if (! $directoryExists) {
-            return [];
-        }
-        $resourcesPath = File::directories($dir);
-        foreach ($resourcesPath as $path) {
-            $path = basename($path);
-            if (class_exists("Modules\\$resourcesNamespace\\$path")) {
-                $moduleResource[] = "Modules\\$resourcesNamespace\\$path";
-            }
-        }
-
-        return $moduleResource;
-    }
-
-    private function loadModules(): array
-    {
-        return array_map(fn ($module) => basename($module), getModules());
     }
 }

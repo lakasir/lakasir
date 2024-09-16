@@ -2,7 +2,6 @@
 
 use App\Models\Tenants\User;
 use Filament\Facades\Filament;
-use Illuminate\Support\Facades\File;
 
 if (! function_exists('hasFeatureAndPermission')) {
     function hasFeatureAndPermission(string $feature, ?string $permission = null): bool
@@ -39,12 +38,5 @@ if (! function_exists('isMultiTenant')) {
         }
 
         return false;
-    }
-}
-
-if (! function_exists('getModules')) {
-    function getModules(): array
-    {
-        return File::isDirectory(base_path('modules')) ? File::directories(base_path('modules')) : [];
     }
 }

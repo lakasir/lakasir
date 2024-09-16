@@ -1,6 +1,5 @@
 <?php
 
-use App\Providers\ModuleServiceProvider;
 use Illuminate\Support\Facades\Facade;
 
 return [
@@ -205,7 +204,6 @@ return [
         App\Providers\TenancyServiceProvider::class,
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
         App\Providers\Filament\TenantPanelProvider::class,
-        ModuleServiceProvider::class,
     ],
 
     /*
