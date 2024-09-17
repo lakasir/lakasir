@@ -2,6 +2,7 @@
 
 namespace App\Traits\Suppliers;
 
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 
 trait HasSupplierForm
@@ -16,6 +17,18 @@ trait HasSupplierForm
                 ->translateLabel()
                 ->rule('regex:/^(\+?\d{1,3}[-.\s]?)?(\(?\d{3}\)?[-.\s]?)?\d{3}[-.\s]?\d{4}$/')
                 ->required(),
+            TextInput::make('contact_name')
+                ->translateLabel(),
+            TextInput::make('email')
+                ->translateLabel(),
+            Textarea::make('address')
+                ->translateLabel(),
+            TextInput::make('city')
+                ->translateLabel(),
+            TextInput::make('country')
+                ->translateLabel(),
+            TextInput::make('postal_code')
+                ->translateLabel(),
         ];
     }
 
