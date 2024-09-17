@@ -65,7 +65,6 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
-use Lakasir\LakasirModule\LakasirModulePlugin;
 use Stancl\Tenancy\Bootstrappers\DatabaseTenancyBootstrapper;
 
 class TenantPanelProvider extends PanelProvider
@@ -81,7 +80,11 @@ class TenantPanelProvider extends PanelProvider
             $this->initializeDefaultPanel($panel);
         }
 
-        return $panel->plugin(LakasirModulePlugin::make());
+        if (class_exists(\Lakasir\LakasirModule\LakasirModulePlugin::class)) {
+            $panel->plugin(\Lakasir\LakasirModule\LakasirModulePlugin::make());
+        }
+
+        return $panel;
     }
 
     private function configurePanel(Panel $panel): Panel
@@ -124,10 +127,15 @@ class TenantPanelProvider extends PanelProvider
 
     private function buildNavigation(NavigationBuilder $navigationBuilder): NavigationBuilder
     {
+        $navigationBuilder->groups($this->getNavigationGroups());
+        if (class_exists(\Lakasir\LakasirModule\LakasirModulePlugin::class)) {
+            $navigationBuilder
+                ->groups(\Lakasir\LakasirModule\LakasirModulePlugin::make()->navigationGroups());
+        }
+
         return $navigationBuilder
-            ->items(array_filter($this->getNavigationItems(), fn ($item) => $item != null))
-            ->groups(LakasirModulePlugin::make()->navigationGroups())
-            ->groups($this->getNavigationGroups());
+            ->items(array_filter($this->getNavigationItems(), fn ($item) => $item != null));
+
     }
 
     private function getNavigationItems(): array
