@@ -11,6 +11,18 @@ class SupplierController extends HasCrudActionAbstract implements WithSimplePagi
 {
     public static string $model = Supplier::class;
 
+    public function filter(): array
+    {
+        return [
+            'email',
+            'name',
+            'phone_number',
+            'address',
+            'city',
+            'country',
+        ];
+    }
+
     public static function rules($id): array
     {
         return [
