@@ -12,6 +12,7 @@
         "filament/filament": "^3.1",
         "guzzlehttp/guzzle": "^7.2",
         "kreait/laravel-firebase": "^5.8",
+        "lakasir/lakasir-module": "^1.0",
         "laravel-notification-channels/fcm": "^4.3",
         "laravel/framework": "^11.9",
         "laravel/pennant": "^1.8",
@@ -23,7 +24,6 @@
         "predis/predis": "^2.2",
         "spatie/laravel-permission": "6.9.0",
         "spatie/laravel-query-builder": "^5.6",
-        "stancl/tenancy": "^3.6",
         "tapp/filament-timezone-field": "^3.0"
     },
     "require-dev": {
@@ -87,5 +87,11 @@
         }
     },
     "minimum-stability": "stable",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../packages/lakasir-module"
+        }
+    ]
 }
