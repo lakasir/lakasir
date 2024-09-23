@@ -95,7 +95,7 @@ class TenantPanelProvider extends PanelProvider
             ->favicon(url('favicon.ico'))
             ->spa(config('app.spa_mode'))
             ->authGuard('web')
-            ->path('/')
+            ->path('/member')
             ->login(TenantLogin::class)
             ->navigation(fn (NavigationBuilder $navigationBuilder) => $this->buildNavigation($navigationBuilder))
             ->profile(EditProfile::class)
