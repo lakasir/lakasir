@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\Tenants\Master\CategoryController;
 use App\Http\Controllers\Api\Tenants\Master\MemberController;
 use App\Http\Controllers\Api\Tenants\Master\Product\StockController;
 use App\Http\Controllers\Api\Tenants\Master\ProductController;
+use App\Http\Controllers\Api\Tenants\Master\SupplierController;
 use App\Http\Controllers\Api\Tenants\NotificationController;
 use App\Http\Controllers\Api\Tenants\PaymentMethodController;
 use App\Http\Controllers\Api\Tenants\ProfileController;
@@ -105,6 +106,7 @@ Route::middleware([
             });
 
             Route::group(['prefix' => 'master'], function () {
+                Route::resource('/supplier', SupplierController::class);
                 Route::group(['prefix' => '/category'], function () {
                     Route::get('/', [CategoryController::class, 'index'])->can('read category');
                     Route::post('/', [CategoryController::class, 'store'])->can('create category');
