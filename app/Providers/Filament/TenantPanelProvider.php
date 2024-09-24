@@ -73,7 +73,7 @@ class TenantPanelProvider extends PanelProvider
 
         $this->initializeConfigDefault($panel);
 
-        if (class_exists(\Lakasir\LakasirModule\LakasirModulePlugin::class)) {
+        if (module_plugin_exist()) {
             $panel->plugin(\Lakasir\LakasirModule\LakasirModulePlugin::make());
         }
 
@@ -121,7 +121,7 @@ class TenantPanelProvider extends PanelProvider
     private function buildNavigation(NavigationBuilder $navigationBuilder): NavigationBuilder
     {
         $navigationBuilder->groups($this->getNavigationGroups());
-        if (class_exists(\Lakasir\LakasirModule\LakasirModulePlugin::class)) {
+        if (module_plugin_exist()) {
             $navigationBuilder
                 ->groups(\Lakasir\LakasirModule\LakasirModulePlugin::make()->navigationGroups());
         }

@@ -29,6 +29,10 @@ class StockOpnameService
         $stockOpname->fill($data);
         $stockOpname->save();
 
+        if (module_plugin_exist()) {
+            \Lakasir\LakasirModule\Events\StockOpnameStarted::dispatch($stockOpname, $data);
+        }
+
         return $stockOpname;
     }
 
@@ -70,6 +74,11 @@ class StockOpnameService
                 }
             }
             RecalculateEvent::dispatch(Product::whereIn('id', $so->stockOpnameItems->pluck('product_id'))->get(), []);
+            if (module_plugin_exist()) {
+                \Lakasir\LakasirModule\Events\StockOpnameApproved::dispatch($so, [
+                    'status' => $status,
+                ]);
+            }
         }
         $so->save();
     }

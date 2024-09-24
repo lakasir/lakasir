@@ -28,7 +28,7 @@ class SellingService
             $products = Product::find($selling->sellingDetails->pluck('product_id'));
             RecalculateEvent::dispatch($products, $data);
 
-            if (class_exists(\Lakasir\LakasirModule\Events\TransactionSucceed::class)) {
+            if (module_plugin_exist()) {
                 \Lakasir\LakasirModule\Events\TransactionSucceed::dispatch($selling, $data);
             }
 

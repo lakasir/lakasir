@@ -26,3 +26,10 @@ if (! function_exists('can')) {
         return $user->can($permission);
     }
 }
+
+if (! function_exists('module_plugin_exist')) {
+    function module_plugin_exist(): bool
+    {
+        return class_exists(\Lakasir\LakasirModule\Events\TransactionSucceed::class);
+    }
+}
