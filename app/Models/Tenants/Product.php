@@ -204,4 +204,9 @@ class Product extends Model
     {
         return $builder->where('show', false);
     }
+
+    public function priceUnits(): HasMany
+    {
+        return $this->hasMany(PriceUnit::class);
+    }
 }

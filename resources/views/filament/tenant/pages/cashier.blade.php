@@ -45,11 +45,8 @@ use App\Features\{PaymentShortcutButton, SellingTax};
         </div>
         <div class="overflow-y-scroll min-h-40 max-h-[35%] overflow-auto"
           @forelse($cartItems as $item)
-            <div class="flex justify-between mb-2 border rounded-lg bg-white dark:border-gray-900 dark:bg-gray-900 px-4 py-2" key="{{ rand() }}">
+            <div class="flex justify-between mb-2 border rounded-lg bg-white dark:border-gray-900 dark:bg-gray-900 px-4 py-2" id="{{ $item->id }}" key="{{ rand() }}">
               <div class="flex items-center space-x-3">
-                <img
-                class="object-cover h-16 w-20 rounded-lg"
-                src=" {{ $item->hero_image }}"/>
                 <div class="space-y-3">
                   <p class="font-semibold"> {{ $item->product->name }}</p>
                   <div class="flex space-x-3 h-8">
@@ -75,6 +72,7 @@ use App\Features\{PaymentShortcutButton, SellingTax};
                       >
                       <x-heroicon-o-trash class="!text-danger-900 h-4 w-4"/>
                     </button>
+                    <livewire:price-setting :cart-item="$item" key="{{ $item->id }}" />
                   </div>
                 </div>
               </div>
@@ -123,6 +121,7 @@ use App\Features\{PaymentShortcutButton, SellingTax};
       </div>
     </div>
   </div>
+  {{-- modal --}}
   <x-filament::modal
     id="edit-detail"
     width="2xl"
@@ -452,10 +451,8 @@ use App\Features\{PaymentShortcutButton, SellingTax};
         suggestions.push(suggestion);
       }
     }
-    console.log(suggestions);
 
     suggestions.sort((a, b) => a - b);
-    console.log(suggestions);
 
     return suggestions;
   }
