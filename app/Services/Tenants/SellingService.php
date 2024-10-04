@@ -5,6 +5,7 @@ namespace App\Services\Tenants;
 use App\Events\RecalculateEvent;
 use App\Events\SellingCreated;
 use App\Models\Tenants\PaymentMethod;
+use App\Models\Tenants\PriceUnit;
 use App\Models\Tenants\Product;
 use App\Models\Tenants\Selling;
 use App\Services\Tenants\Traits\HasNumber;
@@ -24,6 +25,7 @@ class SellingService
             $selling = Selling::create($data);
 
             SellingCreated::dispatch($selling, $data);
+
             /** @var Collection<Product> $products */
             $products = Product::find($selling->sellingDetails->pluck('product_id'));
             RecalculateEvent::dispatch($products, $data);
@@ -49,6 +51,9 @@ class SellingService
             $productsCollection = collect($data['products']);
             $productsCollection->each(
                 function ($product) use (&$total_price, &$total_cost, &$total_price_after_discount, &$total_discount_per_item) {
+                    if (isset($product['price_unit_id']) && $product['price_unit_id'] != null) {
+                        $product['price'] = PriceUnit::whereId($product['price_unit_id'])->first()->selling_price * $product['qty'];
+                    }
                     $modelProduct = Product::find($product['product_id']);
                     $total_price += $product['price'] ?? $modelProduct->selling_price * $product['qty'];
                     $total_discount_per_item += ($product['discount_price'] ?? 0);

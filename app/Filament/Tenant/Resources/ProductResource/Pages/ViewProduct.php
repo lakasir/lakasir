@@ -4,6 +4,7 @@ namespace App\Filament\Tenant\Resources\ProductResource\Pages;
 
 use App\Features\PrintProductLabel;
 use App\Filament\Tenant\Resources\ProductResource;
+use App\Filament\Tenant\Resources\ProductResource\RelationManagers\PriceUnitsRelationManager;
 use App\Filament\Tenant\Resources\ProductResource\RelationManagers\SellingDetailsRelationManager;
 use App\Filament\Tenant\Resources\ProductResource\RelationManagers\StocksRelationManager;
 use App\Filament\Tenant\Resources\ProductResource\Widgets\StatsProduct;
@@ -13,7 +14,6 @@ use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ViewRecord;
-use Filament\Resources\RelationManagers\RelationGroup;
 use Filament\Support\Colors\Color;
 use Filament\Support\Enums\ActionSize;
 
@@ -79,15 +79,12 @@ class ViewProduct extends ViewRecord
     {
         $relations = [
             SellingDetailsRelationManager::make(),
+            PriceUnitsRelationManager::make(),
         ];
         if (! $this->record->is_non_stock) {
             return [
-                RelationGroup::make('', array_merge(
-                    [
-                        StocksRelationManager::make(),
-                    ],
-                    $relations,
-                )),
+                StocksRelationManager::make(),
+                ...$relations,
             ];
         }
 

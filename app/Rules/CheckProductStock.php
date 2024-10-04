@@ -2,6 +2,7 @@
 
 namespace App\Rules;
 
+use App\Models\Tenants\PriceUnit;
 use App\Models\Tenants\Product;
 use Closure;
 use Illuminate\Contracts\Validation\DataAwareRule;
@@ -27,7 +28,8 @@ class CheckProductStock implements DataAwareRule, ValidationRule
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         $index = Str::of($attribute)->explode('.')[1];
-        $product = Product::find($this->data['products'][$index]['product_id']);
+        $dataProduct = $this->data['products'][$index];
+        $product = Product::find($dataProduct['product_id']);
         if (! $product) {
             $fail('The product is not found.');
 
@@ -35,6 +37,9 @@ class CheckProductStock implements DataAwareRule, ValidationRule
         }
         if ($product->is_non_stock) {
             return;
+        }
+        if (isset($dataProduct['price_unit_id']) && $dataProduct['price_unit_id'] != null) {
+            $value = PriceUnit::query()->find($dataProduct['price_unit_id'])->stock * $dataProduct['qty'];
         }
         $bool = $product?->stock < $value;
 

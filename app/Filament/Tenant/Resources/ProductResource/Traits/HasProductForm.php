@@ -67,14 +67,7 @@ trait HasProductForm
     public function generateUnitFormComponent()
     {
         return TextInput::make('unit')
-            ->translateLabel()
-            ->datalist(
-                Product::all()
-                    ->pluck('unit')
-                    ->unique()
-                    ->toArray()
-            );
-
+            ->translateLabel();
     }
 
     public function generateSellingPriceFormComponent(): TextInput

@@ -342,5 +342,8 @@
     "Stocks is empty": "Stocks is empty",
     "This purchasing has been approved": "This purchasing has been approved",
     "This stock opname has been approved": "This stock opname has been approved",
-    "Purchasing Report": "Laporan Pemebelian"
+    "Purchasing Report": "Purchasing Report",
+    "Amount that sold or that filled in unit": "Amount that sold or that filled in unit",
+    "Changes": "Changes",
+    "Remove": "Remove"
 }
