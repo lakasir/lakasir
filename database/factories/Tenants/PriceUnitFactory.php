@@ -1,6 +1,6 @@
 <?php
 
-namespace Database\Factories;
+namespace Database\Factories\Tenants;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -17,7 +17,8 @@ class PriceUnitFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'stock' => 10,
+            'unit' => 'unit-test',
         ];
     }
 }

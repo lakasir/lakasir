@@ -1,5 +1,5 @@
 <div>
-  @if($cartItem->product->priceUnits->count() > 0)
+  @if($cartItem?->product?->priceUnits?->count() > 0)
     <button
       class="bg-info-400 rounded-lg px-2 py-1"
       wire:loading.attr="disabled"

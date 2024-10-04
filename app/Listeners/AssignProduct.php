@@ -26,8 +26,11 @@ class AssignProduct
     private function assignTheProducts(Selling $selling, array $data)
     {
         foreach ($data['products'] as $productRequest) {
-            /** @var PriceUnit $priceUnit */
-            $priceUnit = PriceUnit::find($productRequest['price_unit_id']);
+            /** @var ?PriceUnit $priceUnit */
+            $priceUnit = null;
+            if (isset($productRequest['price_unit_id']) && $productRequest['price_unit_id'] != null) {
+                $priceUnit = PriceUnit::find($productRequest['price_unit_id']);
+            }
 
             /** @var Product $product */
             $product = Product::find($productRequest['product_id']);
