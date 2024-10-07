@@ -11,6 +11,7 @@ use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Support\RawJs;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 use Laravel\Pennant\Feature;
 
 class PriceUnitsRelationManager extends RelationManager
@@ -73,6 +74,11 @@ class PriceUnitsRelationManager extends RelationManager
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
+    }
+
+    public static function getTitle(Model $ownerRecord, string $pageClass): string
+    {
+        return __('Price Units');
     }
 
     public function isReadOnly(): bool

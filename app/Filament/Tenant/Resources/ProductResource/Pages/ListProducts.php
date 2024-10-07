@@ -18,6 +18,8 @@ class ListProducts extends ListRecords
         return [
             Actions\CreateAction::make(),
             ImportAction::make()
+                ->label(__('Import product'))
+                ->translateLabel()
                 ->visible(feature(ProductImport::class))
                 ->importer(ProductImporter::class),
         ];
@@ -26,6 +28,5 @@ class ListProducts extends ListRecords
     protected function getRedirectUrl(): string
     {
         return '/member/products';
-
     }
 }

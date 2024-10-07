@@ -86,6 +86,7 @@ class TenantPanelProvider extends PanelProvider
     private function configurePanel(Panel $panel): Panel
     {
         $panel
+            ->sidebarFullyCollapsibleOnDesktop()
             ->darkMode(config('app.dark_mode', true))
             ->databaseNotifications()
             ->id('tenant')

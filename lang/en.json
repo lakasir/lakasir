@@ -345,5 +345,9 @@
     "Purchasing Report": "Purchasing Report",
     "Amount that sold or that filled in unit": "Amount that sold or that filled in unit",
     "Changes": "Changes",
-    "Remove": "Remove"
+    "Remove": "Remove",
+    "Price Units": "Price Units",
+    "Selling Details": "Selling History",
+    "Stock History": "Stock History",
+    "Import product": "Import product"
 }
