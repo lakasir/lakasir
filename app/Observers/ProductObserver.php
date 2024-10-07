@@ -36,7 +36,6 @@ class ProductObserver extends AbstractObserver implements DataAwareRule
 
     public function creating(Product $product): void
     {
-        dump($product->expired);
         if ($product->expired != null) {
             $this->data = [
                 'expired' => $product->expired,
