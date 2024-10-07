@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\Tenants\User;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\ServiceProvider;
@@ -16,7 +18,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->app->bind(Authenticatable::class, User::class);
     }
 
     /**

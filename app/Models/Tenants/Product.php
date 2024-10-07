@@ -23,7 +23,7 @@ class Product extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $guarded = ['id', 'hero_images_url'];
+    protected $guarded = ['id', 'hero_images_url', 'expired'];
 
     private int $expiredDay = 20;
 

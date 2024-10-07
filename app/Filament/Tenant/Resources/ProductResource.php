@@ -47,19 +47,23 @@ class ProductResource extends Resource
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('category.name')
+                    ->toggleable()
                     ->translateLabel()
                     ->searchable(),
                 TextColumn::make('name')
                     ->translateLabel()
                     ->searchable(),
                 TextColumn::make('sku')
+                    ->toggleable()
                     ->visible(Feature::active(ProductSku::class))
                     ->translateLabel(),
                 TextColumn::make('stock')
+                    ->toggleable()
                     ->translateLabel()
                     ->visible(Feature::active(ProductStock::class))
                     ->sortable(),
                 TextColumn::make('unit')
+                    ->toggleable()
                     ->translateLabel(),
                 TextColumn::make('initial_price')
                     ->visible(Feature::active(ProductInitialPrice::class))
@@ -79,6 +83,7 @@ class ProductResource extends Resource
                     ->visible(Feature::active(ProductType::class))
                     ->translateLabel(),
                 ToggleColumn::make('is_non_stock')
+                    ->toggleable()
                     ->visible(Feature::active(ProductStock::class))
                     ->translateLabel(),
             ])
@@ -106,6 +111,7 @@ class ProductResource extends Resource
                         ->url(fn (Product $record) => static::getUrl('print-label', ['record' => $record])),
                     Tables\Actions\DeleteAction::make(),
                     Tables\Actions\RestoreAction::make(),
+                    Tables\Actions\ForceDeleteAction::make(),
                 ])
                     ->icon('heroicon-m-ellipsis-vertical')
                     ->size(ActionSize::Small)
