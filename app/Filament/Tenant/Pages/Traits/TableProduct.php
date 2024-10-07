@@ -150,7 +150,7 @@ trait TableProduct
         }
 
         $this->addCart($product, [
-            'stock' => $stock,
+            'amount' => $stock,
         ]);
     }
 }

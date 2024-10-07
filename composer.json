@@ -12,7 +12,7 @@
         "filament/filament": "^3.1",
         "guzzlehttp/guzzle": "^7.2",
         "kreait/laravel-firebase": "^5.8",
-        "lakasir/lakasir-module": "^1.0",
+        "lakasir/has-crud-action": "dev-main",
         "laravel-notification-channels/fcm": "^4.3",
         "laravel/framework": "^11.9",
         "laravel/pennant": "^1.8",

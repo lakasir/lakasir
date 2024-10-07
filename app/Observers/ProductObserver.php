@@ -34,6 +34,16 @@ class ProductObserver extends AbstractObserver implements DataAwareRule
         return $prefix.'-'.Str::of($product->name)->substr(0, 3)->upper().'-'.Str::of($product->id)->padLeft(4, 0)->value();
     }
 
+    public function creating(Product $product): void
+    {
+        if ($product->expired != null) {
+            $this->data = [
+                'expired' => $product->expired,
+            ];
+            $product->expired = null;
+        }
+    }
+
     public function created(Product $product)
     {
         if (! Feature::active(ProductStock::class)) {

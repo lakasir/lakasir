@@ -342,5 +342,13 @@
     "Stocks is empty": "Stocks is empty",
     "This purchasing has been approved": "This purchasing has been approved",
     "This stock opname has been approved": "This stock opname has been approved",
-    "Purchasing Report": "Laporan Pemebelian"
+    "Purchasing Report": "Purchasing Report",
+    "Amount that sold or that filled in unit": "Amount that sold or that filled in unit",
+    "Changes": "Changes",
+    "Remove": "Remove",
+    "Price Units": "Price Units",
+    "Selling Details": "Selling History",
+    "Stock History": "Stock History",
+    "Import product": "Import product",
+    "Point the cursor to this input first then scan the barcode": "Point the cursor to this input first then scan the barcode"
 }

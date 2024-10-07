@@ -359,5 +359,13 @@
     "Fashion": "Baju dan pakaian",
     "Pharmacy": "Apotek",
     "Other": "Lainnya",
-    "Purchasing Report": "Laporan Pemebelian"
+    "Purchasing Report": "Laporan Pemebelian",
+    "Amount that sold or that filled in unit": "Jumlah yang terjual atau jumlah yang ada di dalam unit",
+    "Changes": "Ubah",
+    "Remove": "Hilangkan",
+    "Price Units": "Harga lainnya",
+    "Selling Details": "Riwayat Penjualan",
+    "Stock History": "Riawayat penambahan stok",
+    "Import product": "Impor produk",
+    "Point the cursor to this input first then scan the barcode": "Arahkan kursor ke input ini dan lalu scan barkodenya"
 }

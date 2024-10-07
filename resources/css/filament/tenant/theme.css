@@ -37,3 +37,7 @@
 .fi-sidebar-item-active .fi-sidebar-item-label {
   @apply text-white dark:text-white;
 }
+
+.fi-tabs {
+  @apply mx-0;
+}

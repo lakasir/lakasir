@@ -11,6 +11,10 @@ trait RefreshThePage
 
     public function getListeners()
     {
+        if (method_exists($this, 'calculateTotalPrice')) {
+            $this->calculateTotalPrice();
+        }
+
         return ['refreshExampleRelationManager' => '$refresh'];
     }
 }

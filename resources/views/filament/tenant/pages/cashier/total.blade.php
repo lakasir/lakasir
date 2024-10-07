@@ -5,7 +5,7 @@ use function Filament\Support\format_money;
 <div class="space-y-3">
   <div class="flex justify-between">
     <p>{{ __('Sub total') }}</p>
-    <p class="font-bold text-lakasir-primary">{{ format_money($sub_total, $currency) }}</p>
+    <p class="font-bold text-lakasir-primary">{{ price_format($sub_total) }}</p>
   </div>
   <div class="flex justify-between">
     <p>{{ __('Tax') }}</p>
@@ -13,12 +13,12 @@ use function Filament\Support\format_money;
   </div>
   <div class="flex justify-between">
     <p>{{ __('Discount price') }}</p>
-    <p class="font-bold text-lakasir-primary">({{ format_money($this->discount_price, $currency) }})</p>
+    <p class="font-bold text-lakasir-primary">({{ price_format($this->discount_price) }})</p>
   </div>
   <hr/>
   <div class="flex justify-between">
     <p class="font-bold">{{ __('Total') }}</p>
-    <p class="font-bold text-lakasir-primary" x-ref="total" data-value="{{ $total_price }}">{{ format_money($total_price, $currency) }}</p>
+    <p class="font-bold text-lakasir-primary" x-ref="total" data-value="{{ $total_price }}">{{ price_format($total_price) }}</p>
   </div>
   <div class="flex justify-between">
     <p class="font-bold">{{ __('Money changes') }}</p>

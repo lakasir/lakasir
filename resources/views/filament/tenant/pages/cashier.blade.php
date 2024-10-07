@@ -1,6 +1,6 @@
 @php
 use Filament\Facades\Filament;
-use App\Features\{PaymentShortcutButton, SellingTax};
+use App\Features\{PaymentShortcutButton, SellingTax, Discount};
 
 @endphp
 <div class="">
@@ -45,11 +45,8 @@ use App\Features\{PaymentShortcutButton, SellingTax};
         </div>
         <div class="overflow-y-scroll min-h-40 max-h-[35%] overflow-auto"
           @forelse($cartItems as $item)
-            <div class="flex justify-between mb-2 border rounded-lg bg-white dark:border-gray-900 dark:bg-gray-900 px-4 py-2" key="{{ rand() }}">
+            <div class="flex justify-between mb-2 border rounded-lg bg-white dark:border-gray-900 dark:bg-gray-900 px-4 py-2" id="{{ $item->id }}" key="{{ rand() }}">
               <div class="flex items-center space-x-3">
-                <img
-                class="object-cover h-16 w-20 rounded-lg"
-                src=" {{ $item->hero_image }}"/>
                 <div class="space-y-3">
                   <p class="font-semibold"> {{ $item->product->name }}</p>
                   <div class="flex space-x-3 h-8">
@@ -75,25 +72,28 @@ use App\Features\{PaymentShortcutButton, SellingTax};
                       >
                       <x-heroicon-o-trash class="!text-danger-900 h-4 w-4"/>
                     </button>
+                    <livewire:price-setting :cart-item="$item" key="{{ $item->id }}" />
                   </div>
                 </div>
               </div>
               <div class="items-center text-right space-y-2">
                 <p class="font-semibold text-lakasir-primary">{{ $item->price_format_money }}</p>
+                @feature(Discount::class)
                 <div class="flex justify-end">
-                <x-filament::input.wrapper class="w-1/2">
-                  <x-filament::input
-                    type="text"
-                    id="{{ $item->product->name }}-{{ $item->id }}"
-                    value="{{ $item->discount_price == 0  ? '' : $item->discount_price }}"
-                    wire:keyup.debounce.500ms="addDiscountPricePerItem({{  $item  }}, parseFloat($event.target.value.replace(/,/g, '')))"
-                    placeholder="{{ __('Discount') }}"
-                    class="text-right w-1/2"
-                    inputMode="numeric"
-                    x-mask:dynamic="$money($input)"
-                  />
-                </x-filament::input.wrapper>
+                  <x-filament::input.wrapper class="w-1/2">
+                    <x-filament::input
+                      type="text"
+                      id="{{ $item->product->name }}-{{ $item->id }}"
+                      value="{{ $item->discount_price == 0  ? '' : $item->discount_price }}"
+                      wire:keyup.debounce.500ms="addDiscountPricePerItem({{  $item  }}, parseFloat($event.target.value.replace(/,/g, '')))"
+                      placeholder="{{ __('Discount') }}"
+                      class="text-right w-1/2"
+                      inputMode="numeric"
+                      x-mask:dynamic="$money($input)"
+                      />
+                    </x-filament::input.wrapper>
                 </div>
+              @endfeature
                 @if($item->discount_price && $item->discount_price > 0)
                   <p class="font-semibold text-lakasir-primary">{{ $item->final_price_format }}</p>
                 @endif
@@ -123,6 +123,7 @@ use App\Features\{PaymentShortcutButton, SellingTax};
       </div>
     </div>
   </div>
+  {{-- modal --}}
   <x-filament::modal
     id="edit-detail"
     width="2xl"
@@ -148,8 +149,8 @@ use App\Features\{PaymentShortcutButton, SellingTax};
             <template x-for="paymentMethod in paymentMethods">
               <div
                 x-on:click="cartDetail['payment_method_id'] = paymentMethod.id; $wire.cartDetail['payment_method_id'] = paymentMethod.id;"
-                class="cursor-pointer hover:scale-105 border border-lakasir-primary rounded-md px-4 py-2 flex justify-center dark:text-white text-sm"
-                :class="cartDetail['payment_method_id']  == paymentMethod.id ? 'bg-lakasir-primary text-white' : 'dark:bg-gray-900 '"
+                class="cursor-pointer hover:scale-105 border-none rounded-md px-4 py-2 flex justify-center dark:text-white text-sm"
+                :class="cartDetail['payment_method_id']  == paymentMethod.id ? 'bg-lakasir-primary text-white' : 'dark:bg-gray-900 bg-gray-300 '"
                 x-text="paymentMethod.name.substring(0, 8)">
               </div>
             </template>
@@ -172,7 +173,7 @@ use App\Features\{PaymentShortcutButton, SellingTax};
           @error('payed_money') <span class="error text-danger-500">{{ $message }}</span> @enderror
           <input
             id="display"
-            class="w-full p-2 border border-gray-300 rounded-md text-lg text-right dark:bg-gray-900 dark:text-white h-20 text-black @error('payed_money') 'border-danger-500' @enderror"
+            class="w-full p-2 border border-gray-300 rounded-md text-lg text-right dark:bg-gray-900 bg-gray-300 dark:text-white h-20 text-black @error('payed_money') 'border-danger-500' @enderror"
             focus
             :disabled="isTouchScreen"
             x-mask:dynamic="$money($input)"
@@ -452,10 +453,8 @@ use App\Features\{PaymentShortcutButton, SellingTax};
         suggestions.push(suggestion);
       }
     }
-    console.log(suggestions);
 
     suggestions.sort((a, b) => a - b);
-    console.log(suggestions);
 
     return suggestions;
   }

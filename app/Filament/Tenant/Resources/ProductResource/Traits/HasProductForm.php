@@ -67,14 +67,7 @@ trait HasProductForm
     public function generateUnitFormComponent()
     {
         return TextInput::make('unit')
-            ->translateLabel()
-            ->datalist(
-                Product::all()
-                    ->pluck('unit')
-                    ->unique()
-                    ->toArray()
-            );
-
+            ->translateLabel();
     }
 
     public function generateSellingPriceFormComponent(): TextInput
@@ -117,7 +110,7 @@ trait HasProductForm
         return TextInput::make('sku')
             ->translateLabel()
             ->visible(Feature::active(ProductSku::class))
-            ->hint(__('Leave it blank to auto generate'));
+            ->helperText(__('Leave it blank to auto generate'));
     }
 
     public function generateStockFormComponent(): TextInput
@@ -155,6 +148,7 @@ trait HasProductForm
     public function generateBarcodeFormComponent(): TextInput
     {
         return TextInput::make('barcode')
+            ->helperText(__('Point the cursor to this input first then scan the barcode'))
             ->visible(Feature::active(ProductBarcode::class))
             ->translateLabel();
     }

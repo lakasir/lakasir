@@ -23,7 +23,7 @@ class Product extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $guarded = ['id', 'hero_images_url'];
+    protected $guarded = ['id', 'hero_images_url', 'expired'];
 
     private int $expiredDay = 20;
 
@@ -203,5 +203,10 @@ class Product extends Model
     public function scopeInActivate(Builder $builder): Builder
     {
         return $builder->where('show', false);
+    }
+
+    public function priceUnits(): HasMany
+    {
+        return $this->hasMany(PriceUnit::class);
     }
 }
