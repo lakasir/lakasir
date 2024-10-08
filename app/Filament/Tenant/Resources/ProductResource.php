@@ -27,6 +27,7 @@ use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Laravel\Pennant\Feature;
 
 class ProductResource extends Resource
@@ -35,7 +36,28 @@ class ProductResource extends Resource
 
     protected static ?string $model = Product::class;
 
+    protected static ?string $recordTitleAttribute = 'name';
+
     protected static ?string $navigationIcon = 'heroicon-o-archive-box';
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['name', 'sku', 'barcode'];
+    }
+
+    public static function getGlobalSearchResultDetails(Model $record): array
+    {
+        return [
+            __('Name') => $record->name,
+            __('Sku') => $record->sku,
+            __('Stock') => $record->stock,
+        ];
+    }
+
+    public static function getGlobalSearchResultUrl(Model $record): string
+    {
+        return ProductResource::getUrl('view', ['record' => $record]);
+    }
 
     public static function table(Table $table): Table
     {
@@ -54,8 +76,13 @@ class ProductResource extends Resource
                     ->translateLabel()
                     ->searchable(),
                 TextColumn::make('sku')
+                    ->searchable()
                     ->toggleable()
-                    ->visible(Feature::active(ProductSku::class))
+                    ->visible(Feature::active(ProductSku::class)),
+                TextColumn::make('barcode')
+                    ->hidden()
+                    ->searchable()
+                    ->toggleable()
                     ->translateLabel(),
                 TextColumn::make('stock')
                     ->toggleable()
