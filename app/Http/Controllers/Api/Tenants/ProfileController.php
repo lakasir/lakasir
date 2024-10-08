@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api\Tenants;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ProfileResource;
-use App\Models\Tenants\Setting;
 use App\Models\Tenants\UploadedFile;
 use Exception;
 use Illuminate\Http\Request;
@@ -27,7 +26,6 @@ class ProfileController extends Controller
             'email' => ['nullable', 'email', 'unique:users,email,'.auth()->id()],
             'phone' => ['nullable', 'string', 'digits_between:10,13'],
             'address' => ['nullable', 'string'],
-            'locale' => ['nullable', 'string', 'in:id,en'],
             'photo_url' => ['nullable', 'string', 'url', 'regex:/^(http)?s?:?(\/\/[^\']*\.(?:png|jpg|jpeg|gif|png|svg))$/'],
         ]);
 
@@ -54,7 +52,6 @@ class ProfileController extends Controller
                     'photo' => $url,
                 ]);
             }
-            Setting::set('locale', $request->locale ?? 'en');
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();

@@ -4,7 +4,10 @@ namespace App\Filament\Tenant\Pages;
 
 use App\Filament\Tenant\Resources\Traits\RefreshThePage;
 use App\Models\Tenants\About;
+use App\Models\Tenants\Profile;
 use App\Models\Tenants\Setting;
+use App\Models\Tenants\UploadedFile;
+use App\Models\Tenants\User;
 use App\Services\Tenants\AboutService;
 use App\Traits\HasTranslatableResource;
 use Filament\Actions\Contracts\HasActions;
@@ -20,6 +23,7 @@ use Filament\Notifications\Notification;
 use Filament\Pages\Concerns\InteractsWithFormActions;
 use Filament\Pages\Page;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 class GeneralSetting extends Page implements HasActions, HasForms
@@ -39,6 +43,8 @@ class GeneralSetting extends Page implements HasActions, HasForms
 
     public $setting = [];
 
+    public $profile = [];
+
     public function mount(): void
     {
         $about = About::first()?->toArray() ?? $this->about;
@@ -51,6 +57,20 @@ class GeneralSetting extends Page implements HasActions, HasForms
         }
 
         $this->about = $about;
+
+        /** @var User $user */
+        $user = auth()->user();
+        $profile = $user->profile;
+
+        $this->profile = [
+            'name' => $user->name,
+            'email' => $user->email,
+            'phone' => $profile->phone,
+            'address' => $profile->address,
+            'locale' => $profile->locale,
+            'timezone' => $profile->timezone,
+            'photo' => $profile->photo ? [$profile->photo] : null,
+        ];
     }
 
     public function form(Form $form): Form
@@ -86,6 +106,10 @@ class GeneralSetting extends Page implements HasActions, HasForms
                                     ->action('saveApp'),
                             ]),
                         ]),
+                    Tabs\Tab::make('Profile')
+                        ->statePath('profile')
+                        ->translateLabel()
+                        ->schema(Profile::form()),
                 ]),
         ]);
     }
@@ -122,6 +146,82 @@ class GeneralSetting extends Page implements HasActions, HasForms
             $this->about['photo'] = null;
         }
         $aboutService->createOrUpdate($this->about);
+
+        Notification::make()
+            ->title(__('Success'))
+            ->success()
+            ->send();
+
+        $this->mount();
+    }
+
+    public function saveProfile(): void
+    {
+        $this->validate([
+            'profile.email' => 'required|email',
+            'profile.timezone' => 'required',
+            'profile.locale' => 'required',
+            'profile.password' => 'nullable|confirmed',
+            // 'data.photo' => 'required',
+        ]);
+
+        /** @var User $user */
+        $user = auth()->user();
+        $profile = $user->profile;
+
+        if (feature('edit-profile')) {
+            if (isset($this->profile['photo']) && $this->profile['photo'] != null && array_values($this->profile['photo'])[0] instanceof TemporaryUploadedFile) {
+                /** @var TemporaryUploadedFile $image */
+                $image = array_values($this->profile['photo'])[0];
+                $image->storePubliclyAs('public', $image->getFilename());
+                $url = optional(Storage::disk('public'))->url($image->getFilename());
+                $this->profile['photo_url'] = $url;
+                $this->profile['photo'] = null;
+            }
+        }
+
+        if (isset($this->profile['password']) && $this->profile['password'] != '') {
+            $this->profile['password'] = bcrypt($this->profile['password']);
+        }
+
+        $user->update($this->profile);
+        $profile->update($this->profile);
+
+        if (feature('edit-profile')) {
+            $data = $this->profile;
+
+            if (isset($data['photo_url']) && $data['photo_url'] !== $profile->photo) {
+                /** @var \App\Models\Tenants\UploadedFile $tmpFile */
+                $tmpFile = UploadedFile::where('url', $data['photo_url'])->first();
+                $url = $data['photo_url'];
+                if ($tmpFile) {
+                    $url = $tmpFile->moveToPuplic('profile', $profile->photo ? Str::of($profile->photo)->after('profile/') : null);
+                }
+                $profile->update([
+                    'photo' => $url,
+                ]);
+            }
+
+            if (! isset($data['photo_url'])) {
+                /** @var \App\Models\Tenants\UploadedFile $tmpFile */
+                $tmpFile = UploadedFile::where('url', $profile->photo)->first();
+                if ($tmpFile) {
+                    $tmpFile->deleteFromPublic('');
+                } else {
+                    $path = parse_url($profile->photo, PHP_URL_PATH); // Get the path from the URL
+                    $path = str(ltrim($path, '/'))->remove('storage');
+                    $exists = optional(Storage::disk('public'))->has($path);
+                    if ($exists) {
+                        Storage::disk('public')->delete($path);
+                    }
+                }
+
+                $profile->update([
+                    'photo' => null,
+                ]);
+            }
+
+        }
 
         Notification::make()
             ->title(__('Success'))
