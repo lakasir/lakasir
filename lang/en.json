@@ -350,5 +350,7 @@
     "Selling Details": "Selling History",
     "Stock History": "Stock History",
     "Import product": "Import product",
-    "Point the cursor to this input first then scan the barcode": "Point the cursor to this input first then scan the barcode"
+    "Point the cursor to this input first then scan the barcode": "Point the cursor to this input first then scan the barcode",
+    "Profile": "Profile",
+    "Language": "Language"
 }

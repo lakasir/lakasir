@@ -14,7 +14,6 @@ use App\Features\User;
 use App\Features\Voucher;
 use App\Filament\Tenant\Pages\Cashier;
 use App\Filament\Tenant\Pages\CashierReport;
-use App\Filament\Tenant\Pages\EditProfile;
 use App\Filament\Tenant\Pages\GeneralSetting;
 use App\Filament\Tenant\Pages\Printer;
 use App\Filament\Tenant\Pages\ProductReport;
@@ -102,7 +101,6 @@ class TenantPanelProvider extends PanelProvider
             ->path('/member')
             ->login(TenantLogin::class)
             ->navigation(fn (NavigationBuilder $navigationBuilder) => $this->buildNavigation($navigationBuilder))
-            ->profile(EditProfile::class)
             ->discoverResources(in: app_path('Filament/Tenant/Resources'), for: 'App\\Filament\\Tenant\\Resources')
             ->discoverPages(in: app_path('Filament/Tenant/Pages'), for: 'App\\Filament\\Tenant\\Pages')
             ->discoverWidgets(in: app_path('Filament/Tenant/Widgets'), for: 'App\\Filament\\Tenant\\Widgets')
