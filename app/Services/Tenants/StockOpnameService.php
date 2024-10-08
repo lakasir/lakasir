@@ -81,5 +81,9 @@ class StockOpnameService
             }
         }
         $so->save();
+        Notification::make('success')
+            ->title(__('Status updated'))
+            ->success()
+            ->send();
     }
 }
