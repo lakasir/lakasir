@@ -1,5 +1,6 @@
 @php
 use function Filament\Support\format_money;
+use App\Features\{SellingTax, Discount};
 
 @endphp
 <div class="space-y-3">
@@ -7,14 +8,18 @@ use function Filament\Support\format_money;
     <p>{{ __('Sub total') }}</p>
     <p class="font-bold text-lakasir-primary">{{ price_format($sub_total) }}</p>
   </div>
-  <div class="flex justify-between">
-    <p>{{ __('Tax') }}</p>
-    <p class="font-bold text-lakasir-primary">{{ $tax }}%</p>
-  </div>
-  <div class="flex justify-between">
-    <p>{{ __('Discount price') }}</p>
-    <p class="font-bold text-lakasir-primary">({{ price_format($this->discount_price) }})</p>
-  </div>
+  @feature(SellingTax::class)
+    <div class="flex justify-between">
+      <p>{{ __('Tax') }}</p>
+      <p class="font-bold text-lakasir-primary">{{ $tax }}%</p>
+    </div>
+  @endfeature
+  @feature(Discount::class)
+    <div class="flex justify-between">
+      <p>{{ __('Discount price') }}</p>
+      <p class="font-bold text-lakasir-primary">({{ price_format($this->discount_price) }})</p>
+    </div>
+  @endfeature
   <hr/>
   <div class="flex justify-between">
     <p class="font-bold">{{ __('Total') }}</p>

@@ -1,5 +1,5 @@
 @php
-  use App\Features\{Member, Voucher};
+  use App\Features\{Member, Voucher, Discount};
 @endphp
 
 <div class="space-y-3">
@@ -59,6 +59,7 @@
     </div>
   </div>
   @endfeature
+  @feature(Discount::class)
   <div class="flex justify-between hover:underline cursor-pointer"
       x-on:mousedown="$dispatch('open-modal', {
         id: 'edit-detail',
@@ -69,5 +70,6 @@
     <p>{{ __('Discount') }}</p>
     <div>{{ $cartDetail['discount_price'] ?? '-' }}</div>
   </div>
+  @endfeature
 </div>
 
