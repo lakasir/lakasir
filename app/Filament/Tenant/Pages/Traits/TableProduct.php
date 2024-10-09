@@ -2,12 +2,10 @@
 
 namespace App\Filament\Tenant\Pages\Traits;
 
-use App\Models\Tenants\CartItem;
 use App\Models\Tenants\Product;
 use App\Models\Tenants\Setting;
 use Closure;
 use Filament\Forms\Components\TextInput;
-use Filament\Notifications\Notification;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Actions\HeaderActionsPosition;
 use Filament\Tables\Columns\ImageColumn;
@@ -124,33 +122,5 @@ trait TableProduct
                     ->icon('heroicon-o-shopping-bag')
                     ->hidden(fn (Product $product) => ! $product->CartItems()->exists()),
             ]);
-    }
-
-    public function addCartUsingScanner(string $value)
-    {
-        $product = Product::whereBarcode($value)
-            ->orWhere('sku', $value)
-            ->first();
-        if (! $product) {
-            Notification::make()
-                ->title(__('Product not found'))
-                ->warning()
-                ->send();
-
-            return;
-        }
-
-        $stock = 1;
-
-        $cartItem = CartItem::whereProductId($product->getKey())
-            ->cashier()
-            ->first();
-        if ($cartItem) {
-            $stock = $cartItem->qty + 1;
-        }
-
-        $this->addCart($product, [
-            'amount' => $stock,
-        ]);
     }
 }

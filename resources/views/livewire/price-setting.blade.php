@@ -6,7 +6,7 @@
       x-on:mousedown="$dispatch('open-modal', {id: 'price-setting', data: { id: {{ $cartItem->id }} } })"
     >
       <div class="flex items-center gap-x-1">
-        <x-heroicon-o-wrench-screwdriver class="dark:text-white text-black h-4 w-4"/> @lang('Price')
+        <x-heroicon-o-wrench-screwdriver class="dark:text-white text-black h-6 w-4"/> <p class="hidden lg:block">@lang('Price')</p>
       </div>
     </button>
     <x-filament::modal id="price-setting">

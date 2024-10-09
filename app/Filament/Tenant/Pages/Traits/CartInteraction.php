@@ -134,4 +134,32 @@ trait CartInteraction
             ->send();
         $this->mount();
     }
+
+    public function addCartUsingScanner(string $value)
+    {
+        $product = Product::whereBarcode($value)
+            ->orWhere('sku', $value)
+            ->first();
+        if (! $product) {
+            Notification::make()
+                ->title(__('Product not found'))
+                ->warning()
+                ->send();
+
+            return;
+        }
+
+        $stock = 1;
+
+        $cartItem = CartItem::whereProductId($product->getKey())
+            ->cashier()
+            ->first();
+        if ($cartItem) {
+            $stock = $cartItem->qty + 1;
+        }
+
+        $this->addCart($product, [
+            'amount' => $stock,
+        ]);
+    }
 }

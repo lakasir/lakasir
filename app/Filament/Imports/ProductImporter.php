@@ -65,6 +65,10 @@ class ProductImporter extends Importer
                 ->label(__('Type'))
                 ->example('product/services')
                 ->rules(['string']),
+            ImportColumn::make('other_price')
+                ->label(__('Other price'))
+                ->example('1200,grosir,1')
+                ->rules(['numeric']),
         ];
     }
 
