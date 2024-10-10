@@ -48,7 +48,6 @@ trait HasProductForm
             ->translateLabel()
             ->options(Category::pluck('name', 'id'))
             ->native(false)
-            ->searchable()
             ->required()
             ->createOptionForm([
                 TextInput::make('name')

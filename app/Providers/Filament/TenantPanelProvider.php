@@ -14,7 +14,6 @@ use App\Features\User;
 use App\Features\Voucher;
 use App\Filament\Tenant\Pages\Cashier;
 use App\Filament\Tenant\Pages\CashierReport;
-use App\Filament\Tenant\Pages\EditProfile;
 use App\Filament\Tenant\Pages\GeneralSetting;
 use App\Filament\Tenant\Pages\Printer;
 use App\Filament\Tenant\Pages\ProductReport;
@@ -51,15 +50,12 @@ use Filament\PanelProvider;
 use Filament\Resources\Resource;
 use Filament\Support\Assets\Js;
 use Filament\Support\Colors\Color;
-use Filament\Support\Facades\FilamentView;
-use Filament\View\PanelsRenderHook;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
-use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
@@ -83,6 +79,7 @@ class TenantPanelProvider extends PanelProvider
     private function configurePanel(Panel $panel): Panel
     {
         $panel
+            ->globalSearchKeyBindings(['command+k', 'ctrl+k'])
             ->sidebarFullyCollapsibleOnDesktop()
             ->darkMode(config('app.dark_mode', true))
             ->databaseNotifications()
@@ -99,22 +96,11 @@ class TenantPanelProvider extends PanelProvider
             ->path('/member')
             ->login(TenantLogin::class)
             ->navigation(fn (NavigationBuilder $navigationBuilder) => $this->buildNavigation($navigationBuilder))
-            ->profile(EditProfile::class)
             ->discoverResources(in: app_path('Filament/Tenant/Resources'), for: 'App\\Filament\\Tenant\\Resources')
             ->discoverPages(in: app_path('Filament/Tenant/Pages'), for: 'App\\Filament\\Tenant\\Pages')
             ->discoverWidgets(in: app_path('Filament/Tenant/Widgets'), for: 'App\\Filament\\Tenant\\Widgets')
             ->middleware($this->getMiddleware())
             ->authMiddleware([Authenticate::class]);
-
-        FilamentView::registerRenderHook(
-            PanelsRenderHook::GLOBAL_SEARCH_AFTER,
-            fn (): string => Blade::render('@livewire(\'forms.global.localization-selector\')')
-        );
-
-        FilamentView::registerRenderHook(
-            PanelsRenderHook::GLOBAL_SEARCH_AFTER,
-            fn (): string => Blade::render('@livewire(\'forms.global.timezone-select\')')
-        );
 
         return $panel;
     }
