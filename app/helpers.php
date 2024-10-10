@@ -30,17 +30,10 @@ if (! function_exists('can')) {
     }
 }
 
-if (! function_exists('isMultiTenant')) {
-    function isMultiTenant(): bool
+if (! function_exists('module_plugin_exist')) {
+    function module_plugin_exist(): bool
     {
-        $central_domains = config('tenancy.central_domains');
-        $admin_domains = config('tenancy.admin_domains');
-
-        if (count($central_domains) > 0 && $central_domains[0] == request()->getHost()) {
-            return in_array(request()->getHost(), $admin_domains);
-        }
-
-        return false;
+        return class_exists(\Lakasir\LakasirModule\Events\TransactionSucceed::class);
     }
 }
 
