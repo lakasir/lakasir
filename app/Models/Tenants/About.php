@@ -49,12 +49,7 @@ class About extends Model
             Textarea::make('shop_location')
                 ->required()
                 ->translateLabel(),
-            Select::make('currency')
-                ->required()
-                ->options([
-                    'IDR' => 'IDR',
-                ])
-                ->translateLabel(),
+
             FileUpload::make('photo')
                 ->imageResizeMode('cover')
                 ->imageCropAspectRatio('1:1')

@@ -3,6 +3,7 @@
 namespace App\Services\Tenants;
 
 use App\Models\Tenants\About;
+use App\Models\Tenants\Setting;
 use App\Models\Tenants\UploadedFile;
 use App\Models\Tenants\User;
 use Illuminate\Support\Arr;
@@ -13,9 +14,11 @@ class AboutService
 {
     public function createOrUpdate(array $data): void
     {
+        $idAbout = About::latest()->first()!== null?About::latest()->first()->getKey():1;
+
         $about = About::query()
             ->updateOrCreate([
-                'id' => About::first()->getKey(),
+                'id' => $idAbout,
             ], Arr::only($data, [
                 'shop_name',
                 'shop_location',

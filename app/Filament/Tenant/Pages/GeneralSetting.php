@@ -39,7 +39,7 @@ class GeneralSetting extends Page implements HasActions, HasForms
 
     protected static string $view = 'filament.tenant.pages.general-setting';
 
-    public $about = [];
+    public $about = ['photo' => ''];
 
     public $setting = [];
 
@@ -86,6 +86,12 @@ class GeneralSetting extends Page implements HasActions, HasForms
                         ->statePath('setting')
                         ->translateLabel()
                         ->schema([
+                            Select::make('currency')
+                                ->required()
+                                ->options([
+                                    'IDR' => 'IDR',
+                                ])
+                                ->translateLabel(),
                             Select::make('minimum_stock_nofication')
                                 ->options([
                                     0 => 0,
@@ -220,7 +226,6 @@ class GeneralSetting extends Page implements HasActions, HasForms
                     'photo' => null,
                 ]);
             }
-
         }
 
         Notification::make()

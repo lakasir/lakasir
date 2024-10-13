@@ -83,6 +83,7 @@ class TenantPanelProvider extends PanelProvider
     {
         $panel
             ->globalSearchKeyBindings(['command+k', 'ctrl+k'])
+            ->globalSearch(false)
             ->sidebarFullyCollapsibleOnDesktop()
             ->darkMode(config('app.dark_mode', true))
             ->databaseNotifications()
