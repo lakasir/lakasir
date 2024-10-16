@@ -2,8 +2,9 @@
 
 namespace Tests;
 
+use App\Models\Tenants\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Artisan;
 
 trait RefreshDatabaseWithTenant
 {
@@ -17,17 +18,22 @@ trait RefreshDatabaseWithTenant
      */
     public function beginDatabaseTransaction()
     {
-        $this->initializeTenant();
+        $this->initializeApp();
 
         $this->parentBeginDatabaseTransaction();
     }
 
-    public function initializeTenant()
+    public function initializeApp()
     {
-        $tenant = mockTenant();
-
-        tenancy()->initialize($tenant);
-
-        URL::forceRootUrl("http://{$tenant->domains[0]->domain}");
+        User::factory()->createQuietly();
+        Artisan::call('db:seed', [
+            '--class' => 'PermissionSeeder',
+        ]);
+        Artisan::call('db:seed', [
+            '--class' => 'PaymentMethodSeeder',
+        ]);
+        Artisan::call('db:seed', [
+            '--class' => 'CategorySeeder',
+        ]);
     }
 }
