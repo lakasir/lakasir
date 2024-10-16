@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Auth;
 
 use App\Enums\ShopType;
+use App\Rules\Domain;
 use App\Services\RegisterTenant;
 use App\Tenant;
 use Illuminate\Foundation\Http\FormRequest;
@@ -37,7 +38,7 @@ class RegisterRequest extends FormRequest
         }
 
         return [
-            'domain' => ['required', 'string', 'max:255', 'unique:domains', 'regex:/^[a-z0-9]+(?:-[a-z0-9]+)*\.'.config('tenancy.central_domains')[0].'$/'],
+            'domain' => ['required', 'string', 'max:255', 'unique:domains', new Domain],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:tenant_users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'business_type' => ['required', Rule::in(ShopType::cases())],
