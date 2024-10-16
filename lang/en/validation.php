@@ -248,4 +248,5 @@ return [
         'value' => 'value',
         'year' => 'year',
     ],
+    'not_contain_space' => 'The :attribute cannot contain spaces.',
 ];

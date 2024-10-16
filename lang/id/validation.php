@@ -192,4 +192,5 @@ return [
         'value' => 'nilai',
         'year' => 'tahun',
     ],
+    'not_contain_space' => 'Isian :attribute tidak boleh ada spasinya.',
 ];
