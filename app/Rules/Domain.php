@@ -21,9 +21,13 @@ class Domain implements ValidationRule
         $domainPattern = '/^[a-z](?:[a-z0-9]+(?:-[a-z0-9]+)*)?\.'.config('tenancy.central_domains')[0].'$/u';
 
         if (preg_match('/\s/', $value)) {
-            $fail("The $attribute cannot contain spaces.");
+            $fail(__('validation.not_contain_space', [
+                'attribute' => $attribute,
+            ]));
         } elseif (! preg_match($domainPattern, $value)) {
-            $fail("The $attribute is not a valid domain.");
+            $fail(__('validation.regex', [
+                'attribute' => $attribute,
+            ]));
         }
     }
 }
