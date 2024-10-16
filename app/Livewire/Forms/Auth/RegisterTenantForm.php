@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Forms\Auth;
 
+use App\Rules\Domain;
 use App\Services\RegisterTenant;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -40,7 +41,6 @@ class RegisterTenantForm extends Component implements HasForms
                                 ->rules('unique:tenant_users,email')
                                 ->required(),
                             TextInput::make('password')
-                                ->label(__('Password'))
                                 ->password()
                                 ->required()
                                 ->rules(['confirmed', Password::defaults()]),
@@ -82,7 +82,7 @@ class RegisterTenantForm extends Component implements HasForms
                         ->schema([
                             TextInput::make('domain')
                                 ->label('Domain')
-                                ->rules(['unique:tenants,id'])
+                                ->rules(['unique:tenants,id', new Domain])
                                 ->suffix('.'.config('tenancy.central_domains')[0]),
                         ])
                         ->icon('heroicon-o-globe-alt'),

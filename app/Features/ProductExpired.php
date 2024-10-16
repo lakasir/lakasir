@@ -8,6 +8,6 @@ class ProductExpired
 
     public function resolve(mixed $scope): mixed
     {
-        return true;
+        return false;
     }
 }
