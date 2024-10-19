@@ -32,6 +32,8 @@ use Livewire\Volt\Volt;
 
 // Volt::route('/', 'pages/welcome');
 
+Route::redirect('/', '/member');
+
 Route::middleware([
     'web',
 ])

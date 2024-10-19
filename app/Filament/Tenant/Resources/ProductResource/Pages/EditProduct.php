@@ -13,6 +13,8 @@ use Filament\Resources\Pages\EditRecord;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;
+use Lakasir\LakasirModule\Enums\Form;
+use Lakasir\LakasirModule\Forms\ExtendModuleForm;
 
 class EditProduct extends EditRecord
 {
@@ -53,6 +55,8 @@ class EditProduct extends EditRecord
             $data['original_name'][$data['hero_images'][$key]] = $file->original_name;
         });
 
+        $data = ExtendModuleForm::fill($data, Form::PRODUCT, $this->record);
+
         return $data;
     }
 
@@ -86,5 +90,9 @@ class EditProduct extends EditRecord
             );
 
         $product->save();
+
+        if (module_plugin_exist()) {
+            \Lakasir\LakasirModule\Events\ProductUpdated::dispatch($product, $this->data);
+        }
     }
 }

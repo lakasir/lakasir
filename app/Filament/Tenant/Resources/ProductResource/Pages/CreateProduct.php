@@ -34,5 +34,9 @@ class CreateProduct extends CreateRecord
         $stock = $product->stocks->first();
         $stock->expired = $this->data['expired'] ?? null;
         $stock->save();
+
+        if (module_plugin_exist()) {
+            \Lakasir\LakasirModule\Events\ProductCreated::dispatch($product, $this->data);
+        }
     }
 }

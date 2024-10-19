@@ -28,6 +28,8 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Lakasir\LakasirModule\Enums\Form as EnumsForm;
+use Lakasir\LakasirModule\Forms\ExtendModuleForm;
 use Laravel\Pennant\Feature;
 
 class ProductResource extends Resource
@@ -154,7 +156,7 @@ class ProductResource extends Resource
 
     private function generateForm(): array
     {
-        return [
+        return array_merge([
             Grid::make()
                 ->columns(3)
                 ->schema([
@@ -180,12 +182,13 @@ class ProductResource extends Resource
             $this->generateTypeFormComponent()
                 ->columnSpan(1),
             $this->generateNonStockFormComponent(),
-        ];
+        ], $this->loadModuleForm());
     }
 
     public static function form(Form $form): Form
     {
-        return $form->schema((new self)->generateForm());
+        return $form
+            ->schema((new self)->generateForm());
     }
 
     public static function infolist(Infolist $infolist): Infolist
@@ -240,5 +243,14 @@ class ProductResource extends Resource
             'edit' => Pages\EditProduct::route('/{record}/edit'),
             'print-label' => Pages\PrintLabel::route('/{record}/print-label'),
         ];
+    }
+
+    private function loadModuleForm(): array
+    {
+        if (! module_plugin_exist()) {
+            return [];
+        }
+
+        return ExtendModuleForm::make(EnumsForm::PRODUCT);
     }
 }

@@ -4,6 +4,7 @@ use App\Models\Tenants\Profile;
 use App\Models\Tenants\Setting;
 use App\Models\Tenants\User;
 use Filament\Facades\Filament;
+use Filament\Notifications\Notification;
 use Illuminate\Support\Number;
 
 if (! function_exists('hasFeatureAndPermission')) {
@@ -45,5 +46,12 @@ if (! function_exists('price_format')) {
             in: Setting::get('currency', 'IDR'),
             locale: Profile::get()->locale ?? 'en'
         );
+    }
+}
+
+if (! function_exists('notification')) {
+    function notification(?string $id = null): Notification
+    {
+        return Notification::make($id);
     }
 }
