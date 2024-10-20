@@ -6,6 +6,7 @@ use App\Features\ProductInitialPrice;
 use App\Features\ProductSku;
 use App\Features\ProductStock;
 use App\Features\ProductType;
+use App\Filament\Tenant\Components\PriceTextColumn;
 use App\Filament\Tenant\Resources\ProductResource\Pages;
 use App\Filament\Tenant\Resources\ProductResource\Traits\HasProductForm;
 use App\Filament\Tenant\Resources\Traits\HasUploadFileField;
@@ -94,20 +95,14 @@ class ProductResource extends Resource
                 TextColumn::make('unit')
                     ->toggleable()
                     ->translateLabel(),
-                TextColumn::make('initial_price')
+                PriceTextColumn::make('initial_price')
                     ->visible(Feature::active(ProductInitialPrice::class))
-                    ->translateLabel()
-                    ->sortable()
-                    ->money(Setting::get('currency', 'IDR')),
-                TextColumn::make('selling_price')
-                    ->translateLabel()
-                    ->sortable()
-                    ->money(Setting::get('currency', 'IDR')),
-                TextColumn::make('net_profit')
+                    ->sortable(),
+                PriceTextColumn::make('selling_price')
+                    ->sortable(),
+                PriceTextColumn::make('net_profit')
                     ->visible(Feature::active(ProductInitialPrice::class))
-                    ->translateLabel()
-                    ->sortable()
-                    ->money(Setting::get('currency', 'IDR')),
+                    ->sortable(),
                 TextColumn::make('type')
                     ->visible(Feature::active(ProductType::class))
                     ->translateLabel(),
