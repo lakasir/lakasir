@@ -55,3 +55,10 @@ if (! function_exists('notification')) {
         return Notification::make($id);
     }
 }
+
+if (! function_exists('price_string_to_float')) {
+    function price_string_to_float(string $priceString): float
+    {
+        return (float) str($priceString)->replace(',', '')->value();
+    }
+}
