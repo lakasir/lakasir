@@ -12,10 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('receivables', function (Blueprint $table) {
-            $table->dropForeign('debts_member_id_foreign');
+            if (config('database.default') != 'sqlite') {
+                $table->dropForeign('debts_member_id_foreign');
+            }
             $table->foreign(['member_id'])->references('id')->on('members')->onDelete('cascade');
 
-            $table->dropForeign('debts_selling_id_foreign');
+            if (config('database.default') != 'sqlite') {
+                $table->dropForeign('debts_selling_id_foreign');
+            }
             $table->foreign(['selling_id'])->references('id')->on('sellings')->onDelete('cascade');
         });
     }
@@ -26,10 +30,14 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('receivables', function (Blueprint $table) {
-            $table->dropForeign(['member_id']);
+            if (config('database.default') != 'sqlite') {
+                $table->dropForeign(['member_id']);
+            }
             $table->foreign('member_id', 'debts_member_id_foreign')->references('id')->on('members')->onDelete('cascade');
 
-            $table->dropForeign(['selling_id']);
+            if (config('database.default') != 'sqlite') {
+                $table->dropForeign(['selling_id']);
+            }
             $table->foreign('selling_id', 'debts_selling_id_foreign')->references('id')->on('sellings')->onDelete('cascade');
         });
     }
