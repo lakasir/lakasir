@@ -24,6 +24,7 @@ use Filament\Pages\Concerns\InteractsWithFormActions;
 use Filament\Pages\Page;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Lakasir\LakasirModule\Facades\LakasirModule;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 class GeneralSetting extends Page implements HasActions, HasForms
@@ -75,42 +76,53 @@ class GeneralSetting extends Page implements HasActions, HasForms
 
     public function form(Form $form): Form
     {
+        $tabs = [
+            Tabs\Tab::make('About')
+                ->statePath('about')
+                ->translateLabel()
+                ->schema(About::form()),
+            Tabs\Tab::make('App')
+                ->statePath('setting')
+                ->translateLabel()
+                ->schema([
+                    Select::make('minimum_stock_nofication')
+                        ->options([
+                            0 => 0,
+                            5 => 5,
+                            10 => 10,
+                            20 => 20,
+                            50 => 50,
+                        ])
+                        ->translateLabel(),
+                    TextInput::make('default_tax')
+                        ->numeric()
+                        ->suffix('%')
+                        ->translateLabel(),
+                    Actions::make([
+                        Action::make('Save')
+                            ->translateLabel()
+                            ->requiresConfirmation()
+                            ->action('saveApp'),
+                    ]),
+                ]),
+            Tabs\Tab::make('Profile')
+                ->statePath('profile')
+                ->translateLabel()
+                ->schema(Profile::form()),
+        ];
+
+        if (module_plugin_exist()) {
+            array_push($tabs,
+                Tabs\Tab::make('Module')
+                    ->statePath('module')
+                    ->translateLabel()
+                    ->schema(LakasirModule::moduleForm()),
+            );
+        }
+
         return $form->schema([
             Tabs::make('Tabs')
-                ->tabs([
-                    Tabs\Tab::make('About')
-                        ->statePath('about')
-                        ->translateLabel()
-                        ->schema(About::form()),
-                    Tabs\Tab::make('App')
-                        ->statePath('setting')
-                        ->translateLabel()
-                        ->schema([
-                            Select::make('minimum_stock_nofication')
-                                ->options([
-                                    0 => 0,
-                                    5 => 5,
-                                    10 => 10,
-                                    20 => 20,
-                                    50 => 50,
-                                ])
-                                ->translateLabel(),
-                            TextInput::make('default_tax')
-                                ->numeric()
-                                ->suffix('%')
-                                ->translateLabel(),
-                            Actions::make([
-                                Action::make('Save')
-                                    ->translateLabel()
-                                    ->requiresConfirmation()
-                                    ->action('saveApp'),
-                            ]),
-                        ]),
-                    Tabs\Tab::make('Profile')
-                        ->statePath('profile')
-                        ->translateLabel()
-                        ->schema(Profile::form()),
-                ]),
+                ->tabs($tabs),
         ]);
     }
 

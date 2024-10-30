@@ -110,7 +110,7 @@ class TenantPanelProvider extends PanelProvider
         $navigationBuilder->groups($this->getNavigationGroups());
         if (module_plugin_exist()) {
             $navigationBuilder
-                ->groups(\Lakasir\LakasirModule\LakasirModulePlugin::make()->navigationGroups());
+                ->groups(\Lakasir\LakasirModule\Facades\LakasirModule::navigationGroups());
         }
 
         return $navigationBuilder
@@ -160,7 +160,7 @@ class TenantPanelProvider extends PanelProvider
             NavigationGroup::make(__('General'))->label('')->collapsible(false)->items([
                 $this->generateNavigationItem(VoucherResource::class, Voucher::class),
             ]),
-            NavigationGroup::make(__('Setting'))->collapsible(false)->items([
+            NavigationGroup::make(__('Setting'))->items([
                 $this->generateNavigationItem(GeneralSetting::class),
                 $this->generateNavigationItem(Printer::class),
             ]),
