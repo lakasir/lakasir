@@ -13,6 +13,7 @@ use App\Traits\HasTranslatableResource;
 use Filament\Actions\Contracts\HasActions;
 use Filament\Forms\Components\Actions;
 use Filament\Forms\Components\Actions\Action;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\TextInput;
@@ -40,11 +41,7 @@ class GeneralSetting extends Page implements HasActions, HasForms
 
     protected static string $view = 'filament.tenant.pages.general-setting';
 
-    public $about = [];
-
-    public $setting = [];
-
-    public $profile = [];
+    public $formData = [];
 
     public function mount(): void
     {
@@ -54,16 +51,16 @@ class GeneralSetting extends Page implements HasActions, HasForms
             $about['photo'] = [$about['photo']];
         }
         foreach (config('setting.key') as $key) {
-            $this->setting[$key] = Setting::get($key);
+            $this->formData['setting'][$key] = Setting::get($key);
         }
 
-        $this->about = $about;
+        $this->formData['about'] = $about;
 
         /** @var User $user */
         $user = auth()->user();
         $profile = $user->profile;
 
-        $this->profile = [
+        $this->formData['profile'] = [
             'name' => $user->name,
             'email' => $user->email,
             'phone' => $profile->phone,
@@ -72,17 +69,19 @@ class GeneralSetting extends Page implements HasActions, HasForms
             'timezone' => $profile->timezone,
             'photo' => $profile->photo ? [$profile->photo] : null,
         ];
+
+        $this->formData['module'] = [];
     }
 
     public function form(Form $form): Form
     {
         $tabs = [
             Tabs\Tab::make('About')
-                ->statePath('about')
+                ->statePath('formData.about')
                 ->translateLabel()
                 ->schema(About::form()),
             Tabs\Tab::make('App')
-                ->statePath('setting')
+                ->statePath('formData.setting')
                 ->translateLabel()
                 ->schema([
                     Select::make('minimum_stock_nofication')
@@ -106,7 +105,7 @@ class GeneralSetting extends Page implements HasActions, HasForms
                     ]),
                 ]),
             Tabs\Tab::make('Profile')
-                ->statePath('profile')
+                ->statePath('formData.profile')
                 ->translateLabel()
                 ->schema(Profile::form()),
         ];
@@ -114,9 +113,9 @@ class GeneralSetting extends Page implements HasActions, HasForms
         if (module_plugin_exist()) {
             array_push($tabs,
                 Tabs\Tab::make('Module')
-                    ->statePath('module')
+                    ->statePath('formData.module')
                     ->translateLabel()
-                    ->schema(LakasirModule::moduleForm()),
+                    ->schema($this->moduleForm()),
             );
         }
 
@@ -128,7 +127,7 @@ class GeneralSetting extends Page implements HasActions, HasForms
 
     public function saveApp(): void
     {
-        foreach ($this->setting as $key => $value) {
+        foreach ($this->formData['setting'] as $key => $value) {
             Setting::set($key, $value);
         }
 
@@ -143,21 +142,21 @@ class GeneralSetting extends Page implements HasActions, HasForms
     public function saveAbout(AboutService $aboutService): void
     {
         $this->validate([
-            'about.shop_name' => 'required',
-            'about.shop_location' => 'required',
-            'about.currency' => 'required',
+            'formData.about.shop_name' => 'required',
+            'formData.about.shop_location' => 'required',
+            'formData.about.currency' => 'required',
             // 'data.photo' => 'required',
         ]);
 
-        if (isset($this->about['photo']) && $this->about['photo'] != null && array_values($this->about['photo'])[0] instanceof TemporaryUploadedFile) {
+        if (isset($this->formData['about']['photo']) && $this->formData['about']['photo'] != null && array_values($this->formData['about']['photo'])[0] instanceof TemporaryUploadedFile) {
             /** @var TemporaryUploadedFile $image */
-            $image = array_values($this->about['photo'])[0];
+            $image = array_values($this->formData['about']['photo'])[0];
             $image->storePubliclyAs('public', $image->getFilename());
             $url = optional(Storage::disk('public'))->url($image->getFilename());
-            $this->about['photo_url'] = $url;
-            $this->about['photo'] = null;
+            $this->formData['about']['photo_url'] = $url;
+            $this->formData['about']['photo'] = null;
         }
-        $aboutService->createOrUpdate($this->about);
+        $aboutService->createOrUpdate($this->formData['about']);
 
         Notification::make()
             ->title(__('Success'))
@@ -170,10 +169,10 @@ class GeneralSetting extends Page implements HasActions, HasForms
     public function saveProfile(): void
     {
         $this->validate([
-            'profile.email' => 'required|email',
-            'profile.timezone' => 'required',
-            'profile.locale' => 'required',
-            'profile.password' => 'nullable|confirmed',
+            'formData.profile.email' => 'required|email',
+            'formData.profile.timezone' => 'required',
+            'formData.profile.locale' => 'required',
+            'formData.profile.password' => 'nullable|confirmed',
             // 'data.photo' => 'required',
         ]);
 
@@ -182,25 +181,25 @@ class GeneralSetting extends Page implements HasActions, HasForms
         $profile = $user->profile;
 
         if (feature('edit-profile')) {
-            if (isset($this->profile['photo']) && $this->profile['photo'] != null && array_values($this->profile['photo'])[0] instanceof TemporaryUploadedFile) {
+            if (isset($this->formData['profile']['photo']) && $this->formData['profile']['photo'] != null && array_values($this->formData['profile']['photo'])[0] instanceof TemporaryUploadedFile) {
                 /** @var TemporaryUploadedFile $image */
-                $image = array_values($this->profile['photo'])[0];
+                $image = array_values($this->formData['profile']['photo'])[0];
                 $image->storePubliclyAs('public', $image->getFilename());
                 $url = optional(Storage::disk('public'))->url($image->getFilename());
-                $this->profile['photo_url'] = $url;
-                $this->profile['photo'] = null;
+                $this->formData['profile']['photo_url'] = $url;
+                $this->formData['profile']['photo'] = null;
             }
         }
 
-        if (isset($this->profile['password']) && $this->profile['password'] != '') {
-            $this->profile['password'] = bcrypt($this->profile['password']);
+        if (isset($this->formData['profile']['password']) && $this->formData['profile']['password'] != '') {
+            $this->formData['profile']['password'] = bcrypt($this->formData['profile']['password']);
         }
 
-        $user->update($this->profile);
-        $profile->update($this->profile);
+        $user->update($this->formData['profile']);
+        $profile->update($this->formData['profile']);
 
         if (feature('edit-profile')) {
-            $data = $this->profile;
+            $data = $this->formData['profile'];
 
             if (isset($data['photo_url']) && $data['photo_url'] !== $profile->photo) {
                 /** @var \App\Models\Tenants\UploadedFile $tmpFile */
@@ -241,5 +240,27 @@ class GeneralSetting extends Page implements HasActions, HasForms
             ->send();
 
         $this->mount();
+    }
+
+    public function moduleForm(): array
+    {
+        return [
+            FileUpload::make('plugin')
+                ->rules(['mimes:zip'])
+                ->required(),
+            Actions::make([
+                Action::make('Install module')
+                    ->translateLabel()
+                    ->action(function () {
+                        $this->validate([
+                            'formData.module.plugin' => 'required',
+                        ]);
+
+                        foreach ($this->formData['module']['plugin'] as $plugin) {
+                            LakasirModule::unzipThePlugin($plugin);
+                        }
+                    }),
+            ]),
+        ];
     }
 }
