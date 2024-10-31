@@ -52,7 +52,7 @@ class ProductResource extends Resource
                     ->searchable(),
                 TextColumn::make('name')
                     ->translateLabel()
-                    ->searchable(),
+                    ->searchable(['sku', 'name', 'barcode']),
                 TextColumn::make('sku')
                     ->toggleable()
                     ->visible(Feature::active(ProductSku::class))
@@ -87,6 +87,7 @@ class ProductResource extends Resource
                     ->visible(Feature::active(ProductStock::class))
                     ->translateLabel(),
             ])
+            ->searchPlaceholder(__('Search (SKU, name, barcode)'))
             ->filters([
                 Filter::make('expired')
                     ->toggle()
