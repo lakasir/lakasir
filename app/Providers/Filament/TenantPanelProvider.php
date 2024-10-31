@@ -37,7 +37,6 @@ use App\Filament\Tenant\Resources\UserResource;
 use App\Filament\Tenant\Resources\VoucherResource;
 use App\Http\Middleware\LocalizationMiddleware;
 use App\Models\Tenants\About;
-use App\Tenant;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -61,7 +60,6 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
-use Stancl\Tenancy\Bootstrappers\DatabaseTenancyBootstrapper;
 
 class TenantPanelProvider extends PanelProvider
 {
@@ -69,11 +67,10 @@ class TenantPanelProvider extends PanelProvider
     {
         $panel = $this->configurePanel($panel);
 
-        $url = request()->getHost();
-        if ($this->isCentralDomainConfigured()) {
-            $this->initializeTenantPanel($panel, $url);
-        } else {
-            $this->initializeDefaultPanel($panel);
+        $this->initializeConfigDefault($panel);
+
+        if (module_plugin_exist()) {
+            $panel->plugin(\Lakasir\LakasirModule\LakasirModulePlugin::make());
         }
 
         return $panel;
@@ -83,7 +80,7 @@ class TenantPanelProvider extends PanelProvider
     {
         $panel
             ->globalSearchKeyBindings(['command+k', 'ctrl+k'])
-            ->sidebarFullyCollapsibleOnDesktop()
+            ->sidebarCollapsibleOnDesktop()
             ->darkMode(config('app.dark_mode', true))
             ->databaseNotifications()
             ->id('tenant')
@@ -110,9 +107,15 @@ class TenantPanelProvider extends PanelProvider
 
     private function buildNavigation(NavigationBuilder $navigationBuilder): NavigationBuilder
     {
+        $navigationBuilder->groups($this->getNavigationGroups());
+        if (module_plugin_exist()) {
+            $navigationBuilder
+                ->groups(\Lakasir\LakasirModule\Facades\LakasirModule::navigationGroups());
+        }
+
         return $navigationBuilder
-            ->items(array_filter($this->getNavigationItems(), fn ($item) => $item != null))
-            ->groups($this->getNavigationGroups());
+            ->items(array_filter($this->getNavigationItems(), fn ($item) => $item != null));
+
     }
 
     private function getNavigationItems(): array
@@ -157,7 +160,7 @@ class TenantPanelProvider extends PanelProvider
             NavigationGroup::make(__('General'))->label('')->collapsible(false)->items([
                 $this->generateNavigationItem(VoucherResource::class, Voucher::class),
             ]),
-            NavigationGroup::make(__('Setting'))->collapsible(false)->items([
+            NavigationGroup::make(__('Setting'))->items([
                 $this->generateNavigationItem(GeneralSetting::class),
                 $this->generateNavigationItem(Printer::class),
             ]),
@@ -180,47 +183,12 @@ class TenantPanelProvider extends PanelProvider
         ];
     }
 
-    private function isCentralDomainConfigured(): bool
-    {
-        return config('tenancy.central_domains')[0] !== null;
-    }
-
-    private function initializeTenantPanel(Panel $panel, string $url): void
-    {
-        $tenant = Tenant::whereHas('domains', fn ($query) => $query->where('domain', $url))->first();
-
-        if ($tenant) {
-            tenancy()->initialize($tenant->id);
-            $subdomain = $tenant->domains()->where('domain', $url)->first()?->domain;
-
-            $panel->domain($subdomain);
-            config(['cache.prefix' => $subdomain.'_']);
-
-            app(DatabaseTenancyBootstrapper::class)->bootstrap($tenant);
-
-            tenant()->run(fn () => $this->configureTenantBrand($panel));
-        } else {
-            if (in_array($url, config('tenancy.central_domains'))) {
-                return;
-            }
-            abort(404);
-        }
-    }
-
-    private function initializeDefaultPanel(Panel $panel): void
+    private function initializeConfigDefault(Panel $panel): void
     {
         if (Schema::hasTable('abouts') && $about = About::first()) {
             $panel->brandName($about->shop_name ?? 'Your Brand')
                 ->brandLogo($about->photo ?? null);
         }
-    }
-
-    private function configureTenantBrand(Panel $panel): void
-    {
-        $about = About::first();
-
-        $panel->brandName($about->shop_name ?? 'Your Brand')
-            ->brandLogo($about->photo ?? null);
     }
 
     private function generateNavigationItem(string $resource, ?string $feature = null, ?array $activeWhen = []): NavigationItem

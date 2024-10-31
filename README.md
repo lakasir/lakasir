@@ -48,18 +48,27 @@
 1. Clone the repository: git clone https://github.com/lakasir/lakasir.git
 2. Navigate to the project directory: cd lakasir
 3. Install dependencies:
-4. Laravel:
+4. Nodejs:
+   * npm install
+   * npm run dev (development)
+   * npm run build (production)
+5. Laravel:
    * `composer install`
    * `cp .env.example .env`
    * edit the env based on your local configuration
    * `php artisan key:generate`
-   * `php artisan migrate --path=database/migrations/tenant --seed`
+   * `php artisan migrate --seed`
    * `php artisan filament:assets`
-5. Create the user using `php artisan app:create-user`
+6. Create the user using `php artisan app:create-user`
 
 ## Usage
 * api: localdomain.test/api/test
 * webapp: localdomain.test/member/login
+
+
+## Extend the features
+Lakasir support modularity and extendability, you can easily add new features to the application without changing the core application code.
+you can simply look at the [module-plugin](https://github.com/lakasir/lakasir-module)
 
 ## Contributing
 
