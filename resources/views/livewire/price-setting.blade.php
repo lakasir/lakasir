@@ -16,7 +16,7 @@
       @foreach ($cartItem->product->priceUnits as $priceUnit)
         <div class="flex items-center gap-x-4">
           <input type="radio" id="unit-{{ $priceUnit->id }}" wire:model="unit" value="{{ $priceUnit->id }}">
-          <label for="unit-{{ $priceUnit->id }}">{{ $priceUnit->unit }}</label>
+          <label for="unit-{{ $priceUnit->id }}">{{ $priceUnit->unit }} - {{ price_format($priceUnit->selling_price) }}</label>
         </div>
       @endforeach
       <div class="grid grid-cols-2 gap-x-2 mt-5 w-full">
