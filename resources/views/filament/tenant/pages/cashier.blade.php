@@ -575,5 +575,3 @@ use App\Features\{PaymentShortcutButton, SellingTax, Discount};
   });
 </script>
 @endscript
-
-
