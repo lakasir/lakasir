@@ -15,7 +15,7 @@ class AboutService
     {
         $about = About::query()
             ->updateOrCreate([
-                'id' => About::first()->getKey(),
+                'id' => About::first()?->getKey() ?? null,
             ], Arr::only($data, [
                 'shop_name',
                 'shop_location',
