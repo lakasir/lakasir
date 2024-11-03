@@ -12,9 +12,11 @@ use App\Features\StockOpname;
 use App\Features\Supplier;
 use App\Features\User;
 use App\Features\Voucher;
+use App\Filament\Tenant\Pages\CartItem;
 use App\Filament\Tenant\Pages\Cashier;
 use App\Filament\Tenant\Pages\CashierReport;
 use App\Filament\Tenant\Pages\GeneralSetting;
+use App\Filament\Tenant\Pages\POS;
 use App\Filament\Tenant\Pages\Printer;
 use App\Filament\Tenant\Pages\ProductReport;
 use App\Filament\Tenant\Pages\PurchasingReport;
@@ -111,7 +113,10 @@ class TenantPanelProvider extends PanelProvider
             ->discoverPages(in: app_path('Filament/Tenant/Pages'), for: 'App\\Filament\\Tenant\\Pages')
             ->discoverWidgets(in: app_path('Filament/Tenant/Widgets'), for: 'App\\Filament\\Tenant\\Widgets')
             ->middleware($this->getMiddleware())
-            ->authMiddleware([Authenticate::class]);
+            ->authMiddleware([Authenticate::class])
+            ->pages([
+                CartItem::class,
+            ]);
 
         return $panel;
     }
@@ -128,6 +133,7 @@ class TenantPanelProvider extends PanelProvider
         return [
             ...Pages\Dashboard::getNavigationItems(),
             $this->generateNavigationItem(Cashier::class),
+            $this->generateNavigationItem(POS::class),
             $this->generateNavigationItem(SellingResource::class),
             $this->generateNavigationItem(SupplierResource::class, Supplier::class),
             $this->generateNavigationItem(MemberResource::class, Member::class),
