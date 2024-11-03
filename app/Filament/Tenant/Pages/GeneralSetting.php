@@ -39,7 +39,10 @@ class GeneralSetting extends Page implements HasActions, HasForms
 
     protected static string $view = 'filament.tenant.pages.general-setting';
 
-    public $about = [];
+    public $about = [
+        'shop_location' => '',
+        'photo' => '',
+    ];
 
     public $setting = [];
 
@@ -48,15 +51,16 @@ class GeneralSetting extends Page implements HasActions, HasForms
     public function mount(): void
     {
         $about = About::first()?->toArray() ?? $this->about;
-        $about['preview_image'] = $about['photo'];
-        if ($about['photo']) {
-            $about['photo'] = [$about['photo']];
+        if ($about) {
+            $about['preview_image'] = $about['photo'];
+            if ($about['photo']) {
+                $about['photo'] = [$about['photo']];
+            }
+            foreach (config('setting.key') as $key) {
+                $this->setting[$key] = Setting::get($key);
+            }
+            $this->about = $about;
         }
-        foreach (config('setting.key') as $key) {
-            $this->setting[$key] = Setting::get($key);
-        }
-
-        $this->about = $about;
 
         /** @var User $user */
         $user = auth()->user();
