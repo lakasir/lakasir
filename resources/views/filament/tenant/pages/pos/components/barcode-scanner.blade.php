@@ -1,4 +1,4 @@
-<div x-data="barcode()" class="h-full">
+<div x-data="barcode()" class="flex">
   <button
     @click="openBarcodeScanner"
     class="px-3 py-2 bg-orange-500 text-white rounded-lg flex items-center justify-center hover:bg-orange-600 transition-colors"
