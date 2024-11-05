@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <title>Offline - {{ config('app.name') }}</title>
-    <link href="{{ asset('css/app/custom-stylesheet.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/app/custom-stylesheet.css') }}" rel="stylesheet" data-navigate-track>
   </head>
   <body>
     <h1>You are currently not connected to any networks</h1>

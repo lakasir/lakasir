@@ -25,6 +25,8 @@ class Product extends Model
 
     protected $guarded = ['id', 'hero_images_url', 'expired'];
 
+    protected $appends = ['hero_image'];
+
     private int $expiredDay = 20;
 
     public function category(): BelongsTo
