@@ -22,7 +22,7 @@ class PriceSetting extends Component
 
         $this->refreshPage();
 
-        $this->dispatch('close-modal', id : 'price-setting');
+        $this->dispatch('close-modal', id : "price-setting-{$this->cartItem->id}");
     }
 
     public function removeThePrice(): void
@@ -33,7 +33,7 @@ class PriceSetting extends Component
 
         $this->refreshPage();
 
-        $this->dispatch('close-modal', id : 'price-setting');
+        $this->dispatch('close-modal', id : "price-setting-{$this->cartItem->id}");
     }
 
     public function render()
