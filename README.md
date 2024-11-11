@@ -55,7 +55,10 @@
    * `php artisan key:generate`
    * `php artisan migrate --path=database/migrations/tenant --seed`
    * `php artisan filament:assets`
-5. Create the user using `php artisan app:create-user`
+5. Javascript:
+  * `npm install`
+  * `npm run build or npm run dev`
+6. Create the user using `php artisan app:create-user`
 
 ## Usage
 * api: localdomain.test/api/test
