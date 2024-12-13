@@ -3,11 +3,13 @@
 namespace App\Filament\Tenant\Resources\ProductResource\Pages;
 
 use App\Features\ProductImport;
-use App\Filament\Imports\ProductImporter;
 use App\Filament\Tenant\Resources\ProductResource;
+use App\Imports\ProductImport as ImportsProductImport;
 use Filament\Actions;
-use Filament\Actions\ImportAction;
+use Filament\Actions\Action;
+use Filament\Forms\Components\FileUpload;
 use Filament\Resources\Pages\ListRecords;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ListProducts extends ListRecords
 {
@@ -17,11 +19,18 @@ class ListProducts extends ListRecords
     {
         return [
             Actions\CreateAction::make(),
-            ImportAction::make()
+            Action::make('import-product')
                 ->label(__('Import product'))
-                ->translateLabel()
+                ->color('gray')
                 ->visible(feature(ProductImport::class))
-                ->importer(ProductImporter::class),
+                ->form([
+                    FileUpload::make('attachment')
+                        ->acceptedFileTypes(['application/vnd.ms-excel', 'text/csv']),
+                ])->action(function (array $data) {
+                    $file = public_path('storage/'.$data['attachment']);
+
+                    Excel::import(new ImportsProductImport, $file);
+                }),
         ];
     }
 

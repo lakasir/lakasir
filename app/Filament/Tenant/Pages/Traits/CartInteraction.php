@@ -140,6 +140,7 @@ trait CartInteraction
         $product = Product::whereBarcode($value)
             ->orWhere('sku', $value)
             ->first();
+
         if (! $product) {
             Notification::make()
                 ->title(__('Product not found'))

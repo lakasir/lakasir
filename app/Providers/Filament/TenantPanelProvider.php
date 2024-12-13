@@ -5,6 +5,7 @@ namespace App\Providers\Filament;
 use App\Features\Member;
 use App\Features\PaymentMethod;
 use App\Features\Permission;
+use App\Features\PosV2;
 use App\Features\Purchasing;
 use App\Features\Receivable;
 use App\Features\Role;
@@ -12,9 +13,11 @@ use App\Features\StockOpname;
 use App\Features\Supplier;
 use App\Features\User;
 use App\Features\Voucher;
+use App\Filament\Tenant\Pages\CartItem;
 use App\Filament\Tenant\Pages\Cashier;
 use App\Filament\Tenant\Pages\CashierReport;
 use App\Filament\Tenant\Pages\GeneralSetting;
+use App\Filament\Tenant\Pages\POS;
 use App\Filament\Tenant\Pages\Printer;
 use App\Filament\Tenant\Pages\ProductReport;
 use App\Filament\Tenant\Pages\PurchasingReport;
@@ -50,6 +53,8 @@ use Filament\PanelProvider;
 use Filament\Resources\Resource;
 use Filament\Support\Assets\Js;
 use Filament\Support\Colors\Color;
+use Filament\Support\Facades\FilamentView;
+use Filament\View\PanelsRenderHook;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -73,6 +78,11 @@ class TenantPanelProvider extends PanelProvider
             $panel->plugin(\Lakasir\LakasirModule\LakasirModulePlugin::make());
         }
 
+        FilamentView::registerRenderHook(
+            PanelsRenderHook::HEAD_END,
+            fn () => view('meta')
+        );
+
         return $panel;
     }
 
@@ -89,6 +99,7 @@ class TenantPanelProvider extends PanelProvider
             ->assets([
                 Js::make('custom-javascript', resource_path('js/app.js')),
                 Js::make('printer', resource_path('js/printer.js')),
+                Js::make('indexeddb', resource_path('js/indexeddb.js')),
             ])
             ->favicon(url('favicon.ico'))
             ->spa(config('app.spa_mode'))
@@ -100,7 +111,10 @@ class TenantPanelProvider extends PanelProvider
             ->discoverPages(in: app_path('Filament/Tenant/Pages'), for: 'App\\Filament\\Tenant\\Pages')
             ->discoverWidgets(in: app_path('Filament/Tenant/Widgets'), for: 'App\\Filament\\Tenant\\Widgets')
             ->middleware($this->getMiddleware())
-            ->authMiddleware([Authenticate::class]);
+            ->authMiddleware([Authenticate::class])
+            ->pages([
+                CartItem::class,
+            ]);
 
         return $panel;
     }
@@ -123,6 +137,7 @@ class TenantPanelProvider extends PanelProvider
         return [
             ...Pages\Dashboard::getNavigationItems(),
             $this->generateNavigationItem(Cashier::class),
+            $this->generateNavigationItem(POS::class, PosV2::class),
             $this->generateNavigationItem(SellingResource::class),
             $this->generateNavigationItem(SupplierResource::class, Supplier::class),
             $this->generateNavigationItem(MemberResource::class, Member::class),
