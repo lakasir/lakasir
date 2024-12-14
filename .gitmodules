@@ -1,3 +1,6 @@
 [submodule "modules/Warehouse"]
 	path = modules/Warehouse
 	url = git@github.com:lakasir/warehouse-module.git
+[submodule "modules/DebtsAndReceivables"]
+	path = modules/DebtsAndReceivables
+	url = git@github.com:lakasir/debts-and-receivables.git

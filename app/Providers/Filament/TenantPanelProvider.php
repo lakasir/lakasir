@@ -7,7 +7,6 @@ use App\Features\PaymentMethod;
 use App\Features\Permission;
 use App\Features\PosV2;
 use App\Features\Purchasing;
-use App\Features\Receivable;
 use App\Features\Role;
 use App\Features\StockOpname;
 use App\Features\Supplier;
@@ -30,7 +29,6 @@ use App\Filament\Tenant\Resources\PaymentMethodResource;
 use App\Filament\Tenant\Resources\PermissionResource;
 use App\Filament\Tenant\Resources\ProductResource;
 use App\Filament\Tenant\Resources\PurchasingResource;
-use App\Filament\Tenant\Resources\ReceivableResource;
 use App\Filament\Tenant\Resources\RoleResource;
 use App\Filament\Tenant\Resources\SellingResource;
 use App\Filament\Tenant\Resources\StockOpnameResource;
@@ -142,7 +140,6 @@ class TenantPanelProvider extends PanelProvider
             $this->generateNavigationItem(SupplierResource::class, Supplier::class),
             $this->generateNavigationItem(MemberResource::class, Member::class),
             $this->generateNavigationItem(PaymentMethodResource::class, PaymentMethod::class),
-            $this->generateNavigationItem(ReceivableResource::class, Receivable::class),
         ];
     }
 
