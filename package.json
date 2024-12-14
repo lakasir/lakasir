@@ -5,7 +5,8 @@
         "build": "vite build"
     },
     "dependencies": {
-        "cookie": "^0.7.0"
+        "cookie": "^0.7.0",
+        "idb": "^8.0.0"
     },
     "devDependencies": {
         "@tailwindcss/forms": "^0.5.7",

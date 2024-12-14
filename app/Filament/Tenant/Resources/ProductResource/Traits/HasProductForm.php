@@ -4,20 +4,17 @@ namespace App\Filament\Tenant\Resources\ProductResource\Traits;
 
 use App\Features\ProductBarcode;
 use App\Features\ProductExpired;
-use App\Features\ProductInitialPrice;
 use App\Features\ProductSku;
 use App\Features\ProductStock;
 use App\Features\ProductType;
+use App\Filament\Tenant\Components\PriceInput;
 use App\Models\Tenants\Category;
-use App\Models\Tenants\Product;
-use App\Models\Tenants\Setting;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Set;
-use Filament\Support\RawJs;
 use Laravel\Pennant\Feature;
 
 trait HasProductForm
@@ -71,29 +68,14 @@ trait HasProductForm
 
     public function generateSellingPriceFormComponent(): TextInput
     {
-        return TextInput::make('selling_price')
-            ->translateLabel()
-            ->mask(RawJs::make('$money($input)'))
-            ->gte('initial_price')
-            ->stripCharacters(',')
-            ->numeric()
-            ->prefix(Setting::get('currency', 'IDR'))
-            ->required();
+        return PriceInput::make('selling_price')
+            ->gte('initial_price');
     }
 
     public function generateInitialPriceFormComponent(): TextInput
     {
-        return TextInput::make('initial_price')
-            ->visible(Feature::active(ProductInitialPrice::class))
-            ->translateLabel()
-            ->mask(RawJs::make('$money($input)'))
-            ->lte('selling_price')
-            ->default(0)
-            // ->visible(Feature::active(Product))
-            ->stripCharacters(',')
-            ->numeric()
-            ->prefix(Setting::get('currency', 'IDR'))
-            ->required();
+        return PriceInput::make('initial_price')
+            ->lte('selling_price');
     }
 
     public function generateNameFormComponent(): TextInput
@@ -172,7 +154,6 @@ trait HasProductForm
                 return Feature::active(ProductExpired::class) && $operation == 'create';
             })
             ->rule('after:now')
-            ->required()
             ->native(false);
     }
 }
