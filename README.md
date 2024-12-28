@@ -50,7 +50,7 @@
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/jahrulnr/lakasir.git
+git clone https://github.com/lakasir/lakasir.git
 cd lakasir
 ```
 
