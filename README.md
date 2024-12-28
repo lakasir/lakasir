@@ -12,7 +12,7 @@
 - **Docker Compose** (v2.0 or later) - [Install Compose](https://docs.docker.com/compose/install/)
 - **Make** (v4.3 or later) - Available in most UNIX-based systems or install via [GNU Make](https://www.gnu.org/software/make/)
 
-> **Note**: PHP 8.2 and Node.js 20+ are optional and only required if developers want to make changes to the application.
+> **Note**: PHP 8.2 and Node.js 20+ are optional and only required if you want to make changes to the application.
 
 
 ## Features
