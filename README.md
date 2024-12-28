@@ -83,6 +83,10 @@ make run-db
 make install
 ```
 
+5. **Create Admin User**:
+```bash
+docker exec -it lakasir php artisan app:create-user
+```
 ---
 
 ## Usage
