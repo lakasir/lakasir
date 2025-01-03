@@ -11,10 +11,6 @@
 |
 */
 
-use App\Services\RegisterTenant;
-use App\Tenant;
-use Illuminate\Support\Facades\DB;
-
 uses(
     Tests\TestCase::class,
     // Illuminate\Foundation\Testing\RefreshDatabase::class,
@@ -34,33 +30,3 @@ uses(
 expect()->extend('toBeOne', function () {
     return $this->toBe(1);
 });
-
-/*
-|--------------------------------------------------------------------------
-| Functions
-|--------------------------------------------------------------------------
-|
-| While Pest is very powerful out-of-the-box, you may have some testing code specific to your
-| project that you don't want to repeat in every file. Here you can also expose helpers as
-| global functions to help you to reduce the number of lines of code in your test files.
-|
-*/
-
-function mockTenant(): Tenant
-{
-    DB::statement('DROP DATABASE IF EXISTS lakasir_toko_testing');
-    Tenant::where('id', 'toko_testing')->delete();
-    $data = [
-        'name' => 'toko_testing',
-        'domain' => 'toko_testing.'.config('tenancy.central_domains')[0],
-        'email' => 'toko_testing@mail.com',
-        'password' => 'password',
-        'full_name' => 'Toko Testing',
-        'shop_name' => 'Toko Testing',
-        'business_type' => 'Retail',
-    ];
-    $sRegisterTenant = new RegisterTenant();
-    $tenant = $sRegisterTenant->create($data);
-
-    return $tenant;
-}

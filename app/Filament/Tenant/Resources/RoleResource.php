@@ -3,6 +3,7 @@
 namespace App\Filament\Tenant\Resources;
 
 use App\Filament\Tenant\Resources\RoleResource\Pages;
+use App\Models\Tenants\Role;
 use App\Traits\HasTranslatableResource;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\TextInput;
@@ -11,7 +12,6 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Spatie\Permission\Models\Role;
 
 class RoleResource extends Resource
 {
@@ -28,23 +28,21 @@ class RoleResource extends Resource
                 TextInput::make('name')
                     ->translateLabel()
                     ->required(),
-                CheckboxList::make('permissions')
+                CheckboxList::make('webPermissions')
                     ->label('Web app permissions')
                     ->bulkToggleable()
                     ->columns(4)
                     ->relationship(
                         titleAttribute: 'name',
-                        modifyQueryUsing: fn ($query) => $query->where('guard_name', 'web')
                     )
                     ->noSearchResultsMessage('No permissions found.')
                     ->searchable(),
-                CheckboxList::make('permissions')
+                CheckboxList::make('mobilePermissions')
                     ->label('Mobile app permissions')
                     ->bulkToggleable()
                     ->columns(4)
                     ->relationship(
                         titleAttribute: 'name',
-                        modifyQueryUsing: fn ($query) => $query->where('guard_name', 'sanctum')
                     )
                     ->noSearchResultsMessage('No permissions found.')
                     ->searchable(),

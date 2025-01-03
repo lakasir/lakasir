@@ -8,8 +8,6 @@ use App\Models\Tenants\Member;
 use App\Models\Tenants\PaymentMethod;
 use App\Models\Tenants\Product;
 use App\Models\Tenants\Purchasing;
-use App\Models\Tenants\Receivable;
-use App\Models\Tenants\ReceivablePayment;
 use App\Models\Tenants\StockOpname;
 use App\Models\Tenants\Table;
 use App\Models\Tenants\User;
@@ -20,15 +18,11 @@ use App\Policies\Tenants\PaymentMethodPolicy;
 use App\Policies\Tenants\PermissionPolicy;
 use App\Policies\Tenants\ProductPolicy;
 use App\Policies\Tenants\PurchasingPolicy;
-use App\Policies\Tenants\ReceivablePaymentPolicy;
-use App\Policies\Tenants\ReceivablePolicy;
 use App\Policies\Tenants\RolePolicy;
 use App\Policies\Tenants\StockOpnamePolicy;
 use App\Policies\Tenants\TablePolicy;
 use App\Policies\Tenants\UserPolicy;
 use App\Policies\Tenants\VoucherPolicy;
-use App\Tenant;
-use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
@@ -57,8 +51,6 @@ class AuthServiceProvider extends ServiceProvider
         Permission::class => PermissionPolicy::class,
         Purchasing::class => PurchasingPolicy::class,
         StockOpname::class => StockOpnamePolicy::class,
-        Receivable::class => ReceivablePolicy::class,
-        ReceivablePayment::class => ReceivablePaymentPolicy::class,
         Voucher::class => VoucherPolicy::class,
         Table::class => TablePolicy::class,
     ];
@@ -92,14 +84,6 @@ class AuthServiceProvider extends ServiceProvider
             }
 
             return true;
-        });
-
-        ResetPassword::createUrlUsing(function ($notifiable, $token) {
-            /** @var Tenant $tenant */
-            $tenant = Tenant::whereHas('user', fn ($q) => $q->where('email', $notifiable->getEmailForPasswordReset()))->first();
-            $domaaain = $tenant->domains()->first()->domain;
-
-            return "https://$domaaain/reset-password/$token?email=".urlencode($notifiable->getEmailForPasswordReset());
         });
     }
 }
