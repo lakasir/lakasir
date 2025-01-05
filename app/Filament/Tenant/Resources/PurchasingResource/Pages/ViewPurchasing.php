@@ -38,7 +38,7 @@ class ViewPurchasing extends ViewRecord
                         Select::make('status')
                             ->required()
                             ->default($this->record->status)
-                            ->options(Arr::where(PurchasingStatus::all(), function ($key) {
+                            ->options(Arr::where(PurchasingStatus::all()->toArray(), function ($key) {
                                 if ($key == PurchasingStatus::approved) {
                                     return can('approve purchasing');
                                 }
