@@ -224,9 +224,13 @@ class TenantPanelProvider extends PanelProvider
 
     private function initializeDefaultPanel(Panel $panel): void
     {
-        if (Schema::hasTable('abouts') && $about = About::first()) {
-            $panel->brandName($about->shop_name ?? 'Your Brand')
-                ->brandLogo($about->photo ?? null);
+        try {
+            if (Schema::hasTable('abouts') && $about = About::first()) {
+                $panel->brandName($about->shop_name ?? 'Your Brand')
+                    ->brandLogo($about->photo ?? null);
+            }
+        } catch(\Exception $e) {
+            
         }
     }
 

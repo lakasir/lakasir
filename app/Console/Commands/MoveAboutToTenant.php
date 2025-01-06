@@ -16,8 +16,12 @@ class MoveAboutToTenant extends Command
      */
     public function handle()
     {
-        if (! Schema::hasTable('tenant_users') && ! Schema::hasTable('abouts')) {
-            return;
+        try {
+            if (! Schema::hasTable('tenant_users') && ! Schema::hasTable('abouts')) {
+                return;
+            }
+        } catch(\Exception $e) {
+            
         }
         // $tenantUser = DB::connection('mysql')
         //     ->table('tenant_users')
