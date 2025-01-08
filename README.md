@@ -55,6 +55,7 @@
    * `php artisan key:generate`
    * `php artisan migrate --path=database/migrations/tenant --seed`
    * `php artisan filament:assets`
+   * `php artisan livewire:publish --assets`
 5. Javascript:
   * `npm install`
   * `npm run build or npm run dev`
