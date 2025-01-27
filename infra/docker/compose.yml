@@ -9,23 +9,23 @@ services:
       - 127.0.0.1:8000:80
     volumes:
       # laravel & frontend
-      - ../../app:/apps/app
-      - ../../config:/apps/config
-      - ../../database:/apps/database
-      - ../../lang:/apps/lang
-      - ../../resource:/apps/resource
-      - ../../routes:/apps/routes
-      - ../../public:/apps/public
-      - ../../storage/app:/apps/storage/app
-      - ../../storage/logs:/apps/storage/logs
-      - ../../composer.json:/apps/composer.json
-      - ../../composer.lock:/apps/composer.lock
-      - ../../package.json:/apps/package.json
-      - ../../package-lock.json:/apps/package-lock.json
-      - ../../vite.config.js:/apps/vite.config.js
-      - ../../tailwind.config.js:/apps/tailwind.config.js
-      - ../../postcss.config.js:/apps/postcss.config.js
-      - ../../yarn.lock:/apps/yarn.lock
+      # - ../../app:/apps/app
+      # - ../../config:/apps/config
+      # - ../../database:/apps/database
+      # - ../../lang:/apps/lang
+      # - ../../resources:/apps/resources
+      # - ../../routes:/apps/routes
+      # - ../../public:/apps/public
+      # - ../../storage/app:/apps/storage/app
+      # - ../../storage/logs:/apps/storage/logs
+      # - ../../composer.json:/apps/composer.json
+      # - ../../composer.lock:/apps/composer.lock
+      # - ../../package.json:/apps/package.json
+      # - ../../package-lock.json:/apps/package-lock.json
+      # - ../../vite.config.js:/apps/vite.config.js
+      # - ../../tailwind.config.js:/apps/tailwind.config.js
+      # - ../../postcss.config.js:/apps/postcss.config.js
+      # - ../../yarn.lock:/apps/yarn.lock
 
       # infrastructure
       - ../nginx/nginx.conf:/etc/nginx/nginx.conf

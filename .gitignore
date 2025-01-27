@@ -5,13 +5,8 @@
 /storage/*.key
 /storage/debugbar
 /vendor
-/public/js/
-/public/css/
-/public/app/
 /nginx/*.log
 /packages
-/public/build/manifest.json
-public/build
 tags
 .env
 .env.backup

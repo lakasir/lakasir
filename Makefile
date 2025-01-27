@@ -1,7 +1,7 @@
 app=lakasir
 database=database
 
-build:
+build: fe-build
 	docker build . --progress plain -t ${app}:dev -f infra/docker/Dockerfile
 
 run: build network
@@ -15,11 +15,12 @@ network:
 		docker network create services; \
 	fi
 
-install:
-	# makesure you have node v20
+fe-build:
+	# makesure you have node v20++
 	npm install
 	npm run build
 
+install: fe-build
 	# setup app
 	docker exec -it ${app} php artisan key:generate
 	docker exec -it ${app} php artisan migrate --path=database/migrations/tenant --seed

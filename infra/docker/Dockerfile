@@ -61,23 +61,29 @@ RUN apt-get update \
     && rm -rf /tmp/composer-setup.php
 
 WORKDIR /apps
-COPY . /apps
-RUN --mount=type=cache,target=/root/.composer/ composer install --${COMPOSER_MODE} \
-    && chown -R apps:apps /apps/storage /apps/public
+COPY --chown=apps:apps . /apps
+RUN --mount=type=cache,target=/root/.composer/ composer install --${COMPOSER_MODE}
 
 WORKDIR /apps
 
+# -----------------------------------------------------
+# I have some issue when build vite using docker
+# the result seem like build not correctly and give style issue
+# build outside from container is working well without any problem
+
 # build frontend
-FROM node:20.18.1 AS frontend
-COPY --from=base /apps /build
-WORKDIR /build
-RUN npm install; \
-    npm run build
+# FROM node:22.12.0 AS frontend
+# COPY --from=base /apps /apps
+# WORKDIR /apps
+# RUN npm install; \
+#     npm run build
 
-# setup apps
-FROM base
+# # setup apps
+# FROM base
 
-COPY --chown=apps:apps --from=frontend /build/public /apps/
+# COPY --chown=apps:apps --from=frontend /apps /apps
+# -----------------------------------------------------
+
 RUN rm -r infra
 
 # setup nginx
@@ -96,7 +102,8 @@ COPY ./infra/supervisord.conf /etc/supervisord.conf
 
 # setup storage
 USER apps
-RUN if [ ! -f /apps/public/storage ] && [ ! -d /apps/public/storage ]; then artisan storage:link; fi
+RUN if [ ! -f /apps/public/storage ] && [ ! -d /apps/public/storage ]; then artisan storage:link; fi; \
+    artisan filament:assets
 USER root
 
 CMD [ "supervisord", "-n", "-c", "/etc/supervisord.conf" ]

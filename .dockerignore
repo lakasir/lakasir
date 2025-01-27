@@ -3,9 +3,6 @@
 /vendor
 /readme
 /Makefile
-/public/build
-/public/css
-/public/js
 /test
 /bootstrap/cache/*
 /storage/debugbar
