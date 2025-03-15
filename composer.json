@@ -9,7 +9,7 @@
         "aymanalhattami/filament-date-scopes-filter": "^1.0",
         "aymanalhattami/filament-page-with-sidebar": "^2.5",
         "barryvdh/laravel-dompdf": "^2.0",
-        "filament/filament": "^3.1",
+        "filament/filament": "^3.2",
         "guzzlehttp/guzzle": "^7.2",
         "kreait/laravel-firebase": "^5.8",
         "lakasir/has-crud-action": "dev-main",
