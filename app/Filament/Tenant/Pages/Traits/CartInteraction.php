@@ -35,6 +35,11 @@ trait CartInteraction
                 ->qty ?? 0
             ) + 1;
         } else {
+            if (!$data['amount']) {
+                $this->deleteCart(CartItem::whereProductId($product->getKey())->first());
+                $this->mount();
+                return;
+            }
             $qty = $data['amount'];
         }
         if (! $this->validateStock($product, $qty)) {
