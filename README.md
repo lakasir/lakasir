@@ -59,6 +59,10 @@
    * `php artisan key:generate`
    * `php artisan migrate --seed`
    * `php artisan filament:assets`
+   * `php artisan livewire:publish --assets`
+5. Javascript:
+  * `npm install`
+  * `npm run build or npm run dev`
 6. Create the user using `php artisan app:create-user`
 
 ## Usage

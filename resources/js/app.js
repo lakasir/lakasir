@@ -32,7 +32,8 @@ async function printToUSBPrinter(text) {
 
       const encoder = new TextEncoder();
       const data = encoder.encode(receiptText);
-      await device.transferOut(1, data);
+      const endpoint = device.configuration.interfaces[0].alternate.endpoints.filter(endpoint => endpoint.direction === 'out')[0]
+      await device.transferOut(endpoint.endpointNumber, data);
 
       console.log('Data sent to printer');
     } else {
@@ -48,8 +49,8 @@ async function printToUSBPrinter(text) {
         ])
         .send()
     }
-  } catch (error) {
-    console.error(error);
+  } catch (e) {
+    console.error(e);
   }
 }
 

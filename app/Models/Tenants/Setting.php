@@ -22,7 +22,7 @@ class Setting extends Model
         if (! Cache::get('setting_'.$key)) {
             $setting = self::where('key', $key)->first();
 
-            $result = $setting ? $setting->value : $default;
+            $result = $setting ? $setting->value ?? $default : $default;
 
             Cache::put($cacheKey, $result, now()->addMinutes(3 * 60));
 

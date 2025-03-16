@@ -59,10 +59,13 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Illuminate\View\View;
+use Stancl\Tenancy\Bootstrappers\DatabaseTenancyBootstrapper;
 
 class TenantPanelProvider extends PanelProvider
 {
@@ -78,8 +81,22 @@ class TenantPanelProvider extends PanelProvider
 
         FilamentView::registerRenderHook(
             PanelsRenderHook::HEAD_END,
-            fn () => view('meta')
+            fn() => view('meta')
         );
+
+        if (app()->environment('demo')) {
+            $arraySupport = [
+                "https://saweria.co/sheenazien",
+                "https://trakteer.id/sheenazien8/tip",
+                "https://buymeacoffee.com/sheenazien8"
+            ];
+            FilamentView::registerRenderHook(
+                PanelsRenderHook::BODY_START,
+                fn(): View => view('donation-banner', [
+                    "link" => Arr::random($arraySupport)
+                ]),
+            );
+        }
 
         return $panel;
     }
@@ -104,7 +121,7 @@ class TenantPanelProvider extends PanelProvider
             ->authGuard('web')
             ->path('/member')
             ->login(TenantLogin::class)
-            ->navigation(fn (NavigationBuilder $navigationBuilder) => $this->buildNavigation($navigationBuilder))
+            ->navigation(fn(NavigationBuilder $navigationBuilder) => $this->buildNavigation($navigationBuilder))
             ->discoverResources(in: app_path('Filament/Tenant/Resources'), for: 'App\\Filament\\Tenant\\Resources')
             ->discoverPages(in: app_path('Filament/Tenant/Pages'), for: 'App\\Filament\\Tenant\\Pages')
             ->discoverWidgets(in: app_path('Filament/Tenant/Widgets'), for: 'App\\Filament\\Tenant\\Widgets')
@@ -127,7 +144,6 @@ class TenantPanelProvider extends PanelProvider
 
         return $navigationBuilder
             ->items(array_filter($this->getNavigationItems(), fn ($item) => $item != null));
-
     }
 
     private function getNavigationItems(): array
@@ -228,7 +244,7 @@ class TenantPanelProvider extends PanelProvider
         return NavigationItem::make($resource::getLabel())
             ->visible($canAccess)
             ->icon($resource::getNavigationIcon())
-            ->isActiveWhen(fn (): bool => $active)
-            ->url(fn (): string => $resource::getUrl());
+            ->isActiveWhen(fn(): bool => $active)
+            ->url(fn(): string => $resource::getUrl());
     }
 }
