@@ -50,7 +50,7 @@ class ViewStockOpname extends ViewRecord
                     Select::make('status')
                         ->required()
                         ->default($this->record->status)
-                        ->options(Arr::where(StockOpnameStatus::all(), function ($data, $key) {
+                        ->options(Arr::where(StockOpnameStatus::all()->toArray(), function ($data, $key) {
                             if ($key == StockOpnameStatus::approved) {
                                 return can('approve stock opname');
                             }

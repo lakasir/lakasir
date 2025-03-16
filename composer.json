@@ -5,14 +5,15 @@
     "keywords": ["framework", "laravel"],
     "license": "MIT",
     "require": {
-        "php": "^8.2",
+        "php": "^8.1",
         "aymanalhattami/filament-date-scopes-filter": "^1.0",
         "aymanalhattami/filament-page-with-sidebar": "^2.5",
         "barryvdh/laravel-dompdf": "^2.0",
-        "filament/filament": "^3.1",
+        "filament/filament": "^3.2",
         "guzzlehttp/guzzle": "^7.2",
         "kreait/laravel-firebase": "^5.8",
         "lakasir/has-crud-action": "dev-main",
+        "lakasir/lakasir-module": "^1.0",
         "laravel-notification-channels/fcm": "^4.3",
         "laravel/framework": "^11.9",
         "laravel/pennant": "^1.8",
@@ -20,11 +21,13 @@
         "laravel/tinker": "^2.9",
         "livewire/livewire": "^3.0",
         "livewire/volt": "^1.6",
+        "maatwebsite/excel": "^3.1",
         "picqer/php-barcode-generator": "^2.4",
         "predis/predis": "^2.2",
+        "sheenazien8/konstantiq": "^1.0",
+        "silviolleite/laravelpwa": "^2.0",
         "spatie/laravel-permission": "6.9.0",
         "spatie/laravel-query-builder": "^6.0",
-        "stancl/tenancy": "^3.6",
         "tapp/filament-timezone-field": "^3.0"
     },
     "require-dev": {
@@ -88,5 +91,11 @@
         }
     },
     "minimum-stability": "stable",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../packages/lakasir-module"
+        }
+    ]
 }
