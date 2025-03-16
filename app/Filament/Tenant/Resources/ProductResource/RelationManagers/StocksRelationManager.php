@@ -3,7 +3,8 @@
 namespace App\Filament\Tenant\Resources\ProductResource\RelationManagers;
 
 use App\Models\Tenants\Setting;
-use Filament\Forms;
+use App\Models\Tenants\Stock;
+use App\Services\Tenants\StockService;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
@@ -17,11 +18,8 @@ class StocksRelationManager extends RelationManager
     public function form(Form $form): Form
     {
         return $form
-            ->schema([
-                Forms\Components\TextInput::make('stock')
-                    ->required()
-                    ->maxLength(255),
-            ]);
+            ->schema(Stock::form())
+            ->columns(1);
     }
 
     public function table(Table $table): Table
@@ -43,7 +41,14 @@ class StocksRelationManager extends RelationManager
                     ->money(Setting::get('currency', 'IDR')),
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make(),
+                Tables\Actions\CreateAction::make()
+                    ->action(function (array $data, StockService $stockService) {
+                        $stockService->create(array_merge($data,[
+                            'product_id' => $this->ownerRecord->id,
+                            'is_ready' => true
+                        ]));
+                    })
+                    ->createAnother(false),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
@@ -59,5 +64,10 @@ class StocksRelationManager extends RelationManager
     public static function getTitle(Model $ownerRecord, string $pageClass): string
     {
         return __('Stock History');
+    }
+
+    public function isReadOnly(): bool
+    {
+        return false;
     }
 }
