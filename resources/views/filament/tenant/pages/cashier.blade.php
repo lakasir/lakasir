@@ -70,10 +70,10 @@ use App\Features\{PaymentShortcutButton, SellingTax, Discount};
                   <p class="font-semibold text-lakasir-primary">{{ $item->price_format_money }}</p>
                 </div>
               </div>
-              <div class="grid grid-cols-2 items-center text-right space-y-2">
+              <div class="grid grid-cols-2 items-center text-right space-y-2 py-2">
                 <div class="col-span-2">
                   @feature(Discount::class)
-                  <div class="flex justify-end">
+                  <div class="flex justify-end mb-1">
                     <x-filament::input.wrapper class="w-1/2">
                       <x-filament::input
                         type="text"
