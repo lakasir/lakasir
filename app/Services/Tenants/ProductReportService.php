@@ -50,15 +50,18 @@ class ProductReportService
         $totalGrossProfit = 0;
         $totalDiscount = 0;
         $totalDiscountPerItem = 0;
+        $totalAllDiscountPerItem = 0;
         $totalNetProfitBeforeDiscountSelling = 0;
         $totalNetProfitAfterDiscountSelling = 0;
 
         /** @var Product $product */
         foreach ($products as $product) {
             $sellingDetails = $product->sellingDetails;
+            $totalAllDiscountPerItemTemp = 0;
 
             $totalCostPerSelling = $sellingDetails->sum('cost');
             $totalDiscountPerItem = $sellingDetails->sum('discount_price');
+            $totalAllDiscountPerItemTemp += $sellingDetails->sum('discount_price');
             $totalBeforeDiscountPerSelling = $sellingDetails->sum('price');
             $totalAfterDiscountPerSelling = $totalBeforeDiscountPerSelling - $totalDiscountPerItem;
             $totalNetProfitPerSelling = (($totalBeforeDiscountPerSelling - $totalCostPerSelling) - $totalDiscountPerItem);
@@ -88,7 +91,7 @@ class ProductReportService
             $totalNetProfitBeforeDiscountSelling += $totalNetProfitPerSelling;
             $totalNetProfitAfterDiscountSelling += ($totalNetProfitPerSelling - ($selling->discount_price ?? 0));
             $totalGrossProfit += $totalGrossProfitPerSelling;
-            $totalDiscountPerItem += $totalDiscountPerItem;
+            $totalAllDiscountPerItem += $totalAllDiscountPerItemTemp;
             $totalQty += $totalQtyPerSelling;
         }
 
@@ -98,6 +101,7 @@ class ProductReportService
             'total_net' => $this->formatCurrency($totalNet - $totalDiscount),
             'total_discount' => $this->formatCurrency($totalDiscount),
             'total_discount_per_item' => $this->formatCurrency($totalDiscountPerItem),
+            'total_all_discount_per_item' => $this->formatCurrency($totalAllDiscountPerItem),
             'total_gross_profit' => $this->formatCurrency($totalGross - $totalCost),
             'total_net_profit_before_discount_selling' => $this->formatCurrency($totalNet - $totalCost),
             'total_net_profit_after_discount_selling' => $this->formatCurrency($totalNet - $totalDiscount - $totalCost),
