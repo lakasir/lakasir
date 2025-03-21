@@ -83,16 +83,18 @@ class ProductReportService
                 'gross_profit' => $this->formatCurrency($totalBeforeDiscountPerSelling - $totalCostPerSelling),
             ];
 
-            $selling = $sellingDetails->first()->selling;
             $totalCost += $totalCostPerSelling;
-            $totalDiscount += ($selling->discount_price ?? 0);
             $totalGross += $totalBeforeDiscountPerSelling;
             $totalNet += $totalAfterDiscountPerSelling;
             $totalNetProfitBeforeDiscountSelling += $totalNetProfitPerSelling;
-            $totalNetProfitAfterDiscountSelling += ($totalNetProfitPerSelling - ($selling->discount_price ?? 0));
             $totalGrossProfit += $totalGrossProfitPerSelling;
             $totalAllDiscountPerItem += $totalAllDiscountPerItemTemp;
             $totalQty += $totalQtyPerSelling;
+
+            foreach ($sellingDetails as $sellingDetail) {
+                $totalDiscount += ($sellingDetail->selling->discount_price ?? 0.0);
+                $totalNetProfitAfterDiscountSelling += ($totalNetProfitPerSelling - ($sellingDetail->selling->discount_price ?? 0.0));
+            }
         }
 
         $footer = [
