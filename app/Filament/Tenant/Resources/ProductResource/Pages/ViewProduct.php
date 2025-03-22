@@ -3,6 +3,7 @@
 namespace App\Filament\Tenant\Resources\ProductResource\Pages;
 
 use App\Features\PrintProductLabel;
+use App\Features\ProductStock;
 use App\Filament\Tenant\Resources\ProductResource;
 use App\Filament\Tenant\Resources\ProductResource\RelationManagers\PriceUnitsRelationManager;
 use App\Filament\Tenant\Resources\ProductResource\RelationManagers\SellingDetailsRelationManager;
@@ -16,6 +17,7 @@ use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ViewRecord;
 use Filament\Support\Colors\Color;
 use Filament\Support\Enums\ActionSize;
+use Laravel\Pennant\Feature;
 
 class ViewProduct extends ViewRecord
 {
@@ -81,7 +83,7 @@ class ViewProduct extends ViewRecord
             SellingDetailsRelationManager::make(),
             PriceUnitsRelationManager::make(),
         ];
-        if (! $this->record->is_non_stock) {
+        if (! $this->record->is_non_stock && Feature::active(ProductStock::class)) {
             return [
                 StocksRelationManager::make(),
                 ...$relations,

@@ -9,7 +9,6 @@ use App\Features\ProductSku;
 use App\Features\ProductStock;
 use App\Features\ProductType;
 use App\Models\Tenants\Category;
-use App\Models\Tenants\Product;
 use App\Models\Tenants\Setting;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\DatePicker;
@@ -117,7 +116,9 @@ trait HasProductForm
         return TextInput::make('stock')
             ->translateLabel()
             ->numeric()
-            ->visible(Feature::active(ProductStock::class))
+            ->visible(function ($operation) {
+                return Feature::active(ProductStock::class) && $operation == 'create';
+            })
             ->disabled(function ($get) {
                 return $get('is_non_stock') || $get('type') == 'service';
             })
