@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Spatie\Permission\Models\Role as ModelsRole;
 use Spatie\Permission\PermissionRegistrar;
 
+/**
+ * @mixin IdeHelperRole
+ */
 class Role extends ModelsRole
 {
     public function mobilePermissions(): BelongsToMany

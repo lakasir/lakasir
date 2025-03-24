@@ -38,6 +38,8 @@ use App\Filament\Tenant\Resources\UserResource;
 use App\Filament\Tenant\Resources\VoucherResource;
 use App\Http\Middleware\LocalizationMiddleware;
 use App\Models\Tenants\About;
+use App\Tenant;
+use Filament\Forms\Components\DatePicker;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -69,6 +71,17 @@ use Stancl\Tenancy\Bootstrappers\DatabaseTenancyBootstrapper;
 
 class TenantPanelProvider extends PanelProvider
 {
+    public function register(): void
+    {
+        parent::register();
+        DatePicker::configureUsing(function (DatePicker $datePicker): void {
+            $datePicker
+                ->closeOnDateSelection()
+                ->native(false);
+        });
+
+    }
+
     public function panel(Panel $panel): Panel
     {
         $panel = $this->configurePanel($panel);
@@ -81,19 +94,19 @@ class TenantPanelProvider extends PanelProvider
 
         FilamentView::registerRenderHook(
             PanelsRenderHook::HEAD_END,
-            fn() => view('meta')
+            fn () => view('meta')
         );
 
         if (app()->environment('demo')) {
             $arraySupport = [
-                "https://saweria.co/sheenazien",
-                "https://trakteer.id/sheenazien8/tip",
-                "https://buymeacoffee.com/sheenazien8"
+                'https://saweria.co/sheenazien',
+                'https://trakteer.id/sheenazien8/tip',
+                'https://buymeacoffee.com/sheenazien8',
             ];
             FilamentView::registerRenderHook(
                 PanelsRenderHook::BODY_START,
-                fn(): View => view('donation-banner', [
-                    "link" => Arr::random($arraySupport)
+                fn (): View => view('donation-banner', [
+                    'link' => Arr::random($arraySupport),
                 ]),
             );
         }
@@ -121,7 +134,7 @@ class TenantPanelProvider extends PanelProvider
             ->authGuard('web')
             ->path('/member')
             ->login(TenantLogin::class)
-            ->navigation(fn(NavigationBuilder $navigationBuilder) => $this->buildNavigation($navigationBuilder))
+            ->navigation(fn (NavigationBuilder $navigationBuilder) => $this->buildNavigation($navigationBuilder))
             ->discoverResources(in: app_path('Filament/Tenant/Resources'), for: 'App\\Filament\\Tenant\\Resources')
             ->discoverPages(in: app_path('Filament/Tenant/Pages'), for: 'App\\Filament\\Tenant\\Pages')
             ->discoverWidgets(in: app_path('Filament/Tenant/Widgets'), for: 'App\\Filament\\Tenant\\Widgets')
@@ -244,7 +257,7 @@ class TenantPanelProvider extends PanelProvider
         return NavigationItem::make($resource::getLabel())
             ->visible($canAccess)
             ->icon($resource::getNavigationIcon())
-            ->isActiveWhen(fn(): bool => $active)
-            ->url(fn(): string => $resource::getUrl());
+            ->isActiveWhen(fn (): bool => $active)
+            ->url(fn (): string => $resource::getUrl());
     }
 }

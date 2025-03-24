@@ -9,6 +9,7 @@ use App\Features\ProductStock;
 use App\Features\ProductType;
 use App\Filament\Tenant\Components\PriceInput;
 use App\Models\Tenants\Category;
+use App\Models\Tenants\Setting;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
@@ -99,7 +100,9 @@ trait HasProductForm
         return TextInput::make('stock')
             ->translateLabel()
             ->numeric()
-            ->visible(Feature::active(ProductStock::class))
+            ->visible(function ($operation) {
+                return Feature::active(ProductStock::class) && $operation == 'create';
+            })
             ->disabled(function ($get) {
                 return $get('is_non_stock') || $get('type') == 'service';
             })
@@ -154,6 +157,7 @@ trait HasProductForm
                 return Feature::active(ProductExpired::class) && $operation == 'create';
             })
             ->rule('after:now')
+            ->required()
             ->native(false);
     }
 }

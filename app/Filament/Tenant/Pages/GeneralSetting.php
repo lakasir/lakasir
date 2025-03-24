@@ -13,6 +13,8 @@ use App\Traits\HasTranslatableResource;
 use Filament\Actions\Contracts\HasActions;
 use Filament\Forms\Components\Actions;
 use Filament\Forms\Components\Actions\Action;
+use Filament\Forms\Components\Checkbox;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Tabs;
@@ -27,6 +29,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Lakasir\LakasirModule\Facades\LakasirModule;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
+use Laravel\Pennant\Feature;
 
 class GeneralSetting extends Page implements HasActions, HasForms
 {
@@ -54,6 +57,15 @@ class GeneralSetting extends Page implements HasActions, HasForms
             $this->formData['setting'][$key] = Setting::get($key);
         }
 
+        $this->formData['feature'] = [
+            'supplier' => Feature::active('supplier'),
+            'purchasing' => Feature::active('purchasing'),
+            'receivable' => Feature::active('receivable'),
+            'stock-opname' => Feature::active('stock-opname'),
+            'voucher' => Feature::active('voucher'),
+            'pos-v2' => Feature::active('pos-v2'),
+            'product-import' => Feature::active('product-import')
+        ];
         $this->formData['about'] = $about;
 
         /** @var User $user */
@@ -110,6 +122,27 @@ class GeneralSetting extends Page implements HasActions, HasForms
                             ->action('saveApp'),
                     ]),
                 ]),
+                Tabs\Tab::make('Feature')
+                    ->statePath('formData.feature')
+                    ->visible(can('access feature flag'))
+                    ->translateLabel()
+                    ->schema([
+                        Section::make([
+                            Checkbox::make('supplier')->inline(),
+                            Checkbox::make('purchasing')->inline(),
+                            Checkbox::make('receivable')->inline(),
+                            Checkbox::make('stock-opname')->inline(),
+                            Checkbox::make('voucher')->inline(),
+                            Checkbox::make('pos-v2')->label("POS V2")->inline(),
+                            Checkbox::make('product-import')->inline(),
+                        ]),
+                        Actions::make([
+                            Action::make('Save')
+                                ->translateLabel()
+                                ->requiresConfirmation()
+                                ->action('saveFeature'),
+                        ]),
+                    ]),
             Tabs\Tab::make('Profile')
                 ->statePath('formData.profile')
                 ->translateLabel()
@@ -170,6 +203,26 @@ class GeneralSetting extends Page implements HasActions, HasForms
             ->send();
 
         $this->mount();
+    }
+
+    public function saveFeature(): void
+    {
+        if (can('access feature flag')) {
+            foreach ($this->formData['feature'] as $name => $value) {
+                if ($value) {
+                    Feature::activate($name);
+                } else {
+                    Feature::deactivate($name);
+                }
+            }
+
+            Notification::make()
+                ->title(__('Success'))
+                ->success()
+                ->send();
+
+            $this->mount();
+        }
     }
 
     public function saveProfile(): void
