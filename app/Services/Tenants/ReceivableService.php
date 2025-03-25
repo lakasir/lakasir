@@ -3,10 +3,10 @@
 namespace App\Services\Tenants;
 
 use App\Models\Tenants\Product;
+use App\Models\Tenants\Receivable;
 use App\Models\Tenants\ReceivableItem;
 use App\Models\Tenants\Selling;
 use Filament\Facades\Filament;
-use Modules\DebtsAndReceivables\Models\Receivable;
 
 class ReceivableService
 {
