@@ -15,7 +15,6 @@ use Filament\Forms\Components\Actions;
 use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\Section;
-use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\TextInput;
@@ -27,9 +26,8 @@ use Filament\Pages\Concerns\InteractsWithFormActions;
 use Filament\Pages\Page;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use Lakasir\LakasirModule\Facades\LakasirModule;
-use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 use Laravel\Pennant\Feature;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 class GeneralSetting extends Page implements HasActions, HasForms
 {
@@ -64,7 +62,7 @@ class GeneralSetting extends Page implements HasActions, HasForms
             'stock-opname' => Feature::active('stock-opname'),
             'voucher' => Feature::active('voucher'),
             'pos-v2' => Feature::active('pos-v2'),
-            'product-import' => Feature::active('product-import')
+            'product-import' => Feature::active('product-import'),
         ];
         $this->formData['about'] = $about;
 
@@ -122,41 +120,32 @@ class GeneralSetting extends Page implements HasActions, HasForms
                             ->action('saveApp'),
                     ]),
                 ]),
-                Tabs\Tab::make('Feature')
-                    ->statePath('formData.feature')
-                    ->visible(can('access feature flag'))
-                    ->translateLabel()
-                    ->schema([
-                        Section::make([
-                            Checkbox::make('supplier')->inline(),
-                            Checkbox::make('purchasing')->inline(),
-                            Checkbox::make('receivable')->inline(),
-                            Checkbox::make('stock-opname')->inline(),
-                            Checkbox::make('voucher')->inline(),
-                            Checkbox::make('pos-v2')->label("POS V2")->inline(),
-                            Checkbox::make('product-import')->inline(),
-                        ]),
-                        Actions::make([
-                            Action::make('Save')
-                                ->translateLabel()
-                                ->requiresConfirmation()
-                                ->action('saveFeature'),
-                        ]),
+            Tabs\Tab::make('Feature')
+                ->statePath('formData.feature')
+                ->visible(can('access feature flag'))
+                ->translateLabel()
+                ->schema([
+                    Section::make([
+                        Checkbox::make('supplier')->inline(),
+                        Checkbox::make('purchasing')->inline(),
+                        Checkbox::make('receivable')->inline(),
+                        Checkbox::make('stock-opname')->inline(),
+                        Checkbox::make('voucher')->inline(),
+                        Checkbox::make('pos-v2')->label('POS V2')->inline(),
+                        Checkbox::make('product-import')->inline(),
                     ]),
+                    Actions::make([
+                        Action::make('Save')
+                            ->translateLabel()
+                            ->requiresConfirmation()
+                            ->action('saveFeature'),
+                    ]),
+                ]),
             Tabs\Tab::make('Profile')
                 ->statePath('formData.profile')
                 ->translateLabel()
                 ->schema(Profile::form()),
         ];
-
-        if (module_plugin_exist()) {
-            array_push($tabs,
-                Tabs\Tab::make('Module')
-                    ->statePath('formData.module')
-                    ->translateLabel()
-                    ->schema($this->moduleForm()),
-            );
-        }
 
         return $form->schema([
             Tabs::make('Tabs')
@@ -299,27 +288,5 @@ class GeneralSetting extends Page implements HasActions, HasForms
             ->send();
 
         $this->mount();
-    }
-
-    public function moduleForm(): array
-    {
-        return [
-            FileUpload::make('plugin')
-                ->rules(['mimes:zip'])
-                ->required(),
-            Actions::make([
-                Action::make('Install module')
-                    ->translateLabel()
-                    ->action(function () {
-                        $this->validate([
-                            'formData.module.plugin' => 'required',
-                        ]);
-
-                        foreach ($this->formData['module']['plugin'] as $plugin) {
-                            LakasirModule::unzipThePlugin($plugin);
-                        }
-                    }),
-            ]),
-        ];
     }
 }

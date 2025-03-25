@@ -38,7 +38,6 @@ use App\Filament\Tenant\Resources\UserResource;
 use App\Filament\Tenant\Resources\VoucherResource;
 use App\Http\Middleware\LocalizationMiddleware;
 use App\Models\Tenants\About;
-use App\Tenant;
 use Filament\Forms\Components\DatePicker;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -67,7 +66,6 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Illuminate\View\View;
-use Stancl\Tenancy\Bootstrappers\DatabaseTenancyBootstrapper;
 
 class TenantPanelProvider extends PanelProvider
 {
@@ -149,14 +147,14 @@ class TenantPanelProvider extends PanelProvider
 
     private function buildNavigation(NavigationBuilder $navigationBuilder): NavigationBuilder
     {
-        $navigationBuilder->groups($this->getNavigationGroups());
+        $navigationBuilder->groups($this->getNavigationGroups())
+            ->items(array_filter($this->getNavigationItems(), fn ($item) => $item != null));
         if (module_plugin_exist()) {
             $navigationBuilder
                 ->groups(\Lakasir\LakasirModule\Facades\LakasirModule::navigationGroups());
         }
 
-        return $navigationBuilder
-            ->items(array_filter($this->getNavigationItems(), fn ($item) => $item != null));
+        return $navigationBuilder;
     }
 
     private function getNavigationItems(): array
