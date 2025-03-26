@@ -6,13 +6,12 @@ use App\Features\Member;
 use App\Features\PaymentMethod;
 use App\Features\Permission;
 use App\Features\PosV2;
-use App\Features\Purchasing;
 use App\Features\Receivable;
 use App\Features\Role;
-use App\Features\StockOpname;
 use App\Features\Supplier;
 use App\Features\User;
 use App\Features\Voucher;
+use App\Filament\Clusters\Inventory;
 use App\Filament\Tenant\Pages\CartItem;
 use App\Filament\Tenant\Pages\Cashier;
 use App\Filament\Tenant\Pages\CashierReport;
@@ -24,22 +23,18 @@ use App\Filament\Tenant\Pages\PurchasingReport;
 use App\Filament\Tenant\Pages\Report;
 use App\Filament\Tenant\Pages\SellingReport;
 use App\Filament\Tenant\Pages\TenantLogin;
-use App\Filament\Tenant\Resources\CategoryResource;
 use App\Filament\Tenant\Resources\MemberResource;
 use App\Filament\Tenant\Resources\PaymentMethodResource;
 use App\Filament\Tenant\Resources\PermissionResource;
-use App\Filament\Tenant\Resources\ProductResource;
-use App\Filament\Tenant\Resources\PurchasingResource;
 use App\Filament\Tenant\Resources\ReceivableResource;
 use App\Filament\Tenant\Resources\RoleResource;
 use App\Filament\Tenant\Resources\SellingResource;
-use App\Filament\Tenant\Resources\StockOpnameResource;
 use App\Filament\Tenant\Resources\SupplierResource;
-use App\Filament\Tenant\Resources\TableResource;
 use App\Filament\Tenant\Resources\UserResource;
 use App\Filament\Tenant\Resources\VoucherResource;
 use App\Http\Middleware\LocalizationMiddleware;
 use App\Models\Tenants\About;
+use Filament\Clusters\Cluster;
 use Filament\Forms\Components\DatePicker;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -138,6 +133,7 @@ class TenantPanelProvider extends PanelProvider
             ->discoverResources(in: app_path('Filament/Tenant/Resources'), for: 'App\\Filament\\Tenant\\Resources')
             ->discoverPages(in: app_path('Filament/Tenant/Pages'), for: 'App\\Filament\\Tenant\\Pages')
             ->discoverWidgets(in: app_path('Filament/Tenant/Widgets'), for: 'App\\Filament\\Tenant\\Widgets')
+            ->discoverClusters(in: app_path('Filament/Clusters'), for: 'App\\Filament\\Clusters')
             ->middleware($this->getMiddleware())
             ->authMiddleware([Authenticate::class])
             ->pages([
@@ -170,19 +166,13 @@ class TenantPanelProvider extends PanelProvider
             $this->generateNavigationItem(MemberResource::class, Member::class),
             $this->generateNavigationItem(PaymentMethodResource::class, PaymentMethod::class),
             $this->generateNavigationItem(ReceivableResource::class, Receivable::class),
+            $this->generateNavigationItem(Inventory::class),
         ];
     }
 
     private function getNavigationGroups(): array
     {
         return [
-            NavigationGroup::make(__('Inventory'))->items([
-                $this->generateNavigationItem(PurchasingResource::class, Purchasing::class),
-                $this->generateNavigationItem(StockOpnameResource::class, StockOpname::class),
-                $this->generateNavigationItem(ProductResource::class),
-                $this->generateNavigationItem(CategoryResource::class),
-                $this->generateNavigationItem(TableResource::class)->hidden(About::first() && About::first()->business_type != 'fnb'),
-            ]),
             NavigationGroup::make(__('User'))->items([
                 $this->generateNavigationItem(UserResource::class, User::class),
                 $this->generateNavigationItem(RoleResource::class, Role::class),
@@ -244,6 +234,10 @@ class TenantPanelProvider extends PanelProvider
 
         if ((new $resource) instanceof Resource) {
             $active = Str::of(Route::currentRouteName())->contains($resource::getRouteBaseName());
+        }
+
+        if ((new $resource) instanceof Cluster) {
+            $active = Str::of(Route::currentRouteName())->contains($resource::getRouteName());
         }
 
         if (count($activeWhen) > 0) {
