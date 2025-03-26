@@ -36,7 +36,7 @@ class EventServiceProvider extends ServiceProvider
         ],
         SellingCreated::class => [
             AssignProduct::class,
-            CreateReceivableIfCredit::class,
+            CreateReceivableIfCredit::class
         ],
         RecalculateEvent::class => [
             AdjustProduct::class,

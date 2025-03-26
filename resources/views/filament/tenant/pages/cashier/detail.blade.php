@@ -41,7 +41,7 @@
       <div class="flex gap-x-2 mt-2">
         @if($cartDetail['voucher'] == null)
           @foreach($availableVoucher as $voucher)
-            <x-filament::button wire:click="assignVoucher({{ $voucher->code }})" color="gray">
+            <x-filament::button wire:click="assignVoucher('{{ $voucher->code }}')" color="gray">
               <x-heroicon-s-ticket class="h-6 mb-2"/>
               <p>{{ $voucher->code }}</p>
             </x-filament::button>

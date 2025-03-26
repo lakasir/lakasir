@@ -13,6 +13,8 @@ use App\Traits\HasTranslatableResource;
 use Filament\Actions\Contracts\HasActions;
 use Filament\Forms\Components\Actions;
 use Filament\Forms\Components\Actions\Action;
+use Filament\Forms\Components\Checkbox;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\TextInput;
@@ -24,6 +26,7 @@ use Filament\Pages\Concerns\InteractsWithFormActions;
 use Filament\Pages\Page;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Laravel\Pennant\Feature;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 class GeneralSetting extends Page implements HasActions, HasForms
@@ -39,11 +42,7 @@ class GeneralSetting extends Page implements HasActions, HasForms
 
     protected static string $view = 'filament.tenant.pages.general-setting';
 
-    public $about = [];
-
-    public $setting = [];
-
-    public $profile = [];
+    public $formData = [];
 
     public function mount(): void
     {
@@ -53,16 +52,25 @@ class GeneralSetting extends Page implements HasActions, HasForms
             $about['photo'] = [$about['photo']];
         }
         foreach (config('setting.key') as $key) {
-            $this->setting[$key] = Setting::get($key);
+            $this->formData['setting'][$key] = Setting::get($key);
         }
 
-        $this->about = $about;
+        $this->formData['feature'] = [
+            'supplier' => Feature::active('supplier'),
+            'purchasing' => Feature::active('purchasing'),
+            'receivable' => Feature::active('receivable'),
+            'stock-opname' => Feature::active('stock-opname'),
+            'voucher' => Feature::active('voucher'),
+            'pos-v2' => Feature::active('pos-v2'),
+            'product-import' => Feature::active('product-import'),
+        ];
+        $this->formData['about'] = $about;
 
         /** @var User $user */
         $user = auth()->user();
         $profile = $user->profile;
 
-        $this->profile = [
+        $this->formData['profile'] = [
             'name' => $user->name,
             'email' => $user->email,
             'phone' => $profile->phone,
@@ -71,52 +79,83 @@ class GeneralSetting extends Page implements HasActions, HasForms
             'timezone' => $profile->timezone,
             'photo' => $profile->photo ? [$profile->photo] : null,
         ];
+
+        $this->formData['module'] = [];
     }
 
     public function form(Form $form): Form
     {
+        $tabs = [
+            Tabs\Tab::make('About')
+                ->statePath('formData.about')
+                ->translateLabel()
+                ->schema(About::form()),
+            Tabs\Tab::make('App')
+                ->statePath('formData.setting')
+                ->translateLabel()
+                ->schema([
+                    Select::make('currency')
+                        ->options([
+                            'IDR' => 'IDR',
+                            'USD' => 'USD',
+                        ])
+                        ->translateLabel(),
+                    Select::make('minimum_stock_nofication')
+                        ->options([
+                            0 => 0,
+                            5 => 5,
+                            10 => 10,
+                            20 => 20,
+                            50 => 50,
+                        ])
+                        ->translateLabel(),
+                    TextInput::make('default_tax')
+                        ->numeric()
+                        ->suffix('%')
+                        ->translateLabel(),
+                    Actions::make([
+                        Action::make('Save')
+                            ->translateLabel()
+                            ->requiresConfirmation()
+                            ->action('saveApp'),
+                    ]),
+                ]),
+            Tabs\Tab::make('Feature')
+                ->statePath('formData.feature')
+                ->visible(can('access feature flag'))
+                ->translateLabel()
+                ->schema([
+                    Section::make([
+                        Checkbox::make('supplier')->inline(),
+                        Checkbox::make('purchasing')->inline(),
+                        Checkbox::make('receivable')->inline(),
+                        Checkbox::make('stock-opname')->inline(),
+                        Checkbox::make('voucher')->inline(),
+                        Checkbox::make('pos-v2')->label('POS V2')->inline(),
+                        Checkbox::make('product-import')->inline(),
+                    ]),
+                    Actions::make([
+                        Action::make('Save')
+                            ->translateLabel()
+                            ->requiresConfirmation()
+                            ->action('saveFeature'),
+                    ]),
+                ]),
+            Tabs\Tab::make('Profile')
+                ->statePath('formData.profile')
+                ->translateLabel()
+                ->schema(Profile::form()),
+        ];
+
         return $form->schema([
             Tabs::make('Tabs')
-                ->tabs([
-                    Tabs\Tab::make('About')
-                        ->statePath('about')
-                        ->translateLabel()
-                        ->schema(About::form()),
-                    Tabs\Tab::make('App')
-                        ->statePath('setting')
-                        ->translateLabel()
-                        ->schema([
-                            Select::make('minimum_stock_nofication')
-                                ->options([
-                                    0 => 0,
-                                    5 => 5,
-                                    10 => 10,
-                                    20 => 20,
-                                    50 => 50,
-                                ])
-                                ->translateLabel(),
-                            TextInput::make('default_tax')
-                                ->numeric()
-                                ->suffix('%')
-                                ->translateLabel(),
-                            Actions::make([
-                                Action::make('Save')
-                                    ->translateLabel()
-                                    ->requiresConfirmation()
-                                    ->action('saveApp'),
-                            ]),
-                        ]),
-                    Tabs\Tab::make('Profile')
-                        ->statePath('profile')
-                        ->translateLabel()
-                        ->schema(Profile::form()),
-                ]),
+                ->tabs($tabs),
         ]);
     }
 
     public function saveApp(): void
     {
-        foreach ($this->setting as $key => $value) {
+        foreach ($this->formData['setting'] as $key => $value) {
             Setting::set($key, $value);
         }
 
@@ -131,21 +170,21 @@ class GeneralSetting extends Page implements HasActions, HasForms
     public function saveAbout(AboutService $aboutService): void
     {
         $this->validate([
-            'about.shop_name' => 'required',
-            'about.shop_location' => 'required',
-            'about.currency' => 'required',
+            'formData.about.shop_name' => 'required',
+            'formData.about.shop_location' => 'required',
+            'formData.about.currency' => 'required',
             // 'data.photo' => 'required',
         ]);
 
-        if (isset($this->about['photo']) && $this->about['photo'] != null && array_values($this->about['photo'])[0] instanceof TemporaryUploadedFile) {
+        if (isset($this->formData['about']['photo']) && $this->formData['about']['photo'] != null && array_values($this->formData['about']['photo'])[0] instanceof TemporaryUploadedFile) {
             /** @var TemporaryUploadedFile $image */
-            $image = array_values($this->about['photo'])[0];
+            $image = array_values($this->formData['about']['photo'])[0];
             $image->storePubliclyAs('public', $image->getFilename());
             $url = optional(Storage::disk('public'))->url($image->getFilename());
-            $this->about['photo_url'] = $url;
-            $this->about['photo'] = null;
+            $this->formData['about']['photo_url'] = $url;
+            $this->formData['about']['photo'] = null;
         }
-        $aboutService->createOrUpdate($this->about);
+        $aboutService->createOrUpdate($this->formData['about']);
 
         Notification::make()
             ->title(__('Success'))
@@ -155,13 +194,33 @@ class GeneralSetting extends Page implements HasActions, HasForms
         $this->mount();
     }
 
+    public function saveFeature(): void
+    {
+        if (can('access feature flag')) {
+            foreach ($this->formData['feature'] as $name => $value) {
+                if ($value) {
+                    Feature::activate($name);
+                } else {
+                    Feature::deactivate($name);
+                }
+            }
+
+            Notification::make()
+                ->title(__('Success'))
+                ->success()
+                ->send();
+
+            $this->mount();
+        }
+    }
+
     public function saveProfile(): void
     {
         $this->validate([
-            'profile.email' => 'required|email',
-            'profile.timezone' => 'required',
-            'profile.locale' => 'required',
-            'profile.password' => 'nullable|confirmed',
+            'formData.profile.email' => 'required|email',
+            'formData.profile.timezone' => 'required',
+            'formData.profile.locale' => 'required',
+            'formData.profile.password' => 'nullable|confirmed',
             // 'data.photo' => 'required',
         ]);
 
@@ -170,25 +229,25 @@ class GeneralSetting extends Page implements HasActions, HasForms
         $profile = $user->profile;
 
         if (feature('edit-profile')) {
-            if (isset($this->profile['photo']) && $this->profile['photo'] != null && array_values($this->profile['photo'])[0] instanceof TemporaryUploadedFile) {
+            if (isset($this->formData['profile']['photo']) && $this->formData['profile']['photo'] != null && array_values($this->formData['profile']['photo'])[0] instanceof TemporaryUploadedFile) {
                 /** @var TemporaryUploadedFile $image */
-                $image = array_values($this->profile['photo'])[0];
+                $image = array_values($this->formData['profile']['photo'])[0];
                 $image->storePubliclyAs('public', $image->getFilename());
                 $url = optional(Storage::disk('public'))->url($image->getFilename());
-                $this->profile['photo_url'] = $url;
-                $this->profile['photo'] = null;
+                $this->formData['profile']['photo_url'] = $url;
+                $this->formData['profile']['photo'] = null;
             }
         }
 
-        if (isset($this->profile['password']) && $this->profile['password'] != '') {
-            $this->profile['password'] = bcrypt($this->profile['password']);
+        if (isset($this->formData['profile']['password']) && $this->formData['profile']['password'] != '') {
+            $this->formData['profile']['password'] = bcrypt($this->formData['profile']['password']);
         }
 
-        $user->update($this->profile);
-        $profile->update($this->profile);
+        $user->update($this->formData['profile']);
+        $profile->update($this->formData['profile']);
 
         if (feature('edit-profile')) {
-            $data = $this->profile;
+            $data = $this->formData['profile'];
 
             if (isset($data['photo_url']) && $data['photo_url'] !== $profile->photo) {
                 /** @var \App\Models\Tenants\UploadedFile $tmpFile */

@@ -25,6 +25,13 @@ class SellingDetail extends Model
         return $this->belongsTo(Product::class);
     }
 
+    public function pricePerUnit(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->price / $this->qty,
+        );
+    }
+
     public function totalPrice(): Attribute
     {
         return Attribute::make(

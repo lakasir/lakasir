@@ -19,7 +19,8 @@ class Printer {
 
         const encoder = new TextEncoder();
         const data = encoder.encode(commands);
-        await device.transferOut(1, data);
+        const endpoint = device.configuration.interfaces[0].alternate.endpoints.filter(endpoint => endpoint.direction === 'out')[0]
+        await device.transferOut(endpoint.endpointNumber, data);
         await device.close();
         console.log('Data sent to printer');
         this.clearCommands();
@@ -37,7 +38,7 @@ class Printer {
           .send()
       }
     } catch (e) {
-      console.error(error);
+      console.error(e);
     }
   }
 

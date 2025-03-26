@@ -37,7 +37,7 @@
         <x-table-cell colspan="3">{{ __('Total') }}</x-table-cell>
         <x-table-cell class="number">{{ $footer['total_qty'] }}</x-table-cell>
         <x-table-cell class="number">{{ $footer['total_gross'] }}</x-table-cell>
-        <x-table-cell class="number">{{ $footer['total_discount_per_item'] }}</x-table-cell>
+        <x-table-cell class="number">{{ $footer['total_all_discount_per_item'] }}</x-table-cell>
         <x-table-cell class="number">{{ $footer['total_net'] }}</x-table-cell>
         <x-table-cell class="number">{{ $footer['total_gross_profit'] }}</x-table-cell>
         <x-table-cell class="number">{{ $footer['total_net_profit_before_discount_selling'] }}</x-table-cell>
@@ -66,7 +66,7 @@
         <x-table-cell class="number"><b>{{ $footer['total_cost'] }}</b></x-table-cell>
         <x-table-cell class="number"><b>{{ $footer['total_gross'] }}</b></x-table-cell>
         <x-table-cell class="number"><b>{{ $footer['total_discount'] }}</b></x-table-cell>
-        <x-table-cell class="number"><b>{{ $footer['total_discount_per_item'] }}</b></x-table-cell>
+        <x-table-cell class="number"><b>{{ $footer['total_all_discount_per_item'] }}</b></x-table-cell>
         <x-table-cell class="number"><b>{{ $footer['total_net'] }}</b></x-table-cell>
         <x-table-cell class="number"><b>{{ $footer['total_gross_profit'] }}</b></x-table-cell>
         <x-table-cell class="number"><b>{{ $footer['total_net_profit_before_discount_selling'] }}</b></x-table-cell>
