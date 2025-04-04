@@ -2,6 +2,8 @@
 
 namespace App\Filament\Tenant\Resources;
 
+use App\Filament\Clusters\Financials;
+use App\Filament\Clusters\Traits\HasSubNavigationPosition;
 use App\Filament\Tenant\Resources\ReceivableResource\Pages;
 use App\Filament\Tenant\Resources\ReceivableResource\RelationManagers\ReceivableItemsRelationManager;
 use App\Filament\Tenant\Resources\ReceivableResource\RelationManagers\ReceivablePaymentsRelationManager;
@@ -22,11 +24,13 @@ use Filament\Tables\Table;
 
 class ReceivableResource extends Resource
 {
-    use HasReceivablePaymentForm, HasTranslatableResource;
+    use HasReceivablePaymentForm, HasTranslatableResource, HasSubNavigationPosition;
 
     protected static ?string $model = Receivable::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-calendar';
+
+    protected static ?string $cluster = Financials::class;
 
     public static function table(Table $table): Table
     {

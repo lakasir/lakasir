@@ -4,34 +4,23 @@ namespace App\Providers\Filament;
 
 use App\Features\Member;
 use App\Features\PaymentMethod;
-use App\Features\Permission;
 use App\Features\PosV2;
 use App\Features\Receivable;
-use App\Features\Role;
 use App\Features\Supplier;
-use App\Features\User;
-use App\Features\Voucher;
+use App\Filament\Clusters\Financials;
 use App\Filament\Clusters\Inventory;
+use App\Filament\Clusters\Reports;
+use App\Filament\Clusters\Sales;
+use App\Filament\Clusters\Settings;
+use App\Filament\Clusters\Users;
 use App\Filament\Tenant\Pages\CartItem;
 use App\Filament\Tenant\Pages\Cashier;
-use App\Filament\Tenant\Pages\CashierReport;
-use App\Filament\Tenant\Pages\GeneralSetting;
 use App\Filament\Tenant\Pages\POS;
-use App\Filament\Tenant\Pages\Printer;
-use App\Filament\Tenant\Pages\ProductReport;
-use App\Filament\Tenant\Pages\PurchasingReport;
-use App\Filament\Tenant\Pages\Report;
-use App\Filament\Tenant\Pages\SellingReport;
 use App\Filament\Tenant\Pages\TenantLogin;
 use App\Filament\Tenant\Resources\MemberResource;
 use App\Filament\Tenant\Resources\PaymentMethodResource;
-use App\Filament\Tenant\Resources\PermissionResource;
 use App\Filament\Tenant\Resources\ReceivableResource;
-use App\Filament\Tenant\Resources\RoleResource;
-use App\Filament\Tenant\Resources\SellingResource;
 use App\Filament\Tenant\Resources\SupplierResource;
-use App\Filament\Tenant\Resources\UserResource;
-use App\Filament\Tenant\Resources\VoucherResource;
 use App\Http\Middleware\LocalizationMiddleware;
 use App\Models\Tenants\About;
 use Filament\Clusters\Cluster;
@@ -40,7 +29,6 @@ use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Navigation\NavigationBuilder;
-use Filament\Navigation\NavigationGroup;
 use Filament\Navigation\NavigationItem;
 use Filament\Pages;
 use Filament\Pages\Page;
@@ -80,12 +68,7 @@ class TenantPanelProvider extends PanelProvider
     public function panel(Panel $panel): Panel
     {
         $panel = $this->configurePanel($panel);
-
         $this->initializeConfigDefault($panel);
-
-        if (module_plugin_exist()) {
-            $panel->plugin(\Lakasir\LakasirModule\LakasirModulePlugin::make());
-        }
 
         FilamentView::registerRenderHook(
             PanelsRenderHook::HEAD_END,
@@ -145,8 +128,9 @@ class TenantPanelProvider extends PanelProvider
 
     private function buildNavigation(NavigationBuilder $navigationBuilder): NavigationBuilder
     {
-        $navigationBuilder->groups($this->getNavigationGroups())
+        $navigationBuilder
             ->items(array_filter($this->getNavigationItems(), fn ($item) => $item != null));
+
         if (module_plugin_exist()) {
             $navigationBuilder
                 ->groups(\Lakasir\LakasirModule\Facades\LakasirModule::navigationGroups());
@@ -161,41 +145,17 @@ class TenantPanelProvider extends PanelProvider
             ...Pages\Dashboard::getNavigationItems(),
             $this->generateNavigationItem(Cashier::class),
             $this->generateNavigationItem(POS::class, PosV2::class),
-            $this->generateNavigationItem(SellingResource::class),
-            $this->generateNavigationItem(SupplierResource::class, Supplier::class),
-            $this->generateNavigationItem(MemberResource::class, Member::class),
-            $this->generateNavigationItem(PaymentMethodResource::class, PaymentMethod::class),
-            $this->generateNavigationItem(ReceivableResource::class, Receivable::class),
+            $this->generateNavigationItem(Sales::class),
+            $this->generateNavigationItem(Financials::class),
+            // $this->generateNavigationItem(SupplierResource::class, Supplier::class),
+            // $this->generateNavigationItem(MemberResource::class, Member::class),
+            // $this->generateNavigationItem(PaymentMethodResource::class, PaymentMethod::class),
+            // $this->generateNavigationItem(ReceivableResource::class, Receivable::class),
             $this->generateNavigationItem(Inventory::class),
-        ];
-    }
-
-    private function getNavigationGroups(): array
-    {
-        return [
-            NavigationGroup::make(__('User'))->items([
-                $this->generateNavigationItem(UserResource::class, User::class),
-                $this->generateNavigationItem(RoleResource::class, Role::class),
-                $this->generateNavigationItem(PermissionResource::class, Permission::class),
-            ]),
-            NavigationGroup::make(__('Report'))->label('')->collapsible(false)->items([
-                $this->generateNavigationItem(
-                    resource: Report::class,
-                    activeWhen: [
-                        SellingReport::class,
-                        ProductReport::class,
-                        CashierReport::class,
-                        PurchasingReport::class,
-                    ]
-                ),
-            ]),
-            NavigationGroup::make(__('General'))->label('')->collapsible(false)->items([
-                $this->generateNavigationItem(VoucherResource::class, Voucher::class),
-            ]),
-            NavigationGroup::make(__('Setting'))->items([
-                $this->generateNavigationItem(GeneralSetting::class),
-                $this->generateNavigationItem(Printer::class),
-            ]),
+            $this->generateNavigationItem(Users::class),
+            $this->generateNavigationItem(Reports::class),
+            $this->generateNavigationItem(Settings::class),
+            module_plugin_exist() ? $this->generateNavigationItem(\Lakasir\LakasirModule\Filament\Clusters\Modules::class) : null,
         ];
     }
 

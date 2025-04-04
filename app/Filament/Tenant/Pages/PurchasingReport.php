@@ -2,7 +2,7 @@
 
 namespace App\Filament\Tenant\Pages;
 
-use App\Filament\Tenant\Pages\Traits\HasReportPageSidebar;
+use App\Filament\Clusters\Reports;
 use App\Services\Tenants\PurchasingReportService;
 use App\Traits\HasTranslatableResource;
 use Filament\Actions\Action;
@@ -11,11 +11,12 @@ use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Form;
 use Filament\Pages\Concerns\InteractsWithFormActions;
 use Filament\Pages\Page;
+use Filament\Pages\SubNavigationPosition;
 use Livewire\Attributes\Url;
 
 class PurchasingReport extends Page
 {
-    use HasReportPageSidebar, HasTranslatableResource, InteractsWithFormActions, InteractsWithForms;
+    use HasTranslatableResource, InteractsWithFormActions, InteractsWithForms;
 
     protected static ?string $title = '';
 
@@ -24,6 +25,8 @@ class PurchasingReport extends Page
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
 
     protected static string $view = 'filament.tenant.pages.purchasing-report';
+
+    protected static ?string $cluster = Reports::class;
 
     #[Url]
     public ?array $data = [
@@ -35,7 +38,7 @@ class PurchasingReport extends Page
 
     public function mount()
     {
-        $this->generate(new PurchasingReportService());
+        $this->generate(new PurchasingReportService);
     }
 
     public function form(Form $form): Form
@@ -97,5 +100,10 @@ class PurchasingReport extends Page
         ]);
 
         return $this->redirectRoute('purchasing-report.generate', $this->data);
+    }
+
+    public function getSubNavigationPosition(): SubNavigationPosition
+    {
+        return (new static::$cluster)->getSubNavigationPosition();
     }
 }

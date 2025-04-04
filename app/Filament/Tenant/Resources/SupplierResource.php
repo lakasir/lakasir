@@ -2,6 +2,8 @@
 
 namespace App\Filament\Tenant\Resources;
 
+use App\Filament\Clusters\Inventory;
+use App\Filament\Clusters\Traits\HasSubNavigationPosition;
 use App\Filament\Tenant\Resources\SupplierResource\Pages;
 use App\Models\Tenants\Supplier;
 use App\Traits\HasTranslatableResource;
@@ -12,11 +14,13 @@ use Filament\Tables\Table;
 
 class SupplierResource extends Resource
 {
-    use HasTranslatableResource;
+    use HasTranslatableResource, HasSubNavigationPosition;
 
     protected static ?string $model = Supplier::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-queue-list';
+
+    protected static ?string $cluster = Inventory::class;
 
     public static function form(Form $form): Form
     {

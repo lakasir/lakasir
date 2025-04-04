@@ -47,6 +47,8 @@ class ProductResource extends Resource
 
     protected static ?string $cluster = Inventory::class;
 
+    protected static ?int $navigationSort = 1;
+
     public static function getGloballySearchableAttributes(): array
     {
         return ['name', 'sku', 'barcode'];

@@ -33,8 +33,9 @@ class PrintLabel extends Page implements HasForms
     public function getBreadcrumbs(): array
     {
         return [
+            (new static::$resource)->getCluster()::getUrl() => (new static::$resource)->getCluster()::getClusterBreadcrumb(),
             $this->getResource()::getUrl('index') => __('Products'),
-            $this->getResource()::getUrl('view', ['record' => $this->record]) => __('View'),
+            $this->getResource()::getUrl('view', ['record' => $this->record]) => $this->record->name,
             __('Print Label'),
         ];
     }
@@ -50,7 +51,7 @@ class PrintLabel extends Page implements HasForms
     public function applySetting()
     {
         $data = $this->form->getState();
-        $generator = new BarcodeGeneratorSVG();
+        $generator = new BarcodeGeneratorSVG;
 
         $product = $this->record;
         $fillable = collect();

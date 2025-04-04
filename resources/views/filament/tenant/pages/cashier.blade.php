@@ -15,7 +15,7 @@ use App\Features\{PaymentShortcutButton, SellingTax, Discount};
           <div class="flex items-center">
             <div class="xl:flex gap-x-2 hidden items-center">
               <a
-                href="/member/sellings"
+                href="{{ route('filament.tenant.sales.resources.sellings.index') }}"
                 class="py-1 px-4 flex justify-center items-center bg-gray-100 rounded-lg gap-x-1 text-gray-500">
                 <x-heroicon-o-arrow-left class="h-4 w-4 text-gray-500"/>
                   <p class="hidden lg:block">{{ __('Back') }} </p>

@@ -13,4 +13,9 @@ trait HasSubNavigationPosition
     {
         return (new static::$cluster)->getSubNavigationPosition();
     }
+
+    public static function getNavigationSort(): ?int
+    {
+        return static::$navigationSort ?? 9999999;
+    }
 }
