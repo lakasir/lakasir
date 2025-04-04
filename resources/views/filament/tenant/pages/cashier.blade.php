@@ -12,68 +12,45 @@ use App\Features\{PaymentShortcutButton, SellingTax, Discount};
       <div class="px-4 mt-4 space-y-2 h-screen">
         <div class="flex justify-between items-center" x-data="fullscreen">
           <p class="text-xl font-semibold">{{ __('Orders details') }}</p>
-          <div class="xl:hidden gap-x-2">
-            <x-filament::dropdown placement="top-start">
-              <x-slot name="trigger">
-              <x-heroicon-o-ellipsis-vertical
-                class="h-5 w-5 text-gray-900 dark:text-gray-300 cursor-pointer"
-              />
-              </x-slot>
-
-              <x-filament::dropdown.list>
-                <x-filament::dropdown.list.item x-on:mousedown="document.location.reload()" >
-                  <div class="flex gap-x-2">
-                    <x-heroicon-m-arrow-path class="h-5 w-5 text-gray-900 dark:text-gray-300 cursor-pointer" />
-                    <p>{{ __('Reload') }} </p>
-                  </div>
-                </x-filament::dropdown.list.item>
-
-                <x-filament::dropdown.list.item x-on:mousedown="requestFullscreen">
-                  <div class="flex gap-x-2">
-                    <x-heroicon-o-arrows-pointing-out class="h-5 w-5 text-gray-900 dark:text-gray-300 cursor-pointer" />
-                    <p>{{ __('Fullscreen') }} </p>
-                  </div>
-                </x-filament::dropdown.list.item>
-                <x-filament::dropdown.list.item>
-                  <a href="/member/sellings" class="flex gap-x-2">
-                      <x-heroicon-o-arrow-left class="h-5 w-5 text-gray-900 dark:text-gray-300 cursor-pointer"/>
-                      <p>{{ __('Back') }} </p>
-                  </a>
-                </x-filament::dropdown.list.item>
-                <x-filament::dropdown.list.item x-on:mousedown="requestFullscreen" class="bg-red-200 text-red-500">
-                  <p class="flex gap-x-2"
-                    wire:confirm="Are you sure you want to clear all of the items?"
-                    wire:click.prevent="clearCart" >
-                    <x-heroicon-o-trash class="h-5 w-5 text-gray-900 dark:text-gray-300 cursor-pointer"/>
-                    <span>{{ __('Clear') }} </span>
-                  </p>
-                </x-filament::dropdown.list.item>
-
-              </x-filament::dropdown.list>
-            </x-filament::dropdown>
-          </div>
-          <div class="xl:flex gap-x-2 hidden items-center">
-            <a
-              href="/member/sellings"
-              class="py-1 px-4 flex justify-center items-center bg-gray-100 rounded-lg gap-x-1 text-gray-500">
+          <div class="flex items-center">
+            <div class="xl:flex gap-x-2 hidden items-center">
+              <a
+                href="{{ route('filament.tenant.sales.resources.sellings.index') }}"
+                class="py-1 px-4 flex justify-center items-center bg-gray-100 rounded-lg gap-x-1 text-gray-500">
                 <x-heroicon-o-arrow-left class="h-4 w-4 text-gray-500"/>
-                <p class="hidden lg:block">{{ __('Back') }} </p>
-            </a>
-            <button class="py-1 px-4 bg-red-200 text-red-500 rounded-lg flex gap-x-1 items-center"
-              wire:confirm="Are you sure you want to clear all of the items?"
-              wire:click.prevent="clearCart" >
-                <x-heroicon-o-trash class="h-4 w-4 text-red-500"/>
-                <p>{{ __('Clear') }} </p>
-            </button>
+                  <p class="hidden lg:block">{{ __('Back') }} </p>
+              </a>
+            </div>
+            <div class="gap-x-2">
+              <x-filament::dropdown placement="top-start">
+                <x-slot name="trigger">
+                  <x-heroicon-o-ellipsis-vertical class="h-8 w-8 text-gray-900 dark:text-gray-300 cursor-pointer" />
+                </x-slot>
 
-            <x-heroicon-m-arrow-path
-              x-on:mousedown="document.location.reload()"
-              class="h-5 w-5 text-gray-900 dark:text-gray-300 cursor-pointer"
-            />
-            <x-heroicon-o-arrows-pointing-out
-              x-on:mousedown="requestFullscreen"
-              class="h-5 w-5 text-gray-900 dark:text-gray-300 cursor-pointer"
-            />
+                <x-filament::dropdown.list>
+                  <x-filament::dropdown.list.item x-on:mousedown="document.location.reload()" >
+                    <div class="flex gap-x-2">
+                      <x-heroicon-m-arrow-path class="h-5 w-5 text-gray-900 dark:text-gray-300 cursor-pointer" />
+                        <p>{{ __('Reload') }} </p>
+                    </div>
+                  </x-filament::dropdown.list.item>
+
+                  <x-filament::dropdown.list.item x-on:mousedown="requestFullscreen">
+                    <div class="flex gap-x-2">
+                      <x-heroicon-o-arrows-pointing-out class="h-5 w-5 text-gray-900 dark:text-gray-300 cursor-pointer" />
+                        <p>{{ __('Fullscreen') }} </p>
+                    </div>
+                  </x-filament::dropdown.list.item>
+                  <x-filament::dropdown.list.item>
+                    <p class="flex gap-x-2"
+                      wire:confirm="Are you sure you want to clear all of the items?"
+                      wire:click.prevent="clearCart">
+                    <x-heroicon-o-trash class="h-5 w-5 text-gray-900 dark:text-gray-300 cursor-pointer"/> <span>{{ __('Clear') }} </span> </p>
+                  </x-filament::dropdown.list.item>
+
+                </x-filament::dropdown.list>
+              </x-filament::dropdown>
+            </div>
           </div>
         </div>
         <hr/>
@@ -84,7 +61,6 @@ use App\Features\{PaymentShortcutButton, SellingTax, Discount};
           <p class="hidden lg:block text-2xl font-semibold mb-2">{{ __('Current Orders') }}</p>
           <div class="flex gap-x-1"></div>
         </div>
-        {{-- <div wire:loading.class.remove="hidden" class="hidden min-h-40 max-h-[35%] text-center">Loading...</div> --}}
         <div class="overflow-y-scroll min-h-40 max-h-[35%] overflow-auto" wire:loading.class="opacity-20" wire:target="addCart,reduceCart,deleteCart,addDiscountPricePerItem,addCartUsingScanner">
           @forelse($cartItems as $item)
             <div class="mb-2 border rounded-lg bg-white dark:border-gray-900 dark:bg-gray-900 px-4 py-2" id="{{ $item->id }}" key="{{ rand() }}">
@@ -94,10 +70,10 @@ use App\Features\{PaymentShortcutButton, SellingTax, Discount};
                   <p class="font-semibold text-lakasir-primary">{{ $item->price_format_money }}</p>
                 </div>
               </div>
-              <div class="grid grid-cols-2 items-center text-right space-y-2">
+              <div class="grid grid-cols-2 items-center text-right space-y-2 py-2">
                 <div class="col-span-2">
                   @feature(Discount::class)
-                  <div class="flex justify-end">
+                  <div class="flex justify-end mb-1">
                     <x-filament::input.wrapper class="w-1/2">
                       <x-filament::input
                         type="text"
@@ -125,10 +101,21 @@ use App\Features\{PaymentShortcutButton, SellingTax, Discount};
                     >
                     <x-heroicon-o-plus-small class="!text-white h-4 w-4"/>
                   </button>
-                  <p class="my-auto">{{ $item->qty }}</p>
+                    <x-filament::input.wrapper class="w-20" x-data="cart">
+                      <x-filament::input
+                        type="text"
+                        id="{{ $item->product->name }}-{{ $item->id }}-qty-{{ rand() }}"
+                        data-value="{{ $item->qty }}"
+                        value="{{ $item->qty }}"
+                        x-on:keyup.debounce.500ms="(e) => add('{{ $item->product_id }}', e.target.value)"
+                        placeholder="{{ __('Discount') }}"
+                        class="text-right w-1/2"
+                        inputMode="numeric"
+                        />
+                      </x-filament::input.wrapper>
                   <button
                     class="!bg-gray-100 rounded-lg px-2 py-1"
-                    wire:click="reduceCart({{  $item->product_id  }})"
+                    x-on:click="$wire.reduceCart({{  $item->product_id  }});"
                     wire:loading.attr="disabled"
                     >
                     <x-heroicon-o-minus-small class="!text-green-900 h-4 w-4"/>
@@ -492,6 +479,15 @@ use App\Features\{PaymentShortcutButton, SellingTax, Discount};
     }
   });
 
+  Alpine.data('cart', () => {
+    return {
+      add: (productId, amount) => {
+        $wire.addCart(productId, {amount: amount ?? 0})
+        console.log(productId, amount)
+      }
+    }
+  })
+
   let barcodeData = '';
   let barcodeTimeout;
   let scannerEnabled = true;
@@ -599,5 +595,3 @@ use App\Features\{PaymentShortcutButton, SellingTax, Discount};
   });
 </script>
 @endscript
-
-

@@ -35,6 +35,11 @@ trait CartInteraction
                 ->qty ?? 0
             ) + 1;
         } else {
+            if (!$data['amount']) {
+                $this->deleteCart(CartItem::whereProductId($product->getKey())->first());
+                $this->mount();
+                return;
+            }
             $qty = $data['amount'];
         }
         if (! $this->validateStock($product, $qty)) {
@@ -140,6 +145,7 @@ trait CartInteraction
         $product = Product::whereBarcode($value)
             ->orWhere('sku', $value)
             ->first();
+
         if (! $product) {
             Notification::make()
                 ->title(__('Product not found'))

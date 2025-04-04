@@ -1,5 +1,6 @@
 name: unit-test
 env:
+  APP_KEY: base64:LBjssn+d5IhFzVud6YqQMezXtFSyNMF1UGFdiNWIpO4=
   DB_CONNECTION: testing
   DB_DATABASE: ${{ secrets.DB_DATABASE }}
   DB_PORT: 3306

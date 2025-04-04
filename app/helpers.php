@@ -4,6 +4,7 @@ use App\Models\Tenants\Profile;
 use App\Models\Tenants\Setting;
 use App\Models\Tenants\User;
 use Filament\Facades\Filament;
+use Filament\Notifications\Notification;
 use Illuminate\Support\Number;
 
 if (! function_exists('hasFeatureAndPermission')) {
@@ -30,17 +31,10 @@ if (! function_exists('can')) {
     }
 }
 
-if (! function_exists('isMultiTenant')) {
-    function isMultiTenant(): bool
+if (! function_exists('module_plugin_exist')) {
+    function module_plugin_exist(): bool
     {
-        $central_domains = config('tenancy.central_domains');
-        $admin_domains = config('tenancy.admin_domains');
-
-        if (count($central_domains) > 0 && $central_domains[0] == request()->getHost()) {
-            return in_array(request()->getHost(), $admin_domains);
-        }
-
-        return false;
+        return class_exists(\Lakasir\LakasirModule\Events\TransactionSucceed::class);
     }
 }
 
@@ -52,5 +46,19 @@ if (! function_exists('price_format')) {
             in: Setting::get('currency', 'IDR'),
             locale: Profile::get()->locale ?? 'en'
         );
+    }
+}
+
+if (! function_exists('notification')) {
+    function notification(?string $id = null): Notification
+    {
+        return Notification::make($id);
+    }
+}
+
+if (! function_exists('price_string_to_float')) {
+    function price_string_to_float(string $priceString): float
+    {
+        return (float) str($priceString)->replace(',', '')->value();
     }
 }

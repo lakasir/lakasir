@@ -2,6 +2,9 @@
 
 namespace App\Filament\Tenant\Resources;
 
+use App\Features\Voucher as FeaturesVoucher;
+use App\Filament\Clusters\Sales;
+use App\Filament\Clusters\Traits\HasSubNavigationPosition;
 use App\Filament\Tenant\Resources\Traits\RedirectToIndex;
 use App\Filament\Tenant\Resources\VoucherResource\Pages;
 use App\Models\Tenants\Setting;
@@ -19,14 +22,17 @@ use Filament\Support\RawJs;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 
 class VoucherResource extends Resource
 {
-    use HasTranslatableResource, RedirectToIndex;
+    use HasTranslatableResource, RedirectToIndex, HasSubNavigationPosition;
 
     protected static ?string $model = Voucher::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-receipt-percent';
+
+    protected static ?string $cluster = Sales::class;
 
     public static function form(Form $form): Form
     {
@@ -131,5 +137,10 @@ class VoucherResource extends Resource
             'create' => Pages\CreateVoucher::route('/create'),
             'edit' => Pages\EditVoucher::route('/{record}/edit'),
         ];
+    }
+
+    public static function canAccess(): bool
+    {
+        return feature(FeaturesVoucher::class) && parent::canAccess();
     }
 }

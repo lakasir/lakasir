@@ -29,6 +29,10 @@ class PurchasingService
         $data['total_selling_price'] = 0;
         $purchasing = Purchasing::create($data);
 
+        if (module_plugin_exist()) {
+            \Lakasir\LakasirModule\Events\PurchasingStarted::dispatch($purchasing, $data);
+        }
+
         return $purchasing;
     }
 
@@ -76,6 +80,11 @@ class PurchasingService
             }
             $products = Product::find($purchasing->stocks()->pluck('product_id'));
             RecalculateEvent::dispatch($products, []);
+            if (module_plugin_exist()) {
+                \Lakasir\LakasirModule\Events\PurchasingApproved::dispatch($purchasing, [
+                    'status' => $status,
+                ]);
+            }
         }
         $purchasing->save();
         Notification::make('success')

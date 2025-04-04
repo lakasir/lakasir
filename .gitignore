@@ -1,5 +1,6 @@
 /node_modules
 /public/hot
+/public/vendor
 /public/storage
 /public/tmp
 /storage/*.key
@@ -16,6 +17,7 @@ tags
 .env
 .env.backup
 .phpunit.result.cache
+.phpunit.cache/
 Homestead.json
 Homestead.yaml
 npm-debug.log
@@ -23,3 +25,5 @@ yarn-error.log
 tinker.php
 _ide_helper.php
 .phpunit.cache/test-results
+.DS_Store
+

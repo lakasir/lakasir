@@ -3,6 +3,8 @@
 namespace App\Filament\Tenant\Resources;
 
 use App\Features\PaymentMethod as FeaturesPaymentMethod;
+use App\Filament\Clusters\Financials;
+use App\Filament\Clusters\Traits\HasSubNavigationPosition;
 use App\Filament\Tenant\Resources\PaymentMethodResource\Pages;
 use App\Models\Tenants\PaymentMethod;
 use App\Traits\HasTranslatableResource;
@@ -19,11 +21,13 @@ use Laravel\Pennant\Feature;
 
 class PaymentMethodResource extends Resource
 {
-    use HasTranslatableResource;
+    use HasTranslatableResource, HasSubNavigationPosition;
 
     protected static ?string $model = PaymentMethod::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-credit-card';
+
+    protected static ?string $cluster = Financials::class;
 
     public static function form(Form $form): Form
     {

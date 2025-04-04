@@ -3,6 +3,8 @@
 namespace App\Filament\Tenant\Resources;
 
 use App\Features\ProductInitialPrice;
+use App\Filament\Clusters\Sales;
+use App\Filament\Clusters\Traits\HasSubNavigationPosition;
 use App\Filament\Tenant\Resources\SellingResource\Pages;
 use App\Models\Tenants\Profile;
 use App\Models\Tenants\Selling;
@@ -20,13 +22,15 @@ use Illuminate\Support\Carbon;
 
 class SellingResource extends Resource
 {
-    use HasTranslatableResource;
+    use HasTranslatableResource, HasSubNavigationPosition;
 
     protected static ?string $model = Selling::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-banknotes';
 
     protected static ?string $navigationLabel = 'Selling History';
+
+    protected static ?string $cluster = Sales::class;
 
     public static function getBreadcrumb(): string
     {

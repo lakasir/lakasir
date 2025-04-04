@@ -2,7 +2,7 @@
 
 namespace App\Filament\Tenant\Pages;
 
-use App\Filament\Tenant\Pages\Traits\HasReportPageSidebar;
+use App\Filament\Clusters\Reports;
 use App\Services\Tenants\ProductReportService;
 use App\Traits\HasTranslatableResource;
 use Filament\Actions\Action;
@@ -13,11 +13,12 @@ use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
 use Filament\Pages\Concerns\InteractsWithFormActions;
 use Filament\Pages\Page;
+use Filament\Pages\SubNavigationPosition;
 use Livewire\Attributes\Url;
 
 class ProductReport extends Page implements HasActions, HasForms
 {
-    use HasReportPageSidebar, HasTranslatableResource, InteractsWithFormActions, InteractsWithForms;
+    use HasTranslatableResource, InteractsWithFormActions, InteractsWithForms;
 
     protected static ?string $title = '';
 
@@ -26,6 +27,8 @@ class ProductReport extends Page implements HasActions, HasForms
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
 
     protected static string $view = 'filament.tenant.pages.product-report';
+
+    protected static ?string $cluster = Reports::class;
 
     #[Url]
     public ?array $data = [
@@ -99,5 +102,10 @@ class ProductReport extends Page implements HasActions, HasForms
         ]);
 
         return $this->redirectRoute('product-report.generate', $this->data);
+    }
+
+    public function getSubNavigationPosition(): SubNavigationPosition
+    {
+        return (new static::$cluster)->getSubNavigationPosition();
     }
 }

@@ -2,6 +2,8 @@
 
 namespace App\Models\Tenants;
 
+use App\Models\Tenants\PaymentMethod;
+use App\Models\Tenants\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

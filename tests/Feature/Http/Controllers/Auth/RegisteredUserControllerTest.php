@@ -45,7 +45,7 @@ it('user can create the tenant account', function () {
             'is_owner' => true,
         ]);
     });
-});
+})->skip('Remove the tenancy');
 
 it('user cannot create the tenant business_type not in list', function () {
     $data = [
@@ -55,7 +55,7 @@ it('user cannot create the tenant business_type not in list', function () {
     $response = postJson('/api/domain/register', $data);
     $response->assertStatus(422);
     $response->assertJsonValidationErrors(['business_type']);
-});
+})->skip('Remove the tenancy');
 
 it('user can not create the tenant account with invalid domain', function () {
     $data = [
@@ -66,7 +66,7 @@ it('user can not create the tenant account with invalid domain', function () {
 
     $response->assertStatus(422);
     $response->assertJsonValidationErrors(['domain']);
-});
+})->skip('Remove the tenancy');
 
 it('user can not create the tenant with invalid busines type', function () {
     $data = [
@@ -77,7 +77,7 @@ it('user can not create the tenant with invalid busines type', function () {
 
     $response->assertStatus(422);
     $response->assertJsonValidationErrors(['business_type']);
-});
+})->skip('Remove the tenancy');
 
 test('user can not create the tenant when the other business type null if business type is other', function () {
     $data = [
@@ -88,7 +88,7 @@ test('user can not create the tenant when the other business type null if busine
 
     $response->assertStatus(422);
     $response->assertJsonValidationErrors(['other_business_type']);
-});
+})->skip('Remove the tenancy');
 
 afterAll(function () {
     DB::statement('DROP DATABASE IF EXISTS lakasir_tokotest');

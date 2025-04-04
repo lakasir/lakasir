@@ -87,6 +87,11 @@ class ProductRequest extends FormRequest
             $product->fill($this->merging());
             $product->save();
             $this->uploadImage($product);
+
+            if (module_plugin_exist()) {
+                \Lakasir\LakasirModule\Events\ProductCreated::dispatch($product, $this->all());
+            }
+
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
@@ -102,6 +107,11 @@ class ProductRequest extends FormRequest
             $product->fill($this->merging());
             $product->update();
             $this->uploadImage($product);
+
+            if (module_plugin_exist()) {
+                \Lakasir\LakasirModule\Events\ProductUpdated::dispatch($product, $this->all());
+            }
+
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();

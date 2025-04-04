@@ -2,6 +2,7 @@
 
 namespace App\Models\Tenants;
 
+use App\Models\Tenants\Product;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

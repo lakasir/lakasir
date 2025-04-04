@@ -8,6 +8,7 @@ use App\Models\Tenants\PaymentMethod;
 use App\Models\Tenants\PriceUnit;
 use App\Models\Tenants\Product;
 use App\Models\Tenants\Selling;
+use App\Models\Tenants\Setting;
 use App\Services\Tenants\Traits\HasNumber;
 use App\Services\VoucherService;
 use Exception;
@@ -30,6 +31,10 @@ class SellingService
             $products = Product::find($selling->sellingDetails->pluck('product_id'));
             RecalculateEvent::dispatch($products, $data);
 
+            if (module_plugin_exist()) {
+                \Lakasir\LakasirModule\Events\TransactionSucceed::dispatch($selling, $data);
+            }
+
             DB::commit();
 
             return $selling;
@@ -41,6 +46,9 @@ class SellingService
 
     public function mapProductRequest(array $data): array
     {
+        if (Setting::get('default_tax', 0) != 0 && !isset($data['tax'])) {
+            $data['tax'] = Setting::get('default_tax');
+        }
         $request = [];
         $payed_money = ($data['payed_money'] ?? 0);
         if (isset($data['friend_price']) && ! $data['friend_price']) {
