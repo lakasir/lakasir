@@ -221,4 +221,5 @@ return [
         // 'ExampleClass' => App\Example\ExampleClass::class,
     ])->toArray(),
 
+    'update_url' => 'https://api.github.com/repos/lakasir/lakasir/releases/latest',
 ];
