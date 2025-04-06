@@ -34,7 +34,7 @@ class AppUpdateService
             return 'You are already on the latest version.';
         }
 
-        $zipUrl = $latest['zipball_url'];
+        $zipUrl = $latest['assets'][0]['browser_download_url'];
         $zipPath = storage_path('app/update.zip');
 
         $options = [
@@ -79,22 +79,10 @@ class AppUpdateService
             '--class' => 'PermissionSeeder',
         ]);
 
-        $this->runNpmCommands();
 
         file_put_contents(base_path('version.txt'), $latestVersion);
 
         return "Update to v$latestVersion completed.";
-    }
-
-    protected function runNpmCommands()
-    {
-        Process::run('npm install', function ($type, $output) {
-            echo $output;
-        });
-
-        Process::run('npm run build', function ($type, $output) {
-            echo $output;
-        });
     }
 
     protected function copyFolder($from, $to, $exclude = [])
