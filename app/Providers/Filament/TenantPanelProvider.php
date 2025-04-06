@@ -100,6 +100,11 @@ class TenantPanelProvider extends PanelProvider
             fn () => view('meta')
         );
 
+        FilamentView::registerRenderHook(
+            PanelsRenderHook::GLOBAL_SEARCH_AFTER,
+            fn () => view('version-indicator')
+        );
+
         if (app()->environment('demo')) {
             $arraySupport = [
                 'https://saweria.co/sheenazien',
