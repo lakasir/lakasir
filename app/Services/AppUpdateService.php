@@ -96,7 +96,8 @@ class AppUpdateService
 
     public function backupApp()
     {
-        $path = storage_path('app/backups/app-backup-'.now()->format('Ymd-His').'.zip');
+        $currentVersion = app(UpdateChecker::class)->getCurrentVersion();
+        $path = storage_path('app/backups/app-backup-'.$currentVersion.'.zip');
         $backupDir = dirname($path);
         if (! file_exists($backupDir)) {
             mkdir($backupDir, 0777, true);
@@ -119,7 +120,7 @@ class AppUpdateService
             \RecursiveIteratorIterator::SELF_FIRST
         );
 
-        foreach ($files as $key => $file) {
+        foreach ($files as $file) {
             $filePath = $file->getRealPath();
             $relativePath = str_replace($base.DIRECTORY_SEPARATOR, '', $filePath);
 
@@ -160,5 +161,7 @@ class AppUpdateService
 
         $zip->extractTo(base_path());
         $zip->close();
+
+        File::delete($path);
     }
 }
