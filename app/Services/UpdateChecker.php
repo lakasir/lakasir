@@ -10,7 +10,7 @@ class UpdateChecker
 
     public function __construct()
     {
-        $this->url = config('app.update_url');
+        $this->url = config('updater.url');
     }
 
     public function getCurrentVersion(): string

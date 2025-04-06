@@ -5,16 +5,26 @@ namespace App\Services;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Process;
 use ZipArchive;
+
+use function Laravel\Prompts\info;
+use function Laravel\Prompts\progress;
 
 class AppUpdateService
 {
     private ?string $url;
 
+    private ?array $artisanAfterUpdate;
+
+    private ?array $artisanAfterRestore;
+
     public function __construct()
     {
-        $this->url = config('app.update_url');
+        $this->url = config('updater.url');
+
+        $this->artisanAfterUpdate = config('updater.artisan_after_update');
+
+        $this->artisanAfterRestore = config('updater.artisan_after_restore');
     }
 
     public function update()
@@ -34,9 +44,11 @@ class AppUpdateService
             return 'You are already on the latest version.';
         }
 
-        $zipUrl = $latest['assets'][0]['browser_download_url'];
-        $zipPath = storage_path('app/update.zip');
+        info('Downloading updated version....');
 
+        $zipUrl = $latest['assets'][0]['browser_download_url'];
+        $zipSize = $latest['assets'][0]['size'];
+        $zipPath = storage_path('app/update.zip');
         $options = [
             'http' => [
                 'header' => "User-Agent: LakasirAutoUpdater\r\n",
@@ -45,10 +57,39 @@ class AppUpdateService
 
         $context = stream_context_create($options);
 
-        file_put_contents($zipPath, file_get_contents($zipUrl, false, $context));
+        $readStream = fopen($zipUrl, 'r', false, $context);
+        if (! $readStream) {
+            throw new \Exception('Failed to open update ZIP stream.');
+        }
+
+        $writeStream = fopen($zipPath, 'w');
+        if (! $writeStream) {
+            throw new \Exception('Failed to create ZIPxfile.');
+        }
+
+        $chunkSize = 1024 * 512; // 512 KB
+        $totalSteps = (int) ceil($zipSize / $chunkSize);
+
+        progress(
+            label: '📥 Downloading update...',
+            steps: $totalSteps,
+            callback: function () use ($readStream, $writeStream, $chunkSize) {
+                while (! feof($readStream)) {
+                    $buffer = fread($readStream, $chunkSize);
+                    fwrite($writeStream, $buffer);
+
+                    yield 1; // advance by 1 chunk
+                }
+
+                fclose($readStream);
+                fclose($writeStream);
+            }
+        );
+        info("✅ Download completed.");
 
         $zip = new ZipArchive;
         if ($zip->open($zipPath) === true) {
+            info('☕ Extracting update...');
             $extractPath = storage_path('app/update');
             $zip->extractTo($extractPath);
             $zip->close();
@@ -68,25 +109,21 @@ class AppUpdateService
         $this->copyFolder($updateFolder, base_path(), $exclude);
 
         unlink($zipPath);
+        info('🗑️ Cleaning up...');
         File::deleteDirectory(storage_path('app/update'));
 
-        Artisan::call('migrate', [
-            '--force' => true,
-            '--path' => 'database/migrations/tenant',
-        ]);
-
-        Artisan::call('db:seed', [
-            '--class' => 'PermissionSeeder',
-        ]);
-
+        foreach ($this->artisanAfterUpdate as $key => $command) {
+            $this->runArtisanCommands($key, $command);
+        }
 
         file_put_contents(base_path('version.txt'), $latestVersion);
 
-        return "Update to v$latestVersion completed.";
+        return "✅ Update to v$latestVersion completed.";
     }
 
     protected function copyFolder($from, $to, $exclude = [])
     {
+        info('📦 Copying files...');
         foreach (File::allFiles($from) as $file) {
             $relativePath = str_replace($from.'/', '', $file->getPathname());
             foreach ($exclude as $skip) {
@@ -168,6 +205,22 @@ class AppUpdateService
         $zip->extractTo(base_path());
         $zip->close();
 
+        foreach ($this->artisanAfterRestore as $key => $command) {
+            $this->runArtisanCommands($key, $command);
+        }
+
         File::delete($path);
+    }
+
+    private function runArtisanCommands(mixed $key, array $command)
+    {
+        if (is_int($key)) {
+            info('💻 Running artisan command: '.$command);
+            Artisan::call($command);
+        }
+        if (is_string($key)) {
+            info('💻 Running artisan command: '.$key);
+            Artisan::call($key, $command);
+        }
     }
 }
