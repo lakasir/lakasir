@@ -66,16 +66,13 @@
       </div>
     @endif
 
-
-    @dump($isUpdating)
-
     @if ($updateAvailable)
       @can('can update app')
         <form wire:submit.prevent="updateApp">
-          <x-filament::button color="primary" :icon="$isUpdating ? 'heroicon-o-arrow-path' : 'heroicon-o-arrow-down-tray'" type="submit"
+          <x-filament::button color="primary" icon="heroicon-o-arrow-down-tray" type="submit"
             wire:loading.attr="disabled">
-            <span wire:loading.remove>Download & Install v{{ $latestVersion }}</span>
-            <span wire:loading.flex class="items-center space-x-2">
+            <span wire:loading.remove wire:target="updateApp">Download & Install v{{ $latestVersion }}</span>
+            <span wire:loading.flex wire:target="updateApp" class="items-center space-x-2">
               <span>Downloading...</span>
             </span>
           </x-filament::button>
@@ -88,8 +85,25 @@
     @endif
   </div>
 
-  @if ($isUpdating)
-    <div class="fixed inset-0 z-[1000] flex items-center justify-center bg-black bg-opacity-70">
+  <div x-data="{
+      isUpdating: false,
+      init() {
+          window.addEventListener('beforeunload', e => {
+              if (this.isUpdating) {
+                  e.preventDefault();
+                  e.returnValue = 'Update in progress. Are you sure you want to leave?';
+              }
+          });
+
+          document.addEventListener('click', e => {
+              if (this.isUpdating && e.target.closest('a, button') && !e.target.closest('form')) {
+                  e.preventDefault();
+              }
+          }, true);
+      }
+  }" x-init="init()">
+    <div x-show="isUpdating" x-cloak
+      class="fixed inset-0 z-[1000] flex items-center justify-center bg-black bg-opacity-70">
       <div class="space-y-4 px-6 text-center">
         <x-heroicon-o-arrow-path class="mx-auto h-10 w-10 text-white" />
         <h2 class="text-lg font-semibold text-white">System is updating...</h2>
@@ -97,18 +111,11 @@
       </div>
     </div>
 
-    <script>
-      window.addEventListener('beforeunload', function(e) {
-        e.preventDefault();
-        e.returnValue = 'Update in progress. Are you sure you want to leave?';
-      });
+    <div x-ref="content" wire:loading.class="hidden" wire:loading.class.remove="block">
+      <!-- Normal content here -->
+    </div>
 
-      document.addEventListener('click', function(e) {
-        const target = e.target.closest('a, button');
-        if (target && !target.closest('form')) {
-          e.preventDefault();
-        }
-      }, true);
-    </script>
-  @endif
+    <div wire:loading wire:target="updateApp" style="display: none;"></div>
+  </div>
+
 </x-filament::page>

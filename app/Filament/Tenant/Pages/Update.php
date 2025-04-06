@@ -23,8 +23,6 @@ class Update extends Page
 
     public bool $updateAvailable = false;
 
-    public bool $isUpdating = false;
-
     public function mount()
     {
         $updateChecker = app(\App\Services\UpdateChecker::class);
@@ -47,8 +45,6 @@ class Update extends Page
         }
 
         try {
-            $this->isUpdating = true;
-
             $backupFile = storage_path('app/backups/app-backup-'.now()->format('Ymd-His').'.zip');
             $appUpdateService->backupApp($backupFile);
             $appUpdateService->update();
@@ -56,9 +52,7 @@ class Update extends Page
                 ->success()
                 ->title(__('App updated successfully'))
                 ->send();
-            $this->isUpdating = false;
         } catch (Exception $e) {
-            $this->isUpdating = false;
             report($e);
 
             Notification::make()
