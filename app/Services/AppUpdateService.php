@@ -5,6 +5,7 @@ namespace App\Services;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Process;
 use ZipArchive;
 
 class AppUpdateService
@@ -74,9 +75,26 @@ class AppUpdateService
             '--path' => 'database/migrations/tenant',
         ]);
 
+        Artisan::call('db:seed', [
+            '--class' => 'PermissionSeeder',
+        ]);
+
+        $this->runNpmCommands();
+
         file_put_contents(base_path('version.txt'), $latestVersion);
 
         return "Update to v$latestVersion completed.";
+    }
+
+    protected function runNpmCommands()
+    {
+        Process::run('npm install', function ($type, $output) {
+            echo $output;
+        });
+
+        Process::run('npm run build', function ($type, $output) {
+            echo $output;
+        });
     }
 
     protected function copyFolder($from, $to, $exclude = [])
@@ -144,8 +162,8 @@ class AppUpdateService
         $files = File::files($backupDir);
 
         $latestBackup = collect($files)
-            ->filter(fn($file) => str_ends_with($file->getFilename(), '.zip'))
-            ->sortByDesc(fn($file) => $file->getMTime())
+            ->filter(fn ($file) => str_ends_with($file->getFilename(), '.zip'))
+            ->sortByDesc(fn ($file) => $file->getMTime())
             ->first();
 
         if ($latestBackup) {
