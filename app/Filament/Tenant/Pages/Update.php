@@ -28,21 +28,6 @@ class Update extends Page
         $this->currentVersion = $updateChecker->getCurrentVersion();
         $this->updateAvailable = $updateChecker->isUpdateAvailable();
         $this->latestVersion = $updateChecker->getLatestVersion();
-        $this->changelog = $this->getChangelogLines();
-    }
-
-    public function getChangelogLines(): array
-    {
-        $response = Http::withHeaders([
-            'User-Agent' => 'LakasirAutoUpdater',
-        ])->get(config('app.update_url'));
-
-        if (! $response->ok()) {
-            return [];
-        }
-
-        $body = $response->json('body');
-
-        return array_filter(preg_split('/\r\n|\r|\n/', $body));
+        $this->changelog = $updateChecker->getChangelogLines();
     }
 }

@@ -18,33 +18,51 @@ class UpdateChecker
         return trim(file_get_contents(base_path('version.txt')));
     }
 
+    private function fetchAndCacheApiResponse(): ?array
+    {
+        return cache()->remember('api_response', now()->addMinutes(60 * 8), function () {
+            $response = Http::get($this->url);
+
+            if (! $response->ok()) {
+                return null;
+            }
+
+            return $response->json();
+        });
+    }
+
     public function getLatestVersion(): ?string
     {
-        $response = Http::get($this->url);
+        $response = $this->fetchAndCacheApiResponse();
 
-        if (! $response->ok()) {
-            return null;
-        }
-
-        $tag = $response->json('tag_name');
-
-        return ltrim($tag, 'v');
+        return $response ? ltrim($response['tag_name'], 'v') : null;
     }
 
     public function isUpdateAvailable(): bool
     {
-        return cache()->remember('update_available_check', now()->addMinutes(60), function () {
-            $current = $this->getCurrentVersion();
-            $latest = $this->getLatestVersion();
+        $current = $this->getCurrentVersion();
+        $latest = $this->getLatestVersion();
 
-            return $latest && version_compare($latest, $current, '>');
-        });
+        return $latest && version_compare($latest, $current, '>');
     }
 
     public function getChangelog(): ?string
     {
-        $response = Http::get($this->url);
+        $response = $this->fetchAndCacheApiResponse();
 
-        return $response->ok() ? $response->json('body') : null;
+        return $response ? $response['body'] : null;
+    }
+
+    public function getChangelogLines(): array
+    {
+        $response = $this->fetchAndCacheApiResponse();
+
+        if (! $response) {
+            return [];
+        }
+
+        $body = $response['body'];
+
+        return array_filter(preg_split('/\r\n|\r|\n/', $body));
     }
 }
