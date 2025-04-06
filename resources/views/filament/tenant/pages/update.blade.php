@@ -69,17 +69,18 @@
 
 
         @if ($updateAvailable)
-            <form method="POST" action="">
-                @csrf
-                <x-filament::button color="primary" icon="heroicon-o-arrow-down-tray" type="submit">
-                    Download & Install v{{ $latestVersion }}
-                </x-filament::button>
-            </form>
+            @if (can('can update app'))
+                <form method="POST" action="">
+                    @csrf
+                    <x-filament::button color="primary" icon="heroicon-o-arrow-down-tray" type="submit">
+                        Download & Install v{{ $latestVersion }}
+                    </x-filament::button>
+                </form>
+            @endif
         @else
             <x-filament::button disabled>
                 You're on the latest version
             </x-filament::button>
         @endif
-
     </div>
 </x-filament::page>
