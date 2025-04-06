@@ -45,8 +45,7 @@ class Update extends Page
         }
 
         try {
-            $backupFile = storage_path('app/backups/app-backup-'.now()->format('Ymd-His').'.zip');
-            $appUpdateService->backupApp($backupFile);
+            $appUpdateService->backupApp();
             $appUpdateService->update();
             Notification::make()
                 ->success()

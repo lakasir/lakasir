@@ -94,8 +94,9 @@ class AppUpdateService
         }
     }
 
-    public function backupApp(string $path)
+    public function backupApp()
     {
+        $path = storage_path('app/backups/app-backup-'.now()->format('Ymd-His').'.zip');
         $backupDir = dirname($path);
         if (! file_exists($backupDir)) {
             mkdir($backupDir, 0777, true);
@@ -133,6 +134,31 @@ class AppUpdateService
             }
         }
 
+        $zip->close();
+    }
+
+    public function restoreApp()
+    {
+        $backupDir = storage_path('app/backups');
+        $files = File::files($backupDir);
+
+        $latestBackup = collect($files)
+            ->filter(fn($file) => str_ends_with($file->getFilename(), '.zip'))
+            ->sortByDesc(fn($file) => $file->getMTime())
+            ->first();
+
+        if ($latestBackup) {
+            $path = $latestBackup->getRealPath();
+        } else {
+            throw new \Exception('No backup files found.');
+        }
+
+        $zip = new ZipArchive;
+        if ($zip->open($path) !== true) {
+            throw new \Exception('Could not open backup zip file.');
+        }
+
+        $zip->extractTo(base_path());
         $zip->close();
     }
 }
