@@ -1,5 +1,5 @@
 <x-filament::page>
-  <div class="space-y-6">
+  <div class="space-y-6" wire:poll.2s="pollLogs">
     <div class="text-center">
       <h2 class="text-2xl font-bold tracking-tight">Software Update</h2>
       <p class="text-sm text-gray-500">{{ __('Manage your version and keep Lakasir up to date.') }}</p>
@@ -65,36 +65,57 @@
         @endif
       </div>
     @endif
-
-    @if ($updateAvailable)
-      @can('can update app')
-        <form wire:submit.prevent="updateApp">
-          <x-filament::button color="primary" icon="heroicon-o-arrow-down-tray" type="submit"
-            wire:loading.attr="disabled" wire:target="updateApp">
-            <span wire:loading.remove wire:target="updateApp">{{ __('Download & Install v') }}
-              {{ $latestVersion }}</span>
-            <span wire:loading.flex wire:target="updateApp" class="items-center space-x-2">
-              <span>{{ __('Downloading') }}...</span>
-            </span>
-          </x-filament::button>
-        </form>
-      @endcan
-    @else
-      @if ($hasPreviousVersion)
-        @can('can restore app')
-          <x-filament::button color="secondary" icon="heroicon-o-arrow-uturn-left" wire:click.prevent="restoreApp"
-            wire:loading.attr="disabled" wire:target="restoreApp">
-            <span wire:loading.remove wire:target="restoreApp">{{ __('Restore Previous Version') }}</span>
-            <span wire:loading.flex wire:target="restoreApp" class="items-center space-x-2">
-              <span>{{ __('Restoring') }}...</span>
-            </span>
-          </x-filament::button>
+    <div class="flex gap-x-2">
+      @if ($updateAvailable)
+        @can('can update app')
+          <form wire:submit.prevent="updateApp">
+            <x-filament::button color="primary" icon="heroicon-o-arrow-down-tray" type="submit"
+              wire:loading.attr="disabled" wire:target="updateApp">
+              <span wire:loading.remove wire:target="updateApp" x-show="!$wire.updateLog">{{ __('Download & Install v') }}
+                {{ $latestVersion }}</span>
+              <span wire:loading.flex wire:target="updateApp" class="items-center space-x-2">
+                <span>{{ __('Downloading') }}...</span>
+              </span>
+              <span wire:show="updateLog" class="items-center space-x-2">
+                <span>{{ __('Downloading') }}...</span>
+              </span>
+            </x-filament::button>
+          </form>
         @endcan
+      @else
+        @if ($hasPreviousVersion)
+          @can('can restore app')
+            <x-filament::button color="secondary" wire:click.prevent="restoreApp" wire:loading.attr="disabled"
+              wire:target="restoreApp">
+              <div class="flex gap-x-1">
+                <div>
+                  <x-heroicon-o-arrow-uturn-left class="h-5 w-5 text-black dark:text-white" />
+                </div>
+                <div>
+                  <span wire:loading.remove wire:target="restoreApp"
+                    class="text-black dark:text-white">{{ __('Restore Previous Version') }}</span>
+                  <span wire:loading.flex wire:target="restoreApp"
+                    class="items-center space-x-2 text-black dark:text-white">
+                    <span>{{ __('Restoring') }}...</span>
+                  </span>
+                </div>
+              </div>
+            </x-filament::button>
+          @endcan
+        @endif
+        <x-filament::button disabled>
+          {{ __('You\'re on the latest version') }}
+        </x-filament::button>
       @endif
-      <x-filament::button disabled>
-        {{ __('You\'re on the latest version') }}
-      </x-filament::button>
-    @endif
+    </div>
+    <div class="mt-4 h-96 overflow-y-auto rounded bg-gray-900 p-4 font-mono text-sm text-green-400"
+      wire:show="updateLog">
+      @foreach (explode("\n", $updateLog) as $line)
+        @if (trim($line))
+          <div>{{ $line }}</div>
+        @endif
+      @endforeach
+    </div>
   </div>
 
   <div x-data="{

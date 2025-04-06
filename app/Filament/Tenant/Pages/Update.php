@@ -2,10 +2,12 @@
 
 namespace App\Filament\Tenant\Pages;
 
+use App\Jobs\RunAppUpdate;
 use App\Services\AppUpdateService;
 use Exception;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
+use Illuminate\Support\Facades\Cache;
 
 class Update extends Page
 {
@@ -25,6 +27,8 @@ class Update extends Page
 
     public bool $hasPreviousVersion = false;
 
+    public string $updateLog = '';
+
     public function mount()
     {
         $updateChecker = app(\App\Services\UpdateChecker::class);
@@ -36,7 +40,13 @@ class Update extends Page
         $this->hasPreviousVersion = $this->getPreviousVersion();
     }
 
-    public function updateApp(AppUpdateService $appUpdateService)
+    public function pollLogs()
+    {
+        $key = "update:progress";
+        $this->updateLog = Cache::get($key, '');
+    }
+
+    public function updateApp()
     {
         if (! can('can update app')) {
             Notification::make()
@@ -48,12 +58,7 @@ class Update extends Page
         }
 
         try {
-            $appUpdateService->backupApp();
-            $appUpdateService->update();
-            Notification::make()
-                ->success()
-                ->title(__('App updated successfully'))
-                ->send();
+            dispatch(new RunAppUpdate());
         } catch (Exception $e) {
             report($e);
 
