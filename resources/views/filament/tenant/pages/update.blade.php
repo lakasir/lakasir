@@ -44,12 +44,12 @@
           {!! \Illuminate\Support\Str::markdown(
               implode(
                   "\n",
-                  collect($changelog)->when(!($showAll = false), fn($lines) => $lines->take(20))->toArray(),
+                  collect($changelog)->when(!($showAll = false), fn($lines) => $lines->take(15))->toArray(),
               ),
           ) !!}
         </div>
 
-        @if (count($changelog) > 20)
+        @if (count($changelog) > 15)
           <div x-show="!expanded" class="mt-4">
             <button x-on:click="expanded = true" class="text-sm text-primary-600 hover:underline">
               Read more
@@ -57,7 +57,7 @@
           </div>
 
           <div x-show="expanded" x-cloak class="prose mt-4 max-w-none dark:prose-invert">
-            {!! \Illuminate\Support\Str::markdown(implode("\n", collect($changelog)->skip(20)->toArray())) !!}
+            {!! \Illuminate\Support\Str::markdown(implode("\n", collect($changelog)->skip(15)->toArray())) !!}
             <button x-on:click="expanded = false" class="mt-4 block text-sm text-primary-600 hover:underline">
               Show less
             </button>
@@ -67,19 +67,48 @@
     @endif
 
 
+    @dump($isUpdating)
+
     @if ($updateAvailable)
-      @if (can('can update app'))
-        <form method="POST" action="">
-          @csrf
-          <x-filament::button color="primary" icon="heroicon-o-arrow-down-tray" type="submit">
-            Download & Install v{{ $latestVersion }}
+      @can('can update app')
+        <form wire:submit.prevent="updateApp">
+          <x-filament::button color="primary" :icon="$isUpdating ? 'heroicon-o-arrow-path' : 'heroicon-o-arrow-down-tray'" type="submit"
+            wire:loading.attr="disabled">
+            <span wire:loading.remove>Download & Install v{{ $latestVersion }}</span>
+            <span wire:loading.flex class="items-center space-x-2">
+              <span>Downloading...</span>
+            </span>
           </x-filament::button>
         </form>
-      @endif
+      @endcan
     @else
       <x-filament::button disabled>
         You're on the latest version
       </x-filament::button>
     @endif
   </div>
+
+  @if ($isUpdating)
+    <div class="fixed inset-0 z-[1000] flex items-center justify-center bg-black bg-opacity-70">
+      <div class="space-y-4 px-6 text-center">
+        <x-heroicon-o-arrow-path class="mx-auto h-10 w-10 text-white" />
+        <h2 class="text-lg font-semibold text-white">System is updating...</h2>
+        <p class="text-sm text-white">Please don’t close this page or navigate away while the update is in progress.</p>
+      </div>
+    </div>
+
+    <script>
+      window.addEventListener('beforeunload', function(e) {
+        e.preventDefault();
+        e.returnValue = 'Update in progress. Are you sure you want to leave?';
+      });
+
+      document.addEventListener('click', function(e) {
+        const target = e.target.closest('a, button');
+        if (target && !target.closest('form')) {
+          e.preventDefault();
+        }
+      }, true);
+    </script>
+  @endif
 </x-filament::page>

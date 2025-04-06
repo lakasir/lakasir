@@ -2,8 +2,10 @@
 
 namespace App\Filament\Tenant\Pages;
 
+use App\Services\AppUpdateService;
+use Exception;
+use Filament\Notifications\Notification;
 use Filament\Pages\Page;
-use Illuminate\Support\Facades\Http;
 
 class Update extends Page
 {
@@ -21,6 +23,8 @@ class Update extends Page
 
     public bool $updateAvailable = false;
 
+    public bool $isUpdating = false;
+
     public function mount()
     {
         $updateChecker = app(\App\Services\UpdateChecker::class);
@@ -29,5 +33,39 @@ class Update extends Page
         $this->updateAvailable = $updateChecker->isUpdateAvailable();
         $this->latestVersion = $updateChecker->getLatestVersion();
         $this->changelog = $updateChecker->getChangelogLines();
+    }
+
+    public function updateApp(AppUpdateService $appUpdateService)
+    {
+        if (! can('can update app')) {
+            Notification::make()
+                ->danger()
+                ->title(__('You do not have an access to update the app'))
+                ->send();
+
+            return;
+        }
+
+        try {
+            $this->isUpdating = true;
+
+            $backupFile = storage_path('app/backups/app-backup-'.now()->format('Ymd-His').'.zip');
+            $appUpdateService->backupApp($backupFile);
+            $appUpdateService->update();
+            Notification::make()
+                ->success()
+                ->title(__('App updated successfully'))
+                ->send();
+            $this->isUpdating = false;
+        } catch (Exception $e) {
+            $this->isUpdating = false;
+            report($e);
+
+            Notification::make()
+                ->danger()
+                ->title(__('Failed to update the app'))
+                ->body($e->getMessage())
+                ->send();
+        }
     }
 }

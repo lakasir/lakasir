@@ -93,4 +93,43 @@ class AppUpdateService
             File::copy($file->getPathname(), $destPath);
         }
     }
+
+    public function backupApp(string $path)
+    {
+        $tmpDir = storage_path('app/tmp');
+        if (! file_exists($tmpDir)) {
+            mkdir($tmpDir, 0777, true);
+        }
+        putenv('TMPDIR='.$tmpDir);
+
+        $zip = new ZipArchive;
+        if ($zip->open($path, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
+            throw new \Exception('Could not create backup zip file.');
+        }
+
+        $base = base_path();
+        $exclude = ['vendor', 'node_modules', 'storage', '.git'];
+
+        $files = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator($base, \FilesystemIterator::SKIP_DOTS),
+            \RecursiveIteratorIterator::SELF_FIRST
+        );
+
+        foreach ($files as $file) {
+            $filePath = $file->getRealPath();
+            $relativePath = str_replace($base.DIRECTORY_SEPARATOR, '', $filePath);
+
+            if (collect($exclude)->contains(fn ($dir) => str_starts_with($relativePath, $dir))) {
+                continue;
+            }
+
+            if ($file->isDir()) {
+                $zip->addEmptyDir($relativePath);
+            } else {
+                $zip->addFile($filePath, $relativePath);
+            }
+        }
+
+        // $zip->close();
+    }
 }
