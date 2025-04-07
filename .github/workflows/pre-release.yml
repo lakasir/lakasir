@@ -10,6 +10,22 @@ jobs:
     name: Build and Pre-release
     runs-on: ubuntu-latest
 
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: lakasir
+          MYSQL_USER: lakasir
+          MYSQL_PASSWORD: secret
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping --silent"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
     steps:
       - name: ⬇️ Checkout code
         uses: actions/checkout@v3
@@ -22,25 +38,42 @@ jobs:
           php-version: '8.2'
           tools: composer
 
+      - name: 🛠️ Setup .env for pipeline
+        run: |
+          cp .env.example .env
+          echo "DB_CONNECTION=mysql" >> .env
+          echo "DB_HOST=127.0.0.1" >> .env
+          echo "DB_PORT=3306" >> .env
+          echo "DB_DATABASE=lakasir" >> .env
+          echo "DB_USERNAME=lakasir" >> .env
+          echo "DB_PASSWORD=secret" >> .env
+          echo "APP_KEY=base64:$(php -r 'echo base64_encode(random_bytes(32));')" >> .env
+
       - name: 📦 Install PHP dependencies
         run: composer install --optimize-autoloader --no-scripts
 
-      - name: 📦 Run artisan commands
+      - name: 🔐 Generate app key
+        run: php artisan key:generate
+
+      - name: ⚙️ Run artisan setup
         run: |
+          php artisan config:clear
+          php artisan config:cache
+          php artisan migrate --force --path=database/migrations/tenant
           php artisan filament:assets
           php artisan livewire:publish --assets
 
       - name: 📥 Install Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '20' # or use your preferred version
+          node-version: '20'
 
       - name: 📦 Install JS dependencies
         run: npm install
 
       - name: 🛠️ Build frontend assets
         run: npm run build
-        
+
       - name: 📝 Create version.txt
         run: |
           VERSION=${GITHUB_REF#refs/tags/}
@@ -57,14 +90,14 @@ jobs:
             --exclude tests \
             --exclude storage/logs \
             --exclude storage/framework/cache \
-            --exclude vendor/bin 
+            --exclude vendor/bin
 
           cp version.txt release/version.txt
+          mkdir -p release/public/build
+          cp -r public/build release/public/
 
           cd release
           zip -r ../lakasir-${VERSION}.zip ./*
-          
-        shell: bash
 
       - name: 📄 Generate release notes
         id: generate_notes
