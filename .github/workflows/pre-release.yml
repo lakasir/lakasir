@@ -57,8 +57,7 @@ jobs:
             --exclude tests \
             --exclude storage/logs \
             --exclude storage/framework/cache \
-            --exclude vendor/bin \
-            --exclude .env.example
+            --exclude vendor/bin 
 
           cp version.txt release/version.txt
 
