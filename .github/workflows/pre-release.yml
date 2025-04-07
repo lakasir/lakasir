@@ -36,9 +36,6 @@ jobs:
       - name: 📦 Install PHP dependencies
         run: composer install --optimize-autoloader --no-scripts
 
-      - name: 🔐 Generate app key
-        run: php artisan key:generate
-
       - name: ⚙️ Run artisan setup
         run: |
           php artisan config:clear
