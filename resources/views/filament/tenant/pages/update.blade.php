@@ -66,7 +66,7 @@
       </div>
     @endif
     <div class="flex gap-x-2">
-      @if ($updateAvailable)
+      @if ($updateAvailable && $currentVersion != 'Development')
         @can('can update app')
           <form wire:submit.prevent="updateApp">
             <x-filament::button color="primary" icon="heroicon-o-arrow-down-tray" type="submit"
@@ -104,7 +104,11 @@
           @endcan
         @endif
         <x-filament::button disabled>
-          {{ __('You\'re on the latest version') }}
+          @if ($currentVersion != 'Development')
+            {{ __('You\'re on the latest version') }}
+          @else
+            {{ __('You\'re on the development version') }}
+          @endif
         </x-filament::button>
       @endif
     </div>
