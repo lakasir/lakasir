@@ -22,6 +22,17 @@ jobs:
           php-version: '8.2'
           tools: composer
 
+      - name: 🛠️ Setup .env for pipeline
+        run: |
+          cp .env.example .env
+          echo "DB_CONNECTION=mysql" >> .env
+          echo "DB_HOST=127.0.0.1" >> .env
+          echo "DB_PORT=3306" >> .env
+          echo "DB_DATABASE=lakasir" >> .env
+          echo "DB_USERNAME=lakasir" >> .env
+          echo "DB_PASSWORD=secret" >> .env
+          echo "APP_KEY=base64:$(php -r 'echo base64_encode(random_bytes(32));')" >> .env
+
       - name: 📦 Install PHP dependencies
         run: composer install --optimize-autoloader --no-scripts
 
