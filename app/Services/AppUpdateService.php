@@ -35,6 +35,8 @@ class AppUpdateService
 
         $this->commandsAfterUpdate = config('updater.commands_after_update') ?? [];
 
+        $this->commandsAfterUpdate = config('updater.commands_after_update');
+
         $this->logger = $logger;
     }
 
