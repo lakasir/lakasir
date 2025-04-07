@@ -23,7 +23,7 @@ jobs:
           tools: composer
 
       - name: 📦 Install PHP dependencies
-        run: composer install --no-dev --optimize-autoloader
+        run: composer install --optimize-autoloader
 
       - name: 📝 Create version.txt
         run: |
