@@ -48,7 +48,6 @@ jobs:
             --exclude .git \
             --exclude .github \
             --exclude tests \
-            --exclude node_modules \
             --exclude storage/logs \
             --exclude storage/framework/cache \
             --exclude vendor/bin \
