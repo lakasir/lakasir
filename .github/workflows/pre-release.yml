@@ -38,9 +38,9 @@ jobs:
 
       - name: ⚙️ Run artisan setup
         run: |
+          php artisan migrate --force --path=database/migrations/tenant
           php artisan config:clear
           php artisan config:cache
-          php artisan migrate --force
           php artisan filament:assets
           php artisan livewire:publish --assets
 
