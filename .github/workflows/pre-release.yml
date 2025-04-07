@@ -23,8 +23,8 @@ jobs:
           tools: composer
 
       - name: 📦 Install PHP dependencies
-        run: composer install --optimize-autoloader
-
+        run: composer install --optimize-autoloader --no-scripts
+        
       - name: 📝 Create version.txt
         run: |
           VERSION=${GITHUB_REF#refs/tags/}
