@@ -29,6 +29,16 @@ jobs:
         run: |
           VERSION=${GITHUB_REF#refs/tags/}
           echo "$VERSION" > version.txt
+      - name: 📥 Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18' # or use your preferred version
+
+      - name: 📦 Install JS dependencies
+        run: npm install
+
+      - name: 🛠️ Build frontend assets
+        run: npm run build
 
       - name: 📁 Prepare and zip Lakasir release
         run: |
