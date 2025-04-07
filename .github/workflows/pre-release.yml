@@ -24,21 +24,27 @@ jobs:
 
       - name: 📦 Install PHP dependencies
         run: composer install --optimize-autoloader --no-scripts
-        
-      - name: 📝 Create version.txt
+
+      - name: 📦 Run artisan commands
         run: |
-          VERSION=${GITHUB_REF#refs/tags/}
-          echo "$VERSION" > version.txt
+          php artisan filament:assets
+          php artisan livewire:publish --assets
+
       - name: 📥 Install Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18' # or use your preferred version
+          node-version: '20' # or use your preferred version
 
       - name: 📦 Install JS dependencies
         run: npm install
 
       - name: 🛠️ Build frontend assets
         run: npm run build
+        
+      - name: 📝 Create version.txt
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/}
+          echo "$VERSION" > version.txt
 
       - name: 📁 Prepare and zip Lakasir release
         run: |
