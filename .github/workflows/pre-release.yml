@@ -25,6 +25,11 @@ jobs:
       - name: 📦 Install PHP dependencies
         run: composer install --no-dev --optimize-autoloader
 
+      - name: 📝 Create version.txt
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/}
+          echo "$VERSION" > version.txt
+
       - name: 📁 Prepare and zip Lakasir release
         run: |
           VERSION=${GITHUB_REF#refs/tags/}
@@ -39,8 +44,11 @@ jobs:
             --exclude vendor/bin \
             --exclude .env.example
 
+          cp version.txt release/version.txt
+
           cd release
           zip -r ../lakasir-${VERSION}.zip ./*
+          
         shell: bash
 
       - name: 📄 Generate release notes
