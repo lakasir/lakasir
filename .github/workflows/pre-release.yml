@@ -1,0 +1,68 @@
+name: 🚀 Lakasir Pre-release with Versioned Zip
+
+on:
+  push:
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+*'
+
+jobs:
+  build-and-release:
+    name: Build and Pre-release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: ⬇️ Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: 🧰 Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          tools: composer
+
+      - name: 📦 Install PHP dependencies
+        run: composer install --no-dev --optimize-autoloader
+
+      - name: 📁 Prepare and zip Lakasir release
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/}
+          mkdir release
+          rsync -av --progress ./ ./release \
+            --exclude .git \
+            --exclude .github \
+            --exclude tests \
+            --exclude node_modules \
+            --exclude storage/logs \
+            --exclude storage/framework/cache \
+            --exclude vendor/bin \
+            --exclude .env.example
+
+          cd release
+          zip -r ../lakasir-${VERSION}.zip ./*
+        shell: bash
+
+      - name: 📄 Generate release notes
+        id: generate_notes
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const tag = context.ref.replace('refs/tags/', '');
+            const releaseNotes = await github.rest.repos.generateReleaseNotes({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              tag_name: tag
+            });
+            return releaseNotes.data.body;
+
+      - name: 🚀 Create GitHub Pre-release with ZIP
+        uses: softprops/action-gh-release@v2
+        with:
+          name: ${{ github.ref_name }}
+          tag_name: ${{ github.ref_name }}
+          body: ${{ steps.generate_notes.outputs.result }}
+          prerelease: true
+          files: lakasir-${{ github.ref_name }}.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
