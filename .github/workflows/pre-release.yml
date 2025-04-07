@@ -47,6 +47,7 @@ jobs:
           rsync -av --progress ./ ./release \
             --exclude .git \
             --exclude .github \
+            --exclude node_modules \
             --exclude tests \
             --exclude storage/logs \
             --exclude storage/framework/cache \
