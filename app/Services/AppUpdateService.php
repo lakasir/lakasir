@@ -2,40 +2,68 @@
 
 namespace App\Services;
 
+use Exception;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Http;
 use ZipArchive;
+
+use function Laravel\Prompts\info;
+use function Laravel\Prompts\progress;
 
 class AppUpdateService
 {
     private ?string $url;
 
-    public function __construct()
+    private ?array $artisanAfterUpdate;
+
+    private ?array $artisanAfterRestore;
+
+    /** @var callable|null */
+    private $logger = null;
+
+    public function __construct(?callable $logger = null)
     {
-        $this->url = config('app.update_url');
+        $this->url = config('updater.url');
+
+        $this->artisanAfterUpdate = config('updater.artisan_after_update');
+
+        $this->artisanAfterRestore = config('updater.artisan_after_restore');
+
+        $this->logger = $logger;
     }
 
     public function update()
     {
+        $logger = $this->logger;
+        $log = fn ($text) => $logger ? $logger($text) : info($text);
+
+        $log('🔍 Checking for updates...');
         $currentVersion = trim(file_get_contents(base_path('version.txt')));
 
         $response = Http::get($this->url);
 
         if (! $response->ok()) {
-            throw new \Exception('Failed to fetch update info.');
+            throw new Exception('Failed to fetch update $log.');
         }
 
         $latest = $response->json();
         $latestVersion = ltrim($latest['tag_name'], 'v');
 
+        $log('📦 Current version: '.$currentVersion);
+        $log('📦 Latest version: '.$latestVersion);
+
         if (version_compare($latestVersion, $currentVersion, '<=')) {
-            return 'You are already on the latest version.';
+            $log('✅ You are already on the latest version.');
+
+            return;
         }
+        $log('🚀 Updating from v'.$currentVersion.' to v'.$latestVersion.'...');
 
-        $zipUrl = $latest['zipball_url'];
+        $zipUrl = $latest['assets'][0]['browser_download_url'];
+        $zipSize = $latest['assets'][0]['size'];
         $zipPath = storage_path('app/update.zip');
-
         $options = [
             'http' => [
                 'header' => "User-Agent: LakasirAutoUpdater\r\n",
@@ -44,43 +72,74 @@ class AppUpdateService
 
         $context = stream_context_create($options);
 
-        file_put_contents($zipPath, file_get_contents($zipUrl, false, $context));
+        $readStream = fopen($zipUrl, 'r', false, $context);
+        if (! $readStream) {
+            throw new Exception('Failed to open update ZIP stream.');
+        }
+
+        $writeStream = fopen($zipPath, 'w');
+        if (! $writeStream) {
+            throw new Exception('Failed to create ZIPxfile.');
+        }
+
+        $chunkSize = 1024 * 512; // 512 KB
+
+        $progress = progress(
+            label: '📥 Downloading update...',
+            steps: $zipSize,
+        );
+        $progress->start();
+
+        while (! feof($readStream)) {
+            $buffer = fread($readStream, $chunkSize); // 512 KB chunks
+            fwrite($writeStream, $buffer);
+            $progress->advance(strlen($buffer));
+        }
+        fclose($readStream);
+        fclose($writeStream);
+
+        $progress->finish();
+
+        $log('✅ Download completed.');
 
         $zip = new ZipArchive;
         if ($zip->open($zipPath) === true) {
-            $extractPath = storage_path('app/update');
+            $log('☕ Extracting downloaded files...');
+            $extractPath = storage_path('app/update/lakasir/');
             $zip->extractTo($extractPath);
             $zip->close();
         } else {
-            throw new \Exception('Failed to extract zip.');
+            throw new Exception('❌ Failed to extract zip.');
         }
 
         $folders = glob(storage_path('app/update/*'), GLOB_ONLYDIR);
         $updateFolder = $folders[0] ?? null;
 
         if (! $updateFolder) {
-            throw new \Exception('Update folder not found.');
+            throw new Exception('❌ Update folder not found.');
         }
 
         $exclude = ['.env', 'storage', 'vendor'];
 
-        $this->copyFolder($updateFolder, base_path(), $exclude);
+        $this->copyFolder($updateFolder, base_path(), $exclude, $log);
 
         unlink($zipPath);
+        $log('🗑️ Cleaning up...');
         File::deleteDirectory(storage_path('app/update'));
 
-        Artisan::call('migrate', [
-            '--force' => true,
-            '--path' => 'database/migrations/tenant',
-        ]);
+        foreach ($this->artisanAfterUpdate as $key => $command) {
+            $this->runArtisanCommands($key, $command);
+        }
 
         file_put_contents(base_path('version.txt'), $latestVersion);
 
-        return "Update to v$latestVersion completed.";
+        $log("✅ Update to v$latestVersion completed.");
+        Cache::forget('update:progress');
     }
 
-    protected function copyFolder($from, $to, $exclude = [])
+    protected function copyFolder($from, $to, $exclude, $log)
     {
+        $log('📦 Copying files...');
         foreach (File::allFiles($from) as $file) {
             $relativePath = str_replace($from.'/', '', $file->getPathname());
             foreach ($exclude as $skip) {
@@ -96,6 +155,9 @@ class AppUpdateService
 
     public function backupApp()
     {
+        $logger = $this->logger;
+        $log = fn ($text) => $logger ? $logger($text) : info($text);
+        $log('📦 Backing up app...');
         $currentVersion = app(UpdateChecker::class)->getCurrentVersion();
         $path = storage_path('app/backups/app-backup-'.$currentVersion.'.zip');
         $backupDir = dirname($path);
@@ -109,7 +171,7 @@ class AppUpdateService
 
         $zip = new ZipArchive;
         if ($zip->open($path, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
-            throw new \Exception('Could not create backup zip file.');
+            throw new Exception('Could not create backup zip file.');
         }
 
         $base = base_path();
@@ -136,6 +198,7 @@ class AppUpdateService
         }
 
         $zip->close();
+        $log('✅ App backed up successfully');
     }
 
     public function restoreApp()
@@ -144,24 +207,42 @@ class AppUpdateService
         $files = File::files($backupDir);
 
         $latestBackup = collect($files)
-            ->filter(fn($file) => str_ends_with($file->getFilename(), '.zip'))
-            ->sortByDesc(fn($file) => $file->getMTime())
+            ->filter(fn ($file) => str_ends_with($file->getFilename(), '.zip'))
+            ->sortByDesc(fn ($file) => $file->getMTime())
             ->first();
 
         if ($latestBackup) {
             $path = $latestBackup->getRealPath();
         } else {
-            throw new \Exception('No backup files found.');
+            throw new Exception('No backup files found.');
         }
 
         $zip = new ZipArchive;
         if ($zip->open($path) !== true) {
-            throw new \Exception('Could not open backup zip file.');
+            throw new Exception('Could not open backup zip file.');
         }
 
         $zip->extractTo(base_path());
         $zip->close();
 
+        foreach ($this->artisanAfterRestore as $key => $command) {
+            $this->runArtisanCommands($key, $command);
+        }
+
         File::delete($path);
+    }
+
+    private function runArtisanCommands(mixed $key, mixed $command)
+    {
+        $logger = $this->logger;
+        $log = fn ($text) => $logger ? $logger($text) : info($text);
+        if (is_int($key)) {
+            $log('💻 Running artisan command: '.$command);
+            Artisan::call($command);
+        }
+        if (is_string($key)) {
+            $log('💻 Running artisan command: '.$key);
+            Artisan::call($key, $command);
+        }
     }
 }

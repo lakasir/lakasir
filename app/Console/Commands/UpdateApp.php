@@ -11,11 +11,11 @@ class UpdateApp extends Command
 
     protected $description = 'Auto-update app from GitHub latest release';
 
-    public function handle(AppUpdateService $appUpdateService)
+    public function handle()
     {
         try {
-            $message = $appUpdateService->update();
-            $this->info($message);
+            $appUpdateService = new AppUpdateService();
+            $appUpdateService->update();
         } catch (\Exception $e) {
             $this->error($e->getMessage());
         }
