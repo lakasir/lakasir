@@ -23,5 +23,9 @@ return [
         ],
         'optimize:clear',
         'optimize',
+    ],
+    'commands_after_update' => [
+        'npm install',
+        'npm run build'
     ]
 ];

@@ -20,6 +20,8 @@ class AppUpdateService
 
     private ?array $artisanAfterRestore;
 
+    private ?array $commandsAfterUpdate;
+
     /** @var callable|null */
     private $logger = null;
 
@@ -27,9 +29,11 @@ class AppUpdateService
     {
         $this->url = config('updater.url');
 
-        $this->artisanAfterUpdate = config('updater.artisan_after_update');
+        $this->artisanAfterUpdate = config('updater.artisan_after_update') ?? [];
 
-        $this->artisanAfterRestore = config('updater.artisan_after_restore');
+        $this->artisanAfterRestore = config('updater.artisan_after_restore') ?? [];
+
+        $this->commandsAfterUpdate = config('updater.commands_after_update') ?? [];
 
         $this->logger = $logger;
     }
@@ -119,7 +123,7 @@ class AppUpdateService
             throw new Exception('❌ Update folder not found.');
         }
 
-        $exclude = ['.env', 'storage', 'vendor'];
+        $exclude = ['.env', 'storage'];
 
         $this->copyFolder($updateFolder, base_path(), $exclude, $log);
 
@@ -129,6 +133,11 @@ class AppUpdateService
 
         foreach ($this->artisanAfterUpdate as $key => $command) {
             $this->runArtisanCommands($key, $command);
+        }
+
+        foreach ($this->commandsAfterUpdate as $command) {
+            $log('💻 Running command: '.$command);
+            exec($command);
         }
 
         file_put_contents(base_path('version.txt'), $latestVersion);
