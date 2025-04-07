@@ -25,8 +25,14 @@ jobs:
       - name: 📦 Install PHP dependencies
         run: composer install --optimize-autoloader --no-scripts
 
-      - name: 📦 Run artisan commands
+      - name: 🔐 Generate app key
+        run: php artisan key:generate
+
+      - name: ⚙️ Run artisan setup
         run: |
+          php artisan config:clear
+          php artisan config:cache
+          php artisan migrate --force
           php artisan filament:assets
           php artisan livewire:publish --assets
 
