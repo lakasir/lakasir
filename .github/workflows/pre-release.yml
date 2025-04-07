@@ -10,6 +10,22 @@ jobs:
     name: Build and Pre-release
     runs-on: ubuntu-latest
 
+    services:
+      mysql:
+        image: mysql:8.0
+        ports:
+          - 3306:3306
+        env:
+          MYSQL_DATABASE: lakasir
+          MYSQL_USER: lakasir
+          MYSQL_PASSWORD: secret
+          MYSQL_ROOT_PASSWORD: root
+        options: >-
+          --health-cmd="mysqladmin ping --silent"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
     steps:
       - name: ⬇️ Checkout code
         uses: actions/checkout@v3
