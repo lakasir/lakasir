@@ -97,8 +97,9 @@ jobs:
             --exclude storage/logs \
             --exclude storage/framework/cache \
             --exclude vendor/bin
-
+            
           cp version.txt release/version.txt
+          cp .env.example release/.env.example
 
           cd release
           zip -r ../lakasir-${VERSION}.zip ./*
