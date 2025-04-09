@@ -85,7 +85,7 @@ jobs:
           fi
           mv changelog-header.md CHANGELOG.md
 
-      - name: 📁 Prepare and zip Lakasir release
+      - name: 📁 Prepare standard release zip
         run: |
           VERSION=${GITHUB_REF#refs/tags/}
           mkdir release
@@ -97,27 +97,34 @@ jobs:
             --exclude storage/logs \
             --exclude storage/framework/cache \
             --exclude vendor/bin
-            
           cp version.txt release/version.txt
           cp .env.example release/.env.example
 
           cd release
           zip -r ../lakasir-${VERSION}.zip ./*
-
         shell: bash
 
-      - name: 📄 Generate release notes
-        id: generate_notes
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const tag = context.ref.replace('refs/tags/', '');
-            const releaseNotes = await github.rest.repos.generateReleaseNotes({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              tag_name: tag
-            });
-            return releaseNotes.data.body;
+      - name: 📁 Prepare shared hosting release zip
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/}
+          mkdir -p shared-release/lakasir
+          rsync -av --progress ./ ./shared-release/lakasir \
+            --exclude .git \
+            --exclude .github \
+            --exclude node_modules \
+            --exclude tests \
+            --exclude storage/logs \
+            --exclude storage/framework/cache \
+            --exclude vendor/bin
+
+          cp version.txt shared-release/lakasir/version.txt
+          cp .env.example shared-release/lakasir/.env.example
+
+          echo "<?php require __DIR__.'/lakasir/public/index.php';" > shared-release/index.php
+
+          cd shared-release
+          zip -r ../lakasir-shared-${VERSION}.zip ./*
+        shell: bash
 
       - name: 🚀 Create GitHub Pre-release with ZIP
         uses: softprops/action-gh-release@v2
