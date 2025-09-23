@@ -12,8 +12,8 @@ NIXPACKS_PHP_ROOT_DIR = "/app/public"
 [phases.setup]
 nixpkgsArchive = "nixos-23.11"
 nixPkgs = [
-    # SINTAXIS CORREGIDA: Se ha cambiado la forma de listar las extensiones de PHP.
-    "(php81.withExtensions (pe: [ pe.fpm pe.pdo pe.pdo_mysql pe.gd pe.curl pe.mbstring pe.zip pe.fileinfo pe.intl pe.exif pe.bcmath pe.sodium ]))",
+    # CORRECCIÓN FINAL: Se ha eliminado 'pe.fpm' de la lista de extensiones.
+    "(php81.withExtensions (pe: [ pe.pdo pe.pdo_mysql pe.gd pe.curl pe.mbstring pe.zip pe.fileinfo pe.intl pe.exif pe.bcmath pe.sodium ]))",
     "php81Packages.composer",
     "nginx",
     "nodejs_20",
