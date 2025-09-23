@@ -10,33 +10,27 @@ NIXPACKS_PHP_ROOT_DIR = "/app/public"
 
 # Fase 'setup': instala las dependencias del sistema.
 [phases.setup]
-# Utiliza el archivo de NixOS 23.11 para los paquetes.
 nixpkgsArchive = "nixos-23.11"
-# Lista de paquetes de Nix necesarios para la aplicación.
 nixPkgs = [
-    # Se especifica PHP 8.1 con un conjunto de extensiones comunes para Laravel.
+    # Se especifica PHP 8.1 con las extensiones necesarias, incluyendo pdo_mysql.
     "(php81.withExtensions (pe: with pe; [ fpm pdo pdo_mysql gd curl mbstring zip fileinfo intl exif bcmath sodium]))",
-    "php81Packages.composer", # Instala Composer.
-    "nginx",                  # Servidor web Nginx.
-    "nodejs_20",              # Instala Node.js versión 20.
-    "yarn-1_x"                # Instala Yarn.
+    "php81Packages.composer",
+    "nginx",
+    "nodejs_20",
+    "yarn-1_x"
 ]
 
-# Fase 'install': instala las dependencias de la aplicación.
+# Fase 'install': instala las dependencias de la aplicación SIN ejecutar scripts.
 [phases.install]
 cmds = [
-    "composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader", # Instala dependencias de PHP para producción.
-    "yarn install", # Instala dependencias de JavaScript/Node.js.
+    "composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader --no-scripts", # <-- Se añadió --no-scripts
+    "yarn install",
 ]
 
-# Fase 'build': compila los assets y prepara la aplicación.
+# Fase 'build': ÚNICAMENTE compila los assets.
 [phases.build]
 cmds = [
-    "yarn run build", # Compila los assets del frontend (Vite, etc.).
-    "php artisan event:cache",
-    "php artisan route:cache",
-    "php artisan config:cache",
-    "php artisan view:cache"
+    "yarn run build" # <-- Se eliminaron todos los comandos 'php artisan'
 ]
 
 # Configuración del comando de inicio de la aplicación.
