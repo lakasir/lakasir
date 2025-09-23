@@ -12,8 +12,8 @@ NIXPACKS_PHP_ROOT_DIR = "/app/public"
 [phases.setup]
 nixpkgsArchive = "nixos-23.11"
 nixPkgs = [
-    # Se especifica PHP 8.1 con las extensiones necesarias, incluyendo pdo_mysql.
-    "(php81.withExtensions (pe: with pe; [ fpm pdo pdo_mysql gd curl mbstring zip fileinfo intl exif bcmath sodium]))",
+    # SINTAXIS CORREGIDA: Se ha cambiado la forma de listar las extensiones de PHP.
+    "(php81.withExtensions (pe: [ pe.fpm pe.pdo pe.pdo_mysql pe.gd pe.curl pe.mbstring pe.zip pe.fileinfo pe.intl pe.exif pe.bcmath pe.sodium ]))",
     "php81Packages.composer",
     "nginx",
     "nodejs_20",
@@ -23,14 +23,14 @@ nixPkgs = [
 # Fase 'install': instala las dependencias de la aplicación SIN ejecutar scripts.
 [phases.install]
 cmds = [
-    "composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader --no-scripts", # <-- Se añadió --no-scripts
+    "composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader --no-scripts",
     "yarn install",
 ]
 
 # Fase 'build': ÚNICAMENTE compila los assets.
 [phases.build]
 cmds = [
-    "yarn run build" # <-- Se eliminaron todos los comandos 'php artisan'
+    "yarn run build"
 ]
 
 # Configuración del comando de inicio de la aplicación.
