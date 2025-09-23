@@ -10,6 +10,8 @@ use App\Features\ProductStock;
 use App\Features\ProductType;
 use App\Models\Tenants\Category;
 use App\Models\Tenants\Setting;
+use Filament\Actions\StaticAction;
+use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
@@ -18,6 +20,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Set;
 use Filament\Support\RawJs;
 use Laravel\Pennant\Feature;
+use Livewire\Attributes\On;
 
 trait HasProductForm
 {
@@ -148,10 +151,32 @@ trait HasProductForm
 
     public function generateBarcodeFormComponent(): TextInput
     {
+
+        $scanModalId = 'scan-barcode-modal';
+
         return TextInput::make('barcode')
             ->helperText(__('Point the cursor to this input first then scan the barcode'))
             ->visible(Feature::active(ProductBarcode::class))
-            ->translateLabel();
+            ->translateLabel()
+            ->id($scanModalId)
+            ->suffixAction(
+                Action::make('scan')
+                    ->icon('heroicon-o-camera')
+                    ->label('Scan')
+                    ->modalHeading('Scan a barcode')
+                    ->modalContent(view('filament.components.barcode-scanner', ['modalId' => $scanModalId]))
+                    ->modalWidth('lg')
+                    ->closeModalByClickingAway(false)
+                    ->modalCloseButton(false)
+                    ->modalSubmitAction(false)
+                    ->modalCancelAction(
+                        fn(StaticAction $action) =>
+                        $action->label('Cancel')
+                            ->extraAttributes([
+                                'id' => 'close-barcode-scanner-button',
+                            ])
+                    )
+            );
     }
 
     public function generateNonStockFormComponent(): Checkbox

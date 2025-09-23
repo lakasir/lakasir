@@ -136,6 +136,7 @@ class TenantPanelProvider extends PanelProvider
                 Js::make('custom-javascript', resource_path('js/app.js')),
                 Js::make('printer', resource_path('js/printer.js')),
                 Js::make('indexeddb', resource_path('js/indexeddb.js')),
+                Js::make('html5-qrcode', 'https://unpkg.com/html5-qrcode')
             ])
             ->favicon(url('favicon.ico'))
             ->spa(config('app.spa_mode'))
