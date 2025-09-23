@@ -1,5 +1,6 @@
 [phases.setup]
 nixPkgs = ["...", "python311Packages.supervisor"]
+nixpkgsArchive = "nixos-23.11"
 
 [phases.build]
 cmds = [
