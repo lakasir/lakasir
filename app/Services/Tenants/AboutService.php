@@ -13,6 +13,7 @@ class AboutService
 {
     public function createOrUpdate(array $data): void
     {
+
         $about = About::query()
             ->updateOrCreate([
                 'id' => About::first()?->getKey() ?? null,
@@ -41,7 +42,7 @@ class AboutService
             ]);
         }
 
-        if (! isset($data['photo_url'])) {
+        if (! isset($data['photo_url']) && !isset($about->photo)) {
             /** @var \App\Models\Tenants\UploadedFile $tmpFile */
             $tmpFile = UploadedFile::where('url', $about->photo)->first();
             if ($tmpFile) {
