@@ -32,42 +32,29 @@ class Printer extends Page implements HasActions, HasForms
     public function form(Form $form): Form
     {
         return $form->schema([
-            Components\Textarea::make('header')
-                ->rows(5)
-                ->translateLabel(),
             Components\TextInput::make('name')
                 ->required()
                 ->translateLabel(),
             Components\Select::make('driver')
-                ->default('usb')
+                ->default('api')
                 ->options([
-                    // 'bluetooth' => 'Bluetooh',
-                    'usb' => 'USB',
+                    'api' => 'API',
                 ])
                 ->translateLabel(),
             Grid::make(columns: 3)
                 ->schema([
                     Components\TextInput::make('printer')
-                        ->required()
-                        ->helperText(__('Please click the select printer button to choose the connected printer'))
+                        ->default('API Printer Service')
+                        ->helperText(__('API-based thermal printer'))
                         ->readOnly()
                         ->translateLabel()
                         ->columnSpan(2),
                     Components\TextInput::make('printerId')
-                        ->required()
-                        ->hintActions([
-                            ActionsAction::make('select_printer')
-                                ->icon('heroicon-o-printer')
-                                ->translateLabel()
-                                ->extraAttributes([
-                                    'x-on:click' => 'fetchDeviceByDriver',
-                                ]),
-                        ])
-                        ->readOnly(),
+                        ->default('http://localhost:8888/print')
+                        ->helperText(__('Printer API URL'))
+                        ->translateLabel()
+                        ->label(__('API URL')),
                 ]),
-            Components\Textarea::make('footer')
-                ->rows(5)
-                ->translateLabel(),
         ])->statePath('data');
     }
 
