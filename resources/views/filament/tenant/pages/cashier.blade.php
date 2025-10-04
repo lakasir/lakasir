@@ -334,90 +334,66 @@ use App\Features\{PaymentShortcutButton, SellingTax, Discount};
   });
   document.getElementById("printReceiptButton").addEventListener('click', async (event) => {
     let about = @js($about);
-    const printerData = getPrinter();
 
     try {
-      if (!printerData) {
-        new FilamentNotification()
-          .title('@lang('You should choose the printer first in printer setting')')
-          .danger()
-          .actions([
-            new FilamentNotificationAction('Setting')
-            .icon('heroicon-o-cog-6-tooth')
-            .button()
-            .url('/member/printer'),
-          ])
-          .send()
-      } else {
-        const printer = new Printer(printerData.printerId);
-        let printerAction = printer.font('a');
-        if(about != undefined || about != null) {
-          printerAction.size(1)
-            .align('center')
-            .text(about.shop_name)
-            .size(0)
-            .text(about.shop_location);
-          if(printerData.header != undefined) {
-            printerAction
-              .text(printerData.header);
-          }
-          printerAction.align('left')
-            .text('-------------------------------');
-        }
-        printerAction.table(['@lang('Cashier')', selling.user.name])
-        if(selling.table != undefined && selling.table != null) {
-          printerAction.table(['@lang('Table')', selling.table.number])
-        }
-        printerAction.table(['@lang('Payment method')', selling.payment_method.name]);
-        if(selling.member != undefined && selling.member != null) {
-          printerAction
-            .table(['Member', selling.member.name]);
-        }
-        printerAction
-          .text('-------------------------------');
-        selling.selling_details.forEach(sellingDetail => {
-          let price = sellingDetail.price;
-          let text = moneyFormat(sellingDetail.price / sellingDetail.qty) + ' x ' + sellingDetail.qty.toString();
-          printerAction.table([sellingDetail.product.name, moneyFormat(sellingDetail.price / sellingDetail.qty) + ' x ' + sellingDetail.qty.toString()])
-          if (sellingDetail.discount_price > 0) {
-            price = price - sellingDetail.discount_price;
-            printerAction
-              .align('right')
-              .text(`(${moneyFormat(sellingDetail.discount_price)})`)
-          }
-          printerAction
-            .align('right')
-            .text(moneyFormat(price))
-            .align('left')
-        });
-        printerAction
-          .text('-------------------------------');
-        if("@js(feature(SellingTax::class))" == 'true') {
-          printerAction.table(['@lang('Tax')', `${selling.tax}%`])
-            .table(['@lang('Tax price')', moneyFormat(selling.tax_price)]);
-        }
-        printerAction
-          .table(['@lang('Subtotal')', moneyFormat(selling.total_price)])
-        if("@js(feature(Discount::class))" == 'true') {
-          printerAction
-            .table(['@lang('Discount')', `(${moneyFormat(selling.total_discount_per_item + selling.discount_price)})`])
-        }
-        printerAction
-          .table(['@lang('Total price')', moneyFormat(selling.grand_total_price)])
-          .text('-------------------------------')
-          .table(['@lang('Payed money')', moneyFormat(selling.payed_money)])
-          .table(['@lang('Change')', moneyFormat(selling.money_changes)])
-          .align('center');
+      const printer = new Printer();
+      let receiptText = 'Receipt';
+      let items = [];
 
-        if(printerData.footer != undefined) {
-          printerAction
-            .text(printerData.footer);
-        }
-
-        await printerAction
-          .cut()
-          .print();
+      if(about != undefined && about != null) {
+        receiptText = about.shop_name;
+        items.push(about.shop_location);
+        items.push('-------------------------------');
       }
+
+      items.push("Cashier: " + selling.user.name);
+      
+      if(selling.table != undefined && selling.table != null) {
+        items.push("Table: " + selling.table.number);
+      }
+      
+      items.push("Payment method: " + selling.payment_method.name);
+      
+      if(selling.member != undefined && selling.member != null) {
+        items.push("Member: " + selling.member.name);
+      }
+      
+      items.push('-------------------------------');
+      
+      selling.selling_details.forEach(sellingDetail => {
+        let price = sellingDetail.price;
+        let unitPrice = moneyFormat(sellingDetail.price / sellingDetail.qty);
+        items.push(sellingDetail.product.name + ' - ' + unitPrice + ' x ' + sellingDetail.qty);
+        
+        if (sellingDetail.discount_price > 0) {
+          price = price - sellingDetail.discount_price;
+          items.push('  Discount: (' + moneyFormat(sellingDetail.discount_price) + ')');
+        }
+        items.push('  Total: ' + moneyFormat(price));
+      });
+      
+      items.push('-------------------------------');
+      
+      if("@@js(feature(SellingTax::class))" == 'true') {
+        items.push('Tax: ' + selling.tax + '%');
+        items.push('Tax price: ' + moneyFormat(selling.tax_price));
+      }
+      
+      items.push('Subtotal: ' + moneyFormat(selling.total_price));
+      
+      if("@@js(feature(Discount::class))" == 'true') {
+        items.push('Discount: (' + moneyFormat(selling.total_discount_per_item + selling.discount_price) + ')');
+      }
+      
+      items.push('Total price: ' + moneyFormat(selling.grand_total_price));
+      items.push('-------------------------------');
+      items.push('Payed money: ' + moneyFormat(selling.payed_money));
+      items.push('Change: ' + moneyFormat(selling.money_changes));
+
+      printer.text_content = receiptText;
+      printer.items = items;
+      
+      await printer.print();
     } catch (error) {
       console.error(error);
     }

@@ -17,34 +17,23 @@
   <script>
     Alpine.data('printer', () => ({
       init() {
-        if(localStorage.printer) {
-          const printer = JSON.parse(localStorage.printer);
+        if(localStorage.printerApiUrl) {
           $wire.data = {
-            ...printer
+            name: 'API Printer',
+            driver: 'api',
+            printer: 'API Printer Service',
+            printerId: localStorage.printerApiUrl
           }
         }
       },
       fetchDeviceByDriver() {
-        if($wire.data.driver == 'bluetooth') {
-          this.fetchBluetooth();
-        }
-        if($wire.data.driver == 'usb') {
-          this.fetchTheUsb();
+        if($wire.data.driver == 'api') {
+          $wire.data.printer = 'API Printer Service';
+          $wire.data.printerId = 'http://localhost:8888/print';
         }
       },
       async fetchTheUsb() {
-        let selectedDevice = null;
-        try {
-          selectedDevice = await navigator.usb.requestDevice({ filters: [] });
-          await selectedDevice.open();
-          await selectedDevice.selectConfiguration(1);
-          await selectedDevice.claimInterface(0);
-          $wire.data.printer = selectedDevice.productName;
-          $wire.data.printerId = selectedDevice.vendorId;
-          console.log('USB printer selected:', selectedDevice.productName);
-        } catch (error) {
-          console.error(error);
-        }
+        this.fetchDeviceByDriver();
       },
       async fetchBluetooth() {},
       save() {
@@ -52,9 +41,7 @@
         if(!$wire.data.printer || !$wire.data.name) {
           return;
         }
-        localStorage.setItem("printer", JSON.stringify({
-          ...$wire.data,
-        }))
+        localStorage.setItem("printerApiUrl", $wire.data.printerId || 'http://localhost:8888/print');
 
         new FilamentNotification()
           .title('@lang('Save success')')
@@ -67,59 +54,37 @@
           return;
         }
         try {
-          const printer = new Printer($wire.data.printerId);
-          printerAction = printer.font('a')
-            .size(1)
-            .align('center')
-            .text('Toko Mitra Susu')
-            .size(0)
-            .text('Jl. cipinang raya no 156');
+          const printer = new Printer($wire.data.printerId || 'http://localhost:8888/print');
+          printer.text_content = 'Test Receipt';
+          printer.items = [
+            'Toko Mitra Susu',
+            'Jl. cipinang raya no 156',
+            '-------------------------------',
+            'Cashier - Nama kasir',
+            'Payment method - Cash',
+            '-------------------------------',
+            'Test 1 - ' + moneyFormat(2000) + ' x 1',
+            '  Total: ' + moneyFormat(2000),
+            'Test 2 - ' + moneyFormat(5000) + ' x 1',
+            '  Total: ' + moneyFormat(5000),
+            '-------------------------------',
+            'Subtotal: ' + moneyFormat(7000),
+            'Tax: 10%',
+            'Total price: ' + moneyFormat(7700),
+          ];
 
-          if($wire.data.header != undefined) {
-            printerAction
-              .text($wire.data.header);
-          }
-
-          printerAction.align('left')
-            .text('-------------------------------')
-            .table(['Cashier', 'Nama kasir'])
-            .table(['Payment method', 'Cash'])
-            .text('-------------------------------')
-            .tableCustom([
-              { text: 'Test 1'},
-              { text: moneyFormat(2000) + ' x 1', style: 'B'}
-            ])
-            .align('right')
-            .text(moneyFormat(2000))
-            .tableCustom([
-              { text: 'Test 2'},
-              { text: moneyFormat(5000) + ' x 1', style: 'B'}
-            ])
-            .align('right')
-            .text(moneyFormat(2000))
-            .text('-------------------------------')
-            .tableCustom([
-              { text: 'Subtotal', style: 'B'},
-              { text: moneyFormat(5000) + ' x 1', style: 'B'}
-            ])
-            .tableCustom([
-              { text: 'Tax', style: 'B'},
-              { text: moneyFormat(5000) + ' x 1', style: 'B'}
-            ])
-            .tableCustom([
-              { text: 'Total price', style: 'B'},
-              { text: moneyFormat(5000) + ' x 1', style: 'B'}
-            ])
-            .newLine()
-            .align('center');
-          if($wire.data.footer != undefined) {
-            printerAction
-              .text($wire.data.footer);
-          }
-          await printerAction.cut()
-            .print();
+          await printer.print();
+          
+          new FilamentNotification()
+            .title('@lang('Test print sent successfully')')
+            .success()
+            .send();
         } catch (e) {
-          console.error(e)
+          console.error(e);
+          new FilamentNotification()
+            .title('@lang('Test print failed')')
+            .danger()
+            .send();
         }
       }
     }))
