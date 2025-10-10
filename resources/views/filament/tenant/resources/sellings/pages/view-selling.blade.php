@@ -119,69 +119,38 @@
 
     window.location.reload();
   });
+
   document.getElementById('printButton').addEventListener('click', async () => {
-    let selling = @js($record);
-    let about = @js($about);
+    let sellingId = @js($record->id);
 
     try {
-      const printer = new Printer();
-      let receiptText = 'Receipt';
-      let items = [];
-
-      if(about != undefined && about != null) {
-        receiptText = about.shop_name;
-        items.push(about.shop_location);
-        items.push('-------------------------------');
-      }
-
-      items.push("Cashier: " + selling.user.name);
-      
-      if(selling.table != undefined && selling.table != null) {
-        items.push("Table: " + selling.table.number);
-      }
-      
-      items.push("Payment method: " + selling.payment_method.name);
-      
-      if(selling.member != undefined && selling.member != null) {
-        items.push("Member: " + selling.member.name);
-      }
-      
-      items.push('-------------------------------');
-      
-      selling.selling_details.forEach(sellingDetail => {
-        let price = sellingDetail.price;
-        let unitPrice = moneyFormat(sellingDetail.price / sellingDetail.qty);
-        items.push(sellingDetail.product.name + ' - ' + unitPrice + ' x ' + sellingDetail.qty);
-        
-        if (sellingDetail.discount_price > 0) {
-          price = price - sellingDetail.discount_price;
-          items.push('  Discount: (' + moneyFormat(sellingDetail.discount_price) + ')');
+      const response = await fetch(`/member/printer/print/${sellingId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
         }
-        items.push('  Total: ' + moneyFormat(price));
       });
-      
-      items.push('-------------------------------');
-      
-      if("@@js(feature(SellingTax::class))" == 'true') {
-        items.push('Tax: ' + selling.tax + '%');
-        items.push('Tax price: ' + moneyFormat(selling.tax_price));
-      }
-      
-      items.push('Subtotal: ' + moneyFormat(selling.total_price));
-      items.push('Discount: (' + moneyFormat(selling.total_discount_per_item + selling.discount_price) + ')');
-      items.push('Total price: ' + moneyFormat(selling.grand_total_price));
-      items.push('-------------------------------');
-      items.push('Payed money: ' + moneyFormat(selling.payed_money));
-      items.push('Change: ' + moneyFormat(selling.money_changes));
-      items.push('copy');
 
-      printer.text_content = receiptText;
-      printer.items = items;
-      
-      await printer.print();
+      const result = await response.json();
+
+      if (response.ok && result.success) {
+        new FilamentNotification()
+          .title('Print successful')
+          .success()
+          .send();
+      } else {
+        throw new Error(result.message || 'Failed to print');
+      }
     } catch (error) {
       console.error(error);
+      new FilamentNotification()
+        .title(error.message || 'Failed to print. Please check if the printer is configured.')
+        .danger()
+        .send();
     }
   });
 </script>
 @endscript
+

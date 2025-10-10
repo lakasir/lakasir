@@ -12,5 +12,12 @@ class Printer extends Model
 {
     use HasFactory;
 
-    protected $guarded = ['id'];
+    protected $fillable = [
+        'name',
+        'driver',
+        'port',
+        'ip_address',
+        'logo',
+        'footer_text',
+    ];
 }
