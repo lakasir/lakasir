@@ -11,15 +11,18 @@ use App\Models\Tenants\About;
 use App\Models\Tenants\CartItem;
 use App\Models\Tenants\Member;
 use App\Models\Tenants\PaymentMethod;
+use App\Models\Tenants\QrisTransaction;
 use App\Models\Tenants\Selling;
 use App\Models\Tenants\Setting;
 use App\Models\Tenants\Table;
 use App\Models\Tenants\Voucher as TenantsVoucher;
 use App\Rules\CheckProductStock;
 use App\Rules\ShouldSameWithSellingDetail;
+use App\Services\QrisService;
 use App\Services\Tenants\SellingService;
 use App\Services\VoucherService;
 use App\Traits\HasTranslatableResource;
+use Filament\Facades\Filament;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -31,6 +34,7 @@ use Filament\Support\RawJs;
 use Filament\Tables\Contracts\HasTable;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Collection as CollectionSupport;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
@@ -69,6 +73,10 @@ class Cashier extends Page implements HasForms, HasTable
 
     public ?Collection $tableOption;
 
+    public ?QrisTransaction $qrisTransaction = null;
+
+    public bool $showQrisModal = false;
+
     private float $discount_price = 0;
 
     public function mount()
@@ -96,7 +104,7 @@ class Cashier extends Page implements HasForms, HasTable
         $this->calculateTotalPrice();
 
         $this->paymentMethods = PaymentMethod::query()
-            ->select('id', 'name', 'is_credit')
+            ->select('id', 'name', 'is_credit', 'is_qris')
             ->get()
             ->toArray();
 
@@ -202,6 +210,8 @@ class Cashier extends Page implements HasForms, HasTable
         if (isset($paymentMethod['name'])) {
             $this->cartDetail['payment_method_label'] = $paymentMethod['name'];
         }
+
+        // Note: QRIS payment is now handled via frontend Alpine.js when payment method is selected
     }
 
     private function fillMember()
@@ -239,8 +249,13 @@ class Cashier extends Page implements HasForms, HasTable
                 'is_debit' => false,
                 'is_credit' => false,
                 'is_wallet' => false,
+                'is_qris' => false,
                 'icon' => 'assets/images/payment-methods/cash.png',
             ]);
+        }
+
+        if ($pMethod->is_qris) {
+            return;
         }
         $validator = Validator::make($request, [
             'fee' => ['numeric'],
@@ -334,5 +349,188 @@ class Cashier extends Page implements HasForms, HasTable
         });
 
         $this->total_price = $this->sub_total + ($this->sub_total * $this->tax / 100) - $this->discount_price;
+    }
+
+    public function handleQrisPayment(): void
+    {
+        $qrisService = app(QrisService::class);
+        $user = Filament::auth()->user();
+
+        if (!$qrisService->isConfigured()) {
+            Notification::make()
+                ->title(__('notifications.qris.payment_not_configured'))
+                ->body(__('notifications.qris.payment_not_configured_body'))
+                ->danger()
+                ->send();
+            return;
+        }
+
+        if ($this->cartItems->isEmpty()) {
+            Notification::make()
+                ->title(__('notifications.qris.cart_empty'))
+                ->body(__('notifications.qris.cart_empty_body'))
+                ->warning()
+                ->send();
+            return;
+        }
+
+        $transactionNumber = 'QRIS-' . time() . '-' . $user->id;
+
+        $qrisData = $qrisService->createInvoice($transactionNumber, $this->total_price);
+
+        if (!$qrisData) {
+            Notification::make()
+                ->title(__('notifications.qris.failed_to_generate'))
+                ->body(__('notifications.qris.failed_to_generate_body'))
+                ->danger()
+                ->send();
+            return;
+        }
+
+        if (!isset($qrisData['qris_content']) || empty($qrisData['qris_content'])) {
+            Notification::make()
+                ->title(__('notifications.qris.invalid_response'))
+                ->body(__('notifications.qris.invalid_response_body'))
+                ->danger()
+                ->send();
+            return;
+        }
+
+        try {
+            $this->qrisTransaction = QrisTransaction::create([
+                'user_id' => $user->id,
+                'payment_method_id' => $this->cartDetail['payment_method_id'],
+                'qris_invoice_id' => $qrisData['qris_invoiceid'],
+                'qris_content' => $qrisData['qris_content'],
+                'qris_request_date' => $qrisData['qris_request_date'],
+                'qris_nmid' => $qrisData['qris_nmid'],
+                'amount' => $this->total_price,
+                'transaction_number' => $transactionNumber,
+                'status' => 'pending',
+                'cart_data' => $this->cartItems->toArray(),
+                'expires_at' => now()->addMinutes(30),
+            ]);
+
+            $this->showQrisModal = true;
+            $this->dispatch('qrisModalOpened', $this->qrisTransaction);
+        } catch (\Exception $e) {
+            Log::error('Failed to create QRIS transaction record', [
+                'user_id' => $user->id,
+                'transaction_number' => $transactionNumber,
+                'error' => $e->getMessage(),
+            ]);
+
+            Notification::make()
+                ->title(__('notifications.qris.failed_to_create_session'))
+                ->body(__('notifications.qris.failed_to_create_session_body'))
+                ->danger()
+                ->send();
+        }
+    }
+
+    public function checkQrisPaymentStatus(): void
+    {
+        if (!$this->qrisTransaction || !$this->qrisTransaction->isPending()) {
+            return;
+        }
+
+        $qrisService = app(QrisService::class);
+
+        if ($this->qrisTransaction->isExpired()) {
+            $this->qrisTransaction->markAsExpired();
+            $this->dispatch('qrisExpired');
+
+            Notification::make()
+                ->title(__('notifications.qris.payment_expired'))
+                ->body(__('notifications.qris.payment_expired_body'))
+                ->warning()
+                ->send();
+
+            return;
+        }
+
+        try {
+            $statusData = $qrisService->checkInvoiceStatus(
+                $this->qrisTransaction->qris_invoice_id,
+                $this->qrisTransaction->amount,
+                $this->qrisTransaction->qris_request_date->format('Y-m-d')
+            );
+
+            if (!$statusData) {
+                Log::warning('QRIS status check failed', [
+                    'transaction_id' => $this->qrisTransaction->id,
+                    'invoice_id' => $this->qrisTransaction->qris_invoice_id,
+                ]);
+                return;
+            }
+
+            if (isset($statusData['qris_status']) && $statusData['qris_status'] === 'paid') {
+                $this->qrisTransaction->markAsPaid();
+                $this->completeQrisTransaction();
+            }
+        } catch (\Exception $e) {
+            Log::error('Error checking QRIS payment status', [
+                'transaction_id' => $this->qrisTransaction->id,
+                'error' => $e->getMessage(),
+            ]);
+
+            if ($this->qrisTransaction->created_at->diffInMinutes(now()) > 25) {
+                Notification::make()
+                    ->title(__('notifications.qris.status_check_failed'))
+                    ->body(__('notifications.qris.status_check_failed_body'))
+                    ->warning()
+                    ->send();
+            }
+        }
+    }
+
+    private function completeQrisTransaction(): void
+    {
+        $sellingService = app(SellingService::class);
+
+        $request = array_merge($this->cartDetail, [
+            'total_price' => $this->total_price,
+            'discount_price' => floatval(str_replace(',', '', $this->cartDetail['discount_price'] ?? 0)),
+            'products' => $this->cartItems->map(function (CartItem $cartItem) {
+                return [
+                    'product_id' => $cartItem->product_id,
+                    'qty' => $cartItem->qty,
+                    'price' => $cartItem->price,
+                    'discount_price' => $cartItem->discount_price,
+                    'price_unit_id' => $cartItem->price_unit_id,
+                ];
+            })->toArray(),
+        ]);
+
+        $data = array_merge($request, $sellingService->mapProductRequest($request));
+        $selling = $sellingService->create($data);
+
+        CartItem::query()->cashier()->delete();
+
+        Notification::make()
+            ->title(__('notifications.qris.payment_successful'))
+            ->success()
+            ->send();
+
+        $this->showQrisModal = false;
+        $this->qrisTransaction = null;
+
+        $this->dispatch('qrisPaymentCompleted');
+        $this->dispatch('selling-created', selling: $selling->load('sellingDetails.product', 'table'));
+
+        $this->mount();
+    }
+
+    public function cancelQrisPayment(): void
+    {
+        if ($this->qrisTransaction) {
+            $this->qrisTransaction->update(['status' => 'cancelled']);
+        }
+
+        $this->showQrisModal = false;
+        $this->qrisTransaction = null;
+
+        $this->cartDetail['payment_method_id'] = 1;
+        $this->fillPayemntMethod();
     }
 }

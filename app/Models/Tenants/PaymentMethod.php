@@ -21,6 +21,7 @@ class PaymentMethod extends Model
         'is_debit' => 'boolean',
         'is_credit' => 'boolean',
         'is_wallet' => 'boolean',
+        'is_qris' => 'boolean',
     ];
 
     public function icon(): Attribute
