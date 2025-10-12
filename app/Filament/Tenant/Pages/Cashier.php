@@ -85,8 +85,11 @@ class Cashier extends Page implements HasForms, HasTable
             ->orderByDesc('created_at')
             ->cashier()
             ->get();
+        $totalPrice = $this->cartItems->sum(function ($item) {
+            return $item->price * $item->qty;
+        });
         $vouchers = TenantsVoucher::query()
-            ->where('minimal_buying', '<=', $this->cartItems->sum('price'))
+            ->where('minimal_buying', '<=', $totalPrice)
             ->where('start_date', '<=', today()->format('Y-m-d'))
             ->where('expired', '>=', today()->format('Y-m-d'))
             ->get();
@@ -113,7 +116,7 @@ class Cashier extends Page implements HasForms, HasTable
             'friend_price' => false,
         ]);
 
-        $this->fillPayemntMethod();
+        $this->fillPaymentMethod();
     }
 
     protected function getForms(): array
@@ -189,12 +192,12 @@ class Cashier extends Page implements HasForms, HasTable
             $this->total_price = $this->sub_total + ($this->sub_total * $this->tax / 100) - $this->discount_price;
         }
         $this->fillMember();
-        $this->fillPayemntMethod();
+        $this->fillPaymentMethod();
 
         $this->dispatch('close-modal', id: 'edit-detail');
     }
 
-    private function fillPayemntMethod()
+    public function fillPaymentMethod()
     {
         $paymentMethod = collect($this->paymentMethods)->filter(function ($value, int $key) {
             return $value['id'] == $this->cartDetail['payment_method_id'];
@@ -204,7 +207,7 @@ class Cashier extends Page implements HasForms, HasTable
         }
     }
 
-    private function fillMember()
+    public function fillMember()
     {
         $member = $this->members->filter(function (string $value, int $key) {
             return $key == $this->cartDetail['member_id'];
@@ -327,7 +330,7 @@ class Cashier extends Page implements HasForms, HasTable
                 $priceUnit = $priceUnit * $item->qty;
             }
 
-            $this->sub_total += $priceUnit ?? $item->price;
+            $this->sub_total += ($priceUnit ?? $item->price) * $item->qty;
             if ($item->discount_price && $item->discount_price > 0) {
                 $this->discount_price += $item->discount_price;
             }
