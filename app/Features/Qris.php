@@ -4,11 +4,11 @@ namespace App\Features;
 
 class Qris
 {
-    /**
-     * Resolve the feature's initial value.
-     */
-    public function resolve(mixed $_scope): mixed
+    public $name = 'qris';
+
+    public function resolve(): mixed
     {
-        return true;
+        return config('services.qris.api_key') && config('services.qris.m_id');
     }
 }
+

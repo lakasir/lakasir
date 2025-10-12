@@ -74,7 +74,8 @@ class GeneralSetting extends Page implements HasActions, HasForms
             'stock-opname' => Feature::active('stock-opname'),
             'voucher' => Feature::active('voucher'),
             'pos-v2' => Feature::active('pos-v2'),
-            'product-import' => Feature::active('product-import')
+            'product-import' => Feature::active('product-import'),
+            'qris' => Feature::active('qris')
         ];
 
         /** @var User $user */
@@ -145,6 +146,7 @@ class GeneralSetting extends Page implements HasActions, HasForms
                                 Checkbox::make('voucher')->inline(),
                                 Checkbox::make('pos-v2')->label("POS V2")->inline(),
                                 Checkbox::make('product-import')->inline(),
+                                Checkbox::make('qris')->inline(),
                             ]),
                             Actions::make([
                                 Action::make('Save')

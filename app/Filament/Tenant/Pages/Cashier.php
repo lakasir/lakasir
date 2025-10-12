@@ -3,6 +3,7 @@
 namespace App\Filament\Tenant\Pages;
 
 use App\Features\Member as FeaturesMember;
+use App\Features\Qris;
 use App\Features\Voucher;
 use App\Filament\Tenant\Pages\Traits\CartInteraction;
 use App\Filament\Tenant\Pages\Traits\TableProduct;
@@ -103,10 +104,18 @@ class Cashier extends Page implements HasForms, HasTable
 
         $this->calculateTotalPrice();
 
-        $this->paymentMethods = PaymentMethod::query()
+        $paymentMethods = PaymentMethod::query()
             ->select('id', 'name', 'is_credit', 'is_qris')
-            ->get()
-            ->toArray();
+            ->get();
+
+        // Filter out QRIS payment methods if the feature is disabled
+        if (!feature(Qris::class)) {
+            $paymentMethods = $paymentMethods->filter(function ($method) {
+                return !$method->is_qris;
+            });
+        }
+
+        $this->paymentMethods = $paymentMethods->toArray();
 
         $this->members = Member::query()
             ->select('id', 'name')
@@ -121,7 +130,7 @@ class Cashier extends Page implements HasForms, HasTable
             'friend_price' => false,
         ]);
 
-        $this->fillPayemntMethod();
+        $this->fillPaymentMethod();
     }
 
     protected function getForms(): array
@@ -197,12 +206,12 @@ class Cashier extends Page implements HasForms, HasTable
             $this->total_price = $this->sub_total + ($this->sub_total * $this->tax / 100) - $this->discount_price;
         }
         $this->fillMember();
-        $this->fillPayemntMethod();
+        $this->fillPaymentMethod();
 
         $this->dispatch('close-modal', id: 'edit-detail');
     }
 
-    private function fillPayemntMethod()
+    public function fillPaymentMethod()
     {
         $paymentMethod = collect($this->paymentMethods)->filter(function ($value, int $key) {
             return $value['id'] == $this->cartDetail['payment_method_id'];
@@ -214,7 +223,7 @@ class Cashier extends Page implements HasForms, HasTable
         // Note: QRIS payment is now handled via frontend Alpine.js when payment method is selected
     }
 
-    private function fillMember()
+    public function fillMember()
     {
         $member = $this->members->filter(function (string $value, int $key) {
             return $key == $this->cartDetail['member_id'];
@@ -342,7 +351,7 @@ class Cashier extends Page implements HasForms, HasTable
                 $priceUnit = $priceUnit * $item->qty;
             }
 
-            $this->sub_total += $priceUnit ?? $item->price;
+            $this->sub_total += $priceUnit ?? ($item->price * $item->qty);
             if ($item->discount_price && $item->discount_price > 0) {
                 $this->discount_price += $item->discount_price;
             }
@@ -353,9 +362,20 @@ class Cashier extends Page implements HasForms, HasTable
 
     public function handleQrisPayment(): void
     {
+        // Check if QRIS feature is enabled
+        if (!feature(Qris::class)) {
+            Notification::make()
+                ->title(__('Feature not available'))
+                ->body(__('QRIS payment feature is not enabled.'))
+                ->warning()
+                ->send();
+            return;
+        }
+
         $qrisService = app(QrisService::class);
         $user = Filament::auth()->user();
 
+        // Check if QRIS service is properly configured
         if (!$qrisService->isConfigured()) {
             Notification::make()
                 ->title(__('notifications.qris.payment_not_configured'))
@@ -524,13 +544,13 @@ class Cashier extends Page implements HasForms, HasTable
     public function cancelQrisPayment(): void
     {
         if ($this->qrisTransaction) {
-            $this->qrisTransaction->update(['status' => 'cancelled']);
+            $this->qrisTransaction->update(['status' => 'failed']);
         }
 
         $this->showQrisModal = false;
         $this->qrisTransaction = null;
 
         $this->cartDetail['payment_method_id'] = 1;
-        $this->fillPayemntMethod();
+        $this->fillPaymentMethod();
     }
 }
