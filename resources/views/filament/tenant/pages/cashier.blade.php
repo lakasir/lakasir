@@ -82,15 +82,15 @@
               <div class="grid grid-cols-2 items-center space-y-2 py-2 text-right">
                 <div class="col-span-2">
                   @feature(Discount::class)
-                    <div class="mb-1 flex justify-end">
-                      <x-filament::input.wrapper class="w-1/2">
-                        <x-filament::input type="text" id="{{ $item->product->name }}-{{ $item->id }}"
-                          value="{{ $item->discount_price == 0 ? '' : $item->discount_price }}"
-                          wire:keyup.debounce.500ms="addDiscountPricePerItem({{ $item }}, parseFloat($event.target.value.replace(/,/g, '')))"
-                          placeholder="{{ __('Discount') }}" class="w-1/2 text-right" inputMode="numeric"
-                          x-mask:dynamic="$money($input)" />
-                      </x-filament::input.wrapper>
-                    </div>
+                     <div class="mb-1 flex justify-end">
+                       <x-filament::input.wrapper class="w-1/2">
+                         <x-filament::input type="text" data-discount-input="{{ $item->id }}" id="{{ $item->product->name }}-{{ $item->id }}"
+                           value="{{ $item->discount_price == 0 ? '' : $item->discount_price }}"
+                           wire:keyup.debounce.500ms="addDiscountPricePerItem({{ $item }}, parseFloat($event.target.value.replace(/,/g, '')))"
+                           placeholder="{{ __('Discount') }}" class="w-1/2 text-right" inputMode="numeric"
+                           x-mask:dynamic="$money($input)" />
+                       </x-filament::input.wrapper>
+                     </div>
                   @endfeature
                   @if ($item->discount_price && $item->discount_price > 0)
                     <p class="font-semibold text-lakasir-primary">{{ $item->final_price_format }}</p>
@@ -104,7 +104,7 @@
                 </button>
                 <x-filament::input.wrapper class="w-20" x-data="cart">
                   <x-filament::input type="text"
-                    id="{{ $item->product->name }}-{{ $item->id }}-qty-{{ rand() }}"
+                    data-qty-input="{{ $item->id }}" id="{{ $item->product->name }}-{{ $item->id }}-qty-{{ rand() }}"
                     data-value="{{ $item->qty }}" value="{{ $item->qty }}"
                     x-on:keyup.debounce.500ms="(e) => add('{{ $item->product_id }}', e.target.value)"
                     placeholder="{{ __('Discount') }}" class="w-1/2 text-right" inputMode="numeric" />
@@ -162,17 +162,18 @@
       <div class="my-2 grid gap-x-4 md:grid-cols-2">
         <div x-data="detail">
           <div class="rounded-lg">
-            <div class="mb-4 grid grid-cols-4 gap-1">
-              <template x-for="paymentMethod in paymentMethods">
-                <div
-                  x-on:click="cartDetail['payment_method_id'] = paymentMethod.id; $wire.cartDetail['payment_method_id'] = paymentMethod.id;"
-                  class="flex cursor-pointer justify-center rounded-md border-none px-4 py-2 text-sm hover:scale-105 dark:text-white"
-                  :class="cartDetail['payment_method_id'] == paymentMethod.id ? 'bg-lakasir-primary text-white' :
-                      'dark:bg-gray-900 bg-gray-300 '"
-                  x-text="paymentMethod.name.substring(0, 8)">
-                </div>
-              </template>
-            </div>
+             <div class="mb-4 grid grid-cols-4 gap-1">
+               <template x-for="paymentMethod in paymentMethods">
+                 <div
+                   x-on:click="cartDetail['payment_method_id'] = paymentMethod.id; $wire.cartDetail['payment_method_id'] = paymentMethod.id;"
+                   class="flex cursor-pointer justify-center rounded-md border-none px-4 py-2 text-sm hover:scale-105 dark:text-white"
+                   :class="cartDetail['payment_method_id'] == paymentMethod.id ? 'bg-lakasir-primary text-white' :
+                       'dark:bg-gray-900 bg-gray-300 '"
+                   x-text="paymentMethod.name.substring(0, 8)"
+                   :data-payment-method="paymentMethod.name">
+                 </div>
+               </template>
+             </div>
             <x-filament::input.wrapper
               x-show="paymentMethods.filter((pm) => pm.is_credit)[0]?.id == cartDetail['payment_method_id']"
               :valid="!$errors->has('due_date')" class="mb-2">
@@ -196,31 +197,33 @@
             <div class="mt-2 grid grid-cols-3 gap-2 lg:mt-2 lg:gap-2" id="calculator-button">
               <button type="button" class="col-span-3 rounded-md bg-gray-300 p-2 text-lg hover:bg-gray-400"
                 x-on:click="append('no_changes')">{{ __('No change') }}</button>
-              <button type="button" class="rounded-md bg-gray-300 p-2 text-lg hover:bg-gray-400"
-                x-on:click="append(7)">7</button>
-              <button type="button" class="rounded-md bg-gray-300 p-2 text-lg hover:bg-gray-400"
-                x-on:click="append(8)">8</button>
-              <button type="button" class="rounded-md bg-gray-300 p-2 text-lg hover:bg-gray-400"
-                x-on:click="append(9)">9</button>
-              <button type="button" class="rounded-md bg-gray-300 p-2 text-lg hover:bg-gray-400"
-                x-on:click="append(4)">4</button>
-              <button type="button" class="rounded-md bg-gray-300 p-2 text-lg hover:bg-gray-400"
-                x-on:click="append(5)">5</button>
-              <button type="button" class="rounded-md bg-gray-300 p-2 text-lg hover:bg-gray-400"
-                x-on:click="append(6)">6</button>
-              <button type="button" class="rounded-md bg-gray-300 p-2 text-lg hover:bg-gray-400"
-                x-on:click="append(1)">1</button>
-              <button type="button" class="rounded-md bg-gray-300 p-2 text-lg hover:bg-gray-400"
-                x-on:click="append(2)">2</button>
-              <button type="button" class="rounded-md bg-gray-300 p-2 text-lg hover:bg-gray-400"
-                x-on:click="append(3)">3</button>
-              <button type="button" class="rounded-md bg-gray-300 p-2 text-lg hover:bg-gray-400"
-                x-on:click="append('.')">.</button>
-              <button type="button" class="rounded-md bg-gray-300 p-2 text-lg hover:bg-gray-400"
-                x-on:click="append(0)">0</button>
-              <button type="button"
-                class="flex items-center justify-center rounded-md bg-gray-300 p-2 text-lg hover:bg-gray-400"
-                x-on:click="append('backspace')">
+               <button type="button" class="rounded-md bg-gray-300 p-2 text-lg hover:bg-gray-400"
+                 x-on:click="append('no_changes')" data-calculator="no_changes">{{ __('No change') }}</button>
+               <button type="button" class="rounded-md bg-gray-300 p-2 text-lg hover:bg-gray-400"
+                 x-on:click="append(7)" data-calculator="7">7</button>
+               <button type="button" class="rounded-md bg-gray-300 p-2 text-lg hover:bg-gray-400"
+                 x-on:click="append(8)" data-calculator="8">8</button>
+               <button type="button" class="rounded-md bg-gray-300 p-2 text-lg hover:bg-gray-400"
+                 x-on:click="append(9)" data-calculator="9">9</button>
+               <button type="button" class="rounded-md bg-gray-300 p-2 text-lg hover:bg-gray-400"
+                 x-on:click="append(4)" data-calculator="4">4</button>
+               <button type="button" class="rounded-md bg-gray-300 p-2 text-lg hover:bg-gray-400"
+                 x-on:click="append(5)" data-calculator="5">5</button>
+               <button type="button" class="rounded-md bg-gray-300 p-2 text-lg hover:bg-gray-400"
+                 x-on:click="append(6)" data-calculator="6">6</button>
+               <button type="button" class="rounded-md bg-gray-300 p-2 text-lg hover:bg-gray-400"
+                 x-on:click="append(1)" data-calculator="1">1</button>
+               <button type="button" class="rounded-md bg-gray-300 p-2 text-lg hover:bg-gray-400"
+                 x-on:click="append(2)" data-calculator="2">2</button>
+               <button type="button" class="rounded-md bg-gray-300 p-2 text-lg hover:bg-gray-400"
+                 x-on:click="append(3)" data-calculator="3">3</button>
+               <button type="button" class="rounded-md bg-gray-300 p-2 text-lg hover:bg-gray-400"
+                 x-on:click="append('.')" data-calculator=".">.</button>
+               <button type="button" class="rounded-md bg-gray-300 p-2 text-lg hover:bg-gray-400"
+                 x-on:click="append(0)" data-calculator="0">0</button>
+               <button type="button"
+                 class="flex items-center justify-center rounded-md bg-gray-300 p-2 text-lg hover:bg-gray-400"
+                 x-on:click="append('backspace')" data-calculator="backspace">
                 <x-filament::icon icon="heroicon-o-backspace" class="h-5 w-5 text-gray-500 dark:text-white" />
               </button>
               <div class="col-span-3 flex gap-x-2">

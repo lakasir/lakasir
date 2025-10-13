@@ -1,4 +1,4 @@
-name: unit-test
+name: CI
 env:
   APP_KEY: base64:LBjssn+d5IhFzVud6YqQMezXtFSyNMF1UGFdiNWIpO4=
   DB_CONNECTION: testing
@@ -18,41 +18,144 @@ on:
       - master
 
 jobs:
-  build:
-    name: Unit Test
+  test:
+    name: PHP Tests
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php-version: [8.2]
+        php-version: [8.2, 8.3]
     services:
       mysql:
-        image: mysql:5.7
+        image: mysql:8.0
         ports:
           - 3306:3306
         env:
           MYSQL_DATABASE: ${{ env.DB_DATABASE }}
           MYSQL_ROOT_PASSWORD: ${{ env.DB_PASSWORD }}
+          MYSQL_ALLOW_EMPTY_PASSWORD: true
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - name: Setup php ${{ matrix.php-version }}
+      - name: Setup PHP ${{ matrix.php-version }}
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-version }}
-          tools: php-cs-fixer, composer, phpunit
+          extensions: pdo, pdo_mysql, bcmath, ctype, fileinfo, json, mbstring, openssl, tokenizer, xml
+          tools: composer:v2
+          coverage: xdebug
 
-      - name: Installing dependecies
-        run: composer install -q --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist
+      - name: Cache Composer dependencies
+        uses: actions/cache@v4
+        with:
+          path: vendor
+          key: ${{ runner.os }}-php-${{ matrix.php-version }}-composer-${{ hashFiles('composer.lock') }}
+          restore-keys: ${{ runner.os }}-php-${{ matrix.php-version }}-composer-
 
-      - name: Setup laravel
-        run: >
-          php -r "file_exists('.env') || copy('.env.example', '.env');"
-          php artisan key:generate
+      - name: Install PHP dependencies
+        run: composer install --no-progress --prefer-dist --optimize-autoloader
 
-      - name: Setup database Unit Test
+      - name: Copy environment file
+        run: php -r "file_exists('.env') || copy('.env.example', '.env');"
+
+      - name: Generate application key
+        run: php artisan key:generate
+
+      - name: Setup testing database
         run: php artisan app:migrate-testing-database
 
-      - name: Setup database and Run Unit Test
-        run: php artisan test
+      - name: Run PHP tests
+        run: php artisan test --coverage --min=80
+
+  browser-test:
+    name: Browser Tests
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.0
+        ports:
+          - 3306:3306
+        env:
+          MYSQL_DATABASE: ${{ env.DB_DATABASE }}
+          MYSQL_ROOT_PASSWORD: ${{ env.DB_PASSWORD }}
+          MYSQL_ALLOW_EMPTY_PASSWORD: true
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+      selenium:
+        image: selenium/standalone-chrome:latest
+        ports:
+          - 4444:4444
+        options: --shm-size=2g
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.2
+          extensions: pdo, pdo_mysql, bcmath, ctype, fileinfo, json, mbstring, openssl, tokenizer, xml
+          tools: composer:v2
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v4
+        with:
+          path: vendor
+          key: ${{ runner.os }}-php-composer-${{ hashFiles('composer.lock') }}
+          restore-keys: ${{ runner.os }}-php-composer-
+
+      - name: Install PHP dependencies
+        run: composer install --no-progress --prefer-dist --optimize-autoloader
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: npm
+
+      - name: Install Node.js dependencies
+        run: npm ci
+
+      - name: Build assets
+        run: npm run build
+
+      - name: Copy environment file
+        run: php -r "file_exists('.env') || copy('.env.example', '.env');"
+
+      - name: Generate application key
+        run: php artisan key:generate
+
+      - name: Setup testing database
+        run: php artisan app:migrate-testing-database
+
+      - name: Install Dusk dependencies
+        run: php artisan dusk:chrome-driver
+
+      - name: Run browser tests
+        run: php artisan dusk --verbose
+
+  lint:
+    name: Code Quality
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.2
+          tools: composer:v2, php-cs-fixer
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v4
+        with:
+          path: vendor
+          key: ${{ runner.os }}-php-composer-${{ hashFiles('composer.lock') }}
+          restore-keys: ${{ runner.os }}-php-composer-
+
+      - name: Install PHP dependencies
+        run: composer install --no-progress --prefer-dist --optimize-autoloader
+
+      - name: Run PHP CS Fixer
+        run: php-cs-fixer fix --dry-run --diff
