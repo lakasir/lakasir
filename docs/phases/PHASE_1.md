@@ -524,6 +524,26 @@ Submit/Cancel buttons wrapper.
 
 ---
 
+## Multilanguage Requirements
+
+**IMPORTANT**: All text in UI components must be translatable using Laravel's localization system.
+
+### Translation Keys Required
+- Use `__('key')` helper for all user-facing text
+- Add translations to `lang/en/`, `lang/id/`, `lang/es/`
+- Use descriptive key names (e.g., `auth.welcome_back`)
+
+### Example
+```blade
+{{-- Instead of --}}
+<h1>Welcome Back</h1>
+
+{{-- Use --}}
+<h1>{{ __('auth.welcome_back') }}</h1>
+```
+
+---
+
 ## Routes
 
 Add authentication routes in `routes/web.php`:

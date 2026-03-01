@@ -21,19 +21,19 @@ rules([
 
 $login = function() {
     $this->validate();
-    
+
     $credentials = [
         'email' => $this->email,
         'password' => $this->password,
     ];
-    
+
     if (!Auth::guard('web')->attempt($credentials, $this->remember)) {
         $this->addError('email', __('auth.failed'));
         return;
     }
-    
+
     session()->regenerate();
-    
+
     return redirect()->intended(route('dashboard', absolute: false));
 };
 
@@ -41,14 +41,14 @@ $login = function() {
 
 <div>
     <div class="text-center mb-6">
-        <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Welcome Back</h1>
-        <p class="text-gray-500 dark:text-gray-400 mt-2">Sign in to your account to continue</p>
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">{{ __('auth.welcome_back') }}</h1>
+        <p class="text-gray-500 dark:text-gray-400 mt-2">{{ __('auth.sign_in_to_continue') }}</p>
     </div>
 
     <form wire:submit="login" class="space-y-5">
         <div>
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Email Address
+                {{ __('auth.email_address') }}
             </label>
             <div class="relative">
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -59,7 +59,7 @@ $login = function() {
                 <input
                     type="email"
                     wire:model="email"
-                    placeholder="you@example.com"
+                    placeholder="{{ __('auth.email_placeholder') }}"
                     class="@error('email') border-red-500 focus:ring-red-500 @else border-gray-300 dark:border-gray-600 @enderror w-full rounded-lg bg-white dark:bg-gray-900 px-3 py-2 pl-10 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-lakasir-primary focus:border-transparent"
                 >
             </div>
@@ -70,7 +70,7 @@ $login = function() {
 
         <div>
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Password
+                {{ __('auth.password_label') }}
             </label>
             <div class="relative">
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -81,7 +81,7 @@ $login = function() {
                 <input
                     type="{{ $showPassword ? 'text' : 'password' }}"
                     wire:model="password"
-                    placeholder="Enter your password"
+                    placeholder="{{ __('auth.password_placeholder') }}"
                     class="@error('password') border-red-500 focus:ring-red-500 @else border-gray-300 dark:border-gray-600 @enderror w-full rounded-lg bg-white dark:bg-gray-900 px-3 py-2 pl-10 pr-10 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-lakasir-primary focus:border-transparent"
                 >
                 <button
@@ -96,7 +96,7 @@ $login = function() {
                         </svg>
                     @else
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/>
                         </svg>
                     @endif
                 </button>
@@ -113,12 +113,12 @@ $login = function() {
                     wire:model="remember"
                     class="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-lakasir-primary focus:ring-lakasir-primary"
                 >
-                <span class="text-sm text-gray-600 dark:text-gray-400">Remember me</span>
+                <span class="text-sm text-gray-600 dark:text-gray-400">{{ __('auth.remember_me') }}</span>
             </label>
 
             @if(Route::has('password.request'))
                 <a href="{{ route('password.request') }}" class="text-sm text-lakasir-primary hover:underline">
-                    Forgot password?
+                    {{ __('auth.forgot_password') }}
                 </a>
             @endif
         </div>
@@ -132,15 +132,15 @@ $login = function() {
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
             </svg>
-            <span>Sign In</span>
+            <span>{{ __('auth.sign_in') }}</span>
         </button>
     </form>
 
     @if(Route::has('auth.register'))
         <p class="mt-6 text-center text-sm text-gray-500 dark:text-gray-400">
-            Don't have an account?
+            {{ __('auth.dont_have_account') }}
             <a href="{{ route('auth.register') }}" class="text-lakasir-primary hover:underline font-medium">
-                Sign up
+                {{ __('auth.sign_up') }}
             </a>
         </p>
     @endif

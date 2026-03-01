@@ -40,6 +40,36 @@ Replacing Filament Admin Panel with custom Livewire + Tailwind CSS UI while pres
 
 ---
 
+---
+
+## Multilanguage Support
+
+**IMPORTANT**: All user-facing text in Blade templates and Livewire/Volt components must use Laravel's localization helper functions (`__('key')` or `@lang('key')`) instead of hardcoded strings.
+
+### Translation Files
+- English: `lang/en/`
+- Indonesian: `lang/id/`
+- Spanish: `lang/es/`
+
+### Usage Examples
+```blade
+{{-- Correct --}}
+<h1>{{ __('auth.welcome_back') }}</h1>
+<p>{{ __('auth.sign_in_to_continue') }}</p>
+
+{{-- Incorrect --}}
+<h1>Welcome Back</h1>
+<p>Sign in to your account to continue</p>
+```
+
+### Key Guidelines
+1. Always use `__('file.key')` for translatable text
+2. Add translations to all three language files (en, id, es)
+3. Use descriptive translation keys (e.g., `auth.welcome_back` not `auth.text1`)
+4. Include placeholders for dynamic text: `__('welcome_message', ['name' => $user->name])`
+
+---
+
 ## Design Implementation Status
 
 ### Common UI Screens

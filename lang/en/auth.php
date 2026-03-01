@@ -17,4 +17,16 @@ return [
     'password' => 'The provided password is incorrect.',
     'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
 
+    'welcome_back' => 'Welcome Back',
+    'sign_in_to_continue' => 'Sign in to your account to continue',
+    'email_address' => 'Email Address',
+    'email_placeholder' => 'you@example.com',
+    'password_label' => 'Password',
+    'password_placeholder' => 'Enter your password',
+    'remember_me' => 'Remember me',
+    'forgot_password' => 'Forgot password?',
+    'sign_in' => 'Sign In',
+    'dont_have_account' => "Don't have an account?",
+    'sign_up' => 'Sign up',
+
 ];

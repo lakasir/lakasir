@@ -205,6 +205,7 @@ This document tracks progress and decisions during the Lakasir redesign project.
 3. **Update progress** after completing tasks
 4. **Log decisions** that affect architecture
 5. **Test with multi-tenancy** after each feature
+6. **IMPORTANT: Use multilanguage** - Always use `__('key')` helper for all text in Blade/Volt templates. Never hardcode English strings. Add translations to `lang/en/`, `lang/id/`, and `lang/es/` files.
 
 ---
 

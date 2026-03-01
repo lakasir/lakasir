@@ -17,4 +17,16 @@ return [
     'password' => 'La contraseña proporcionada es incorrecta.',
     'throttle' => 'Demasiados intentos de inicio de sesión. Por favor intenta de nuevo en :seconds segundos.',
 
+    'welcome_back' => 'Bienvenido de Nuevo',
+    'sign_in_to_continue' => 'Inicia sesión en tu cuenta para continuar',
+    'email_address' => 'Correo Electrónico',
+    'email_placeholder' => 'tu@ejemplo.com',
+    'password_label' => 'Contraseña',
+    'password_placeholder' => 'Ingresa tu contraseña',
+    'remember_me' => 'Recordarme',
+    'forgot_password' => '¿Olvidaste tu contraseña?',
+    'sign_in' => 'Iniciar Sesión',
+    'dont_have_account' => '¿No tienes una cuenta?',
+    'sign_up' => 'Regístrate',
+
 ];

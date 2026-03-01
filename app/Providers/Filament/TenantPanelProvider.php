@@ -107,9 +107,7 @@ class TenantPanelProvider extends PanelProvider
 
         if (app()->environment('demo')) {
             $arraySupport = [
-                'https://saweria.co/sheenazien',
                 'https://trakteer.id/sheenazien8/tip',
-                'https://buymeacoffee.com/sheenazien8',
             ];
             FilamentView::registerRenderHook(
                 PanelsRenderHook::BODY_START,
