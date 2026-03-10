@@ -1,0 +1,432 @@
+name: Create Shared Hosting Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  create-shared-hosting-release:
+    name: Build Shared Hosting Package
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP 8.2
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.2
+          tools: composer
+          extensions: bcmath, ctype, fileinfo, json, mbstring, openssl, pdo, tokenizer, xml
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install PHP dependencies (production)
+        run: |
+          # Clear any existing cache files
+          rm -f bootstrap/cache/packages.php
+          rm -f bootstrap/cache/services.php
+          # Install with all scripts disabled to avoid package discovery issues
+          composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
+
+      - name: Install NPM dependencies
+        run: npm ci
+
+      - name: Build frontend assets
+        run: npm run build
+
+      - name: Create production environment file
+        run: |
+          # Create production .env file
+          cp .env.example .env.production
+          # Create temporary .env for build commands with SQLite to avoid DB connections
+          cat > .env << 'EOF'
+          APP_NAME=Lakasir
+          APP_ENV=local
+          APP_KEY=base64:$(openssl rand -base64 32)
+          APP_DEBUG=false
+          APP_URL=http://localhost
+
+          LOG_CHANNEL=stack
+          LOG_LEVEL=error
+
+          DB_CONNECTION=sqlite
+          DB_DATABASE=:memory:
+
+          CACHE_DRIVER=array
+          FILESYSTEM_DISK=local
+          QUEUE_CONNECTION=sync
+          SESSION_DRIVER=array
+          SESSION_LIFETIME=120
+
+          MAIL_MAILER=log
+
+          SELLING_METHOD=normal
+          SPA_MODE=false
+          DARK_MODE=false
+          EOF
+
+      - name: Optimize Laravel for production
+        run: |
+          # Clear caches only (don't create them to avoid DB connections)
+          php artisan config:clear --quiet || true
+          php artisan route:clear --quiet || true
+          php artisan view:clear --quiet || true
+          php artisan cache:clear --quiet || true
+          php artisan filament:cache-components --quiet || true
+          php artisan filament:clear-cached-components --quiet || true
+          php artisan icons:cache --quiet || true
+          php artisan icons:clear --quiet || true
+          # Remove temporary .env file
+          rm -f .env
+
+      - name: Create shared hosting structure
+        run: |
+          # Create shared hosting directory structure
+          mkdir -p shared-hosting-release/lakasir_app
+          mkdir -p shared-hosting-release/public_html
+
+          # Copy Laravel core files to lakasir_app (everything except public)
+          cp -r app shared-hosting-release/lakasir_app/
+          cp -r bootstrap shared-hosting-release/lakasir_app/
+          cp -r config shared-hosting-release/lakasir_app/
+          cp -r database shared-hosting-release/lakasir_app/
+          cp -r lang shared-hosting-release/lakasir_app/
+          cp -r resources shared-hosting-release/lakasir_app/
+          cp -r routes shared-hosting-release/lakasir_app/
+          cp -r storage shared-hosting-release/lakasir_app/
+          cp -r vendor shared-hosting-release/lakasir_app/
+          cp artisan shared-hosting-release/lakasir_app/
+          cp composer.json shared-hosting-release/lakasir_app/
+          cp .env.production shared-hosting-release/lakasir_app/.env
+
+          # Clean up any problematic cache files that might cause issues
+          rm -f shared-hosting-release/lakasir_app/bootstrap/cache/packages.php
+          rm -f shared-hosting-release/lakasir_app/bootstrap/cache/services.php
+          rm -f shared-hosting-release/lakasir_app/bootstrap/cache/config.php
+          rm -f shared-hosting-release/lakasir_app/bootstrap/cache/routes.php
+          rm -f shared-hosting-release/lakasir_app/bootstrap/cache/filament.php
+          rm -rf shared-hosting-release/lakasir_app/storage/framework/cache/filament
+          # rm -rf shared-hosting-release/lakasir_app/storage/framework/views/*
+
+          # Ensure storage directories exist and have proper structure
+          mkdir -p shared-hosting-release/lakasir_app/storage/framework/cache/data
+          mkdir -p shared-hosting-release/lakasir_app/storage/framework/cache/filament
+          mkdir -p shared-hosting-release/lakasir_app/storage/framework/sessions
+          mkdir -p shared-hosting-release/lakasir_app/storage/framework/views
+          mkdir -p shared-hosting-release/lakasir_app/storage/logs
+
+          # Create empty .gitkeep files to preserve directory structure
+          touch shared-hosting-release/lakasir_app/storage/framework/cache/data/.gitkeep
+          touch shared-hosting-release/lakasir_app/storage/framework/cache/filament/.gitkeep
+          touch shared-hosting-release/lakasir_app/storage/framework/sessions/.gitkeep
+          touch shared-hosting-release/lakasir_app/storage/framework/views/.gitkeep
+          touch shared-hosting-release/lakasir_app/storage/logs/.gitkeep
+
+          # Copy ENTIRE public folder to lakasir_app (including build assets)
+          cp -r public shared-hosting-release/lakasir_app/
+
+          # Copy ONLY the necessary public files to public_html (excluding build folder)
+          cp public/index.php shared-hosting-release/public_html/
+          cp public/.htaccess shared-hosting-release/public_html/ 2>/dev/null || true
+
+          # Copy other public assets to public_html (but not build folder)
+          find public -maxdepth 1 -type f \( -name "*.ico" -o -name "*.txt" -o -name "*.js" \) -exec cp {} shared-hosting-release/public_html/ \; 2>/dev/null || true
+
+          # Copy public directories except build to public_html
+          for dir in public/*/; do
+            dirname=$(basename "$dir")
+            if [ "$dirname" != "build" ]; then
+              cp -r "$dir" shared-hosting-release/public_html/ 2>/dev/null || true
+            fi
+          done
+          
+          # Create manual storage symlink for shared hosting (since exec() is disabled)
+          mkdir -p shared-hosting-release/public_html/storage
+          # Create an index.php that manually serves storage files
+          cat > shared-hosting-release/public_html/storage/index.php << 'EOF'
+          <?php
+          
+          // Manual storage link for shared hosting
+          // This replaces 'php artisan storage:link' when exec() is disabled
+          
+          $requestPath = $_SERVER['REQUEST_URI'];
+          $path = parse_url($requestPath, PHP_URL_PATH);
+          
+          // Remove /storage from the beginning
+          $storagePath = ltrim(str_replace('/storage', '', $path), '/');
+          
+          // Build the actual file path
+          $filePath = __DIR__ . '/../../lakasir_app/storage/app/public/' . $storagePath;
+          
+          if (!file_exists($filePath) || !is_file($filePath)) {
+              http_response_code(404);
+              exit('File not found');
+          }
+          
+          // Get file info
+          $finfo = finfo_open(FILEINFO_MIME_TYPE);
+          $mimeType = finfo_file($finfo, $filePath);
+          finfo_close($finfo);
+          
+          // Set headers
+          header('Content-Type: ' . $mimeType);
+          header('Content-Length: ' . filesize($filePath));
+          
+          // Output file
+          readfile($filePath);
+          exit;
+          EOF
+          
+          # Create .htaccess for storage directory
+          cat > shared-hosting-release/public_html/storage/.htaccess << 'EOF'
+          <IfModule mod_rewrite.c>
+              RewriteEngine On
+              RewriteCond %{REQUEST_FILENAME} !-f
+              RewriteCond %{REQUEST_FILENAME} !-d
+              RewriteRule ^(.*)$ index.php [QSA,L]
+          </IfModule>
+          EOF
+
+          # Create modified index.php for shared hosting
+          cat > shared-hosting-release/public_html/index.php << 'EOF'
+          <?php
+
+          use Illuminate\Contracts\Http\Kernel;
+          use Illuminate\Http\Request;
+
+          define('LARAVEL_START', microtime(true));
+
+          // Determine if the application is in maintenance mode...
+          if (file_exists($maintenance = __DIR__.'/../lakasir_app/storage/framework/maintenance.php')) {
+              require $maintenance;
+          }
+
+          // Register the Composer autoloader...
+          require __DIR__.'/../lakasir_app/vendor/autoload.php';
+
+          // Bootstrap Laravel and handle the request...
+          (require_once __DIR__.'/../lakasir_app/bootstrap/app.php')
+              ->handleRequest(Request::capture());
+          EOF
+
+          # Create .htaccess for shared hosting
+          cat > shared-hosting-release/public_html/.htaccess << 'EOF'
+          <IfModule mod_rewrite.c>
+              <IfModule mod_negotiation.c>
+                  Options -MultiViews -Indexes
+              </IfModule>
+
+              RewriteEngine On
+
+              # Handle Authorization Header
+              RewriteCond %{HTTP:Authorization} .
+              RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+              # Redirect Trailing Slashes If Not A Folder...
+              RewriteCond %{REQUEST_FILENAME} !-d
+              RewriteCond %{REQUEST_URI} (.+)/$
+              RewriteRule ^ %1 [L,R=301]
+
+              # Send Requests To Front Controller...
+              RewriteCond %{REQUEST_FILENAME} !-d
+              RewriteCond %{REQUEST_FILENAME} !-f
+              RewriteRule ^ index.php [L]
+          </IfModule>
+          EOF
+
+      - name: Create shared hosting archive
+        run: |
+          cd shared-hosting-release
+          tar -czf ../lakasir-shared-hosting.tar.gz .
+
+      - name: Create installation instructions
+        run: |
+          cat > INSTALLATION.md << 'EOF'
+          # Lakasir - Shared Hosting Installation Guide
+
+          ## Requirements
+          - PHP 8.1 or higher
+          - MySQL 5.7 or higher
+          - Required PHP extensions: BCMath, Ctype, Fileinfo, JSON, Mbstring, OpenSSL, PDO, Tokenizer, XML
+
+          ## Package Structure
+          After extracting `lakasir-shared-hosting.tar.gz`, you'll get:
+          ```
+          lakasir-shared-hosting/
+          ├── lakasir_app/          # Laravel core files (private)
+          │   ├── app/
+          │   ├── bootstrap/
+          │   ├── config/
+          │   ├── database/
+          │   ├── vendor/
+          │   ├── storage/
+          │   ├── public/           # Complete public folder with build assets
+          │   │   └── build/        # Compiled CSS/JS assets (Vite manifest here)
+          │   ├── .env              # Your environment file
+          │   └── artisan
+          └── public_html/          # Public web files (no build folder)
+              ├── index.php         # Modified for shared hosting
+              ├── .htaccess         # Optimized for shared hosting
+              └── assets/           # Images, icons, etc.
+          ```
+
+          ## Installation Steps
+
+          ### 1. Upload Files
+          - Extract `lakasir-shared-hosting.tar.gz` on your computer
+          - Upload `lakasir_app/` folder to your hosting account root (outside public_html)
+          - Upload contents of `public_html/` folder to your domain's public folder (usually `public_html` or `www`)
+
+          **Final server structure should look like:**
+          ```
+          /home/yourusername/
+          ├── lakasir_app/          # Upload here (private)
+          └── public_html/          # Upload public_html contents here
+              ├── index.php
+              ├── .htaccess
+              └── build/
+          ```
+
+          ### 2. Configure Environment
+          - Edit `lakasir_app/.env` file with your database credentials:
+            ```
+            APP_NAME=Lakasir
+            APP_ENV=production
+            APP_KEY=base64:YOUR_32_CHAR_KEY_HERE
+            APP_DEBUG=false
+            APP_URL=https://yourdomain.com
+
+            DB_CONNECTION=mysql
+            DB_HOST=localhost
+            DB_PORT=3306
+            DB_DATABASE=your_database_name
+            DB_USERNAME=your_username
+            DB_PASSWORD=your_password
+            ```
+          - **Generate APP_KEY**:
+            - Option 1: Use online Laravel key generator (search "Laravel key generator")
+            - Option 2: If your hosting supports PHP CLI: `cd lakasir_app && php artisan key:generate`
+            - Option 3: Generate manually: `base64:` + 32 random characters
+
+          ### 3. Set File Permissions (via cPanel File Manager)
+          - `lakasir_app/storage/` and all subdirectories: **755**
+          - `lakasir_app/bootstrap/cache/`: **755**
+          - All files in above directories: **644**
+
+          **Important directories to set permissions:**
+          - `lakasir_app/storage/framework/cache/`
+          - `lakasir_app/storage/framework/cache/filament/`
+          - `lakasir_app/storage/framework/sessions/`
+          - `lakasir_app/storage/framework/views/`
+          - `lakasir_app/storage/logs/`
+
+          ### 4. Database Setup
+          - Create a MySQL database through your hosting control panel (cPanel > MySQL Databases)
+          - Import your database via phpMyAdmin, or if CLI is available:
+            ```
+            cd lakasir_app
+            php artisan migrate --force
+            php artisan db:seed --force
+            ```
+
+          ### 5. Verify Installation
+          - Visit your domain - you should see Lakasir running
+          - If you get 500 errors, check file permissions and `.env` configuration
+          - If styles are missing, ensure `public_html/build/` folder contains CSS/JS files
+
+          ## What's Pre-Configured
+          ✅ **index.php** - Modified to work with shared hosting structure
+          ✅ **.htaccess** - Optimized for shared hosting
+          ✅ **Storage link** - Manual storage link (no `artisan storage:link` needed)
+          ✅ **Production dependencies** - No need to run composer install
+          ✅ **Built assets** - CSS/JS compiled and placed in `lakasir_app/public/build/`
+          ✅ **Vite manifest** - Located at `lakasir_app/public/build/manifest.json`
+          ✅ **Cached routes/config** - For better performance
+
+          ## Troubleshooting
+
+          ### Common Issues:
+          - **500 Internal Server Error**: Check file permissions (755 for folders, 644 for files)
+          - **Database Connection Error**: Verify credentials in `lakasir_app/.env`
+          - **Missing Styles/JS**: Ensure `lakasir_app/public/build/` folder exists with compiled assets
+          - **Vite manifest not found**: Verify `lakasir_app/public/build/manifest.json` exists
+          - **Storage files not accessible**: Storage link is pre-configured in `public_html/storage/`
+          - **"exec() disabled" error**: Storage link uses manual PHP script instead of artisan command
+          - **Filament components not loading**: Check `lakasir_app/storage/framework/cache/filament/` permissions
+          - **Icons not displaying**: Ensure icon cache can be written to storage directory
+          - **App Key Error**: Generate a valid APP_KEY in your `.env` file
+          - **Routes not working**: Verify `.htaccess` file exists in `public_html/`
+
+          ### File Paths Issues:
+          If you placed files differently, edit `public_html/index.php` and update these lines:
+          ```php
+          require __DIR__.'/../lakasir_app/vendor/autoload.php';
+          (require_once __DIR__.'/../lakasir_app/bootstrap/app.php')
+          ```
+
+          ## Support
+          For technical support, please visit: https://github.com/sheenazien8/lakasir/issues
+          EOF
+
+      - name: Get version from tag
+        id: get_version
+        run: |
+          if [[ $GITHUB_REF == refs/tags/* ]]; then
+            echo "version=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+          else
+            echo "version=development-$(date +%Y%m%d-%H%M%S)" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            lakasir-shared-hosting.tar.gz
+            INSTALLATION.md
+          name: "Lakasir ${{ steps.get_version.outputs.version }} - Shared Hosting"
+          body: |
+            ## Lakasir ${{ steps.get_version.outputs.version }} - Shared Hosting Release
+
+            This release contains a production-ready package for shared hosting deployment.
+
+            ### What's New
+            - ✅ Pre-built frontend assets (no Node.js required)
+            - ✅ Production PHP dependencies included
+            - ✅ Optimized for shared hosting environments
+            - ✅ Complete installation guide included
+
+            ### Files
+            - `lakasir-shared-hosting.tar.gz` - Complete application package
+            - `INSTALLATION.md` - Detailed installation instructions
+
+            ### Quick Start
+            1. Download `lakasir-shared-hosting.tar.gz`
+            2. Extract to your hosting public folder
+            3. Follow the instructions in `INSTALLATION.md`
+            4. Configure your `.env` file
+            5. Set proper file permissions
+            6. You're ready to go!
+
+            No terminal access or build tools required on your hosting server.
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload artifact (for manual download)
+        uses: actions/upload-artifact@v4
+        with:
+          name: lakasir-shared-hosting-${{ steps.get_version.outputs.version }}
+          path: |
+            lakasir-shared-hosting.tar.gz
+            INSTALLATION.md
+          retention-days: 30

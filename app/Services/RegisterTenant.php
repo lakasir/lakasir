@@ -11,6 +11,10 @@ use Illuminate\Support\Facades\Artisan;
 
 class RegisterTenant
 {
+    private const SEED_COMMAND = 'db:seed';
+
+    private const CLASS_OPTION = '--class';
+
     public function create(array $data): Tenant
     {
         $name = $data['name'] ?? null;
@@ -33,21 +37,21 @@ class RegisterTenant
             ]);
 
             About::create([
-                'shop_name' => $data['full_name'] ?? null,
-                'business_type' => $data['business_type'],
+                'shop_name' => $data['shop_name'] ?? $data['full_name'] ?? null,
+                'business_type' => $data['business_type'] ?? 'other',
                 'other_business_type' => $data['other_business_type'] ?? null,
             ]);
 
             $user->notify(new DomainCreated());
 
-            Artisan::call('db:seed', [
-                '--class' => 'PermissionSeeder',
+            Artisan::call(self::SEED_COMMAND, [
+                self::CLASS_OPTION => 'PermissionSeeder',
             ]);
-            Artisan::call('db:seed', [
-                '--class' => 'PaymentMethodSeeder',
+            Artisan::call(self::SEED_COMMAND, [
+                self::CLASS_OPTION => 'PaymentMethodSeeder',
             ]);
-            Artisan::call('db:seed', [
-                '--class' => 'CategorySeeder',
+            Artisan::call(self::SEED_COMMAND, [
+                self::CLASS_OPTION => 'CategorySeeder',
             ]);
             $user->assignRole(Role::admin);
         });

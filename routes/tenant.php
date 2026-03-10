@@ -29,6 +29,7 @@ use App\Http\Controllers\SellingReportController;
 use App\Http\Middleware\InitializeTenancyByDomain;
 use App\Livewire\ResetPassword;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 
@@ -51,6 +52,9 @@ Route::middleware([
             ->name('cashier-report.generate');
         Route::view('/member/sellings/{selling}/print', 'filament.tenant.pages.selling.print-receipt')
             ->name('selling.print');
+        Route::post('/member/printer/print/{selling}', [PrinterController::class, 'printWeb'])
+            ->middleware('auth')
+            ->name('printer.print');
         Route::get('/reset-password/{token}', ResetPassword::class)
             ->middleware('guest')
             ->name('reset-password.index');
@@ -132,7 +136,6 @@ Route::middleware([
                 Route::group(['prefix' => 'payment-method'], function () {
                     Route::get('/', [PaymentMethodController::class, 'index'])->can('read payment method');
                 });
-
             });
 
             Route::group(['prefix' => 'about'], function () {
@@ -192,6 +195,8 @@ Route::middleware([
                     ->can('update printer');
                 Route::delete('/{printer}', [PrinterController::class, 'destroy'])
                     ->can('delete printer');
+                Route::post('/print/{selling}', [PrinterController::class, 'print'])
+                    ->can('create selling');
             });
 
             Route::group(['prefix' => 'notification'], function () {
@@ -206,7 +211,6 @@ Route::middleware([
             Route::get('/user', function (Request $request) {
                 return $request->user();
             });
-
         });
 
         Route::get('/', function () {
