@@ -368,13 +368,13 @@ This phase implements the transaction management screens including the transacti
 
 ```php
 Route::middleware('auth')->prefix('member')->group(function () {
-    Route::get('/transactions', \App\Livewire\Pages\Transaction\Index::class)
+    Volt::route('/transactions', 'pages/transaction/index')
         ->name('transactions.index');
-    
-    Route::get('/transactions/landing', \App\Livewire\Pages\Transaction\Landing::class)
+
+    Volt::route('/transactions/landing', 'pages/transaction/landing')
         ->name('transactions.landing');
-    
-    Route::get('/transactions/{id}', \App\Livewire\Pages\Transaction\Show::class)
+
+    Volt::route('/transactions/{id}', 'pages/transaction/show')
         ->name('transactions.show');
 });
 ```
@@ -383,15 +383,7 @@ Route::middleware('auth')->prefix('member')->group(function () {
 
 ## Files to Create
 
-### Livewire Components
-```
-app/Livewire/Pages/Transaction/
-├── Landing.php
-├── Index.php
-└── Show.php
-```
-
-### Views
+### Volt Pages
 ```
 resources/views/livewire/pages/transaction/
 ├── landing.blade.php

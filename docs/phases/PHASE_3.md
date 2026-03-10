@@ -56,7 +56,7 @@ POS State (Livewire)
 ### Data Flow
 
 ```
-User Action → Livewire Component → State Update → UI Reactivity → API Call (if needed)
+User Action → Volt Component → State Update → UI Reactivity → API Call (if needed)
                 ↓
             Cart Management
                 ↓
@@ -75,7 +75,7 @@ User Action → Livewire Component → State Update → UI Reactivity → API Ca
 
 **File**: `resources/views/livewire/pos/product-list.blade.php`
 
-**Livewire Component**: `app/Livewire/POS/ProductList.php`
+**Volt Page**: `resources/views/livewire/pos/product-list.blade.php`
 
 #### 1.1 Product Grid Layout
 
@@ -698,15 +698,12 @@ public function newTransaction(): void {}
 ## Routes
 
 ```php
+use Livewire\Volt\Volt;
+
 Route::middleware('auth')->prefix('member')->group(function () {
-    Route::get('/pos', \App\Livewire\POS\Main::class)
-        ->name('pos.index');
-    
-    Route::get('/pos/cart', \App\Livewire\POS\Cart::class)
-        ->name('pos.cart');
-    
-    Route::get('/pos/payment', \App\Livewire\POS\Payment::class)
-        ->name('pos.payment');
+    Volt::route('/pos', 'pos/main')->name('pos.index');
+    Volt::route('/pos/cart', 'pos/cart')->name('pos.cart');
+    Volt::route('/pos/payment', 'pos/payment')->name('pos.payment');
 });
 ```
 
@@ -727,16 +724,16 @@ Route::middleware('auth')->prefix('member')->group(function () {
 
 ## Files to Create
 
-### Livewire Components
+### Volt Pages
 ```
-app/Livewire/POS/
-├── Main.php (extends Component)
-├── ProductList.php
-├── Cart.php
-├── Payment.php
-├── PaymentMethod.php
-├── QRPayment.php
-└── CashPayment.php
+resources/views/livewire/pos/
+├── main.blade.php
+├── product-list.blade.php
+├── cart.blade.php
+├── payment.blade.php
+├── payment-method.blade.php
+├── qr-payment.blade.php
+└── cash-payment.blade.php
 ```
 
 ### Views

@@ -1,6 +1,5 @@
 <?php
 
-use App\Livewire\Forms\Auth\RegisterTenantForm;
 use App\Notifications\DomainCreated;
 use App\Tenant;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -19,25 +18,22 @@ describe('Register Test', function () {
     });
     it('user can see the register page', function () {
         get('/auth/register')
-            ->assertSeeLivewire(RegisterTenantForm::class);
+            ->assertSeeLivewire('pages.auth.register');
     });
 
     it('user can create the tenant account through web', function () {
         Notification::fake();
-        $data = [
-            'full_name' => 'test',
-            'email' => 'testweb@mail.com',
-            'password' => 'password',
-            'password_confirmation' => 'password',
-            'shop_name' => 'test',
-            'business_type' => 'fnb',
-            'domain' => 'tokotestweb',
-        ];
+        $testEmail = 'testweb@mail.com';
 
-        livewire(RegisterTenantForm::class)
-            ->fillForm($data)
+        livewire('pages.auth.register')
+            ->set('shopName', 'test')
+            ->set('email', $testEmail)
+            ->set('password', 'password')
+            ->set('passwordConfirmation', 'password')
+            ->set('domain', 'tokotestweb')
+            ->set('agreeTerms', true)
             ->call('create')
-            ->assertHasNoFormErrors()
+            ->assertHasNoErrors()
             ->assertStatus(200);
 
         $tenant = Tenant::find('tokotestweb');
@@ -49,11 +45,11 @@ describe('Register Test', function () {
             'id' => 'tokotestweb',
         ]);
         $this->assertDatabaseHas('tenant_users', [
-            'email' => 'testweb@mail.com',
+            'email' => $testEmail,
         ]);
-        $tenant->run(function () {
+        $tenant->run(function () use ($testEmail) {
             $this->assertDatabaseHas('users', [
-                'email' => 'testweb@mail.com',
+                'email' => $testEmail,
             ]);
         });
     });

@@ -1,7 +1,8 @@
 # Phase 1: Foundation & Authentication
 
 **Duration**: 2-3 days  
-**Status**: In Progress  
+**Status**: Done (UI Slicing Scope)  
+**Completed On**: 2026-03-10  
 **Dependencies**: None
 
 ---
@@ -16,7 +17,10 @@ This phase establishes the foundational UI components and authentication system.
 
 | Screen | Node ID | URL |
 |--------|---------|-----|
-| Login | 1470-836 | [View](https://www.figma.com/design/Nbc5NwW89oB9msV7q55HZP/Redesign-Lakasir--Copy-?node-id=1470-836) |
+| Login Mobile | 1470-836 | [View](https://www.figma.com/design/Nbc5NwW89oB9msV7q55HZP/Redesign-Lakasir--Copy-?node-id=1470-836&m=dev) |
+| Login Tablet | 285-181 | [View](https://www.figma.com/design/Nbc5NwW89oB9msV7q55HZP/Redesign-Lakasir--Copy-?node-id=285-181&m=dev) |
+| Sign Up Mobile | 1470-1036 | [View](https://www.figma.com/design/Nbc5NwW89oB9msV7q55HZP/Redesign-Lakasir--Copy-?node-id=1470-1036&m=dev) |
+| Sign Up Tablet | 283-181 | [View](https://www.figma.com/design/Nbc5NwW89oB9msV7q55HZP/Redesign-Lakasir--Copy-?node-id=283-181&m=dev) |
 
 ---
 
@@ -408,7 +412,7 @@ Bottom navigation for mobile devices.
 
 **File**: `resources/views/livewire/pages/auth/login.blade.php`
 
-**Livewire Component**: `app/Livewire/Pages/Auth/Login.php`
+**Volt Page**: `resources/views/livewire/pages/auth/login.blade.php`
 
 **Design Reference**: [Figma - Login](https://www.figma.com/design/Nbc5NwW89oB9msV7q55HZP/Redesign-Lakasir--Copy-?node-id=1470-836)
 
@@ -421,25 +425,21 @@ Bottom navigation for mobile devices.
 - Error messages display
 - Logo and branding
 
-**Component Properties**:
+**Component State (Volt)**:
 ```php
-// app/Livewire/Pages/Auth/Login.php
-class Login extends Component
-{
-    public string $email = '';
-    public string $password = '';
-    public bool $remember = false;
-    public bool $isLoading = false;
+state([
+    'email' => '',
+    'password' => '',
+    'remember' => true,
+]);
 
-    public function login(): void
-    {
-        // Validate and authenticate
-    }
-}
+$login = function () {
+    // Validate and authenticate
+};
 ```
 
 **Tasks**:
-- [ ] Create Volt/Livewire component
+- [ ] Create Volt page component
 - [ ] Design login form UI matching Figma
 - [ ] Implement form validation
 - [ ] Add authentication logic
@@ -549,9 +549,11 @@ Submit/Cancel buttons wrapper.
 Add authentication routes in `routes/web.php`:
 
 ```php
+use Livewire\Volt\Volt;
+
 Route::middleware('guest')->group(function () {
-    Route::get('/login', \App\Livewire\Pages\Auth\Login::class)
-        ->name('login');
+    Volt::route('/login', 'pages/auth/login')->name('login');
+    Volt::route('/auth/register', 'pages/auth/register')->name('auth.register');
 });
 
 Route::middleware('auth')->group(function () {
@@ -597,18 +599,16 @@ resources/views/components/
     └── actions.blade.php
 ```
 
-### Livewire Pages
+### Volt Pages
 ```
 resources/views/livewire/pages/auth/
-└── login.blade.php
+├── login.blade.php
+└── register.blade.php
 ```
 
-### Livewire Components
+### Livewire Class Components (Only If Needed)
 ```
 app/Livewire/
-├── Pages/
-│   └── Auth/
-│       └── Login.php
 └── Components/
     └── ToastContainer.php
 ```
@@ -657,6 +657,15 @@ app/Livewire/
 - New routes should use `/member/` prefix (check existing route structure)
 - Multi-tenancy middleware should still work
 - Test with different user roles
+
+---
+
+## Completion Notes
+
+- Auth UI slicing is completed for this phase scope (login and sign up).
+- Pages are aligned to the Figma nodes listed above for mobile and tablet.
+- Auth flow logic remains integrated with tenancy registration and existing routes.
+- Translation keys for auth screens are available in EN, ID, and ES.
 
 ---
 

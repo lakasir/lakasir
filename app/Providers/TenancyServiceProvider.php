@@ -11,6 +11,7 @@ use Illuminate\Support\ServiceProvider;
 use Livewire\Livewire;
 use Stancl\JobPipeline\JobPipeline;
 use Stancl\Tenancy\Events;
+use Stancl\Tenancy\Features\UniversalRoutes;
 use Stancl\Tenancy\Jobs;
 use Stancl\Tenancy\Listeners;
 use Stancl\Tenancy\Middleware;
@@ -153,8 +154,7 @@ class TenancyServiceProvider extends ServiceProvider
             return Route::post('/livewire/update', $handle)
                 ->middleware(
                     'web',
-                    'universal',
-                    InitializeTenancyByDomain::class, // or whatever tenancy middleware you use
+                    InitializeTenancyByDomain::class,
                 );
         });
     }

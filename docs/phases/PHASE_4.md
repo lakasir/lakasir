@@ -369,7 +369,7 @@ This phase adapts the mobile POS for tablet devices (768px+). The tablet version
 The main POS component should detect screen size and switch between mobile and tablet layouts.
 
 ```php
-// In Livewire component
+// In Volt component script section
 public bool $isTablet = false;
 
 public function mount()
@@ -407,7 +407,7 @@ public function updateLayout($width)
 
 ## Shared State
 
-The same Livewire component handles both mobile and tablet views. State is preserved across view switches:
+The same Volt component handles both mobile and tablet views. State is preserved across view switches:
 
 ```php
 // Shared state (from Phase 3)
@@ -426,9 +426,10 @@ public ?int $selectedCategory = null;
 Same routes as mobile POS (Phase 3) - responsive detection handles layout.
 
 ```php
+use Livewire\Volt\Volt;
+
 Route::middleware('auth')->prefix('member')->group(function () {
-    Route::get('/pos', \App\Livewire\POS\Main::class)
-        ->name('pos.index');
+    Volt::route('/pos', 'pos/main')->name('pos.index');
 });
 ```
 

@@ -37,7 +37,7 @@ This phase implements the main dashboard and settings pages. The dashboard serve
 
 **File**: `resources/views/livewire/pages/dashboard.blade.php`
 
-**Livewire Component**: `app/Livewire/Pages/Dashboard.php`
+**Volt Page**: `resources/views/livewire/pages/dashboard.blade.php`
 
 #### 1.1 Dashboard Layout
 
@@ -366,23 +366,18 @@ This phase implements the main dashboard and settings pages. The dashboard serve
 ## Routes
 
 ```php
+use Livewire\Volt\Volt;
+
 Route::middleware('auth')->prefix('member')->group(function () {
-    Route::get('/dashboard', \App\Livewire\Pages\Dashboard::class)
-        ->name('dashboard');
+    Volt::route('/dashboard', 'pages/dashboard')->name('dashboard');
     
     Route::prefix('settings')->group(function () {
-        Route::get('/', \App\Livewire\Pages\Settings\General::class)
-            ->name('settings.general');
-        Route::get('/users', \App\Livewire\Pages\Settings\Users::class)
-            ->name('settings.users');
-        Route::get('/roles', \App\Livewire\Pages\Settings\Roles::class)
-            ->name('settings.roles');
-        Route::get('/printer', \App\Livewire\Pages\Settings\Printer::class)
-            ->name('settings.printer');
-        Route::get('/about', \App\Livewire\Pages\Settings\About::class)
-            ->name('settings.about');
-        Route::get('/profile', \App\Livewire\Pages\Settings\Profile::class)
-            ->name('settings.profile');
+        Volt::route('/', 'pages/settings/general')->name('settings.general');
+        Volt::route('/users', 'pages/settings/users')->name('settings.users');
+        Volt::route('/roles', 'pages/settings/roles')->name('settings.roles');
+        Volt::route('/printer', 'pages/settings/printer')->name('settings.printer');
+        Volt::route('/about', 'pages/settings/about')->name('settings.about');
+        Volt::route('/profile', 'pages/settings/profile')->name('settings.profile');
     });
 });
 ```
@@ -464,7 +459,7 @@ resources/views/livewire/pages/
     └── profile.blade.php
 ```
 
-### Livewire Components
+### Optional Class Components (Only If Needed)
 ```
 app/Livewire/
 ├── Pages/

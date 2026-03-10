@@ -10,8 +10,7 @@ layout('components.layouts.auth');
 state([
     'email' => '',
     'password' => '',
-    'remember' => false,
-    'showPassword' => false,
+    'remember' => true,
 ]);
 
 rules([
@@ -29,7 +28,7 @@ $login = function() {
 
     if (!Auth::guard('web')->attempt($credentials, $this->remember)) {
         $this->addError('email', __('auth.failed'));
-        return;
+        return null;
     }
 
     session()->regenerate();
@@ -39,85 +38,65 @@ $login = function() {
 
 ?>
 
-<div>
-    <div class="text-center mb-6">
-        <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">{{ __('auth.welcome_back') }}</h1>
-        <p class="text-gray-500 dark:text-gray-400 mt-2">{{ __('auth.sign_in_to_continue') }}</p>
+<div class="auth-login">
+    <div class="auth-login__logo-wrap">
+        <img src="{{ asset('assets/logo/image.png') }}" alt="Lakasir" class="auth-login__logo">
     </div>
 
-    <form wire:submit="login" class="space-y-5">
-        <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                {{ __('auth.email_address') }}
-            </label>
-            <div class="relative">
-                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"/>
-                    </svg>
-                </div>
+    <div class="auth-form__header">
+        <h1 class="auth-form__title">{{ __('auth.sign_in') }} Lakasir</h1>
+        <p class="auth-form__subtitle">{{ __('auth.enter_your_details') }}</p>
+    </div>
+
+    <form wire:submit="login" class="auth-form__body">
+        <div class="auth-form__fields">
+            <div class="auth-field">
+                <label for="login-email" class="sr-only">
+                    {{ __('auth.email_address') }}
+                </label>
                 <input
+                    id="login-email"
                     type="email"
                     wire:model="email"
-                    placeholder="{{ __('auth.email_placeholder') }}"
-                    class="@error('email') border-red-500 focus:ring-red-500 @else border-gray-300 dark:border-gray-600 @enderror w-full rounded-lg bg-white dark:bg-gray-900 px-3 py-2 pl-10 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-lakasir-primary focus:border-transparent"
+                    autocomplete="email"
+                    placeholder="{{ __('auth.email_or_phone_placeholder') }}"
+                    class="auth-input @error('email') auth-input--error @enderror"
                 >
+                @error('email')
+                    <p class="auth-field__error">{{ $message }}</p>
+                @enderror
             </div>
-            @error('email')
-                <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-            @enderror
-        </div>
 
-        <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                {{ __('auth.password_label') }}
-            </label>
-            <div class="relative">
-                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
-                    </svg>
-                </div>
+            <div class="auth-field">
+                <label for="login-password" class="sr-only">
+                    {{ __('auth.password_label') }}
+                </label>
                 <input
-                    type="{{ $showPassword ? 'text' : 'password' }}"
+                    id="login-password"
+                    type="password"
                     wire:model="password"
+                    autocomplete="current-password"
                     placeholder="{{ __('auth.password_placeholder') }}"
-                    class="@error('password') border-red-500 focus:ring-red-500 @else border-gray-300 dark:border-gray-600 @enderror w-full rounded-lg bg-white dark:bg-gray-900 px-3 py-2 pl-10 pr-10 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-lakasir-primary focus:border-transparent"
+                    class="auth-input @error('password') auth-input--error @enderror"
                 >
-                <button
-                    type="button"
-                    @click="$wire.showPassword = !$wire.showPassword"
-                    class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
-                >
-                    @if($showPassword)
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                        </svg>
-                    @else
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/>
-                        </svg>
-                    @endif
-                </button>
+                @error('password')
+                    <p class="auth-field__error">{{ $message }}</p>
+                @enderror
             </div>
-            @error('password')
-                <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-            @enderror
         </div>
 
-        <div class="flex items-center justify-between">
-            <label class="flex items-center gap-2 cursor-pointer">
+        <div class="auth-form__meta">
+            <label class="auth-remember">
                 <input
                     type="checkbox"
                     wire:model="remember"
-                    class="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-lakasir-primary focus:ring-lakasir-primary"
+                    class="auth-remember__checkbox"
                 >
-                <span class="text-sm text-gray-600 dark:text-gray-400">{{ __('auth.remember_me') }}</span>
+                <span>{{ __('auth.remember_me') }}</span>
             </label>
 
             @if(Route::has('password.request'))
-                <a href="{{ route('password.request') }}" class="text-sm text-lakasir-primary hover:underline">
+                <a href="{{ route('password.request') }}" class="auth-form__link">
                     {{ __('auth.forgot_password') }}
                 </a>
             @endif
@@ -126,9 +105,9 @@ $login = function() {
         <button
             type="submit"
             wire:loading.attr="disabled"
-            class="w-full inline-flex items-center justify-center font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed bg-lakasir-primary text-white hover:bg-orange-600 focus:ring-lakasir-primary px-6 py-3 text-base gap-2"
+            class="auth-submit"
         >
-            <svg wire:loading class="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <svg wire:loading wire:target="login" class="auth-submit__spinner animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
             </svg>
@@ -137,9 +116,9 @@ $login = function() {
     </form>
 
     @if(Route::has('auth.register'))
-        <p class="mt-6 text-center text-sm text-gray-500 dark:text-gray-400">
+        <p class="auth-form__footer">
             {{ __('auth.dont_have_account') }}
-            <a href="{{ route('auth.register') }}" class="text-lakasir-primary hover:underline font-medium">
+            <a href="{{ route('auth.register') }}">
                 {{ __('auth.sign_up') }}
             </a>
         </p>

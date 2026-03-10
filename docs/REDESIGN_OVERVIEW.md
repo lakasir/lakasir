@@ -202,7 +202,7 @@ app/
 
 ### Parallel Development
 During migration, both systems will coexist:
-1. New Livewire components are created
+1. New Volt pages/components are created
 2. Routes are added for new components
 3. Once validated, Filament routes are removed
 4. Filament package is removed after full migration

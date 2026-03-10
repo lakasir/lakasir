@@ -8,19 +8,22 @@
     <style>[x-cloak] { display: none !important; }</style>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="bg-gray-100 dark:bg-gray-900 font-sans antialiased min-h-screen flex items-center justify-center p-4">
-    <div class="w-full max-w-md">
-        <div class="text-center mb-8">
-            <a href="/" class="inline-flex items-center gap-2">
-                <img src="{{ asset('assets/logo/image.png') }}" alt="Lakasir" class="h-12 w-auto">
-                <span class="text-2xl font-bold text-lakasir-primary">Lakasir</span>
-            </a>
-        </div>
-        
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 md:p-8">
-            {{ $slot }}
-        </div>
-    </div>
+<body class="auth-figma-shell antialiased">
+    <main class="auth-figma-stage">
+        <button
+            type="button"
+            class="auth-back-link"
+            aria-label="{{ __('auth.back') }}"
+            onclick="if (window.history.length > 1) { window.history.back(); } else { window.location.href='{{ url('/') }}'; }"
+        >
+            <svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+            </svg>
+        </button>
+
+        {{ $slot }}
+    </main>
+
     @stack('scripts')
 </body>
 </html>

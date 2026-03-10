@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
-use App\Livewire\Forms\Auth\RegisterTenantForm;
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 
@@ -17,11 +16,12 @@ Route::get('/serviceworker.js', function () {
 Route::middleware('guest')->group(function () {
     Volt::route('/login', 'pages/auth/login')->name('login');
 
-    Route::get('/auth/register', RegisterTenantForm::class)
-        ->name('auth.register');
+    Volt::route('/auth/register', 'pages/auth/register')->name('auth.register');
 });
 
 Route::middleware('auth')->group(function () {
+    Volt::route('/dashboard', 'pages/dashboard')->name('dashboard');
+
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('logout');
 });

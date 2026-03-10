@@ -14,16 +14,16 @@
 <body class="bg-gray-50 dark:bg-gray-900 font-sans antialiased">
     <div class="flex h-screen overflow-hidden">
         @include('components.shared.sidebar')
-        
+
         <div class="flex-1 flex flex-col overflow-hidden">
             @include('components.shared.header')
-            
+
             <main class="flex-1 overflow-y-auto p-4 md:p-6">
                 {{ $slot }}
             </main>
         </div>
     </div>
-    
+
     @stack('scripts')
 </body>
 </html>
