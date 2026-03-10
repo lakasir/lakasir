@@ -25,8 +25,8 @@ Replacing Filament Admin Panel with custom Livewire + Tailwind CSS UI while pres
 
 | Phase | Name | Duration | Status | Document |
 |-------|------|----------|--------|----------|
-| 1 | Foundation & Authentication | 2-3 days | Not Started | [PHASE_1.md](./phases/PHASE_1.md) |
-| 2 | Dashboard & Common UI | 2-3 days | Not Started | [PHASE_2.md](./phases/PHASE_2.md) |
+| 1 | Foundation & Authentication | 2-3 days | Done (UI Slicing Scope) | [PHASE_1.md](./phases/PHASE_1.md) |
+| 2 | Menu Home & Settings UI | 2-3 days | Not Started | [PHASE_2.md](./phases/PHASE_2.md) |
 | 3 | POS/Cashier (Mobile) | 4-5 days | Not Started | [PHASE_3.md](./phases/PHASE_3.md) |
 | 4 | POS/Cashier (Tablet) | 3-4 days | Not Started | [PHASE_4.md](./phases/PHASE_4.md) |
 | 5 | Transaction Management | 2-3 days | Not Started | [PHASE_5.md](./phases/PHASE_5.md) |
@@ -76,8 +76,10 @@ Replacing Filament Admin Panel with custom Livewire + Tailwind CSS UI while pres
 
 | Screen | Figma | Status | Phase |
 |--------|-------|--------|-------|
-| Login | [View](https://www.figma.com/design/Nbc5NwW89oB9msV7q55HZP/Redesign-Lakasir--Copy-?node-id=1470-836) | Not Started | Phase 1 |
-| Homepage/Dashboard | [View](https://www.figma.com/design/Nbc5NwW89oB9msV7q55HZP/Redesign-Lakasir--Copy-?node-id=1470-1204) | Not Started | Phase 2 |
+| Login | [View](https://www.figma.com/design/Nbc5NwW89oB9msV7q55HZP/Redesign-Lakasir--Copy-?node-id=1470-836) | Done (UI Slicing Scope) | Phase 1 |
+| Sign Up | [View](https://www.figma.com/design/Nbc5NwW89oB9msV7q55HZP/Redesign-Lakasir--Copy-?node-id=1470-1036) | Done (UI Slicing Scope) | Phase 1 |
+| Menu Home (Mobile) | [View](https://www.figma.com/design/Nbc5NwW89oB9msV7q55HZP/Redesign-Lakasir--Copy-?node-id=1470-1204) | Not Started | Phase 2 |
+| Menu Home (Desktop) | [View](https://www.figma.com/design/Nbc5NwW89oB9msV7q55HZP/Redesign-Lakasir--Copy-?node-id=369-1092) | Not Started | Phase 2 |
 | Landing Transaction | [View](https://www.figma.com/design/Nbc5NwW89oB9msV7q55HZP/Redesign-Lakasir--Copy-?node-id=1492-2789) | Not Started | Phase 5 |
 | Category | [View](https://www.figma.com/design/Nbc5NwW89oB9msV7q55HZP/Redesign-Lakasir--Copy-?node-id=1492-2918) | Not Started | Phase 6 |
 | Transaction History | [View](https://www.figma.com/design/Nbc5NwW89oB9msV7q55HZP/Redesign-Lakasir--Copy-?node-id=1497-3316) | Not Started | Phase 5 |

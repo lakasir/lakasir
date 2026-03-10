@@ -52,19 +52,12 @@ Before starting, ensure:
     @stack('scripts')
 </head>
 <body class="bg-gray-50 dark:bg-gray-900">
-    <!-- Sidebar + Main Content wrapper -->
-    <div class="flex h-screen overflow-hidden">
-        <!-- Sidebar -->
-        @include('components.shared.sidebar')
-        
-        <!-- Main Content -->
-        <div class="flex-1 flex flex-col overflow-hidden">
-            @include('components.shared.header')
-            
-            <main class="flex-1 overflow-y-auto p-4 md:p-6">
-                {{ $slot }}
-            </main>
-        </div>
+    <div class="min-h-screen">
+        @include('components.shared.header')
+
+        <main class="mx-auto w-full max-w-7xl px-4 py-6 md:px-6">
+            {{ $slot }}
+        </main>
     </div>
     
     @persist('toasts')
@@ -76,17 +69,17 @@ Before starting, ensure:
 
 **Implementation Steps**:
 - [ ] Create file structure
-- [ ] Implement responsive sidebar (collapsible on mobile)
+- [ ] Implement neutral authenticated shell without fixed sidebar
 - [ ] Add dark mode support
 - [ ] Include toast notification container
-- [ ] Add mobile navigation drawer
+- [ ] Ensure slot layout can host Menu Home in Phase 2
 
 #### 1.2 Guest Layout (`resources/views/components/layouts/guest.blade.php`)
 
 For public pages (landing, registration, etc.)
 
 **Implementation Steps**:
-- [ ] Create minimal layout without sidebar
+- [ ] Create minimal layout without authenticated app navigation
 - [ ] Include only header with logo
 - [ ] Footer with links
 
@@ -329,80 +322,26 @@ For loading states:
 
 ---
 
-### 3. Navigation Components
+### 3. Navigation Foundation (Deferred to Phase 2)
 
-#### 3.1 Sidebar (`resources/views/components/shared/sidebar.blade.php`)
+Navigation for authenticated pages follows the Menu Home design in Phase 2 (tile grid), not a global app sidebar.
+
+#### 3.1 Shared Header (`resources/views/components/shared/header.blade.php`)
 
 **Features**:
-- Collapsible on desktop
-- Drawer on mobile
-- Active state indication
-- Nested menu support
-- Role-based menu visibility
-
-**Menu Structure**:
-```
-Dashboard
-POS
-├── Cashier
-├── Transactions
-└── History
-Master
-├── Products
-├── Categories
-├── Members
-├── Suppliers
-└── Payment Methods
-Inventory
-├── Stock Opname
-└── Purchasing
-Finance
-├── Receivables
-└── Vouchers
-Reports
-├── Sales
-├── Products
-├── Cashiers
-└── Purchases
-Settings
-├── General
-├── Users
-├── Roles
-└── Printer
-```
+- Branding/logo area
+- Logout action entry point
+- Reusable container for authenticated pages
 
 **Tasks**:
-- [ ] Create sidebar HTML structure
-- [ ] Implement collapse/expand
-- [ ] Add mobile drawer
-- [ ] Add active route detection
-- [ ] Implement role-based visibility
+- [ ] Create header structure usable by Menu Home and settings pages
+- [ ] Add logout trigger area in header
+- [ ] Keep responsive spacing for mobile and desktop
 
-#### 3.2 Header (`resources/views/components/shared/header.blade.php`)
+#### 3.2 Deferred Scope
 
-**Features**:
-- Hamburger menu (mobile)
-- Search bar (desktop)
-- User dropdown
-- Notifications bell
-- Theme toggle
-
-**Tasks**:
-- [ ] Create header structure
-- [ ] Add mobile menu toggle
-- [ ] Add user menu dropdown
-- [ ] Implement search functionality
-- [ ] Add dark mode toggle
-
-#### 3.3 Mobile Nav (`resources/views/components/shared/mobile-nav.blade.php`)
-
-Bottom navigation for mobile devices.
-
-**Features**:
-- Home
-- POS
-- History
-- Profile
+- [ ] Implement Menu Home navigation grid in Phase 2 dashboard page
+- [ ] Implement settings sidebar only inside settings module (Phase 2)
 
 ---
 
@@ -590,9 +529,7 @@ resources/views/components/
 │   ├── empty-state.blade.php
 │   └── confirm-dialog.blade.php
 ├── shared/
-│   ├── sidebar.blade.php
-│   ├── header.blade.php
-│   └── mobile-nav.blade.php
+│   └── header.blade.php
 └── form/
     ├── wrapper.blade.php
     ├── section.blade.php
@@ -631,7 +568,7 @@ app/Livewire/
 
 ### Browser Tests
 - [ ] Test login form submission
-- [ ] Test sidebar navigation
+- [ ] Test register form submission
 - [ ] Test responsive layouts
 
 ---
@@ -639,8 +576,7 @@ app/Livewire/
 ## Acceptance Criteria
 
 - [ ] User can log in with email/password
-- [ ] Sidebar displays all menu items based on role
-- [ ] Sidebar collapses on mobile, shows drawer
+- [ ] User can register with valid tenant/user data
 - [ ] All base UI components render correctly
 - [ ] Toast notifications appear and dismiss
 - [ ] Modal opens and closes correctly
@@ -671,4 +607,4 @@ app/Livewire/
 
 ## Next Phase
 
-After completing this phase, proceed to [Phase 2: Dashboard & Common UI](./PHASE_2.md)
+After completing this phase, proceed to [Phase 2: Menu Home & Settings UI](./PHASE_2.md)

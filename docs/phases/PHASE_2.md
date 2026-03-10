@@ -1,4 +1,4 @@
-# Phase 2: Dashboard & Common UI
+# Phase 2: Menu Home & Settings UI
 
 **Duration**: 2-3 days  
 **Status**: Not Started  
@@ -8,7 +8,7 @@
 
 ## Overview
 
-This phase implements the main dashboard and settings pages. The dashboard serves as the landing page after login, displaying key metrics and quick actions.
+This phase implements the post-login Menu Home and settings pages. Based on Figma, the landing page after login is a tile-based menu (not a global sidebar dashboard).
 
 ---
 
@@ -16,7 +16,8 @@ This phase implements the main dashboard and settings pages. The dashboard serve
 
 | Screen | Node ID | URL |
 |--------|---------|-----|
-| Homepage/Dashboard | 1470-1204 | [View](https://www.figma.com/design/Nbc5NwW89oB9msV7q55HZP/Redesign-Lakasir--Copy-?node-id=1470-1204) |
+| Menu Home Desktop | 369-1092 | [View](https://www.figma.com/design/Nbc5NwW89oB9msV7q55HZP/Redesign-Lakasir--Copy-?node-id=369-1092) |
+| Menu Home Mobile | 1470-1204 | [View](https://www.figma.com/design/Nbc5NwW89oB9msV7q55HZP/Redesign-Lakasir--Copy-?node-id=1470-1204) |
 | Settings Menu | 1513-3250 | [View](https://www.figma.com/design/Nbc5NwW89oB9msV7q55HZP/Redesign-Lakasir--Copy-?node-id=1513-3250) |
 | Simple Settings | 1513-3407 | [View](https://www.figma.com/design/Nbc5NwW89oB9msV7q55HZP/Redesign-Lakasir--Copy-?node-id=1513-3407) |
 
@@ -27,167 +28,95 @@ This phase implements the main dashboard and settings pages. The dashboard serve
 - [ ] Phase 1 complete
 - [ ] All base UI components available
 - [ ] Authentication working
-- [ ] Sidebar navigation functional
+- [ ] Shared header (logo + logout) available
 
 ---
 
 ## Tasks
 
-### 1. Dashboard Page
+### 1. Menu Home Page
 
 **File**: `resources/views/livewire/pages/dashboard.blade.php`
 
 **Volt Page**: `resources/views/livewire/pages/dashboard.blade.php`
 
-#### 1.1 Dashboard Layout
+#### 1.1 Menu Home Layout
 
-**Design**: Responsive grid with cards and widgets
+**Design**: Responsive menu grid with action tiles (no global sidebar)
 
 **Structure**:
 ```
-┌─────────────────────────────────────────────────────────────┐
-│  Header: Welcome Message + Date                            │
-├─────────────────────────────────────────────────────────────┤
-│  Stats Cards (4 columns)                                     │
-│  ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌─────────┐           │
-│  │ Sales   │ │ Orders  │ │ Product │ │ Customer│           │
-│  │ Today   │ │ Today   │ │ Count   │ │ Count   │           │
-│  └─────────┘ └─────────┘ └─────────┘ └─────────┘           │
-├─────────────────────────────────────────────────────────────┤
-│  Quick Actions                                               │
-│  ┌─────────────────────────────────────────────┐           │
-│  │ [New Sale] [Add Product] [View Reports]     │           │
-│  └─────────────────────────────────────────────┘           │
-├─────────────────────────────────────────────────────────────┤
-│  Main Content Grid                                           │
-│  ┌─────────────────────────┬─────────────────────────┐    │
-│  │ Recent Transactions     │ Today's Best Seller      │    │
-│  │ (List)                 │ (List)                   │    │
-│  └─────────────────────────┴─────────────────────────┘    │
-│  ┌─────────────────────────┬─────────────────────────┐    │
-│  │ Low Stock Alert         │ Expired Products         │    │
-│  │ (List)                  │ (List)                   │    │
-│  └─────────────────────────┴─────────────────────────┘    │
-└─────────────────────────────────────────────────────────────┘
+┌────────────────────────────────────────────────────────────┐
+│ Header: Logo (left) + Logout (right)                     │
+├────────────────────────────────────────────────────────────┤
+│ Menu Grid                                                 │
+│ Desktop: 3 columns, 2 rows                               │
+│ Mobile : 2 columns, 3 rows                               │
+│                                                            │
+│ [Transaction] [Product] [Member]                         │
+│ [Profile]    [About]   [Setting]                         │
+├────────────────────────────────────────────────────────────┤
+│ Footer Link: Support Center                              │
+└────────────────────────────────────────────────────────────┘
 ```
 
 **Tasks**:
-- [ ] Create dashboard page component
-- [ ] Implement responsive grid layout
-- [ ] Add welcome header with date
-- [ ] Create stats cards component
+- [ ] Create Menu Home page component
+- [ ] Implement responsive grid (2 cols mobile, 3 cols desktop)
+- [ ] Add header with logo and logout action
+- [ ] Add Support Center link placement per Figma
+- [ ] Match spacing, tile sizing, and color accents from Figma
 
-#### 1.2 Stats Cards Widget
+#### 1.2 Menu Tile Component
 
-**File**: `resources/views/components/dashboard/stats-card.blade.php`
+**File**: `resources/views/components/dashboard/menu-tile.blade.php`
 
 **Props**:
-- `title`: card title
-- `value`: main value
+- `title`: tile label
+- `route`: target route
 - `icon`: optional icon
-- `trend`: optional trend percentage
-- `trendDirection`: up, down, neutral
-- `color`: primary, success, warning, danger
+- `accent`: tile accent color class/token
+- `disabled`: boolean (permission-aware)
 
-**Data to Display**:
-1. **Today's Sales**: Total sales amount for today
-2. **Today's Orders**: Count of transactions today
-3. **Total Products**: Count of active products
-4. **Total Customers**: Count of registered members
-
-**Tasks**:
-- [ ] Create stats card component
-- [ ] Add icon support
-- [ ] Add trend indicator
-- [ ] Implement loading skeleton
-
-#### 1.3 Quick Actions Bar
-
-**Actions**:
-- New Sale (POS) - primary button
-- Add Product - secondary button
-- View Reports - secondary button
-- Stock Opname - secondary button
+**Menu Items**:
+1. **Transaction**
+2. **Product**
+3. **Member**
+4. **Profile**
+5. **About**
+6. **Setting**
 
 **Tasks**:
-- [ ] Create quick actions component
-- [ ] Add icon buttons
-- [ ] Link to respective pages
-- [ ] Responsive button layout
+- [ ] Create reusable tile component for desktop/mobile
+- [ ] Add icon + label alignment matching Figma
+- [ ] Add hover/focus/active states
+- [ ] Handle disabled state when route is not permitted
 
-#### 1.4 Recent Transactions Widget
+#### 1.3 Navigation Mapping & Access Control
 
-**File**: `resources/views/components/dashboard/recent-transactions.blade.php`
-
-**API Endpoint**: `/api/tenant/transactions/recent`
-
-**Display**:
-- Transaction ID
-- Customer name
-- Total amount
-- Time
-- Status badge
-- Quick view link
+**Route Mapping**:
+- Transaction → transaction module route
+- Product → product module route
+- Member → member module route
+- Profile → profile settings route
+- About → about settings route
+- Setting → general settings route
 
 **Tasks**:
-- [ ] Create recent transactions component
-- [ ] Implement real-time updates (optional polling)
-- [ ] Add pagination for "See All"
-- [ ] Format currency and time
+- [ ] Map all six tiles to existing member-prefixed routes
+- [ ] Apply permission checks per tile visibility/state
+- [ ] Add navigation loading feedback (optional)
 
-#### 1.5 Best Selling Products Widget
+#### 1.4 Logout & Support Actions
 
-**File**: `resources/views/components/dashboard/best-sellers.blade.php`
-
-**API Endpoint**: `/api/tenant/reports/products/best-selling`
-
-**Data Source**: Existing `TodaysBestSellingProduct` widget from Filament
-
-**Display**:
-- Product image
-- Product name
-- Quantity sold
-- Revenue
+**Features**:
+- Logout action in top-right header
+- Support Center link at bottom area
 
 **Tasks**:
-- [ ] Create best sellers component
-- [ ] Add product images
-- [ ] Show quantity and revenue
-- [ ] Link to product detail
-
-#### 1.6 Low Stock Alert Widget
-
-**File**: `resources/views/components/dashboard/low-stock.blade.php`
-
-**API Endpoint**: `/api/tenant/products/low-stock`
-
-**Display**:
-- Product name
-- Current stock
-- Minimum threshold
-- Quick restock link
-
-**Tasks**:
-- [ ] Create low stock component
-- [ ] Add urgency indicators (color coding)
-- [ ] Link to stock management
-
-#### 1.7 Expired Products Widget
-
-**File**: `resources/views/components/dashboard/expired-products.blade.php`
-
-**Data Source**: Existing `ExpiredProduct` widget from Filament
-
-**Display**:
-- Product name
-- Expiration date
-- Days until expiration (or days expired)
-- Link to product
-
-**Tasks**:
-- [ ] Create expired products component
-- [ ] Add color coding by urgency
-- [ ] Link to product management
+- [ ] Use POST logout flow from authenticated session controller
+- [ ] Ensure Support Center link is visible on both breakpoints
+- [ ] Add localization keys for Logout and Support Center labels
 
 ---
 
@@ -198,6 +127,8 @@ This phase implements the main dashboard and settings pages. The dashboard serve
 #### 2.1 Settings Navigation
 
 **Design Reference**: [Figma - Settings Menu](https://www.figma.com/design/Nbc5NwW89oB9msV7q55HZP/Redesign-Lakasir--Copy-?node-id=1513-3250)
+
+**Note**: The sidebar in this section is scoped to settings pages only, not global application navigation.
 
 **Structure**:
 ```
@@ -384,48 +315,31 @@ Route::middleware('auth')->prefix('member')->group(function () {
 
 ---
 
-## Dashboard Widgets Data Requirements
+## Menu Home Data Requirements
 
-### Stats Card Data
+### Menu Configuration
 
-**API Endpoint**: `/api/tenant/dashboard/stats`
+Menu Home can use static configuration for the initial slicing:
 
-```json
-{
-    "sales_today": 1500000,
-    "orders_today": 45,
-    "total_products": 234,
-    "total_customers": 89,
-    "sales_trend": "+12.5",
-    "orders_trend": "-3.2"
-}
+```php
+[
+    ['key' => 'transaction', 'label' => 'menu.transaction', 'route' => '...'],
+    ['key' => 'product', 'label' => 'menu.product', 'route' => '...'],
+    ['key' => 'member', 'label' => 'menu.member', 'route' => '...'],
+    ['key' => 'profile', 'label' => 'menu.profile', 'route' => 'settings.profile'],
+    ['key' => 'about', 'label' => 'menu.about', 'route' => 'settings.about'],
+    ['key' => 'setting', 'label' => 'menu.setting', 'route' => 'settings.general'],
+]
 ```
 
-**Controller Method**: `DashboardController@stats`
+### Endpoint Dependencies
 
-### Recent Transactions Data
+- Logout: `POST /logout`
+- Optional support center URL: tenant/general setting value
 
-**API Endpoint**: `/api/tenant/transactions/recent`
+### Future Enhancement (Optional)
 
-```json
-{
-    "data": [
-        {
-            "id": "TRX001",
-            "customer": "John Doe",
-            "total": 50000,
-            "status": "completed",
-            "created_at": "2024-01-15 10:30:00"
-        }
-    ]
-}
-```
-
-### Best Sellers Data
-
-**API Endpoint**: `/api/tenant/reports/products/best-selling`
-
-**Existing Logic**: `app/Filament/Tenant/Widgets/TodaysBestSellingProduct.php`
+- Add badge counters per tile (pending transactions, low stock, etc.) from lightweight APIs
 
 ---
 
@@ -435,12 +349,8 @@ Route::middleware('auth')->prefix('member')->group(function () {
 ```
 resources/views/components/
 ├── dashboard/
-│   ├── stats-card.blade.php
-│   ├── quick-actions.blade.php
-│   ├── recent-transactions.blade.php
-│   ├── best-sellers.blade.php
-│   ├── low-stock.blade.php
-│   └── expired-products.blade.php
+│   ├── menu-tile.blade.php
+│   └── menu-grid.blade.php
 └── settings/
     ├── sidebar.blade.php
     └── permission-matrix.blade.php
@@ -471,13 +381,6 @@ app/Livewire/
 │       ├── Printer.php
 │       ├── About.php
 │       └── Profile.php
-└── Components/
-    └── Dashboard/
-        ├── StatsCard.php
-        ├── RecentTransactions.php
-        ├── BestSellers.php
-        ├── LowStock.php
-        └── ExpiredProducts.php
 ```
 
 ---
@@ -485,12 +388,14 @@ app/Livewire/
 ## Testing Checklist
 
 ### Unit Tests
-- [ ] Test dashboard stats calculation
+- [ ] Test menu tile visibility by permission
 - [ ] Test settings save functionality
 - [ ] Test role permission matrix
 
 ### Feature Tests
-- [ ] Test dashboard page renders
+- [ ] Test Menu Home page renders
+- [ ] Test all menu tile routes are reachable
+- [ ] Test logout action from Menu Home
 - [ ] Test settings page renders
 - [ ] Test settings update
 - [ ] Test user CRUD
@@ -498,21 +403,19 @@ app/Livewire/
 - [ ] Test permission assignment
 
 ### Browser Tests
-- [ ] Test dashboard widget loading
+- [ ] Test Menu Home grid layout (mobile and desktop)
 - [ ] Test settings form submission
-- [ ] Test real-time stats update
+- [ ] Test logout flow from header
 
 ---
 
 ## Acceptance Criteria
 
-- [ ] Dashboard displays correct stats
-- [ ] Stats cards show trends correctly
-- [ ] Quick actions navigate to correct pages
-- [ ] Recent transactions list displays
-- [ ] Best sellers list displays
-- [ ] Low stock alert shows items under threshold
-- [ ] Expired products list displays
+- [ ] Menu Home displays 6 tiles matching Figma labels
+- [ ] Desktop and mobile tile layouts match Figma structure
+- [ ] Each tile navigates to the correct module route
+- [ ] Logout action works from Menu Home header
+- [ ] Support Center link is visible and clickable
 - [ ] Settings sidebar navigates between sections
 - [ ] General settings form saves correctly
 - [ ] User management CRUD works
@@ -527,8 +430,8 @@ app/Livewire/
 
 ## Notes
 
-- Dashboard widgets should load data asynchronously
-- Consider caching frequently accessed dashboard data
+- Menu Home is a navigation entry page, not a KPI widget dashboard
+- Keep settings sidebar local to settings pages only
 - Settings should be tenant-scoped (multi-tenancy)
 - Profile changes should reflect immediately
 
