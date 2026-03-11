@@ -20,7 +20,21 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
-    Volt::route('/dashboard', 'pages/dashboard')->name('dashboard');
+    Route::redirect('/dashboard', '/app/dashboard');
+
+    Route::prefix('app')->group(function () {
+        Volt::route('/dashboard', 'pages/dashboard')->name('dashboard');
+
+        Route::prefix('settings')->group(function () {
+            Volt::route('/', 'pages/settings/general')->name('settings.general');
+            Volt::route('/category', 'pages/settings/category')->name('settings.category');
+            Volt::route('/users', 'pages/settings/users')->name('settings.users');
+            Volt::route('/roles', 'pages/settings/roles')->name('settings.roles');
+            Volt::route('/printer', 'pages/settings/printer')->name('settings.printer');
+            Volt::route('/about', 'pages/settings/about')->name('settings.about');
+            Volt::route('/profile', 'pages/settings/profile')->name('settings.profile');
+        });
+    });
 
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('logout');

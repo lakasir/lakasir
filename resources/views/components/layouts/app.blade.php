@@ -11,17 +11,13 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('styles')
 </head>
-<body class="bg-gray-50 dark:bg-gray-900 font-sans antialiased">
-    <div class="flex h-screen overflow-hidden">
-        @include('components.shared.sidebar')
+<body class="min-h-screen bg-[#f2f2f2] text-[#111111] antialiased">
+    <div class="min-h-screen">
+        @include('components.shared.header')
 
-        <div class="flex-1 flex flex-col overflow-hidden">
-            @include('components.shared.header')
-
-            <main class="flex-1 overflow-y-auto p-4 md:p-6">
-                {{ $slot }}
-            </main>
-        </div>
+        <main class="mx-auto w-full max-w-6xl px-4 pb-10 pt-2 md:px-6 md:pb-12">
+            {{ $slot }}
+        </main>
     </div>
 
     @stack('scripts')
