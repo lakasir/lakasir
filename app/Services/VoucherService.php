@@ -20,7 +20,7 @@ class VoucherService
         if (! $voucher) {
             return null;
         }
-        if ($voucher?->minimal_buying <= $price && $today->gte($voucher->start_date) && $today->lte($voucher->expired) && $voucher->kuota > 0) {
+        if ($voucher?->minimal_buying <= $price && $today->gte(\Carbon\Carbon::parse($voucher->start_date)) && $today->lte(\Carbon\Carbon::parse($voucher->expired)) && $voucher->kuota > 0) {
             $this->price = $price;
             $this->voucher = $voucher;
 
