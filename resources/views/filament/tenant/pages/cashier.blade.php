@@ -385,6 +385,114 @@
     </x-slot>
   </x-filament::modal>
 
+  <style>
+    /* html5-qrcode library button & control styling */
+    #qr-reader__dashboard_section_csr button,
+    #qr-reader__dashboard_section_swaplink {
+      background-color: #f97316 !important;
+      border: none !important;
+      color: #fff !important;
+      padding: 0.5rem 1.25rem !important;
+      border-radius: 0.5rem !important;
+      font-weight: 600 !important;
+      font-size: 0.875rem !important;
+      cursor: pointer !important;
+      transition: background-color 0.2s ease !important;
+      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1) !important;
+      margin: 0.25rem 0 !important;
+    }
+
+    #qr-reader__dashboard_section_csr button:hover,
+    #qr-reader__dashboard_section_swaplink:hover {
+      background-color: #ea580c !important;
+    }
+
+    #qr-reader__dashboard_section {
+      padding: 0.75rem !important;
+      margin-top: 0.5rem !important;
+    }
+
+    #qr-reader__dashboard_section_csr {
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 0.5rem !important;
+      align-items: stretch !important;
+    }
+
+    #qr-reader__dashboard_section_csr select {
+      width: 100% !important;
+      padding: 0.5rem 0.75rem !important;
+      border-radius: 0.5rem !important;
+      border: 1px solid #d1d5db !important;
+      background-color: #fff !important;
+      color: #111827 !important;
+      font-size: 0.875rem !important;
+      outline: none !important;
+      transition: border-color 0.2s ease !important;
+    }
+
+    #qr-reader__dashboard_section_csr select:focus {
+      border-color: #f97316 !important;
+      box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.25) !important;
+    }
+
+    #qr-reader__scan_region {
+      min-height: 200px !important;
+      border-radius: 0.5rem !important;
+      overflow: hidden !important;
+    }
+
+    #qr-reader {
+      border: none !important;
+    }
+
+    #qr-reader__dashboard {
+      padding: 0.5rem !important;
+    }
+
+    #qr-reader__status_line {
+      font-size: 0.875rem !important;
+      padding: 0.25rem 0.5rem !important;
+    }
+
+    /* Dark mode support */
+    .dark #qr-reader__dashboard_section_csr select {
+      background-color: #111827 !important;
+      color: #f3f4f6 !important;
+      border-color: #374151 !important;
+    }
+
+    .dark #qr-reader__dashboard_section_csr select:focus {
+      border-color: #f97316 !important;
+      box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.25) !important;
+    }
+
+    .dark #qr-reader__dashboard_section {
+      background-color: #1f2937 !important;
+      border-color: #374151 !important;
+    }
+
+    .dark #qr-reader__dashboard {
+      background-color: #111827 !important;
+    }
+
+    .dark #qr-reader__status_line {
+      color: #d1d5db !important;
+    }
+
+    .dark #qr-reader img[alt="Info icon"] {
+      filter: invert(1) !important;
+    }
+
+    /* Fix dark mode swap link: transparent background keeps text readable */
+    .dark #qr-reader__dashboard_section_swaplink {
+      background-color: transparent !important;
+      color: #f97316 !important;
+      text-decoration: underline !important;
+      box-shadow: none !important;
+      padding: 0 !important;
+    }
+  </style>
 </div>
 
 @script()

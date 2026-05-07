@@ -3,6 +3,7 @@
 namespace App\Filament\Tenant\Resources\Traits;
 
 use Filament\Forms\Components\BaseFileUpload;
+use Illuminate\Support\Facades\Storage;
 use League\Flysystem\UnableToCheckFileExistence;
 
 trait HasUploadFileField
@@ -13,8 +14,6 @@ trait HasUploadFileField
         $storage = $component->getDisk();
 
         $shouldFetchFileInformation = $component->shouldFetchFileInformation();
-
-        $file = str($file)->remove('/storage');
 
         if ($shouldFetchFileInformation) {
             try {
@@ -30,7 +29,7 @@ trait HasUploadFileField
             'name' => $file,
             'size' => $shouldFetchFileInformation ? $storage->size($file) : 0,
             'type' => $shouldFetchFileInformation ? $storage->mimeType($file) : null,
-            'url' => str('/storage'.$file),
+            'url' => $storage->url($file),
         ];
     }
 }

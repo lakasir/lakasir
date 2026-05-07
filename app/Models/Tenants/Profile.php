@@ -68,6 +68,8 @@ class Profile extends Model
                     'es' => 'Español',
                 ]),
             FileUpload::make('photo')
+                ->disk(config('filesystems.upload_disk'))
+                ->directory('profile')
                 ->visible(feature('edit-profile'))
                 ->imageResizeMode('cover')
                 ->imageCropAspectRatio('1:1')
@@ -75,8 +77,6 @@ class Profile extends Model
                 ->image()
                 ->getUploadedFileUsing(function ($file, string|array|null $storedFileNames, $component) {
                     $static = new static;
-
-                    $file = str($file)->remove(config('app.url'));
 
                     return $static->getUploadedFileUsing($component, $file, $storedFileNames);
                 })

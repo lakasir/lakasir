@@ -13,10 +13,10 @@ class RecalculateEvent
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     /**
-     * @param  Collection<Product>  $products
+     * @param  Collection<int|string, Product>|Product  $products
      * @return void
      */
-    public function __construct(public $products, public array $data)
+    public function __construct(public Collection|Product $products, public array $data)
     {
     }
 }

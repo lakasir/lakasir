@@ -62,14 +62,24 @@ class StocksRelationManager extends RelationManager
                             'is_ready' => true,
                         ]));
 
-                        $products = Product::find($this->ownerRecord->id);
-                        RecalculateEvent::dispatch($products, []);
+                        RecalculateEvent::dispatch(collect([$this->ownerRecord]), []);
                     })
                     ->createAnother(false),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->action(function (Stock $record, array $data, StockService $stockService) {
+                        $stockService->update($record, array_merge($data, [
+                            'product_id' => $record->product_id,
+                        ]));
+                        RecalculateEvent::dispatch(collect([$record->product]), []);
+                    }),
+                Tables\Actions\DeleteAction::make()
+                    ->action(function (Stock $record) {
+                        $product = $record->product;
+                        $record->delete();
+                        RecalculateEvent::dispatch(collect([$product]), []);
+                    }),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

@@ -53,6 +53,8 @@ jobs:
         run: composer install --optimize-autoloader --no-scripts
 
       - name: ⚙️ Run artisan setup
+        env:
+          CACHE_DRIVER: array
         run: |
           php artisan migrate --force --path=database/migrations/tenant
           php artisan filament:assets

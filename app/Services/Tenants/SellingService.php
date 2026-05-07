@@ -28,7 +28,7 @@ class SellingService
             SellingCreated::dispatch($selling, $data);
 
             /** @var Collection<Product> $products */
-            $products = Product::find($selling->sellingDetails->pluck('product_id'));
+            $products = Product::whereIn('id', $selling->sellingDetails->pluck('product_id'))->get();
             RecalculateEvent::dispatch($products, $data);
 
             DB::commit();

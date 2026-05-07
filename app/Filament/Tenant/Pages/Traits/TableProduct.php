@@ -30,8 +30,12 @@ trait TableProduct
                     ->where(function ($query) {
                         $query->where('type', 'product')
                             ->where(function ($query) {
-                                $query->where('stock', '>', 0)
-                                    ->orWhere('is_non_stock', true);
+                                $query->whereHas('stocks', function ($query) {
+                                    $query->where('is_ready', 1)
+                                        ->where('type', 'in')
+                                        ->where('stock', '>', 0);
+                                })
+                                ->orWhere('is_non_stock', true);
                             })
                         ->orWhere('type', 'service');
                     })
@@ -79,7 +83,7 @@ trait TableProduct
                         ->extraAttributes([
                             'class' => 'font-bold',
                         ])
-                        ->formatStateUsing(fn (Product $product) => __('Stock').': '.$product->stocks()->sum('stock')),
+                        ->formatStateUsing(fn (Product $product) => __('Stock').': '.$product->stock_calculate),
                 ]),
             ])
             ->contentGrid([

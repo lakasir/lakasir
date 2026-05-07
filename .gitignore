@@ -12,6 +12,9 @@
 /packages
 /public/build/manifest.json
 public/build
+
+# Production env (never commit real .env)
+.env.production
 tags
 .env
 .env.backup
@@ -26,3 +29,6 @@ _ide_helper.php
 .phpunit.cache/test-results
 .herd.yml
 .opencode/*
+tasks/
+.mcp.json
+opencode.json

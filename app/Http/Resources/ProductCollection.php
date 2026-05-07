@@ -19,7 +19,7 @@ class ProductCollection extends JsonResource
             'unit' => $this->unit,
             'stock' => $this->stock,
             'is_non_stock' => (bool) $this->is_non_stock,
-            'hero_images' => $this->hero_images,
+            'hero_images' => $this->hero_images_url,
             'sku' => $this->sku,
             'barcode' => $this->barcodes()->primary()->active()->value('code'),
             'show' => $this->show,

@@ -8,7 +8,6 @@ use App\Models\Tenants\UploadedFile;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 
 class ProfileController extends Controller
 {
@@ -23,10 +22,10 @@ class ProfileController extends Controller
     {
         $this->validate($request, [
             'name' => ['nullable', 'string'],
-            'email' => ['nullable', 'email', 'unique:users,email,'.auth()->id()],
+            'email' => ['nullable', 'email', 'unique:users,email,' . auth()->id()],
             'phone' => ['nullable', 'string', 'digits_between:10,13'],
             'address' => ['nullable', 'string'],
-            'photo_url' => ['nullable', 'string', 'url', 'regex:/^(http)?s?:?(\/\/[^\']*\.(?:png|jpg|jpeg|gif|png|svg))$/'],
+            'uploaded_file_id' => ['nullable', 'integer', 'exists:uploaded_files,id'],
         ]);
 
         try {
@@ -37,21 +36,21 @@ class ProfileController extends Controller
 
             /** @var \App\Models\Tenants\Profile $profile */
             $profile = $user->profile;
-            $request->merge([
-                'photo' => $request->photo_url,
-            ]);
             $profile = $user->profile()->updateOrCreate([
                 'user_id' => $user->id,
             ], $request->only('phone', 'address', 'locale'));
 
-            if ($request->filled('photo_url') && $request->photo_url !== $profile->photo) {
-                /** @var \App\Models\Tenants\UploadedFile $tmpFile */
-                $tmpFile = UploadedFile::where('url', $request->photo_url)->first();
-                $url = $tmpFile->moveToPuplic('profile', $profile->photo ? Str::of($profile->photo)->after('profile/') : null);
-                $profile->update([
-                    'photo' => $url,
-                ]);
+            if ($request->filled('uploaded_file_id')) {
+                $tmpFile = UploadedFile::find($request->uploaded_file_id);
+
+                if ($tmpFile && $tmpFile->relative_path !== $profile->photo) {
+                    $relativePath = $tmpFile->moveToPublic('profile', $profile->photo ?: null);
+                    $profile->update([
+                        'photo' => $relativePath,
+                    ]);
+                }
             }
+
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();

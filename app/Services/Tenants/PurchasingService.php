@@ -74,7 +74,7 @@ class PurchasingService
                 $stock->is_ready = true;
                 $stock->save();
             }
-            $products = Product::find($purchasing->stocks()->pluck('product_id'));
+            $products = Product::whereIn('id', $purchasing->stocks()->pluck('product_id'))->get();
             RecalculateEvent::dispatch($products, []);
         }
         $purchasing->save();

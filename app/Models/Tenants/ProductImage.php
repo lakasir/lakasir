@@ -23,7 +23,13 @@ class ProductImage extends Model
     public function getPathAttribute()
     {
         $value = $this->attributes['name'];
+        $uploadDisk = config('filesystems.upload_disk');
+        $driver = config('filesystems.disks.' . $uploadDisk . '.driver');
 
-        return Storage::disk('public')->path($value);
+        if ($driver === 'local' || $driver === 'public') {
+            return Storage::disk($uploadDisk)->path($value);
+        }
+
+        return Storage::disk($uploadDisk)->url($value);
     }
 }

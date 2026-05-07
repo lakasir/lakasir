@@ -25,7 +25,7 @@ use Filament\Notifications\Notification;
 use Filament\Pages\Concerns\InteractsWithFormActions;
 use Filament\Pages\Page;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
+
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 use Laravel\Pennant\Feature;
 
@@ -78,7 +78,6 @@ class GeneralSetting extends Page implements HasActions, HasForms
             'qris' => Feature::active('qris')
         ];
 
-        /** @var User $user */
         $user = auth()->user();
         $profile = $user->profile;
 
@@ -177,24 +176,49 @@ class GeneralSetting extends Page implements HasActions, HasForms
         $this->mount();
     }
 
+    /**
+     * Store a TemporaryUploadedFile on the tmp disk and create an UploadedFile record.
+     * Returns the UploadedFile ID for use with the ID-based lookup flow.
+     */
+    private function storeAsUploadedFile(TemporaryUploadedFile $image): int
+    {
+        $tmpDisk = config('filesystems.tmp_disk');
+        $filename = $image->getFilename();
+
+        $image->storePubliclyAs('', $filename, $tmpDisk);
+
+        $fullUrl = Storage::disk($tmpDisk)->url($filename);
+
+        $uploadedFile = UploadedFile::create([
+            'name' => $filename,
+            'original_name' => $image->getClientOriginalName(),
+            'url' => $fullUrl,
+            'mime_type' => $image->getMimeType(),
+            'extension' => $image->extension(),
+            'size' => $image->getSize(),
+            'relative_path' => $filename,
+            'path' => '',
+            'disk' => $tmpDisk,
+        ]);
+
+        return $uploadedFile->id;
+    }
+
     public function saveAbout(AboutService $aboutService): void
     {
         $this->validate([
             'about.shop_name' => 'required',
             'about.business_type' => 'required',
             'about.shop_location' => 'required',
-            // 'about.currency' => 'required',
-            // 'data.photo' => 'required',
         ]);
 
         if (isset($this->about['photo']) && $this->about['photo'] != null && array_values($this->about['photo'])[0] instanceof TemporaryUploadedFile) {
             /** @var TemporaryUploadedFile $image */
             $image = array_values($this->about['photo'])[0];
-            $image->storePubliclyAs('public', $image->getFilename());
-            $url = optional(Storage::disk('public'))->url($image->getFilename());
-            $this->about['photo_url'] = $url;
+            $this->about['uploaded_file_id'] = $this->storeAsUploadedFile($image);
             $this->about['photo'] = null;
         }
+
         $aboutService->createOrUpdate($this->about);
 
         Notification::make()
@@ -232,7 +256,6 @@ class GeneralSetting extends Page implements HasActions, HasForms
             'profile.timezone' => 'required',
             'profile.locale' => 'required',
             'profile.password' => 'nullable|confirmed',
-            // 'data.photo' => 'required',
         ]);
 
         /** @var User $user */
@@ -243,9 +266,7 @@ class GeneralSetting extends Page implements HasActions, HasForms
             if (isset($this->profile['photo']) && $this->profile['photo'] != null && array_values($this->profile['photo'])[0] instanceof TemporaryUploadedFile) {
                 /** @var TemporaryUploadedFile $image */
                 $image = array_values($this->profile['photo'])[0];
-                $image->storePubliclyAs('public', $image->getFilename());
-                $url = optional(Storage::disk('public'))->url($image->getFilename());
-                $this->profile['photo_url'] = $url;
+                $this->profile['uploaded_file_id'] = $this->storeAsUploadedFile($image);
                 $this->profile['photo'] = null;
             }
         }
@@ -260,29 +281,26 @@ class GeneralSetting extends Page implements HasActions, HasForms
         if (feature('edit-profile')) {
             $data = $this->profile;
 
-            if (isset($data['photo_url']) && $data['photo_url'] !== $profile->photo) {
-                /** @var \App\Models\Tenants\UploadedFile $tmpFile */
-                $tmpFile = UploadedFile::where('url', $data['photo_url'])->first();
-                $url = $data['photo_url'];
-                if ($tmpFile) {
-                    $url = $tmpFile->moveToPuplic('profile', $profile->photo ? Str::of($profile->photo)->after('profile/') : null);
+            if (isset($data['uploaded_file_id'])) {
+                $tmpFile = UploadedFile::find($data['uploaded_file_id']);
+
+                if ($tmpFile && $tmpFile->relative_path !== $profile->photo) {
+                    $relativePath = $tmpFile->moveToPublic('profile', $profile->photo ?: null);
+                    $profile->update([
+                        'photo' => $relativePath,
+                    ]);
                 }
-                $profile->update([
-                    'photo' => $url,
-                ]);
             }
 
-            if (! isset($data['photo_url'])) {
-                /** @var \App\Models\Tenants\UploadedFile $tmpFile */
-                $tmpFile = UploadedFile::where('url', $profile->photo)->first();
+            if (! isset($data['uploaded_file_id']) && ! isset($data['photo']) && $profile->photo) {
+                $tmpFile = UploadedFile::where('relative_path', $profile->photo)->first()
+                    ?? UploadedFile::where('url', $profile->photo)->first();
                 if ($tmpFile) {
-                    $tmpFile->deleteFromPublic('');
+                    $tmpFile->deleteFromPublic('profile');
                 } else {
-                    $path = parse_url($profile->photo, PHP_URL_PATH); // Get the path from the URL
-                    $path = str(ltrim($path, '/'))->remove('storage');
-                    $exists = optional(Storage::disk('public'))->has($path);
-                    if ($exists) {
-                        Storage::disk('public')->delete($path);
+                    $uploadDisk = config('filesystems.upload_disk');
+                    if (Storage::disk($uploadDisk)->exists($profile->photo)) {
+                        Storage::disk($uploadDisk)->delete($profile->photo);
                     }
                 }
 
@@ -290,7 +308,6 @@ class GeneralSetting extends Page implements HasActions, HasForms
                     'photo' => null,
                 ]);
             }
-
         }
 
         Notification::make()

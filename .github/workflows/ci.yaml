@@ -1,6 +1,7 @@
 name: unit-test
 env:
   APP_KEY: base64:LBjssn+d5IhFzVud6YqQMezXtFSyNMF1UGFdiNWIpO4=
+  CACHE_DRIVER: array
   DB_CONNECTION: testing
   DB_DATABASE: ${{ secrets.DB_DATABASE }}
   DB_PORT: 3306
@@ -11,11 +12,10 @@ env:
 on:
   push:
     branches:
-      - master
-      - features/**
+      - 1.x
   pull_request:
     branches:
-      - master
+      - 1.x
 
 jobs:
   build:

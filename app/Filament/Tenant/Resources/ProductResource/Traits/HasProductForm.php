@@ -28,6 +28,7 @@ trait HasProductForm
     public function generateFileUploadFormComponent(): FileUpload
     {
         return FileUpload::make('hero_images')
+            ->disk(config('filesystems.upload_disk'))
             ->image()
             ->translateLabel()
             ->imageResizeMode('cover')
@@ -169,7 +170,10 @@ trait HasProductForm
                             ->icon('heroicon-o-camera')
                             ->label('Scan')
                             ->modalHeading('Scan a barcode')
-                            ->modalContent(view('filament.components.barcode-scanner', ['modalId' => 'scan-barcode-modal']))
+                            ->modalContent(fn (Action $action) =>
+                            view('filament.components.barcode-scanner', [
+                                'statePath' => $action->getComponent()->getStatePath()
+                            ]))
                             ->modalWidth('lg')
                             ->closeModalByClickingAway(false)
                             ->modalCloseButton(false)

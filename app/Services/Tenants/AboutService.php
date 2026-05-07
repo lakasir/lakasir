@@ -7,7 +7,6 @@ use App\Models\Tenants\UploadedFile;
 use App\Models\Tenants\User;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 
 class AboutService
 {
@@ -29,35 +28,40 @@ class AboutService
             $owner->save();
         }
 
-        if (isset($data['photo_url']) && $data['photo_url'] !== $about->photo) {
-            /** @var \App\Models\Tenants\UploadedFile $tmpFile */
-            $tmpFile = UploadedFile::where('url', $data['photo_url'])->first();
-            $url = $data['photo_url'];
-            if ($tmpFile) {
-                $url = $tmpFile->moveToPuplic('profile', $about->photo ? Str::of($about->photo)->after('profile/') : null);
+        if (array_key_exists('uploaded_file_id', $data)) {
+            $tmpFile = UploadedFile::find($data['uploaded_file_id']);
+
+            if ($tmpFile && $tmpFile->relative_path !== $about->photo) {
+                $relativePath = $tmpFile->moveToPublic('profile', $about->photo ?: null);
+                $about->update([
+                    'photo' => $relativePath,
+                ]);
+            } elseif (! $tmpFile && $about->photo) {
+                $this->deletePhoto($about);
             }
-            $about->update([
-                'photo' => $url,
-            ]);
         }
 
-        if (! isset($data['photo_url']) && !isset($about->photo)) {
-            /** @var \App\Models\Tenants\UploadedFile $tmpFile */
-            $tmpFile = UploadedFile::where('url', $about->photo)->first();
-            if ($tmpFile) {
-                $tmpFile->deleteFromPublic('');
-            } else {
-                $path = parse_url($about->photo, PHP_URL_PATH); // Get the path from the URL
-                $path = str(ltrim($path, '/'))->remove('storage');
-                $exists = optional(Storage::disk('public'))->has($path);
-                if ($exists) {
-                    Storage::disk('public')->delete($path);
-                }
-            }
-
-            $about->update([
-                'photo' => null,
-            ]);
+        if (array_key_exists('uploaded_file_id', $data) && $data['uploaded_file_id'] === null && $about->photo) {
+            $this->deletePhoto($about);
         }
+    }
+
+    private function deletePhoto(About $about): void
+    {
+        $uploadedFile = UploadedFile::where('relative_path', $about->photo)->first()
+            ?? UploadedFile::where('url', $about->photo)->first();
+
+        if ($uploadedFile) {
+            $uploadedFile->deleteFromPublic('profile');
+        } else {
+            $uploadDisk = config('filesystems.upload_disk');
+            if (Storage::disk($uploadDisk)->exists($about->photo)) {
+                Storage::disk($uploadDisk)->delete($about->photo);
+            }
+        }
+
+        $about->update([
+            'photo' => null,
+        ]);
     }
 }

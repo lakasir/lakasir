@@ -50,14 +50,14 @@ class About extends Model
                 ->required()
                 ->translateLabel(),
             FileUpload::make('photo')
+                ->disk(config('filesystems.upload_disk'))
+                ->directory('profile')
                 ->imageResizeMode('cover')
                 ->imageCropAspectRatio('1:1')
                 ->imageEditor()
                 ->image()
                 ->getUploadedFileUsing(function ($file, string|array|null $storedFileNames, $component) {
                     $static = new static;
-
-                    $file = str($file)->remove(config('app.url'));
 
                     return $static->getUploadedFileUsing($component, $file, $storedFileNames);
                 })

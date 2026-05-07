@@ -266,7 +266,7 @@ test('cashier cannot create the sellings transaction with normal selling method 
             'selling_price' => 30000,
             'is_ready' => true,
         ]);
-    RecalculateEvent::dispatch($product, []);
+    RecalculateEvent::dispatch(collect([$product]), []);
     $user = User::first();
 
     $response = actingAs($user)->postJson('/api/transaction/selling', [

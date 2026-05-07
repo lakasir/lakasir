@@ -12,7 +12,6 @@ use Filament\Actions\Action;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Storage;
 
 class EditProduct extends EditRecord
 {
@@ -45,15 +44,18 @@ class EditProduct extends EditRecord
     protected function mutateFormDataBeforeFill(array $data): array
     {
         $data = $this->getRecord()->attributesToArray();
-        $uploadedFile = UploadedFile::inUrl($data['hero_images'])
-            ->select(['name', 'original_name'])
+
+        $heroImages = $data['hero_images'] ?? [];
+        $uploadedFile = UploadedFile::where(function ($q) use ($heroImages) {
+            $q->whereIn('relative_path', $heroImages)->orWhereIn('url', $heroImages);
+        })->select(['name', 'original_name', 'relative_path', 'url'])
             ->get();
+
         $uploadedFile->each(function ($file, $key) use (&$data) {
-            $data['hero_images'][$key] = '/product/'.$file->name;
-            $data['original_name'][$data['hero_images'][$key]] = $file->original_name;
+            $data['hero_images'][$key] = $file->relative_path;
+            $data['original_name'][$file->relative_path] = $file->original_name;
         });
 
-        // Load barcodes
         $data['barcodes'] = $this->getRecord()->barcodes()->get()->map(function ($barcode) {
             return [
                 'id' => $barcode->id,
@@ -78,14 +80,14 @@ class EditProduct extends EditRecord
     {
         /** @var Product $product */
         $product = $this->getRecord();
-        $urls = Arr::map($data['hero_images'], function ($heroImage) {
-            return optional(Storage::disk('public'))->url($heroImage);
-        });
+
+        $newHeroImages = $data['hero_images'] ?? [];
 
         if (! $product->hero_images) {
             $product->hero_images = collect([]);
         }
-        $deletedHeroImages = $product->hero_images->diff($urls);
+
+        $deletedHeroImages = collect($product->hero_images)->diff($newHeroImages);
 
         $this->productService->handleDeleteUploadedFile($deletedHeroImages->toArray());
 
@@ -105,13 +107,10 @@ class EditProduct extends EditRecord
 
         $product->save();
 
-        // Update barcodes
         $barcodesData = $this->data['barcodes'] ?? [];
 
-        // Delete existing barcodes
         $product->barcodes()->delete();
 
-        // Created new barcodes
         foreach ($barcodesData as $barcodeData) {
             if (!empty($barcodeData['code'])) {
                 $product->barcodes()->create([
