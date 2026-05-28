@@ -7,9 +7,9 @@ use App\Models\Tenants\PriceUnit;
 use App\Models\Tenants\Product;
 use App\Models\Tenants\User;
 use Livewire\Livewire;
-use Tests\RefreshDatabaseWithTenant;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
-uses(RefreshDatabaseWithTenant::class);
+uses(RefreshDatabase::class);
 
 it('price setting renders successfully', function () {
     Category::factory()->create();

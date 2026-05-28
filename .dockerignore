@@ -5,6 +5,7 @@ npm-debug.log
 Dockerfile
 docker-compose.yml
 docker-compose*.yml
+docker
 *.md
 .env
 .env.*
@@ -15,3 +16,5 @@ storage/logs
 storage/framework/sessions
 storage/framework/views
 storage/debugbar
+deploy
+.github

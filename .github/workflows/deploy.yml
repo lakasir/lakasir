@@ -1,0 +1,206 @@
+name: 🚢 Deploy to Production
+
+on:
+  release:
+    types: [published]   # triggers when a pre-release is promoted to release
+  workflow_dispatch:      # manual trigger from GitHub UI
+    inputs:
+      version:
+        description: 'Version tag to deploy (e.g. 1.2.3)'
+        required: true
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  # ──────────────────────────────────────────────
+  # Job 1: Build & Push Docker Image to GHCR
+  # ──────────────────────────────────────────────
+  build-and-push:
+    name: 🏗️ Build & Push Docker Image
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    outputs:
+      image_tag: ${{ steps.version.outputs.version }}
+      image_full: ${{ steps.image.outputs.full }}
+
+    steps:
+      - name: ⬇️ Checkout code
+        uses: actions/checkout@v4
+
+      - name: 📝 Determine version
+        id: version
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            VERSION="${{ github.event.inputs.version }}"
+          else
+            VERSION="${{ github.ref_name }}"
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "📦 Deploying version: $VERSION"
+
+      - name: 🔑 Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 📋 Extract metadata (tags, labels)
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=semver,pattern={{version}},value=${{ steps.version.outputs.version }}
+            type=raw,value=latest
+
+      - name: 🐳 Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: 🏗️ Build and push Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          build-args: |
+            SKIP_OPTIMIZE=false
+
+      - name: 🖼️ Set full image reference output
+        id: image
+        run: |
+          # Use the version-specific tag only (not the comma-separated list)
+          IMAGE="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.version }}"
+          echo "full=$IMAGE" >> "$GITHUB_OUTPUT"
+          echo "🏷️ Image: $IMAGE"
+
+  # ──────────────────────────────────────────────
+  # Job 2: Deploy to Server via SSH
+  # ──────────────────────────────────────────────
+  deploy:
+    name: 🚀 Deploy to Server
+    runs-on: ubuntu-latest
+    needs: build-and-push
+    environment: production
+
+    steps:
+      - name: ⬇️ Checkout code (for deploy script)
+        uses: actions/checkout@v4
+
+      - name: 📝 Set version variable
+        id: version
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            VERSION="${{ github.event.inputs.version }}"
+          else
+            VERSION="${{ github.ref_name }}"
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: 🔑 Setup SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+
+          # If using Cloudflared tunnel for SSH, set up the proxy command
+          if [ "${{ secrets.USE_CLOUDFLARED_SSH }}" = "true" ]; then
+            echo "🌐 Configuring Cloudflared SSH proxy..."
+            # Install cloudflared
+            curl -fsSL https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64 \
+              -o /usr/local/bin/cloudflared
+            chmod +x /usr/local/bin/cloudflared
+            # Configure SSH to use cloudflared
+            cat >> ~/.ssh/config <<EOF
+          Host ${{ secrets.SERVER_HOST }}
+            HostName ${{ secrets.SERVER_HOST }}
+            User ${{ secrets.SERVER_USER }}
+            IdentityFile ~/.ssh/deploy_key
+            ProxyCommand /usr/local/bin/cloudflared access ssh --hostname %h
+          EOF
+          else
+            cat >> ~/.ssh/config <<EOF
+          Host ${{ secrets.SERVER_HOST }}
+            HostName ${{ secrets.SERVER_HOST }}
+            Port ${{ secrets.SERVER_PORT }}
+            User ${{ secrets.SERVER_USER }}
+            IdentityFile ~/.ssh/deploy_key
+          EOF
+          fi
+
+          # Accept any host key for automation
+          ssh-keyscan -H ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts 2>/dev/null || true
+
+      - name: 🚀 Deploy to server
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+          IMAGE: ${{ needs.build-and-push.outputs.image_full }}
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GHCR_USER: ${{ github.actor }}
+          SERVER_HOST: ${{ secrets.SERVER_HOST }}
+          SERVER_USER: ${{ secrets.SERVER_USER }}
+          APP_DIR: ${{ secrets.APP_DIR }}
+        run: |
+          ssh "${SERVER_HOST}" bash -s << DEPLOY_SCRIPT
+          set -euo pipefail
+
+          VERSION="${VERSION}"
+          IMAGE="${IMAGE}"
+          APP_DIR="${APP_DIR:-/opt/lakasir}"
+          GHCR_TOKEN="${GHCR_TOKEN}"
+          GHCR_USER="${GHCR_USER}"
+
+          echo ""
+          echo "╔══════════════════════════════════════════════════╗"
+          echo "║        🚀 Lakasir Deployment Starting            ║"
+          echo "╠══════════════════════════════════════════════════╣"
+          echo "║  Version:  \${VERSION}"
+          echo "║  Image:    \${IMAGE}"
+          echo "║  Directory: \${APP_DIR}"
+          echo "╚══════════════════════════════════════════════════╝"
+          echo ""
+
+          # Create app directory if it doesn't exist
+          mkdir -p "\${APP_DIR}"
+          cd "\${APP_DIR}"
+
+          # Login to GHCR on the server
+          echo "\${GHCR_TOKEN}" | docker login ghcr.io -u "\${GHCR_USER}" --password-stdin
+
+          # Download production compose file and deploy script from the release
+          curl -fsSL "https://raw.githubusercontent.com/${{ github.repository }}/\${VERSION}/docker-compose.prod.yml" -o docker-compose.prod.yml
+          curl -fsSL "https://raw.githubusercontent.com/${{ github.repository }}/\${VERSION}/deploy/deploy.sh" -o deploy.sh
+          chmod +x deploy.sh
+
+          # Run the deployment script
+          bash deploy.sh "\${VERSION}" "\${IMAGE}" "\${APP_DIR}"
+
+          echo "✅ Deployment complete!"
+          DEPLOY_SCRIPT
+
+      - name: 💬 Deployment summary
+        if: always()
+        run: |
+          if [ "${{ job.status }}" = "success" ]; then
+            echo "### ✅ Deployment Successful!" >> "$GITHUB_STEP_SUMMARY"
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            echo "| Field | Value |" >> "$GITHUB_STEP_SUMMARY"
+            echo "|-------|-------|" >> "$GITHUB_STEP_SUMMARY"
+            echo "| Version | \`${{ steps.version.outputs.version }}\` |" >> "$GITHUB_STEP_SUMMARY"
+            echo "| Image | \`${{ needs.build-and-push.outputs.image_full }}\` |" >> "$GITHUB_STEP_SUMMARY"
+            echo "| Environment | production |" >> "$GITHUB_STEP_SUMMARY"
+            echo "| Time | $(date -u '+%Y-%m-%d %H:%M:%S UTC') |" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "### ❌ Deployment Failed!" >> "$GITHUB_STEP_SUMMARY"
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            echo "Check the logs above for details." >> "$GITHUB_STEP_SUMMARY"
+          fi

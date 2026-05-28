@@ -10,11 +10,11 @@ use App\Models\Tenants\Stock;
 use App\Models\Tenants\User;
 use App\Models\Tenants\Voucher;
 use Illuminate\Support\Facades\Cache;
-use Tests\RefreshDatabaseWithTenant;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 use function Pest\Laravel\actingAs;
 
-uses(RefreshDatabaseWithTenant::class);
+uses(RefreshDatabase::class);
 
 test('cashier can create the selling transaction', function () {
     $user = User::first();

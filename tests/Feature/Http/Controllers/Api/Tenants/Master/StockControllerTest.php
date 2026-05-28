@@ -7,9 +7,9 @@ use App\Models\Tenants\Setting;
 use App\Models\Tenants\Stock;
 use App\Models\Tenants\User;
 use Illuminate\Support\Facades\Cache;
-use Tests\RefreshDatabaseWithTenant;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
-uses(RefreshDatabaseWithTenant::class);
+uses(RefreshDatabase::class);
 
 beforeEach(function () {
     Setting::set('selling_method', 'fifo');

@@ -4,11 +4,11 @@ use App\Models\Tenants\Category;
 use App\Models\Tenants\Product;
 use App\Models\Tenants\User;
 use Illuminate\Http\Response;
-use Tests\RefreshDatabaseWithTenant;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 use function Pest\Laravel\actingAs;
 
-uses(RefreshDatabaseWithTenant::class);
+uses(RefreshDatabase::class);
 
 test("can'\t create product", function () {
     $user = User::first();

@@ -1,66 +1,33 @@
 <?php
 
-/*
-|--------------------------------------------------------------------------
-| Test Case
-|--------------------------------------------------------------------------
-|
-| The closure you provide to your test functions is always bound to a specific PHPUnit test
-| case class. By default, that class is "PHPUnit\Framework\TestCase". Of course, you may
-| need to change it using the "uses()" function to bind a different classes or traits.
-|
-*/
+use App\Models\Tenants\PaymentMethod;
+use App\Models\Tenants\User;
+use App\Models\Tenants\Setting;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Cache;
+use Spatie\Permission\Models\Role;
+use Tests\TestCase;
 
-use App\Services\RegisterTenant;
-use App\Tenant;
-use Illuminate\Support\Facades\DB;
+uses(TestCase::class, RefreshDatabase::class)
+    ->beforeEach(function () {
+        Role::create(['name' => 'admin', 'guard_name' => 'web']);
+        Role::create(['name' => 'admin', 'guard_name' => 'sanctum']);
 
-uses(
-    Tests\TestCase::class,
-    // Illuminate\Foundation\Testing\RefreshDatabase::class,
-)->in('Feature', 'Unit');
+        User::factory()->create([
+            'email' => 'admin@test.com',
+            'password' => bcrypt('password'),
+            'is_owner' => true,
+        ])->assignRole('admin');
 
-/*
-|--------------------------------------------------------------------------
-| Expectations
-|--------------------------------------------------------------------------
-|
-| When you're writing tests, you often need to check that values meet certain conditions. The
-| "expect()" function gives you access to a set of "expectations" methods that you can use
-| to assert different things. Of course, you may extend the Expectation API at any time.
-|
-*/
+        PaymentMethod::create([
+            'name' => 'Cash',
+            'is_credit' => false,
+        ]);
+
+        Cache::clear();
+    })
+    ->in('Feature', 'Unit');
 
 expect()->extend('toBeOne', function () {
     return $this->toBe(1);
 });
-
-/*
-|--------------------------------------------------------------------------
-| Functions
-|--------------------------------------------------------------------------
-|
-| While Pest is very powerful out-of-the-box, you may have some testing code specific to your
-| project that you don't want to repeat in every file. Here you can also expose helpers as
-| global functions to help you to reduce the number of lines of code in your test files.
-|
-*/
-
-function mockTenant(): Tenant
-{
-    DB::statement('DROP DATABASE IF EXISTS lakasir_toko_testing');
-    Tenant::where('id', 'toko_testing')->delete();
-    $data = [
-        'name' => 'toko_testing',
-        'domain' => 'toko_testing.'.config('tenancy.central_domains')[0],
-        'email' => 'toko_testing@mail.com',
-        'password' => 'password',
-        'full_name' => 'Toko Testing',
-        'shop_name' => 'Toko Testing',
-        'business_type' => 'Retail',
-    ];
-    $sRegisterTenant = new RegisterTenant();
-    $tenant = $sRegisterTenant->create($data);
-
-    return $tenant;
-}

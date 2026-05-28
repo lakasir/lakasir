@@ -4,9 +4,9 @@ use App\Imports\ProductImport;
 use App\Models\Tenants\Barcode;
 use App\Models\Tenants\Category;
 use App\Models\Tenants\Product;
-use Tests\RefreshDatabaseWithTenant;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
-uses(RefreshDatabaseWithTenant::class);
+uses(RefreshDatabase::class);
 
 beforeEach(function () {
     Category::factory()->create(['name' => 'Uncategorized']);

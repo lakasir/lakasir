@@ -11,26 +11,22 @@ class CreateUser extends Command
 {
     protected $signature = 'app:create-user';
 
-    protected $description = 'Create user for standalone lakasir';
+    protected $description = 'Create user for lakasir';
 
     public function handle()
     {
-        if (config('tenancy.central_domains')[0] === null) {
-            $user = User::create([
-                'name' => $this->ask('name'),
-                'email' => $this->ask('email'),
-                'password' => bcrypt($this->ask('password')),
-                'is_owner' => true,
-            ]);
-            Artisan::call('db:seed', [
-                '--class' => 'PermissionSeeder',
-                '--force' => true,
-            ]);
-            $user->assignRole(Role::admin);
+        $user = User::create([
+            'name' => $this->ask('name'),
+            'email' => $this->ask('email'),
+            'password' => bcrypt($this->ask('password')),
+            'is_owner' => true,
+        ]);
+        Artisan::call('db:seed', [
+            '--class' => 'PermissionSeeder',
+            '--force' => true,
+        ]);
+        $user->assignRole(Role::admin);
 
-            $this->info('User created successfully, please open '.config('app.url').'/member/login');
-        } else {
-            $this->error("You can't run this command on multi tenant");
-        }
+        $this->info('User created successfully, please open '.config('app.url').'/member/login');
     }
 }

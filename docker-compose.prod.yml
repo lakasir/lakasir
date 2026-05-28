@@ -1,0 +1,82 @@
+# Production Docker Compose for Lakasir
+# This file pulls the pre-built image from GitHub Container Registry (GHCR)
+# instead of building from source.
+
+services:
+  app:
+    restart: unless-stopped
+    image: ghcr.io/${GITHUB_REPO:-sheenazien8/lakasir}:${IMAGE_TAG:-latest}
+    ports:
+      - '${APP_PORT:-80}:80'
+    volumes:
+      - 'app-storage:/var/www/html/storage'
+      - 'app-bootstrap-cache:/var/www/html/bootstrap/cache'
+    networks:
+      - lakasir
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      APP_ENV: production
+      APP_DEBUG: 'false'
+      APP_KEY: '${APP_KEY}'
+      APP_URL: '${APP_URL:-https://localhost}'
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_DATABASE: '${DB_DATABASE:-lakasir}'
+      DB_USERNAME: '${DB_USERNAME:-lakasir}'
+      DB_PASSWORD: '${DB_PASSWORD}'
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      CACHE_DRIVER: redis
+      QUEUE_CONNECTION: redis
+      SESSION_DRIVER: redis
+      LOG_CHANNEL: daily
+
+  mysql:
+    restart: unless-stopped
+    image: mysql:8.0
+    volumes:
+      - lakasir-mysql:/var/lib/mysql
+    networks:
+      - lakasir
+    environment:
+      MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
+      MYSQL_ROOT_HOST: '%'
+      MYSQL_DATABASE: '${DB_DATABASE:-lakasir}'
+      MYSQL_USER: '${DB_USERNAME:-lakasir}'
+      MYSQL_PASSWORD: '${DB_PASSWORD}'
+    healthcheck:
+      test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost', '-p${DB_PASSWORD}']
+      retries: 5
+      timeout: 5s
+      interval: 10s
+
+  redis:
+    restart: unless-stopped
+    image: redis:7-alpine
+    volumes:
+      - lakasir-redis:/data
+    networks:
+      - lakasir
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      retries: 3
+      timeout: 5s
+      interval: 5s
+
+networks:
+  lakasir:
+    driver: bridge
+
+volumes:
+  lakasir-mysql:
+    driver: local
+  lakasir-redis:
+    driver: local
+  app-storage:
+    driver: local
+  app-bootstrap-cache:
+    driver: local

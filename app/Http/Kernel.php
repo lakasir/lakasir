@@ -5,7 +5,6 @@ namespace App\Http;
 use App\Http\Middleware\DisableDebugbar;
 use App\Http\Middleware\LocalizationMiddleware;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
-use Stancl\Tenancy\Features\UniversalRoutes;
 
 class Kernel extends HttpKernel
 {
@@ -49,9 +48,6 @@ class Kernel extends HttpKernel
             'throttle:api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             LocalizationMiddleware::class,
-        ],
-        'universal' => [
-            // UniversalRoutes::class,
         ],
     ];
 

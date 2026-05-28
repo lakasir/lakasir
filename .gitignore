@@ -32,3 +32,4 @@ tasks/
 .mcp.json
 opencode.json
 version.txt
+database/testing.sqlite

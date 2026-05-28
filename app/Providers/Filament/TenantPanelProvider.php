@@ -40,7 +40,6 @@ use App\Filament\Tenant\Resources\UserResource;
 use App\Filament\Tenant\Resources\VoucherResource;
 use App\Http\Middleware\LocalizationMiddleware;
 use App\Models\Tenants\About;
-use App\Tenant;
 use Filament\Forms\Components\DatePicker;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -64,11 +63,9 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Illuminate\View\View;
-use Stancl\Tenancy\Bootstrappers\DatabaseTenancyBootstrapper;
 
 class TenantPanelProvider extends PanelProvider
 {
@@ -80,18 +77,19 @@ class TenantPanelProvider extends PanelProvider
                 ->closeOnDateSelection()
                 ->native(false);
         });
-
     }
 
     public function panel(Panel $panel): Panel
     {
         $panel = $this->configurePanel($panel);
 
-        $url = request()->getHost();
-        if ($this->isCentralDomainConfigured()) {
-            $this->initializeTenantPanel($panel, $url);
-        } else {
-            $this->initializeDefaultPanel($panel);
+        try {
+            if (About::exists()) {
+                $about = About::first();
+                $panel->brandName($about->shop_name ?? 'Your Brand')
+                    ->brandLogo($about->photo ?? null);
+            }
+        } catch (\Throwable) {
         }
 
         FilamentView::registerRenderHook(
@@ -130,7 +128,7 @@ class TenantPanelProvider extends PanelProvider
                 Js::make('custom-javascript', resource_path('js/app.js')),
                 Js::make('printer', resource_path('js/printer.js')),
                 Js::make('indexeddb', resource_path('js/indexeddb.js')),
-                Js::make('html5-qrcode', 'https://unpkg.com/html5-qrcode')
+                Js::make('html5-qrcode', 'https://unpkg.com/html5-qrcode'),
             ])
             ->favicon(url('favicon.ico'))
             ->spa(config('app.spa_mode'))
@@ -221,61 +219,6 @@ class TenantPanelProvider extends PanelProvider
             DispatchServingFilamentEvent::class,
             LocalizationMiddleware::class,
         ];
-    }
-
-    private function isCentralDomainConfigured(): bool
-    {
-        return config('tenancy.central_domains')[0] !== null;
-    }
-
-    private function initializeTenantPanel(Panel $panel, string $url): void
-    {
-        try {
-            $tenant = Tenant::whereHas('domains', fn ($query) => $query->where('domain', $url))->first();
-
-            if ($tenant) {
-                tenancy()->initialize($tenant->id);
-                $subdomain = $tenant->domains()->where('domain', $url)->first()?->domain;
-
-                $panel->domain($subdomain);
-                config(['cache.prefix' => $subdomain.'_']);
-
-                app(DatabaseTenancyBootstrapper::class)->bootstrap($tenant);
-
-                tenant()->run(fn () => $this->configureTenantBrand($panel));
-            } else {
-                if (in_array($url, config('tenancy.central_domains'))) {
-                    return;
-                }
-                abort(404);
-            }
-        } catch (\Throwable) {
-            // DB not available during build/package-discovery
-        }
-    }
-
-    private function initializeDefaultPanel(Panel $panel): void
-    {
-        try {
-            if (Schema::hasTable('abouts') && $about = About::first()) {
-                $panel->brandName($about->shop_name ?? 'Your Brand')
-                    ->brandLogo($about->photo ?? null);
-            }
-        } catch (\Throwable) {
-            // DB not available during build/package-discovery
-        }
-    }
-
-    private function configureTenantBrand(Panel $panel): void
-    {
-        try {
-            $about = About::first();
-
-            $panel->brandName($about->shop_name ?? 'Your Brand')
-                ->brandLogo($about->photo ?? null);
-        } catch (\Throwable) {
-            // DB not available during build/package-discovery
-        }
     }
 
     private function isNonFnbBusiness(): bool

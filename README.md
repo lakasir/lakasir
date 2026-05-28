@@ -67,6 +67,8 @@
 
 ## Contributing
 
+[![Contributors](https://contrib.rocks/image?repo=lakasir/lakasir&nocache=1)](https://github.com/lakasir/lakasir/graphs/contributors)
+
 We welcome contributions from the community! If you'd like to contribute to Lakasir, please follow these steps:
 
 1. keep on eye on [roadmap](https://github.com/orgs/lakasir/discussions/321)

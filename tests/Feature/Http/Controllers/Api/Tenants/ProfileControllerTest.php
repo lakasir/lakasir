@@ -1,11 +1,11 @@
 <?php
 
 use App\Models\Tenants\User;
-use Tests\RefreshDatabaseWithTenant;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 use function Pest\Laravel\actingAs;
 
-uses(RefreshDatabaseWithTenant::class);
+uses(RefreshDatabase::class);
 
 test('user can get the profile', function () {
     $user = User::first();

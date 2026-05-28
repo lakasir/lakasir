@@ -26,7 +26,7 @@ class ProductFactory extends Factory
     public function definition()
     {
         return [
-            'category_id' => Category::all()->random(),
+            'category_id' => Category::factory(),
             'name' => $this->faker->company(),
             'stock' => $this->faker->randomDigit(),
             'initial_price' => rand(50000, 60000),

@@ -1,0 +1,10 @@
+{
+    "category": 1,
+    "initial_price": 2200,
+    "is_non_stock": false,
+    "name": "iPhone 12 Pro Max",
+    "selling_price": 2500,
+    "stock": 999,
+    "type": "product",
+    "hero_images_uploaded_file_id": 3
+}

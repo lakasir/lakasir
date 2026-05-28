@@ -1,0 +1,29 @@
+# ───────────────────────────────────────────────────────────────
+# Example Cloudflared Tunnel Configuration
+# ───────────────────────────────────────────────────────────────
+# Place this file at: ~/.cloudflared/config.yml
+# (or /etc/cloudflared/config.yml for system service)
+#
+# Setup steps:
+#   1. cloudflared tunnel login
+#   2. cloudflared tunnel create lakasir
+#   3. Copy the tunnel ID and place it below
+#   4. cloudflared tunnel route dns lakasir your-domain.com
+#   5. cloudflared tunnel run lakasir
+# ───────────────────────────────────────────────────────────────
+
+tunnel: <YOUR_TUNNEL_ID>
+credentials-file: /root/.cloudflared/<YOUR_TUNNEL_ID>.json
+
+ingress:
+  # Route your domain to the Lakasir app
+  - hostname: your-domain.com
+    service: http://localhost:80
+
+  # Optionally, expose SSH for CI/CD deployments
+  # Uncomment the block below to allow GitHub Actions to SSH via the tunnel:
+  # - hostname: ssh.your-domain.com
+  #   service: ssh://localhost:22
+
+  # Catch-all rule (required)
+  - service: http_status:404
