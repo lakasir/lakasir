@@ -29,12 +29,13 @@ class PaymentMethodResource extends Resource
                 TextInput::make('name')
                     ->translateLabel()
                     ->columnSpanFull(),
-                Card::make([
-                    Checkbox::make('is_cash')->inline(),
-                    Checkbox::make('is_debit')->inline(),
-                    Checkbox::make('is_credit')->inline(),
-                    Checkbox::make('is_wallet')->inline(),
-                ]),
+                 Card::make([
+                     Checkbox::make('is_cash')->inline(),
+                     Checkbox::make('is_debit')->inline(),
+                     Checkbox::make('is_credit')->inline(),
+                     Checkbox::make('is_wallet')->inline(),
+                     Checkbox::make('is_qris')->inline(),
+                 ]),
             ]);
     }
 
@@ -72,16 +73,25 @@ class PaymentMethodResource extends Resource
                         'No' => 'danger',
                         'Yes' => 'success',
                     }),
-                TextColumn::make('is_wallet')
-                    ->badge()
-                    ->getStateUsing(function (PaymentMethod $pMethod) {
-                        return $pMethod->is_wallet ? 'Yes' : 'No';
-                    })
-                    ->color(fn (string $state): string => match ($state) {
-                        'No' => 'danger',
-                        'Yes' => 'success',
-                    }),
-            ])
+                 TextColumn::make('is_wallet')
+                     ->badge()
+                     ->getStateUsing(function (PaymentMethod $pMethod) {
+                         return $pMethod->is_wallet ? 'Yes' : 'No';
+                     })
+                     ->color(fn (string $state): string => match ($state) {
+                         'No' => 'danger',
+                         'Yes' => 'success',
+                     }),
+                 TextColumn::make('is_qris')
+                     ->badge()
+                     ->getStateUsing(function (PaymentMethod $pMethod) {
+                         return $pMethod->is_qris ? 'Yes' : 'No';
+                     })
+                     ->color(fn (string $state): string => match ($state) {
+                         'No' => 'danger',
+                         'Yes' => 'success',
+                     }),
+             ])
             ->filters([
                 Tables\Filters\TrashedFilter::make(),
             ])

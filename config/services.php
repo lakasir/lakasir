@@ -31,4 +31,9 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'qris' => [
+        'api_key' => env('QRIS_API_KEY'),
+        'm_id' => env('QRIS_M_ID'),
+    ],
+
 ];

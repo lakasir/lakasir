@@ -22,7 +22,8 @@
 - **Purchasing**: Manage purchase orders and supplier relationships.
 - **Stock Opname**: Conduct stock taking and inventory audits to ensure accuracy.
 - **Receivable Management**: Track and manage receivables owed by and to your business.
-- **Payment Method Management**: Define and manage various payment methods.
+- **Payment Method Management**: Define and manage various payment methods including QRIS e-wallet payments.
+- **QRIS Payment Integration**: Support for Indonesian QRIS standard payments with automatic QR code generation and status monitoring.
 - **Voucher Management**: Create, distribute, and track the usage of vouchers.
 - **Reporting**: Generate reports for insights into sales and performance.
 - **Simple Accounting**: Basic accounting features to track income, expenses, and profits.
@@ -60,6 +61,25 @@
   * `npm install`
   * `npm run build or npm run dev`
 6. Create the user using `php artisan app:create-user`
+
+## Configuration
+
+### QRIS Payment Integration
+
+Lakasir supports QRIS (Quick Response Code Indonesian Standard) payments for Indonesian users. To enable QRIS payments:
+
+1. Obtain QRIS API credentials from your payment provider (e.g., Interactive.co.id)
+2. Add the following environment variables to your `.env` file:
+
+```env
+QRIS_API_KEY=your_qris_api_key_here
+QRIS_M_ID=your_merchant_id_here
+```
+
+3. Once configured, QRIS payment methods will automatically appear in the cashier interface
+4. If credentials are not provided, QRIS options will be hidden from the payment methods
+
+**Note**: QRIS payments require a valid merchant account with a QRIS-enabled payment provider.
 
 ## Usage
 * api: localdomain.test/api/test

@@ -187,56 +187,107 @@
             @error('payed_money')
               <span class="error text-danger-500">{{ $message }}</span>
             @enderror
-            <input id="display"
-              class="@error('payed_money') 'border-danger-500' @enderror w-full rounded-md border border-gray-300 bg-white p-2 text-right text-lg text-black dark:bg-gray-900 dark:text-white"
-              focus :disabled="isTouchScreen" x-mask:dynamic="$money($input)" x-on:keyup="changes" x-ref="payedMoney"
-              inputMode="numeric">
-            <div class="mt-4 grid grid-cols-3 gap-4" id="calculator-button-shortcut">
-            </div>
-            <div class="mt-2 grid grid-cols-3 gap-2 lg:mt-2 lg:gap-2" id="calculator-button">
-              <button type="button" class="col-span-3 rounded-md bg-gray-300 p-2 text-lg hover:bg-gray-400"
-                x-on:click="append('no_changes')">{{ __('No change') }}</button>
-              <button type="button" class="rounded-md bg-gray-300 p-2 text-lg hover:bg-gray-400"
-                x-on:click="append(7)">7</button>
-              <button type="button" class="rounded-md bg-gray-300 p-2 text-lg hover:bg-gray-400"
-                x-on:click="append(8)">8</button>
-              <button type="button" class="rounded-md bg-gray-300 p-2 text-lg hover:bg-gray-400"
-                x-on:click="append(9)">9</button>
-              <button type="button" class="rounded-md bg-gray-300 p-2 text-lg hover:bg-gray-400"
-                x-on:click="append(4)">4</button>
-              <button type="button" class="rounded-md bg-gray-300 p-2 text-lg hover:bg-gray-400"
-                x-on:click="append(5)">5</button>
-              <button type="button" class="rounded-md bg-gray-300 p-2 text-lg hover:bg-gray-400"
-                x-on:click="append(6)">6</button>
-              <button type="button" class="rounded-md bg-gray-300 p-2 text-lg hover:bg-gray-400"
-                x-on:click="append(1)">1</button>
-              <button type="button" class="rounded-md bg-gray-300 p-2 text-lg hover:bg-gray-400"
-                x-on:click="append(2)">2</button>
-              <button type="button" class="rounded-md bg-gray-300 p-2 text-lg hover:bg-gray-400"
-                x-on:click="append(3)">3</button>
-              <button type="button" class="rounded-md bg-gray-300 p-2 text-lg hover:bg-gray-400"
-                x-on:click="append('.')">.</button>
-              <button type="button" class="rounded-md bg-gray-300 p-2 text-lg hover:bg-gray-400"
-                x-on:click="append(0)">0</button>
-              <button type="button"
-                class="flex items-center justify-center rounded-md bg-gray-300 p-2 text-lg hover:bg-gray-400"
-                x-on:click="append('backspace')">
-                <x-filament::icon icon="heroicon-o-backspace" class="h-5 w-5 text-gray-500 dark:text-white" />
-              </button>
-              <div class="col-span-3 flex gap-x-2">
-                <button wire:loading.attr="disabled" type="submit"
-                  class="flex w-full items-center justify-center gap-x-2 rounded-md bg-lakasir-primary p-2 text-lg text-white hover:bg-[#ff6611]">
-                  <div wire:loading>
-                    <x-filament::loading-indicator class="h-5 w-5" />
+             <!-- Calculator Interface (shown for non-QRIS payments) -->
+             <div x-show="!isQrisPayment" class="space-y-4">
+               <input id="display"
+                 class="@error('payed_money') 'border-danger-500' @enderror w-full rounded-md border border-gray-300 bg-white p-2 text-right text-lg text-black dark:bg-gray-900 dark:text-white"
+                 focus :disabled="isTouchScreen" x-mask:dynamic="$money($input)" x-on:keyup="changes" x-ref="payedMoney"
+                 inputMode="numeric">
+               <div class="mt-4 grid grid-cols-3 gap-4" id="calculator-button-shortcut">
+               </div>
+               <div class="mt-2 grid grid-cols-3 gap-2 lg:mt-2 lg:gap-2" id="calculator-button">
+                 <button type="button" class="col-span-3 rounded-md bg-gray-300 p-2 text-lg hover:bg-gray-400"
+                   x-on:click="append('no_changes')">{{ __('No change') }}</button>
+                 <button type="button" class="rounded-md bg-gray-300 p-2 text-lg hover:bg-gray-400"
+                   x-on:click="append(7)">7</button>
+                 <button type="button" class="rounded-md bg-gray-300 p-2 text-lg hover:bg-gray-400"
+                   x-on:click="append(8)">8</button>
+                 <button type="button" class="rounded-md bg-gray-300 p-2 text-lg hover:bg-gray-400"
+                   x-on:click="append(9)">9</button>
+                 <button type="button" class="rounded-md bg-gray-300 p-2 text-lg hover:bg-gray-400"
+                   x-on:click="append(4)">4</button>
+                 <button type="button" class="rounded-md bg-gray-300 p-2 text-lg hover:bg-gray-400"
+                   x-on:click="append(5)">5</button>
+                 <button type="button" class="rounded-md bg-gray-300 p-2 text-lg hover:bg-gray-400"
+                   x-on:click="append(6)">6</button>
+                 <button type="button" class="rounded-md bg-gray-300 p-2 text-lg hover:bg-gray-400"
+                   x-on:click="append(1)">1</button>
+                 <button type="button" class="rounded-md bg-gray-300 p-2 text-lg hover:bg-gray-400"
+                   x-on:click="append(2)">2</button>
+                 <button type="button" class="rounded-md bg-gray-300 p-2 text-lg hover:bg-gray-400"
+                   x-on:click="append(3)">3</button>
+                 <button type="button" class="rounded-md bg-gray-300 p-2 text-lg hover:bg-gray-400"
+                   x-on:click="append('.')">.</button>
+                 <button type="button" class="rounded-md bg-gray-300 p-2 text-lg hover:bg-gray-400"
+                   x-on:click="append(0)">0</button>
+                 <button type="button"
+                   class="flex items-center justify-center rounded-md bg-gray-300 p-2 text-lg hover:bg-gray-400"
+                   x-on:click="append('backspace')">
+                   <x-filament::icon icon="heroicon-o-backspace" class="h-5 w-5 text-gray-500 dark:text-white" />
+                 </button>
+               </div>
+             </div>
+
+             <!-- QRIS Interface (shown for QRIS payments) -->
+             <div x-show="isQrisPayment" class="space-y-4">
+               <div class="text-center">
+                  <h3 class="text-lg font-semibold mb-4">{{ __('notifications.qris.scan_qris_code') }}</h3>
+
+                  <!-- QR Code Display -->
+                  <div class="bg-gray-100 p-4 rounded-lg mb-4">
+                    <canvas id="qris-qr-code-modal" class="mx-auto" width="200" height="200"></canvas>
+                    <p class="text-sm text-gray-600 mt-2">{{ __('notifications.qris.scan_with_wallet') }}</p>
                   </div>
-                  {{ __('Pay it') }}
-                </button>
-                <button wire:click="dispatch('close-modal', {id: 'proceed-the-payment'});" type="button"
-                  class="flex w-full items-center justify-center gap-x-2 rounded-md bg-gray-300 p-2 text-lg">
-                  {{ __('Close') }}
-                </button>
-              </div>
-            </div>
+
+                  <!-- Transaction Details -->
+                  <div class="text-left bg-gray-50 p-3 rounded-lg">
+                    <div class="flex justify-between mb-2">
+                      <span class="text-gray-600">{{ __('notifications.qris.amount') }}</span>
+                      <span class="font-medium" x-text="'Rp. ' + moneyFormat($wire.total_price)"></span>
+                    </div>
+                    <div class="flex justify-between mb-2">
+                      <span class="text-gray-600">{{ __('notifications.qris.status') }}</span>
+                      <span class="font-medium" x-text="qrisStatus"></span>
+                    </div>
+                    <div class="flex justify-between">
+                      <span class="text-gray-600">{{ __('notifications.qris.expires_in') }}</span>
+                      <span class="font-medium text-orange-600" x-text="qrisTimeRemaining"></span>
+                    </div>
+                  </div>
+
+                  <!-- Status Messages -->
+                  <div x-show="qrisStatus === 'checking'" class="mt-4">
+                    <div class="flex items-center justify-center text-blue-600">
+                      <div class="animate-spin h-5 w-5 border-2 border-blue-600 border-b-transparent rounded-full mr-2"></div>
+                      {{ __('notifications.qris.checking_payment_status') }}
+                    </div>
+                  </div>
+
+                  <div x-show="qrisStatus === 'expired'" class="mt-4">
+                    <div class="text-red-600 font-medium">
+                      {{ __('notifications.qris.payment_expired_message') }}
+                    </div>
+                  </div>
+               </div>
+             </div>
+
+             <!-- Action Buttons -->
+             <div class="flex gap-x-2 mt-4">
+               <button
+                 x-show="!isQrisPayment"
+                 wire:loading.attr="disabled"
+                 type="submit"
+                 class="flex w-full items-center justify-center gap-x-2 rounded-md bg-lakasir-primary p-2 text-lg text-white hover:bg-[#ff6611]">
+                 <div wire:loading>
+                   <x-filament::loading-indicator class="h-5 w-5" />
+                 </div>
+                 {{ __('Pay it') }}
+               </button>
+               <button wire:click="dispatch('close-modal', {id: 'proceed-the-payment'});" type="button"
+                 class="flex w-full items-center justify-center gap-x-2 rounded-md bg-gray-300 p-2 text-lg">
+                 {{ __('Close') }}
+               </button>
+             </div>
           </div>
         </div>
         <div class="hidden max-h-[80vh] overflow-y-scroll md:block">
@@ -442,10 +493,6 @@
       padding: 0 !important;
     }
   </style>
-
-
-
-
 </div>
 
 @script()
@@ -576,6 +623,8 @@
         }
       }
     });
+
+
     Alpine.data('detail', () => {
       return {
         isTouchScreen() {
@@ -584,9 +633,93 @@
             (navigator.msMaxTouchPoints > 0);
         },
         displayValue: '',
-        paymentMethods: $wire.entangle('paymentMethods'),
+        paymentMethods: @js($paymentMethods),
         cartDetail: @js($cartDetail),
-        subtotal: $wire.entangle('total_price'),
+        subtotal: @js($total_price),
+        isQrisPayment: false,
+        qrisStatus: '{{ __("notifications.qris.waiting_for_scan") }}',
+        qrisTimeRemaining: '30:00',
+        qrisStatusCheckInterval: null,
+
+        init() {
+          this.$watch('cartDetail.payment_method_id', (newMethodId) => {
+            this.checkIfQrisPayment(newMethodId);
+          });
+
+          this.checkIfQrisPayment(this.cartDetail.payment_method_id);
+
+          Livewire.on('qrisModalOpened', (transaction) => {
+            this.startQrisCountdown();
+            this.startQrisStatusChecking();
+            this.generateQrisQRCode(transaction.qris_content);
+          });
+
+          Livewire.on('qrisExpired', () => {
+            this.qrisStatus = '{{ __("notifications.qris.expired") }}';
+            this.stopQrisStatusChecking();
+          });
+
+          Livewire.on('qrisPaymentCompleted', () => {
+            this.qrisStatus = '{{ __("notifications.qris.payment_completed") }}';
+            this.stopQrisStatusChecking();
+          });
+        },
+
+        checkIfQrisPayment(methodId) {
+          const method = this.paymentMethods.find(pm => pm.id == methodId);
+          this.isQrisPayment = method && method.is_qris;
+          if (this.isQrisPayment) {
+            $wire.handleQrisPayment();
+          }
+        },
+
+        generateQrisQRCode(qrisContent) {
+          const canvas = document.getElementById('qris-qr-code-modal');
+          if (!canvas || !qrisContent) return;
+
+          QRCode.toCanvas(canvas, qrisContent, {
+            width: 200,
+            height: 200,
+            color: {
+              dark: '#000000',
+              light: '#FFFFFF'
+            }
+          }).catch(err => {
+            console.error('Error generating QR code:', err);
+          });
+        },
+
+        startQrisCountdown() {
+          let seconds = 30 * 60;
+          this.qrisStatusCheckInterval = setInterval(() => {
+            seconds--;
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = seconds % 60;
+            this.qrisTimeRemaining = `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+
+            if (seconds <= 0) {
+              this.stopQrisStatusChecking();
+              this.qrisStatus = '{{ __("notifications.qris.expired") }}';
+            }
+          }, 1000);
+        },
+
+        startQrisStatusChecking() {
+          this.qrisStatusCheckInterval = setInterval(() => {
+            if (this.isQrisPayment) {
+              this.qrisStatus = '{{ __("notifications.qris.checking") }}';
+              $wire.checkQrisPaymentStatus();
+            }
+          }, 5000);
+        },
+
+        stopQrisStatusChecking() {
+          if (this.qrisStatusCheckInterval) {
+            clearInterval(this.qrisStatusCheckInterval);
+            this.qrisStatusCheckInterval = null;
+          }
+        },
+
         shortcut(number) {
           this.$refs.payedMoney.value = moneyFormat(number);
           this.changes();
@@ -637,6 +770,8 @@
       }
     })
 
+
+
     let barcodeData = '';
     let barcodeTimeout;
     let scannerEnabled = true;
@@ -677,9 +812,7 @@
 
     $wire.on('open-modal', (event) => {
 
-      // Initialize QR scanner when modal opens
       if (event.id === 'qr-scanner-modal') {
-        // Create scanner instance only once (singleton pattern)
         if (!html5QrcodeScanner) {
           html5QrcodeScanner = new Html5QrcodeScanner(
             "qr-reader",
@@ -688,7 +821,7 @@
               qrbox: { width: 300, height: 200 },
               rememberLastUsedCamera: true
             },
-            false // verbose mode disabled
+            false
           );
         }
         html5QrcodeScanner.render(onScanSuccess, onScanFailure);
@@ -733,7 +866,6 @@
       modalOpened = false;
     });
 
-    // QR Scanner global variables and functions
     let html5QrcodeScanner = null;
     let isScanningEnabled = true;
 
@@ -744,7 +876,6 @@
     async function onScanSuccess(decodedText, decodedResult) {
       if (!isScanningEnabled) return;
 
-      // Find Alpine.js component for state management
       const readerElement = document.getElementById('qr-reader');
       if (!readerElement) {
         console.error('Scanner reader element not found!');
@@ -758,26 +889,21 @@
       }
       const alpineComponent = alpineContainer._x_dataStack[0];
 
-      // Disable scanning and show loading spinner
       isScanningEnabled = false;
       alpineComponent.isLoading = true;
 
       console.log(`Scan result: ${decodedText}`);
 
-      // Process product and wait for Livewire to complete
       await $wire.call('addCartUsingScanner', decodedText);
 
-      // Hide loading spinner
       alpineComponent.isLoading = false;
 
-      // Show success notification
       new FilamentNotification()
         .title('Product added')
         .success()
         .duration(3000)
         .send();
 
-      // Re-enable scanning after cooldown period
       setTimeout(() => {
         isScanningEnabled = true;
       }, 1000);
@@ -798,11 +924,11 @@
         html5QrcodeScanner.clear().then(() => {
           console.log('QR Code scanner stopped successfully.');
         }).catch(err => {
-          // Ignore errors during rapid closing
+          throw err
         });
       }
     };
-    // Physical barcode scanner support (keyboard input)
+
     document.addEventListener('keypress', (event) => {
       if (modalOpened || !scannerEnabled) {
         return;
@@ -819,7 +945,6 @@
         barcodeData = '';
         scannerEnabled = false;
 
-        // Re-enable scanner after processing
         setTimeout(() => {
           scannerEnabled = true;
         }, 1000);
@@ -827,10 +952,11 @@
         barcodeData += event.key;
       }
 
-      // Clear barcode data if no input for 500ms
       barcodeTimeout = setTimeout(() => {
         barcodeData = '';
       }, 500);
     });
   </script>
+
+
 @endscript

@@ -24,6 +24,7 @@ class CartItem extends Model
         'user_id',
         'product_id',
         'price_unit_id',
+        'discount_price',
     ];
 
     protected $appends = ['price_format_money', 'discount_price_format', 'final_price_format'];
