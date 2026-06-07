@@ -66,6 +66,7 @@ class Profile extends Model
                     'id' => 'Bahasa Indonesia',
                     'en' => 'English',
                     'es' => 'Español',
+                    'ar' => 'العربية',
                 ]),
             FileUpload::make('photo')
                 ->disk(config('filesystems.upload_disk'))
