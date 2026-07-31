@@ -1,43 +1,651 @@
 @import '/vendor/filament/filament/resources/css/theme.css';
 @config '../../../../tailwind.config.js';
 
+/* ============================================================
+   FROST UI v2 — No Gradients, Clean Responsive Design
+   Light Mode Default | Dark Mode via .dark class
+   Font: Inter (Google Fonts)
+   ============================================================ */
 
+/* --- Root & Font --- */
+*, *::before, *::after {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif !important;
+}
+
+/* --- Body & Background --- */
+.fi-body {
+    background-color: #F2F4F7 !important;
+    min-height: 100vh;
+}
+.dark .fi-body {
+    background-color: #0F1117 !important;
+}
+.fi-main-ctn {
+    min-width: 0 !important; /* Forces flex child to shrink properly */
+    width: 100% !important; /* Overrides w-screen which can cause scrollbar overflow */
+    max-width: 100% !important;
+}
+.fi-main {
+    background: transparent !important;
+}
+
+/* --- Global text colors — Light Mode --- */
+body, .fi-body {
+    color: #1F2937 !important;
+}
+p, span, li, td, th, label, div {
+    color: inherit;
+}
+/* Headings */
+h1, h2, h3, h4, h5, h6,
+.fi-page-heading,
+.fi-section-header-heading,
+.fi-widget-heading {
+    color: #111827 !important;
+}
+/* Secondary / muted text */
+.text-gray-400, .text-gray-500, .text-gray-600 {
+    color: #6B7280 !important;
+}
+.text-gray-700, .text-gray-800, .text-gray-900 {
+    color: #374151 !important;
+}
+/* --- Global text colors — Dark Mode --- */
+.dark body, .dark .fi-body {
+    color: #E2E8F0 !important;
+}
+.dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6,
+.dark .fi-page-heading,
+.dark .fi-section-header-heading,
+.dark .fi-widget-heading {
+    color: #F1F5F9 !important;
+}
+.dark .text-gray-400, .dark .text-gray-500, .dark .text-gray-600 {
+    color: rgba(255,255,255,0.45) !important;
+}
+.dark .text-gray-700, .dark .text-gray-800, .dark .text-gray-900 {
+    color: rgba(255,255,255,0.75) !important;
+}
+
+/* ============================================================
+   SIDEBAR — Show/Hide Compatible
+   (Filament handles toggle via fi-sidebar-close/open classes)
+   ============================================================ */
+.fi-sidebar {
+    /* No backdrop-filter — would create stacking context breaking dropdown z-index */
+    background-color: #FFFFFF !important;
+    border-right: 1px solid rgba(0, 0, 0, 0.08) !important;
+    box-shadow: 2px 0 12px rgba(0, 0, 0, 0.06) !important;
+}
+.dark .fi-sidebar {
+    background-color: #13151E !important;
+    border-right: 1px solid rgba(255, 255, 255, 0.07) !important;
+    box-shadow: 2px 0 12px rgba(0, 0, 0, 0.35) !important;
+}
+
+/* Brand / Logo area */
+.fi-sidebar-header {
+    padding: 1rem 1rem !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06) !important;
+}
+.dark .fi-sidebar-header {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+}
+
+/* Sidebar Nav container */
 .fi-sidebar-nav {
-  @apply bg-white drop-shadow-md dark:bg-gray-900;
+    background: transparent !important;
+    padding: 0.5rem 0.625rem !important;
 }
 
+/* Navigation Group Labels */
+.fi-sidebar-group-label {
+    font-size: 0.65rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.1em !important;
+    text-transform: uppercase !important;
+    color: #9CA3AF !important;
+    padding: 1rem 0.625rem 0.25rem !important;
+}
+.dark .fi-sidebar-group-label {
+    color: rgba(255, 255, 255, 0.3) !important;
+}
+
+/* Sidebar Items */
 .fi-sidebar-item a {
-  @apply py-1.5 px-2;
+    border-radius: 8px !important;
+    padding: 0.5rem 0.75rem !important;
+    transition: background-color 0.15s ease, color 0.15s ease !important;
+    color: #374151 !important;
+    font-size: 0.875rem !important;
+    font-weight: 500 !important;
+    gap: 0.625rem !important;
+    display: flex !important;
+    align-items: center !important;
+}
+.dark .fi-sidebar-item a {
+    color: rgba(255, 255, 255, 0.65) !important;
 }
 
+/* Active sidebar item — solid orange, no gradient */
 .fi-sidebar-item.fi-sidebar-item-active a {
-  @apply bg-lakasir-primary;
+    background-color: #FF6600 !important;
+    color: #ffffff !important;
 }
-
 .fi-sidebar-item.fi-sidebar-item-active a:hover {
-  @apply bg-lakasir-primary;
+    background-color: #e55d00 !important;
+    color: #ffffff !important;
 }
-
+.fi-sidebar-item.fi-sidebar-item-active .fi-sidebar-item-label {
+    color: #ffffff !important;
+    font-weight: 600 !important;
+}
 .fi-sidebar-item.fi-sidebar-item-active svg {
-  @apply text-white;
+    color: #ffffff !important;
 }
 
+/* Hover on non-active items */
 .fi-sidebar-item:not(.fi-sidebar-item-active):hover a {
-  .fi-sidebar-item-label {
-    @apply text-white;
-  }
-
-  svg {
-    @apply text-white;
-  }
-
-  @apply bg-lakasir-primary text-white;
+    background-color: rgba(255, 102, 0, 0.08) !important;
+    color: #FF6600 !important;
+}
+.dark .fi-sidebar-item:not(.fi-sidebar-item-active):hover a {
+    background-color: rgba(255, 102, 0, 0.12) !important;
+    color: #FF8533 !important;
+}
+.fi-sidebar-item:not(.fi-sidebar-item-active):hover .fi-sidebar-item-label {
+    color: #FF6600 !important;
+}
+.dark .fi-sidebar-item:not(.fi-sidebar-item-active):hover .fi-sidebar-item-label {
+    color: #FF8533 !important;
+}
+.fi-sidebar-item:not(.fi-sidebar-item-active):hover svg {
+    color: #FF6600 !important;
+}
+.dark .fi-sidebar-item:not(.fi-sidebar-item-active):hover svg {
+    color: #FF8533 !important;
 }
 
-.fi-sidebar-item-active .fi-sidebar-item-label {
-  @apply text-white dark:text-white;
+/* Sidebar icons size */
+.fi-sidebar-item svg {
+    width: 1.125rem !important;
+    height: 1.125rem !important;
+    flex-shrink: 0 !important;
 }
 
+/* Sidebar item label */
+.fi-sidebar-item-label {
+    font-size: 0.875rem !important;
+    font-weight: 500 !important;
+    color: #374151 !important;
+    transition: color 0.15s ease !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+.dark .fi-sidebar-item-label {
+    color: rgba(255, 255, 255, 0.65) !important;
+}
+
+/* ============================================================
+   TOPBAR / NAVBAR
+   ============================================================ */
+.fi-topbar {
+    /* No backdrop-filter — creates stacking context that breaks dropdown close */
+    background-color: #FFFFFF !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.07) !important;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.06) !important;
+    /* Keep topbar below teleported dropdowns */
+    position: relative;
+    z-index: 20;
+}
+.dark .fi-topbar {
+    background-color: #13151E !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07) !important;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.25) !important;
+}
+
+/* Topbar text & icons */
+.fi-topbar .text-gray-500,
+.fi-topbar .text-gray-600,
+.fi-topbar .text-gray-700 {
+    color: #4B5563 !important;
+}
+.dark .fi-topbar .text-gray-500,
+.dark .fi-topbar .text-gray-600,
+.dark .fi-topbar .text-gray-700 {
+    color: rgba(255, 255, 255, 0.6) !important;
+}
+
+/* Breadcrumbs */
+.fi-breadcrumbs-item {
+    font-size: 0.8125rem !important;
+    font-weight: 500 !important;
+    color: #6B7280 !important;
+}
+.fi-breadcrumbs-item-label {
+    color: #374151 !important;
+}
+.dark .fi-breadcrumbs-item {
+    color: rgba(255, 255, 255, 0.45) !important;
+}
+.dark .fi-breadcrumbs-item-label {
+    color: rgba(255, 255, 255, 0.8) !important;
+}
+
+/* Global Search */
+.fi-global-search-field input {
+    border-radius: 8px !important;
+    background-color: rgba(0, 0, 0, 0.05) !important;
+    border: 1px solid rgba(0, 0, 0, 0.08) !important;
+    font-size: 0.875rem !important;
+    transition: all 0.2s ease !important;
+}
+.fi-global-search-field input:focus {
+    background-color: #ffffff !important;
+    border-color: #FF6600 !important;
+    box-shadow: 0 0 0 3px rgba(255, 102, 0, 0.12) !important;
+    outline: none !important;
+}
+.dark .fi-global-search-field input {
+    background-color: rgba(255, 255, 255, 0.07) !important;
+    border-color: rgba(255, 255, 255, 0.08) !important;
+    color: #E8EAF0 !important;
+}
+.dark .fi-global-search-field input:focus {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* ============================================================
+   USER AVATAR & PROFILE MENU
+   ============================================================ */
+.fi-user-avatar,
+.fi-avatar {
+    border: 2px solid #FF6600 !important;
+    box-shadow: 0 0 0 3px rgba(255, 102, 0, 0.15) !important;
+    border-radius: 9999px !important;
+    transition: box-shadow 0.2s ease !important;
+}
+.fi-user-avatar:hover,
+.fi-avatar:hover {
+    box-shadow: 0 0 0 4px rgba(255, 102, 0, 0.25) !important;
+}
+
+/* ============================================================
+   DROPDOWN PANEL — Fix width and positioning
+   Filament default: w-screen (100vw) with shift:false
+   This causes cut-off at viewport edges.
+   ============================================================ */
+.fi-dropdown-panel {
+    background-color: #ffffff !important;
+    border: 1px solid rgba(0, 0, 0, 0.09) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1), 0 2px 8px rgba(0, 0, 0, 0.06) !important;
+}
+.dark .fi-dropdown-panel {
+    background-color: #161821 !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45) !important;
+}
+
+.fi-dropdown-list-item-button {
+    font-size: 0.875rem !important;
+    font-weight: 500 !important;
+    border-radius: 6px !important;
+    transition: background-color 0.15s ease, color 0.15s ease !important;
+    color: #374151 !important;
+    margin: 2px !important;
+}
+.fi-dropdown-list-item-button:hover {
+    background-color: rgba(255, 102, 0, 0.08) !important;
+    color: #FF6600 !important;
+}
+.dark .fi-dropdown-list-item-button {
+    color: rgba(255, 255, 255, 0.75) !important;
+}
+.dark .fi-dropdown-list-item-button:hover {
+    background-color: rgba(255, 102, 0, 0.12) !important;
+    color: #FF8533 !important;
+}
+
+/* ============================================================
+   CARDS, WIDGETS, TABLES, SECTIONS
+   ============================================================ */
+.fi-ta-ctn,
+.fi-wi-stats-overview-stat,
+.fi-wi,
+.fi-fo-component-ctn,
+.fi-section,
+.fi-modal-window {
+    background-color: rgba(255, 255, 255, 0.85) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    border: 1px solid rgba(0, 0, 0, 0.06) !important;
+    box-shadow: 0 1px 8px rgba(0, 0, 0, 0.05) !important;
+    border-radius: 12px !important;
+}
+
+/* Section headers */
+.fi-section-header {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06) !important;
+    padding: 1rem 1.25rem !important;
+}
+.fi-section-header-heading {
+    font-size: 0.9375rem !important;
+    font-weight: 600 !important;
+    color: #111827 !important;
+}
+
+/* Stats Overview Widget */
+.fi-wi-stats-overview-stat-label {
+    font-size: 0.8125rem !important;
+    font-weight: 500 !important;
+    color: #6B7280 !important;
+}
+.fi-wi-stats-overview-stat-value {
+    font-size: 1.5rem !important;
+    font-weight: 700 !important;
+    color: #111827 !important;
+    letter-spacing: -0.02em !important;
+}
+
+/* Table */
+.fi-ta-header-cell-label {
+    font-size: 0.75rem !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.04em !important;
+    text-transform: uppercase !important;
+    color: #6B7280 !important;
+}
+.fi-ta-row {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.04) !important;
+    transition: background-color 0.12s ease !important;
+}
+.fi-ta-row:hover {
+    background-color: rgba(255, 102, 0, 0.03) !important;
+}
+.fi-ta-cell {
+    font-size: 0.875rem !important;
+    color: #374151 !important;
+}
+
+/* Tabs */
 .fi-tabs {
-  @apply mx-0;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+.fi-tabs-tab {
+    font-size: 0.875rem !important;
+    font-weight: 500 !important;
+    border-radius: 6px !important;
+}
+
+/* Dark mode cards */
+.dark .fi-ta-ctn,
+.dark .fi-wi-stats-overview-stat,
+.dark .fi-wi,
+.dark .fi-fo-component-ctn,
+.dark .fi-section,
+.dark .fi-modal-window {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    box-shadow: 0 1px 8px rgba(0, 0, 0, 0.25) !important;
+}
+.dark .fi-section-header {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+}
+.dark .fi-section-header-heading {
+    color: #E8EAF0 !important;
+}
+.dark .fi-wi-stats-overview-stat-label {
+    color: rgba(255, 255, 255, 0.45) !important;
+}
+.dark .fi-wi-stats-overview-stat-value {
+    color: #E8EAF0 !important;
+}
+.dark .fi-ta-header-cell-label {
+    color: rgba(255, 255, 255, 0.4) !important;
+}
+.dark .fi-ta-row {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04) !important;
+}
+.dark .fi-ta-row:hover {
+    background-color: rgba(255, 102, 0, 0.05) !important;
+}
+.dark .fi-ta-cell {
+    color: rgba(255, 255, 255, 0.72) !important;
+}
+
+/* ============================================================
+   MODAL
+   ============================================================ */
+.fi-modal-window {
+    border-radius: 16px !important;
+}
+.fi-modal-header {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06) !important;
+    padding: 1.125rem 1.5rem !important;
+}
+.fi-modal-heading {
+    font-size: 1rem !important;
+    font-weight: 600 !important;
+    color: #111827 !important;
+}
+.dark .fi-modal-header {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+}
+.dark .fi-modal-heading {
+    color: #E8EAF0 !important;
+}
+.fi-modal-close-btn {
+    border-radius: 6px !important;
+}
+.fi-modal-close-btn:hover {
+    background-color: rgba(0, 0, 0, 0.06) !important;
+}
+
+/* ============================================================
+   BUTTONS — Solid orange, no gradient
+   ============================================================ */
+.fi-btn {
+    border-radius: 8px !important;
+    font-weight: 500 !important;
+    font-size: 0.875rem !important;
+    transition: background-color 0.15s ease, box-shadow 0.15s ease !important;
+}
+.fi-btn-color-primary {
+    background-color: #FF6600 !important;
+}
+.fi-btn-color-primary:hover {
+    background-color: #e55d00 !important;
+}
+.fi-btn-color-primary:active {
+    background-color: #cc5200 !important;
+}
+
+/* ============================================================
+   FORM INPUTS
+   ============================================================ */
+.fi-input {
+    border-radius: 8px !important;
+    border-color: rgba(0, 0, 0, 0.12) !important;
+    background-color: #ffffff !important;
+    font-size: 0.875rem !important;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease !important;
+    color: #111827 !important;
+}
+.fi-input:focus {
+    border-color: #FF6600 !important;
+    box-shadow: 0 0 0 3px rgba(255, 102, 0, 0.12) !important;
+    outline: none !important;
+}
+.dark .fi-input {
+    background-color: rgba(255, 255, 255, 0.06) !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+    color: #E8EAF0 !important;
+}
+.dark .fi-input:focus {
+    background-color: rgba(255, 255, 255, 0.09) !important;
+    border-color: #FF6600 !important;
+}
+.fi-input-label {
+    font-size: 0.8125rem !important;
+    font-weight: 500 !important;
+    color: #374151 !important;
+}
+.dark .fi-input-label {
+    color: rgba(255, 255, 255, 0.6) !important;
+}
+
+/* ============================================================
+   NOTIFICATIONS
+   ============================================================ */
+.fi-notification {
+    border-radius: 12px !important;
+    backdrop-filter: blur(16px) !important;
+    background-color: rgba(255, 255, 255, 0.96) !important;
+    border: 1px solid rgba(0, 0, 0, 0.08) !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1) !important;
+}
+.dark .fi-notification {
+    background-color: rgba(22, 25, 35, 0.96) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+/* ============================================================
+   PAGINATION
+   ============================================================ */
+.fi-pagination-item {
+    border-radius: 6px !important;
+    font-size: 0.875rem !important;
+    font-weight: 500 !important;
+}
+.fi-pagination-item[aria-current="page"] {
+    background-color: #FF6600 !important;
+    color: #ffffff !important;
+}
+
+/* ============================================================
+   BADGES
+   ============================================================ */
+.fi-badge {
+    border-radius: 5px !important;
+    font-size: 0.75rem !important;
+    font-weight: 600 !important;
+}
+
+/* ============================================================
+   CUSTOM SCROLLBAR
+   ============================================================ */
+::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.15);
+    border-radius: 9999px;
+}
+.dark ::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.12);
+}
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 102, 0, 0.4);
+}
+
+/* ============================================================
+   ANIMATED ORBS KEYFRAMES
+   ============================================================ */
+@keyframes float-orb-1 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(30px, -40px) scale(1.1); }
+}
+@keyframes float-orb-2 {
+    0%, 100% { transform: translate(0, 0) scale(1) rotate(0deg); }
+    50% { transform: translate(-35px, 30px) scale(1.05) rotate(12deg); }
+}
+@keyframes float-orb-3 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(35px, -30px) scale(1.06); }
+}
+@keyframes float-orb-4 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(-20px, -20px) scale(1.12); }
+}
+
+.animate-orb-1 { animation: float-orb-1 14s ease-in-out infinite; }
+.animate-orb-2 { animation: float-orb-2 18s ease-in-out infinite; }
+.animate-orb-3 { animation: float-orb-3 16s ease-in-out infinite; }
+.animate-orb-4 { animation: float-orb-4 12s ease-in-out infinite; }
+
+/* ==========================================================================
+   VIEWPORT BREAKPOINTS STANDARDIZATION (As per Requirements)
+   ========================================================================== */
+
+/* 1. BASE STYLE / MOBILE UTAMA (< 360px) */
+body {
+  font-size: 14px;
+  line-height: 1.5;
+  color: #333333;
+}
+.dark body { color: #f3f4f6; }
+
+/* 2. BREAKPOINT: MOBILE MEDIUM (>= 360px) */
+@media (min-width: 360px) { }
+
+/* 3. BREAKPOINT: MOBILE LARGE (>= 390px) */
+@media (min-width: 390px) { }
+
+/* 4. BREAKPOINT: TABLET PORTRAIT (>= 768px) */
+@media (min-width: 768px) {
+  body { font-size: 16px; }
+}
+
+/* 5. BREAKPOINT: TABLET LARGE / LAPTOP KECIL (>= 1024px) */
+@media (min-width: 1024px) { }
+
+/* 6. BREAKPOINT: LAPTOP STANDAR (>= 1280px) */
+@media (min-width: 1280px) {
+  .container { width: 100%; max-width: 1140px; margin: 0 auto; }
+}
+
+/* 7. BREAKPOINT: LAPTOP MODERN / MACBOOK RETINA (>= 1440px) */
+@media (min-width: 1440px) {
+  .container { max-width: 1280px; }
+}
+
+/* 8. BREAKPOINT: DESKTOP FULL HD (>= 1920px) */
+@media (min-width: 1920px) {
+  .container { max-width: 1440px; }
+}
+
+/* 9. BREAKPOINT: ULTRA HIGH RESOLUTION (>= 2560px) */
+@media (min-width: 2560px) {
+  body { font-size: 18px; }
+  .container { max-width: 1600px; }
+}
+
+/* ==========================================================================
+   SIDEBAR & TOPBAR UI OVERRIDES
+   ========================================================================== */
+.fi-topbar .fi-user-menu {
+    display: none !important;
+}
+
+.fi-sidebar-header button {
+    background-color: rgba(255, 102, 0, 0.1) !important;
+    color: #FF6600 !important;
+    border: 1px solid rgba(255, 102, 0, 0.2) !important;
+    border-radius: 8px !important;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
+    transition: all 0.2s ease !important;
+}
+.fi-sidebar-header button:hover {
+    background-color: rgba(255, 102, 0, 0.2) !important;
+}
+.dark .fi-sidebar-header button {
+    background-color: rgba(255, 102, 0, 0.15) !important;
+    border-color: rgba(255, 102, 0, 0.3) !important;
 }

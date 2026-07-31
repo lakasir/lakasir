@@ -3,28 +3,29 @@ use Filament\Facades\Filament;
 use App\Features\{PaymentShortcutButton, SellingTax, Discount};
 
 @endphp
-<div class="">
-  <div class="grid grid-cols-3 gap-x-4">
-    <div class="col-span-2">
+<div class="w-full max-w-full overflow-x-hidden">
+  <div class="flex flex-col lg:flex-row gap-4 relative">
+    <div class="w-full lg:w-2/3 overflow-x-auto pb-4">
       {{ $this->table }}
     </div>
-    <div class="fixed right-0 w-1/3 h-screen pb-10 overflow-y-scroll">
-      <div class="px-4 mt-4 space-y-2 h-screen">
+    <div class="w-full lg:w-1/3 lg:sticky lg:top-0 h-auto lg:h-screen lg:pb-10 overflow-y-auto">
+      <div class="px-2 lg:px-4 mt-4 space-y-2 h-full lg:h-screen">
+        <div class="bg-white/40 dark:bg-black/20 backdrop-blur-xl border border-white/60 dark:border-white/20 rounded-2xl p-4 shadow-2xl text-gray-900 dark:text-white">
         <div class="flex justify-between items-center" x-data="fullscreen">
-          <p class="text-xl font-semibold">{{ __('Orders details') }}</p>
+          <p class="text-xl lg:text-xl font-semibold">{{ __('Orders details') }}</p>
           <div class="flex items-center">
             <div class="xl:flex gap-x-2 hidden items-center">
               <a
                 href="/member/sellings"
-                class="py-1 px-4 flex justify-center items-center bg-gray-100 rounded-lg gap-x-1 text-gray-500">
-                <x-heroicon-o-arrow-left class="h-4 w-4 text-gray-500"/>
+                class="py-1 px-4 flex justify-center items-center bg-white/40 dark:bg-white/10 hover:bg-white/60 dark:hover:bg-white/20 transition-colors border border-white/60 dark:border-white/20 rounded-lg gap-x-1 text-gray-800 dark:text-white">
+                <x-heroicon-o-arrow-left class="h-4 w-4 text-gray-800 dark:text-white"/>
                   <p class="hidden lg:block">{{ __('Back') }} </p>
               </a>
             </div>
             <div class="gap-x-2">
               <x-filament::dropdown placement="top-start">
                 <x-slot name="trigger">
-                  <x-heroicon-o-ellipsis-vertical class="h-8 w-8 text-gray-900 dark:text-gray-300 cursor-pointer" />
+                  <x-heroicon-o-ellipsis-vertical class="h-8 w-8 text-gray-800 dark:text-white hover:text-gray-600 dark:hover:text-gray-200 cursor-pointer" />
                 </x-slot>
 
                 <x-filament::dropdown.list>
@@ -58,12 +59,12 @@ use App\Features\{PaymentShortcutButton, SellingTax, Discount};
           <p class="">{{ Filament::auth()->user()->cashier_name }}</p>
         </div>
         <div class="flex justify-between items-center">
-          <p class="hidden lg:block text-2xl font-semibold mb-2">{{ __('Current Orders') }}</p>
+          <p class="hidden lg:block text-2xl font-semibold mb-2 text-gray-900 dark:text-white">{{ __('Current Orders') }}</p>
           <div class="flex gap-x-1"></div>
         </div>
-        <div class="overflow-y-scroll min-h-40 max-h-[35%] overflow-auto" wire:loading.class="opacity-20" wire:target="addCart,reduceCart,deleteCart,addDiscountPricePerItem,addCartUsingScanner">
+        <div class="overflow-y-auto min-h-40 max-h-[50vh] lg:max-h-[35%] pr-2 custom-scrollbar" wire:loading.class="opacity-20" wire:target="addCart,reduceCart,deleteCart,addDiscountPricePerItem,addCartUsingScanner">
           @forelse($cartItems as $item)
-            <div class="mb-2 border rounded-lg bg-white dark:border-gray-900 dark:bg-gray-900 px-4 py-2" id="{{ $item->id }}" key="{{ rand() }}">
+            <div class="mb-2 border border-white/60 dark:border-white/10 rounded-xl bg-white/40 dark:bg-white/5 backdrop-blur-md px-4 py-3 shadow-sm text-gray-900 dark:text-white" id="{{ $item->id }}" key="{{ rand() }}">
               <div class="grid items-center space-x-3">
                 <div class="flex justify-between">
                   <p class="font-semibold"> {{ $item->product->name }}</p>
@@ -114,11 +115,11 @@ use App\Features\{PaymentShortcutButton, SellingTax, Discount};
                         />
                       </x-filament::input.wrapper>
                   <button
-                    class="!bg-gray-100 rounded-lg px-2 py-1"
+                    class="!bg-white/40 dark:!bg-white/20 hover:!bg-white/60 dark:hover:!bg-white/30 transition-colors border border-white/60 dark:border-white/20 rounded-lg px-2 py-1"
                     x-on:click="$wire.reduceCart({{  $item->product_id  }});"
                     wire:loading.attr="disabled"
                     >
-                    <x-heroicon-o-minus-small class="!text-green-900 h-4 w-4"/>
+                    <x-heroicon-o-minus-small class="!text-gray-900 dark:!text-white h-4 w-4"/>
                   </button>
                   <button
                     class="!bg-danger-100 rounded-lg px-2 py-1"
@@ -131,26 +132,28 @@ use App\Features\{PaymentShortcutButton, SellingTax, Discount};
                 </div>
             </div>
           @empty
-            <div class="flex justify-center items-center h-40 border bg-white rounded-lg dark:border-gray-900 dark:bg-gray-900">
-              <x-heroicon-o-x-mark class="text-gray-900 dark:text-white h-10 w-10 hidden lg:block"/>
-                <p class="text-xl lg:text-3xl text-gray-600 dark:text-white">{{ __('No item') }}</p>
+            <div class="flex justify-center items-center h-40 border border-white/60 dark:border-white/10 bg-white/40 dark:bg-white/5 backdrop-blur-md rounded-xl">
+              <x-heroicon-o-x-mark class="text-gray-400 dark:text-white/50 h-10 w-10 hidden lg:block"/>
+                <p class="text-lg lg:text-2xl text-gray-500 dark:text-white/70">{{ __('No item') }}</p>
             </div>
           @endforelse
         </div>
-        <div>
-          <div class="bg-white px-4 py-2 w-full border rounded-lg dark:border-gray-900 dark:bg-gray-900 dark:text-white text-gray-600">
+        <div class="mt-4">
+          <div class="bg-white/40 dark:bg-white/5 backdrop-blur-md px-4 py-3 w-full border border-white/60 dark:border-white/10 rounded-xl text-gray-900 dark:text-white">
             @include('filament.tenant.pages.cashier.detail')
           </div>
         </div>
-        <div>
-          <div class="bg-white px-4 py-2 w-full border rounded-lg dark:border-gray-900 dark:bg-gray-900 dark:text-white text-gray-600">
+        <div class="mt-2 mb-4">
+          <div class="bg-white/40 dark:bg-white/5 backdrop-blur-md px-4 py-3 w-full border border-white/60 dark:border-white/10 rounded-xl text-gray-900 dark:text-white">
             @include('filament.tenant.pages.cashier.total')
           </div>
         </div>
         <button
-          class="py-4 px-2 bg-lakasir-primary text-white rounded-lg w-full"
+          class="py-4 px-2 w-full font-bold text-white rounded-xl shadow-[0_0_15px_rgba(255,102,0,0.4)] transition-transform active:scale-[0.98]"
+          style="background: linear-gradient(135deg, #FF6600 0%, #FF4500 100%);"
           x-on:mousedown="$dispatch('open-modal', {id: 'proceed-the-payment'})"
           >{{ __('Proceed to payment') }}</button>
+        </div>
       </div>
     </div>
   </div>
@@ -233,10 +236,10 @@ use App\Features\{PaymentShortcutButton, SellingTax, Discount};
                 class="h-5 w-5 text-gray-500 dark:text-white"
               />
             </button>
-            <div class="flex col-span-3 gap-x-2">
+            <div class="flex col-span-3 gap-x-2 mt-2">
               <button
                 wire:loading.attr="disabled"
-                type="submit" class="w-full bg-lakasir-primary hover:bg-[#ff6611] p-2 rounded-md text-white text-lg flex justify-center items-center gap-x-2">
+                type="submit" class="w-full bg-lakasir-primary hover:bg-[#ff6611] p-3 rounded-xl text-white font-bold text-lg flex justify-center items-center gap-x-2 shadow-lg">
                 <div wire:loading>
                   <x-filament::loading-indicator class="h-5 w-5"/>
                 </div>
@@ -244,14 +247,14 @@ use App\Features\{PaymentShortcutButton, SellingTax, Discount};
               </button>
               <button
                 wire:click="dispatch('close-modal', {id: 'proceed-the-payment'});"
-                type="button" class="w-full bg-gray-300 p-2 rounded-md text-lg flex justify-center items-center gap-x-2">
+                type="button" class="w-full bg-gray-300 dark:bg-gray-700 hover:bg-gray-400 dark:hover:bg-gray-600 p-3 rounded-xl text-lg flex justify-center items-center gap-x-2 text-black dark:text-white transition-colors">
                 {{ __('Close') }}
               </button>
             </div>
           </div>
         </div>
       </div>
-      <div class="overflow-y-scroll max-h-[80vh] hidden md:block">
+      <div class="overflow-y-auto max-h-[40vh] md:max-h-[80vh] mt-4 md:mt-0 border-t md:border-t-0 pt-4 md:pt-0 border-gray-200 dark:border-gray-800">
         @if ($errors->any())
           @foreach ($errors->all() as $error)
             <p class="error text-danger-500 text-lg text-center w-full">{{ $error }}</p>

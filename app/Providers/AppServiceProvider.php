@@ -62,6 +62,11 @@ class AppServiceProvider extends ServiceProvider
             $this->loadMigrationsFrom($directories);
         }
 
+        \Filament\Support\Facades\FilamentView::registerRenderHook(
+            \Filament\View\PanelsRenderHook::BODY_START,
+            fn (): \Illuminate\Contracts\View\View => view('filament.tenant.components.background-orbs'),
+        );
+
         Feature::resolveScopeUsing(fn ($driver) => null);
         Feature::discover();
     }

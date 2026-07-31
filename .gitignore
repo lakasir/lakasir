@@ -24,3 +24,8 @@ yarn-error.log
 tinker.php
 _ide_helper.php
 .phpunit.cache/test-results
+
+# Graphify & Agents (Local only)
+/graphify-out/
+/.agents/
+/rules/

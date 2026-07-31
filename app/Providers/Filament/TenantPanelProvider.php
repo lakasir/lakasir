@@ -114,6 +114,11 @@ class TenantPanelProvider extends PanelProvider
             );
         }
 
+        FilamentView::registerRenderHook(
+            PanelsRenderHook::SIDEBAR_FOOTER,
+            fn () => view('filament.tenant.components.sidebar-footer')
+        );
+
         return $panel;
     }
 
@@ -121,8 +126,9 @@ class TenantPanelProvider extends PanelProvider
     {
         $panel
             ->globalSearchKeyBindings(['command+k', 'ctrl+k'])
-            ->sidebarFullyCollapsibleOnDesktop()
+            ->sidebarCollapsibleOnDesktop()
             ->darkMode(config('app.dark_mode', true))
+            ->defaultThemeMode(\Filament\Enums\ThemeMode::Light)
             ->databaseNotifications()
             ->id('tenant')
             ->viteTheme('resources/css/filament/tenant/theme.css')
@@ -135,8 +141,8 @@ class TenantPanelProvider extends PanelProvider
             ->favicon(url('favicon.ico'))
             ->spa(config('app.spa_mode'))
             ->authGuard('web')
-            ->path('/member')
-            ->login(TenantLogin::class)
+            ->path('/member-legacy')
+            // ->login(TenantLogin::class) // Disabled to use custom Shadcn Login
             ->navigation(fn (NavigationBuilder $navigationBuilder) => $this->buildNavigation($navigationBuilder))
             ->discoverResources(in: app_path('Filament/Tenant/Resources'), for: 'App\\Filament\\Tenant\\Resources')
             ->discoverPages(in: app_path('Filament/Tenant/Pages'), for: 'App\\Filament\\Tenant\\Pages')
@@ -252,9 +258,13 @@ class TenantPanelProvider extends PanelProvider
 
     private function initializeDefaultPanel(Panel $panel): void
     {
-        if (Schema::hasTable('abouts') && $about = About::first()) {
-            $panel->brandName($about->shop_name ?? 'Your Brand')
-                ->brandLogo($about->photo ?? null);
+        try {
+            if (Schema::hasTable('abouts') && $about = About::first()) {
+                $panel->brandName($about->shop_name ?? 'Your Brand')
+                    ->brandLogo($about->photo ?? null);
+            }
+        } catch (\Throwable $e) {
+            // Ignore database connection issues when DB is not initialized yet
         }
     }
 
