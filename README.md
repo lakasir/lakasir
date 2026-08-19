@@ -92,10 +92,10 @@ For any inquiries or support, please contact lakasirapp@gmail.com or you can ope
 
 ## Star History
 
-<a href="https://star-history.com/#lakasir/lakasir&Date">
+<a href="https://star-history.dera.page/#lakasir/lakasir&Date">
  <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=lakasir/lakasir&type=Date&theme=dark" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=lakasir/lakasir&type=Date" />
-   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=lakasir/lakasir&type=Date" />
+   <source media="(prefers-color-scheme: dark)" srcset="https://star-history.dera.page/svg?repos=lakasir/lakasir&type=Date&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://star-history.dera.page/svg?repos=lakasir/lakasir&type=Date" />
+   <img alt="Star History Chart" src="https://star-history.dera.page/svg?repos=lakasir/lakasir&type=Date" />
  </picture>
 </a>
