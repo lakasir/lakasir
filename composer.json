@@ -21,7 +21,7 @@
         "livewire/livewire": "^3.0",
         "livewire/volt": "^1.6",
         "maatwebsite/excel": "^3.1",
-        "picqer/php-barcode-generator": "^2.4",
+        "picqer/php-barcode-generator": "^3.2",
         "predis/predis": "^2.2",
         "sheenazien8/konstantiq": "^1.0",
         "silviolleite/laravelpwa": "^2.0",
