@@ -29,6 +29,11 @@ _ide_helper.php
 .phpunit.cache/test-results
 .herd.yml
 tasks/
+# Local working docs: plan/task index (README.md) + detailed plans
+/docs/plan/
 .mcp.json
 opencode.json
 version.txt
+.env.before_lerd
+.mcp.json
+.lerd.yaml
