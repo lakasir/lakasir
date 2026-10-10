@@ -1,5 +1,6 @@
 {
     "type": "module",
+    "license": "GPL-3.0-only",
     "scripts": {
         "dev": "vite",
         "build": "vite build"
