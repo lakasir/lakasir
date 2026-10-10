@@ -3,7 +3,7 @@
     "type": "project",
     "description": "The Laravel Framework.",
     "keywords": ["framework", "laravel"],
-    "license": "MIT",
+    "license": "GPL-3.0-only",
     "require": {
         "php": "^8.4",
         "aymanalhattami/filament-date-scopes-filter": "^1.0",
