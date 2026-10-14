@@ -67,7 +67,7 @@ class SettingController extends Controller
         if ($key === 'all') {
             return $this->buildResponse()
                 ->setData([
-                    'currency' => Setting::get('currency', 'IDR'),
+                    'currency' => currency_code(),
                     'selling_method' => Setting::get('selling_method', env('SELLING_METHOD', 'fifo')),
                     'cash_drawer_enabled' => (bool) Setting::get('cash_drawer_enabled', false),
                     'secure_initial_price_enabled' => (bool) Setting::get('secure_initial_price_enabled', false),

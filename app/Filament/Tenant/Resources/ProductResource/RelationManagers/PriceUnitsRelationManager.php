@@ -3,8 +3,6 @@
 namespace App\Filament\Tenant\Resources\ProductResource\RelationManagers;
 
 use App\Features\ProductStock;
-use App\Models\Tenants\Profile;
-use App\Models\Tenants\Setting;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -41,7 +39,7 @@ class PriceUnitsRelationManager extends RelationManager
                     ->mask(RawJs::make('$money($input)'))
                     ->stripCharacters(',')
                     ->numeric()
-                    ->prefix(Setting::get('currency', 'IDR'))
+                    ->prefix(currency_code())
                     ->required(),
             ]);
     }
@@ -58,8 +56,8 @@ class PriceUnitsRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('selling_price')
                     ->translateLabel()
                     ->money(
-                        currency: Setting::get('currency', 'IDR'),
-                        locale: Profile::get()->locale
+                        currency: currency_code(),
+                        locale: money_locale(),
                     ),
             ])
             ->headerActions([

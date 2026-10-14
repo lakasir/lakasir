@@ -27,7 +27,7 @@ $prices = [
     [
         'title' => 'Pribadi',
         'description' => 'Kami menyediakan gratis untuk temen-temen pengguna dengan syarat menggunakan server anda sendiri',
-        'price' => 'IDR 0.00',
+        'price' => '0.00 ج.م',
         'button' => 'Bagaimana caranya?',
         'route' => '',
         'includes' => ['Semua fitur gratis'],
@@ -38,7 +38,7 @@ $prices = [
     [
         'title' => 'Server kami',
         'description' => 'Dengan menggunakan server kami, anda bisa mendapatkan fitur yang lebih lengkap.',
-        'price' => 'IDR 50.000',
+        'price' => '50.00 ج.م',
         'button' => 'Bagaimana caranya?',
         'route' => '',
         'includes' => [

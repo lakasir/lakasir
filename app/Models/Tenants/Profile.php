@@ -63,10 +63,10 @@ class Profile extends Model
                 ->label(__('Language'))
                 ->selectablePlaceholder(false)
                 ->options([
-                    'id' => 'Bahasa Indonesia',
-                    'en' => 'English',
-                    'es' => 'Español',
                     'ar' => 'العربية',
+                    'en' => 'English',
+                    'id' => 'Bahasa Indonesia',
+                    'es' => 'Español',
                 ]),
             FileUpload::make('photo')
                 ->disk(config('filesystems.upload_disk'))

@@ -21,7 +21,15 @@ trait HasStockOpnameItemForm
                 ->native(false)
                 ->placeholder(__('Search...'))
                 ->relationship(name: $product, titleAttribute: 'name')
-                ->searchable(['name', 'barcode', 'sku'])
+                ->searchable()
+                ->getSearchResultsUsing(function (string $search): array {
+                    return Product::query()
+                        ->searchByKeyword($search)
+                        ->orderBy('name')
+                        ->limit(50)
+                        ->pluck('name', 'id')
+                        ->toArray();
+                })
                 ->live()
                 ->afterStateUpdated(function (Set $set, ?string $state) {
                     $product = Product::find($state);

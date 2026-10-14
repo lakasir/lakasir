@@ -42,7 +42,7 @@ class ProductResource extends Resource
 
     public static function getGloballySearchableAttributes(): array
     {
-        return ['name', 'sku', 'barcode'];
+        return ['name', 'sku', 'barcodes.code'];
     }
 
     public static function getGlobalSearchResultDetails(Model $record): array
@@ -74,7 +74,9 @@ class ProductResource extends Resource
                     ->searchable(),
                 TextColumn::make('name')
                     ->translateLabel()
-                    ->searchable(['sku', 'name', 'barcode']),
+                    ->searchable(query: function (Builder $query, string $search): void {
+                        $query->searchByKeyword($search);
+                    }),
                 TextColumn::make('sku')
                     ->searchable()
                     ->toggleable()
@@ -98,16 +100,16 @@ class ProductResource extends Resource
                     ->visible(Feature::active(ProductInitialPrice::class))
                     ->translateLabel()
                     ->sortable()
-                    ->money(Setting::get('currency', 'IDR')),
+                    ->money(currency_code()),
                 TextColumn::make('selling_price')
                     ->translateLabel()
                     ->sortable()
-                    ->money(Setting::get('currency', 'IDR')),
+                    ->money(currency_code()),
                 TextColumn::make('net_profit')
                     ->visible(Feature::active(ProductInitialPrice::class))
                     ->translateLabel()
                     ->sortable()
-                    ->money(Setting::get('currency', 'IDR')),
+                    ->money(currency_code()),
                 TextColumn::make('type')
                     ->visible(Feature::active(ProductType::class))
                     ->translateLabel(),
@@ -222,11 +224,11 @@ class ProductResource extends Resource
             Infolists\Components\TextEntry::make('unit')
                 ->translateLabel(),
             Infolists\Components\TextEntry::make('initial_price')
-                ->money(Setting::get('currency', 'IDR'))
+                ->money(currency_code())
                 ->size(TextEntry\TextEntrySize::Large)
                 ->translateLabel(),
             Infolists\Components\TextEntry::make('selling_price')
-                ->money(Setting::get('currency', 'IDR'))
+                ->money(currency_code())
                 ->size(TextEntry\TextEntrySize::Large)
                 ->translateLabel(),
         ]);

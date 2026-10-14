@@ -31,7 +31,7 @@ class AboutController extends Controller
 
         $aboutService->createOrUpdate($request->all());
 
-        Setting::set('currency', $request->currency ?? 'IDR');
+        Setting::set('currency', $request->currency ?: config('setting.default_currency', 'EGP'));
 
         return $this->buildResponse()
             ->setMessage('About updated successfully')

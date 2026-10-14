@@ -3,12 +3,43 @@
   use App\Features\{PaymentShortcutButton, SellingTax, Discount};
 
 @endphp
-<div class="">
-  <div class="grid grid-cols-3 gap-x-4">
-    <div class="col-span-2">
+<div>
+<style>
+  .cashier-shell {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1rem;
+    align-items: start;
+  }
+
+  .cashier-products,
+  .cashier-cart {
+    min-width: 0;
+  }
+
+  @media (min-width: 1024px) {
+    .cashier-shell {
+      grid-template-columns: minmax(0, 1fr) 24rem;
+    }
+
+    .cashier-cart {
+      position: sticky;
+      top: 0;
+      max-height: 100vh;
+      overflow-y: auto;
+      padding-bottom: 2.5rem;
+    }
+  }
+
+  [dir="rtl"] .cashier-back-icon {
+    transform: scaleX(-1);
+  }
+</style>
+  <div class="cashier-shell">
+    <div class="cashier-products">
       {{ $this->table }}
     </div>
-    <div class="fixed right-0 h-screen w-1/3 overflow-y-scroll pb-10">
+    <div class="cashier-cart">
       <div class="mt-4 h-screen space-y-2 px-4">
         <div class="flex items-center justify-between" x-data="fullscreen">
           <p class="text-xl font-semibold">{{ __('Orders details') }}</p>
@@ -16,7 +47,7 @@
             <div class="hidden items-center gap-x-2 xl:flex">
               <a href="/member/sellings"
                 class="flex items-center justify-center gap-x-1 rounded-lg bg-gray-100 px-4 py-1 text-gray-500">
-                <x-heroicon-o-arrow-left class="h-4 w-4 text-gray-500" />
+                <x-heroicon-o-arrow-left class="cashier-back-icon h-4 w-4 text-gray-500" />
                 <p class="hidden lg:block">{{ __('Back') }} </p>
               </a>
 
@@ -48,7 +79,7 @@
                     </div>
                   </x-filament::dropdown.list.item>
                   <x-filament::dropdown.list.item>
-                    <p class="flex gap-x-2" wire:confirm="Are you sure you want to clear all of the items?"
+                    <p class="flex gap-x-2" wire:confirm="{{ __('Are you sure you want to clear all of the items?') }}"
                       wire:click.prevent="clearCart">
                       <x-heroicon-o-trash class="h-5 w-5 cursor-pointer text-gray-900 dark:text-gray-300" />
                       <span>{{ __('Clear') }} </span>
@@ -107,7 +138,7 @@
                     id="{{ $item->product->name }}-{{ $item->id }}-qty-{{ rand() }}"
                     data-value="{{ $item->qty }}" value="{{ $item->qty }}"
                     x-on:keyup.debounce.500ms="(e) => add('{{ $item->product_id }}', e.target.value)"
-                    placeholder="{{ __('Discount') }}" class="w-1/2 text-right" inputMode="numeric" />
+                    placeholder="{{ __('Quantity') }}" class="w-1/2 text-end" inputMode="numeric" />
                 </x-filament::input.wrapper>
                 <button class="rounded-lg !bg-gray-100 px-2 py-1"
                   x-on:click="$wire.reduceCart({{ $item->product_id }});" wire:loading.attr="disabled">

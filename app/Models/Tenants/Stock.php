@@ -89,7 +89,7 @@ class Stock extends Model
                 ->native(false)
                 ->date(),
             TextInput::make('initial_price')
-                ->prefix(Setting::get('currency', 'IDR'))
+                ->prefix(currency_code())
                 ->mask(RawJs::make('$money($input)'))
                 ->lte('selling_price')
                 ->stripCharacters(',')
@@ -100,7 +100,7 @@ class Stock extends Model
                 })
                 ->live(onBlur: true),
             TextInput::make('selling_price')
-                ->prefix(Setting::get('currency', 'IDR'))
+                ->prefix(currency_code())
                 ->mask(RawJs::make('$money($input)'))
                 ->gte('initial_price')
                 ->stripCharacters(',')

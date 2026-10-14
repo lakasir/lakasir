@@ -12,7 +12,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Number;
 use Illuminate\Support\Str;
 
 /**
@@ -118,7 +117,7 @@ class Product extends Model
     {
         return Attribute::make(
             get: function ($value) {
-                return Number::currency($this->initial_price, Setting::get('currency', 'IDR'));
+                return price_format((float) $this->initial_price);
             },
             set: fn($value) => $value
         );
@@ -262,6 +261,18 @@ class Product extends Model
     public function barcodes(): HasMany
     {
         return $this->hasMany(Barcode::class);
+    }
+
+    public function scopeSearchByKeyword(Builder $query, string $search): Builder
+    {
+        return $query->where(function (Builder $query) use ($search) {
+            $query->where('sku', 'like', "%{$search}%")
+                ->orWhere('name', 'like', "%{$search}%")
+                ->orWhereHas('barcodes', function (Builder $query) use ($search) {
+                    $query->where('code', 'like', "%{$search}%")
+                        ->where('is_active', true);
+                });
+        });
     }
 
 

@@ -121,9 +121,13 @@ class TenantPanelProvider extends PanelProvider
         $panel
             ->globalSearchKeyBindings(['command+k', 'ctrl+k'])
             ->sidebarFullyCollapsibleOnDesktop()
-            ->darkMode(config('app.dark_mode', true))
+            ->darkMode(
+                (bool) config('app.dark_mode', false),
+                isForced: (bool) config('app.dark_mode', false),
+            )
             ->databaseNotifications()
             ->id('tenant')
+            ->font('Cairo')
             ->viteTheme('resources/css/filament/tenant/theme.css')
             ->colors(['primary' => Color::hex('#FF6600')])
             ->assets([
