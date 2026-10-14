@@ -44,13 +44,32 @@ if (! function_exists('isMultiTenant')) {
     }
 }
 
+if (! function_exists('currency_code')) {
+    function currency_code(): string
+    {
+        $currency = Setting::get('currency');
+
+        return $currency ?: (string) config('setting.default_currency', 'EGP');
+    }
+}
+
+if (! function_exists('money_locale')) {
+    function money_locale(): string
+    {
+        $locale = Profile::get()->locale ?: config('app.locale', 'ar');
+
+        // Egyptian receipts use Western digits (0-9) with the Arabic pound sign.
+        return $locale === 'ar' ? 'ar_EG@numbers=latn' : $locale;
+    }
+}
+
 if (! function_exists('price_format')) {
     function price_format(float $price): string
     {
         return Number::currency(
             number: $price,
-            in: Setting::get('currency', 'IDR'),
-            locale: Profile::get()->locale ?? 'en'
+            in: currency_code(),
+            locale: money_locale(),
         );
     }
 }

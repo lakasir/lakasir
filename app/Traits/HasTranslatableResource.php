@@ -32,10 +32,11 @@ trait HasTranslatableResource
             return __(static::$label);
         }
 
-        return static::$navigationLabel ?? static::$title ?? str(class_basename(static::class))
+        return __(static::$navigationLabel ?? static::$title ?? str(class_basename(static::class))
             ->kebab()
             ->replace('-', ' ')
-            ->title();
+            ->title()
+            ->value());
     }
 
     private static function pageNavigationItems(): array

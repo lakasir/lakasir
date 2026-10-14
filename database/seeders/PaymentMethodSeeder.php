@@ -20,12 +20,20 @@ class PaymentMethodSeeder extends Seeder
     {
         return [
             [
-                'name' => 'Cash',
+                'name' => 'كاش',
                 'is_cash' => true,
                 'is_debit' => false,
                 'is_credit' => false,
                 'is_wallet' => false,
                 'icon' => 'assets/images/payment-methods/cash.png',
+            ],
+            [
+                'name' => 'بطاقة',
+                'is_cash' => false,
+                'is_debit' => true,
+                'is_credit' => false,
+                'is_wallet' => false,
+                'icon' => null,
             ],
         ];
     }

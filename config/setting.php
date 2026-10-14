@@ -10,4 +10,17 @@ return [
         'default_tax',
         'minimum_stock_nofication',
     ],
+
+    'default_currency' => 'EGP',
+    'default_locale' => 'ar',
+    'default_timezone' => 'Africa/Cairo',
+
+    'currencies' => [
+        'EGP' => 'جنيه مصري (EGP)',
+        'USD' => 'دولار أمريكي (USD)',
+        'SAR' => 'ريال سعودي (SAR)',
+        'AED' => 'درهم إماراتي (AED)',
+        'EUR' => 'يورو (EUR)',
+        'IDR' => 'روبية إندونيسية (IDR)',
+    ],
 ];

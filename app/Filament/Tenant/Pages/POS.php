@@ -38,7 +38,7 @@ class POS extends Page
 
     public function mount()
     {
-        $this->currency = Setting::get('currency', 'IDR');
+        $this->currency = currency_code();
         $this->locale = Profile::get()->locale ?? 'en';
         $this->allCategory();
 

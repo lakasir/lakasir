@@ -31,10 +31,9 @@
             <h3 class="font-medium" x-text="cartItem.product.name"></h3>
             <p class="text-sm text-gray-500" x-text="cartItem.product.description"></p>
             <p class="mt-1">
-            <span class="text-gray-500">Total Price</span>
+            <span class="text-gray-500">{{ __('Total Price') }}</span>
             </p>
             <p>
-              <span class="text-lakasir-primary text-sm font-normal">Rp. </span>
               <span class="font-semibold" x-text="moneyFormat(cartItem.price)"></span>
             </p>
           </div>
@@ -77,23 +76,23 @@
       <div class="space-y-3">
         <div class="flex justify-between text-gray-600">
           <span>Subtotal</span>
-          <span x-text="'Rp. ' + moneyFormat(cartTotal)"></span>
+          <span x-text="moneyFormat(cartTotal)"></span>
         </div>
         <div class="flex justify-between text-gray-600">
           <span>Discount</span>
-          <span>Rp. 0</span>
+          <span x-text="moneyFormat(0)"></span>
         </div>
         <div class="flex justify-between text-gray-600">
           <span>Member</span>
-          <span>No Member</span>
+          <span>{{ __('No member selected') }}</span>
         </div>
         <div class="flex justify-between text-gray-600">
           <span>Tax (10%)</span>
-          <span x-text="'Rp. ' + moneyFormat(cartTotal * 0.1)"></span>
+          <span x-text="moneyFormat(cartTotal * 0.1)"></span>
         </div>
         <div class="flex justify-between font-medium text-lg">
           <span>Total</span>
-          <span class="text-orange-500" x-text="'Rp. ' + moneyFormat(cartTotal * 1.1)"></span>
+          <span class="text-orange-500" x-text="moneyFormat(cartTotal * 1.1)"></span>
         </div>
       </div>
 

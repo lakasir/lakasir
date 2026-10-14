@@ -69,6 +69,7 @@ class GeneralSetting extends Page implements HasActions, HasForms
             foreach (config('setting.key') as $key) {
                 $this->setting[$key] = Setting::get($key);
             }
+            $this->setting['currency'] = $this->setting['currency'] ?: config('setting.default_currency', 'EGP');
             $this->about = $about;
         }
 
@@ -110,11 +111,10 @@ class GeneralSetting extends Page implements HasActions, HasForms
                         ->translateLabel()
                         ->schema([
                             Select::make('currency')
-                                ->options([
-                                    'IDR' => 'IDR',
-                                    'MXN' => 'MXN',
-                                    'USD' => 'USD',
-                                ])
+                                ->options(config('setting.currencies'))
+                                ->default(config('setting.default_currency', 'EGP'))
+                                ->searchable()
+                                ->native(false)
                                 ->translateLabel(),
                             Select::make('minimum_stock_nofication')
                                 ->options([
@@ -128,6 +128,7 @@ class GeneralSetting extends Page implements HasActions, HasForms
                             TextInput::make('default_tax')
                                 ->numeric()
                                 ->suffix('%')
+                                ->helperText(__('Egypt VAT is 14% for registered businesses. Leave 0 if you do not charge tax.'))
                                 ->translateLabel(),
                             Actions::make([
                                 Action::make('Save')

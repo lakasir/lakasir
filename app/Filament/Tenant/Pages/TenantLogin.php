@@ -22,14 +22,22 @@ class TenantLogin extends Login
 
             return null;
         }
-        $user->profile()->updateOrCreate(
+        $profile = $user->profile()->firstOrCreate(
             [
                 'user_id' => $user->getKey(),
             ],
             [
-                'timezone' => 'Asia/Jakarta',
+                'timezone' => config('setting.default_timezone', 'Africa/Cairo'),
+                'locale' => config('setting.default_locale', 'ar'),
             ]
         );
+
+        if (! $profile->timezone || ! $profile->locale) {
+            $profile->update([
+                'timezone' => $profile->timezone ?: config('setting.default_timezone', 'Africa/Cairo'),
+                'locale' => $profile->locale ?: config('setting.default_locale', 'ar'),
+            ]);
+        }
 
         return $loginResponse;
     }

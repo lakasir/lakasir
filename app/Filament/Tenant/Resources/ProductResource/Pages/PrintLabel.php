@@ -4,7 +4,6 @@ namespace App\Filament\Tenant\Resources\ProductResource\Pages;
 
 use App\Filament\Tenant\Resources\ProductResource;
 use App\Models\Tenants\Product;
-use App\Models\Tenants\Setting;
 use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
@@ -16,7 +15,6 @@ use Filament\Support\Colors\Color;
 use Filament\Support\Enums\Alignment;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Number;
 use Picqer\Barcode\BarcodeGeneratorSVG;
 
 class PrintLabel extends Page implements HasForms
@@ -65,7 +63,7 @@ class PrintLabel extends Page implements HasForms
                 'name' => $product->name,
                 'sku' => $product->sku,
                 'unit' => $product->unit,
-                'price' => Number::currency($product->selling_price, Setting::get('currency', 'IDR')),
+                'price' => price_format((float) $product->selling_price),
             ]);
         }
 

@@ -98,15 +98,23 @@ function padText(text, length, alignRight = false, center = false, textSize = 'n
 
 /**
  * Formats a number as currency.
- * For IDR, decimals are hidden for a cleaner POS look.
+ * EGP keeps two decimals. IDR hides decimals for a cleaner POS look.
  * 
  * @param {number} number - The value to format.
  * @param {string|null} currency - Currency code (e.g., 'IDR', 'USD').
  * @returns {string} The formatted currency string.
  */
+function resolveMoneyLocale(locale) {
+  if (!locale || locale === 'ar' || String(locale).startsWith('ar')) {
+    return 'ar-EG-u-nu-latn';
+  }
+
+  return String(locale).replace('_', '-');
+}
+
 function moneyFormat(number, currency = null) {
-  const activeCurrency = currency || window.lakasirCurrency || 'IDR';
-  const activeLocale = window.lakasirLocale || 'en';
+  const activeCurrency = currency || window.lakasirCurrency || 'EGP';
+  const activeLocale = resolveMoneyLocale(window.lakasirLocale || 'ar');
 
   const options = {
     style: 'currency',
@@ -129,7 +137,7 @@ function moneyFormat(number, currency = null) {
  * @returns {string} The formatted number string.
  */
 function numberFormat(number) {
-  const activeLocale = window.lakasirLocale || 'en';
+  const activeLocale = resolveMoneyLocale(window.lakasirLocale || 'ar');
   const formatter = new Intl.NumberFormat(activeLocale);
 
   return formatter.format(number);

@@ -28,7 +28,7 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
           </a>
-          <h1 class="text-xl font-semibold">Cashier</h1>
+          <h1 class="text-xl font-semibold">{{ __('Cashier') }}</h1>
           <button class="text-gray-800">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
@@ -45,7 +45,7 @@
               x-model="searchQuery"
               @input="handleSearch"
               class="w-full px-4 py-2 bg-gray-100 rounded-lg pl-10"
-              placeholder="Search"
+              placeholder="{{ __('Search') }}"
               :disabled="isSearching"
               >
               <div class="absolute inset-y-0 left-3 flex items-center">
@@ -90,7 +90,7 @@
               >
               <template x-if="item.stock === 0">
                 <div class="absolute inset-0 bg-black bg-opacity-50 rounded-lg flex items-center justify-center">
-                  <span class="text-white text-sm font-medium">Out of stock</span>
+                  <span class="text-white text-sm font-medium">{{ __('Out of stock') }}</span>
                 </div>
               </template>
               <template x-if="item.stock > 0 && getItemQuantity(item) == 0">
@@ -109,11 +109,8 @@
               <h3 class="font-medium" x-text="item.name"></h3>
               <p class="text-sm text-gray-500" x-text="item.description"></p>
               <div class="mt-2">
-                <p class="text-sm text-gray-500">Total Price</p>
-                <p class="text-gray-900 font-semibold">
-                  <span class="text-lakasir-primary text-sm font-normal" x-text="`Rp. `"></span>
-                  <span x-text="moneyFormat(item.selling_price)"></span>
-                </p>
+                <p class="text-sm text-gray-500">{{ __('Total Price') }}</p>
+                <p class="text-gray-900 font-semibold" x-text="moneyFormat(item.selling_price)"></p>
               </div>
             </div>
 
