@@ -95,7 +95,19 @@ class ProductionRecipeItemsRelationManager extends RelationManager
                     ));
                 }),
             PriceInput::make('price_per_need')
-                ->readOnly(),
+                ->readOnly()
+                // `price_per_need` is derived, not a column: compute it so the
+                // field is not empty (and required-blocking) when editing.
+                ->formatStateUsing(function ($state, ?ProductionRecipeItem $record) {
+                    if ($record?->exists && $record->rawMaterial) {
+                        return $record->rawMaterial->costFor(
+                            (float) $record->quantity_required,
+                            $record->quantity_unit ?? $record->rawMaterial->base_unit,
+                        ) ?? 0;
+                    }
+
+                    return $state;
+                }),
 
         ];
     }
@@ -191,6 +203,8 @@ class ProductionRecipeItemsRelationManager extends RelationManager
                 CreateAction::make(),
             ])
             ->actions([
+                Tables\Actions\EditAction::make()
+                    ->label(__('Edit')),
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
