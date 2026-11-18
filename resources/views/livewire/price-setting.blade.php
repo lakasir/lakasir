@@ -3,20 +3,20 @@
     <button
       class="bg-info-400 rounded-lg px-2 py-1"
       wire:loading.attr="disabled"
-      x-on:mousedown="$dispatch('open-modal', {id: 'price-setting', data: { id: {{ $cartItem->id }} } })"
+      x-on:mousedown="$dispatch('open-modal', {id: 'price-setting-{{$cartItem->id}}', data: { id: {{ $cartItem->id }} } })"
     >
       <div class="flex items-center gap-x-1">
         <x-heroicon-o-wrench-screwdriver class="dark:text-white text-black h-6 w-4"/> <p class="hidden lg:block">@lang('Price')</p>
       </div>
     </button>
-    <x-filament::modal id="price-setting">
+    <x-filament::modal id="price-setting-{{$cartItem->id}}">
       <x-slot name="heading">
         <p>{{ __('Choose the unit price') }}</p>
       </x-slot>
       @foreach ($cartItem->product->priceUnits as $priceUnit)
         <div class="flex items-center gap-x-4">
           <input type="radio" id="unit-{{ $priceUnit->id }}" wire:model="unit" value="{{ $priceUnit->id }}">
-          <label for="unit-{{ $priceUnit->id }}">{{ $priceUnit->unit }}</label>
+          <label for="unit-{{ $priceUnit->id }}">{{ $priceUnit->unit }} - {{ price_format($priceUnit->selling_price) }}</label>
         </div>
       @endforeach
       <div class="grid grid-cols-2 gap-x-2 mt-5 w-full">

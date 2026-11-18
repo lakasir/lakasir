@@ -42,7 +42,7 @@ class StatsProduct extends BaseWidget
                     ? __('notifications.stocks.single-runs-out', $productName)
                     : __('notifications.stocks.single-out-of-stock', $productName);
             }
-            $stock = Stat::make(__('Stock'), $product->stock)
+            $stock = Stat::make(__('Stock'), $product->stocks->sum("stock"))
                 ->description($description)
                 ->color(Color::Yellow);
         }

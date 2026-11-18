@@ -38,7 +38,7 @@ class ViewPurchasing extends ViewRecord
                         Select::make('status')
                             ->required()
                             ->default($this->record->status)
-                            ->options(Arr::where(PurchasingStatus::all(), function ($key) {
+                            ->options(Arr::where(PurchasingStatus::all()->toArray(), function ($key) {
                                 if ($key == PurchasingStatus::approved) {
                                     return can('approve purchasing');
                                 }
@@ -104,7 +104,7 @@ class ViewPurchasing extends ViewRecord
         }
 
         /** @var Product $product */
-        $product = Product::where('barcode', $barcode)->orWhere('sku', $barcode)->first();
+        $product = Product::findByBarcodeOrSku($barcode);
         if (! $product) {
             Notification::make()
                 ->title(__('Product not found'))

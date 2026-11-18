@@ -87,6 +87,7 @@ trait HasStockOpnameItemForm
                 ->readOnly()
                 ->numeric(),
             FileUpload::make('attachment')
+                ->disk(config('filesystems.upload_disk'))
                 ->translateLabel()
                 ->maxWidth(10)
                 ->image(),

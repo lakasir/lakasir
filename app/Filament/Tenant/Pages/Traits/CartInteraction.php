@@ -11,7 +11,8 @@ trait CartInteraction
 {
     private function validateStock(Product $product, $qty): bool
     {
-        if (! $product->is_non_stock && ($product->stock < 0 || $product->stock < $qty)) {
+        $available = $product->stock_calculate;
+        if (! $product->is_non_stock && ($available < 0 || $available < $qty)) {
             Notification::make()
                 ->title(__('Stock is out'))
                 ->danger()
@@ -35,6 +36,11 @@ trait CartInteraction
                 ->qty ?? 0
             ) + 1;
         } else {
+            if (!$data['amount']) {
+                $this->deleteCart(CartItem::whereProductId($product->getKey())->first());
+                $this->mount();
+                return;
+            }
             $qty = $data['amount'];
         }
         if (! $this->validateStock($product, $qty)) {
@@ -137,9 +143,8 @@ trait CartInteraction
 
     public function addCartUsingScanner(string $value)
     {
-        $product = Product::whereBarcode($value)
-            ->orWhere('sku', $value)
-            ->first();
+        $product = Product::findByBarcodeOrSku($value);
+
         if (! $product) {
             Notification::make()
                 ->title(__('Product not found'))

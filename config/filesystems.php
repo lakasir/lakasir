@@ -17,6 +17,30 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Upload Disk
+    |--------------------------------------------------------------------------
+    |
+    | This disk is used for permanent file uploads (products, profiles, etc.).
+    | Switch between 'public' (local) and 's3' without code changes.
+    |
+    */
+
+    'upload_disk' => env('UPLOAD_DISK', 'public'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Temporary Disk
+    |--------------------------------------------------------------------------
+    |
+    | This disk is used for temporary file uploads before they are moved to the
+    | upload disk.
+    |
+    */
+
+    'tmp_disk' => env('TMP_DISK', 'tmp'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Filesystem Disks
     |--------------------------------------------------------------------------
     |

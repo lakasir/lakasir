@@ -36,6 +36,18 @@ class Handler extends ExceptionHandler
         'password_confirmation',
     ];
 
+    protected function shouldReturnJson($request, Throwable $e): bool
+    {
+        if ($request->expectsJson()) {
+            return true;
+        }
+
+        $contentType = $request->header('Content-Type', '');
+
+        return str_contains($contentType, 'application/json');
+    }
+
+
     /**
      * Register the exception handling callbacks for the application.
      *

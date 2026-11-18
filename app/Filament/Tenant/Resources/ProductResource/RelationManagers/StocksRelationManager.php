@@ -2,8 +2,15 @@
 
 namespace App\Filament\Tenant\Resources\ProductResource\RelationManagers;
 
+use App\Constants\StockType;
+use App\Events\RecalculateEvent;
+use App\Features\ProductExpired;
+use App\Filament\Tenant\Resources\ProductResource\Traits\HasProductForm;
+use App\Models\Tenants\Product;
 use App\Models\Tenants\Setting;
-use Filament\Forms;
+use App\Models\Tenants\Stock;
+use App\Services\Tenants\StockService;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
@@ -12,16 +19,20 @@ use Illuminate\Database\Eloquent\Model;
 
 class StocksRelationManager extends RelationManager
 {
+    use HasProductForm;
+
     protected static string $relationship = 'stocks';
 
     public function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('stock')
+                Select::make('type')
                     ->required()
-                    ->maxLength(255),
-            ]);
+                    ->options(StockType::all()),
+                ...Stock::form(),
+            ])
+            ->columns(1);
     }
 
     public function table(Table $table): Table
@@ -34,6 +45,7 @@ class StocksRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('date')
                     ->translateLabel(),
                 Tables\Columns\TextColumn::make('expired')
+                    ->visible(feature(ProductExpired::class))
                     ->translateLabel(),
                 Tables\Columns\TextColumn::make('initial_price')
                     ->translateLabel()
@@ -43,11 +55,31 @@ class StocksRelationManager extends RelationManager
                     ->money(Setting::get('currency', 'IDR')),
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make(),
+                Tables\Actions\CreateAction::make()
+                    ->action(function (array $data, StockService $stockService) {
+                        $stockService->create(array_merge($data, [
+                            'product_id' => $this->ownerRecord->id,
+                            'is_ready' => true,
+                        ]));
+
+                        RecalculateEvent::dispatch(collect([$this->ownerRecord]), []);
+                    })
+                    ->createAnother(false),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->action(function (Stock $record, array $data, StockService $stockService) {
+                        $stockService->update($record, array_merge($data, [
+                            'product_id' => $record->product_id,
+                        ]));
+                        RecalculateEvent::dispatch(collect([$record->product]), []);
+                    }),
+                Tables\Actions\DeleteAction::make()
+                    ->action(function (Stock $record) {
+                        $product = $record->product;
+                        $record->delete();
+                        RecalculateEvent::dispatch(collect([$product]), []);
+                    }),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -59,5 +91,10 @@ class StocksRelationManager extends RelationManager
     public static function getTitle(Model $ownerRecord, string $pageClass): string
     {
         return __('Stock History');
+    }
+
+    public function isReadOnly(): bool
+    {
+        return false;
     }
 }

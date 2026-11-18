@@ -9,11 +9,14 @@ use App\Features\ProductSku;
 use App\Features\ProductStock;
 use App\Features\ProductType;
 use App\Models\Tenants\Category;
-use App\Models\Tenants\Product;
 use App\Models\Tenants\Setting;
+use App\Rules\UniqueBarcode;
+use Filament\Actions\StaticAction;
+use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Set;
@@ -25,6 +28,7 @@ trait HasProductForm
     public function generateFileUploadFormComponent(): FileUpload
     {
         return FileUpload::make('hero_images')
+            ->disk(config('filesystems.upload_disk'))
             ->image()
             ->translateLabel()
             ->imageResizeMode('cover')
@@ -66,6 +70,7 @@ trait HasProductForm
     public function generateUnitFormComponent()
     {
         return TextInput::make('unit')
+            ->required()
             ->translateLabel();
     }
 
@@ -117,7 +122,9 @@ trait HasProductForm
         return TextInput::make('stock')
             ->translateLabel()
             ->numeric()
-            ->visible(Feature::active(ProductStock::class))
+            ->visible(function ($operation) {
+                return Feature::active(ProductStock::class) && $operation == 'create';
+            })
             ->disabled(function ($get) {
                 return $get('is_non_stock') || $get('type') == 'service';
             })
@@ -144,12 +151,66 @@ trait HasProductForm
             ->required();
     }
 
-    public function generateBarcodeFormComponent(): TextInput
+    public function generateBarcodeFormComponent(): Repeater
     {
-        return TextInput::make('barcode')
-            ->helperText(__('Point the cursor to this input first then scan the barcode'))
+        return Repeater::make('barcodes')
+            ->translateLabel()
             ->visible(Feature::active(ProductBarcode::class))
-            ->translateLabel();
+            ->schema([
+                TextInput::make('code')
+                    ->label(__('Barcode'))
+                    ->required()
+                    ->rules(fn($get) => [new UniqueBarcode($get('id'))])
+                    ->helperText(__('Point the cursor to this input first then scan the barcode'))
+                    ->columnSpan(2)
+                    ->translateLabel()
+                    ->id('scan-barcode-modal')
+                    ->suffixAction(
+                        Action::make('scan')
+                            ->icon('heroicon-o-camera')
+                            ->label('Scan')
+                            ->modalHeading('Scan a barcode')
+                            ->modalContent(fn (Action $action) =>
+                            view('filament.components.barcode-scanner', [
+                                'statePath' => $action->getComponent()->getStatePath()
+                            ]))
+                            ->modalWidth('lg')
+                            ->closeModalByClickingAway(false)
+                            ->modalCloseButton(false)
+                            ->modalSubmitAction(false)
+                            ->modalCancelAction(
+                                fn(StaticAction $action) =>
+                                $action->label('Cancel')
+                                    ->extraAttributes([
+                                        'id' => 'close-barcode-scanner-button',
+                                    ])
+                            )
+                    ),
+
+                Select::make('type')
+                    ->label(__('Type'))
+                    ->options([
+                        'primary' => __('Primary'),
+                        'secondary' => __('Secondary'),
+                        'internal' => __('Intern'),
+                        'supplier' => __('Suplier'),
+                        'other' => __('Other'),
+                    ])
+                    ->default('primary')
+                    ->required()
+                    ->columnSpan(1),
+
+                TextInput::make('description')
+                    ->label(__('Description'))
+                    ->placeholder(__('Optional barcode description'))
+                    ->columnSpan(3),
+            ])
+            ->columns(3)
+            ->addActionLabel(__('Add barcode'))
+            ->reorderable()
+            ->collapsible()
+            ->defaultItems(0)
+            ->itemLabel(fn (array $state): ?string => $state['code'] ?? null);
     }
 
     public function generateNonStockFormComponent(): Checkbox

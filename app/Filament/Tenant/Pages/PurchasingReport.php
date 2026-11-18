@@ -25,6 +25,11 @@ class PurchasingReport extends Page
 
     protected static string $view = 'filament.tenant.pages.purchasing-report';
 
+    public static function canAccess(): bool
+    {
+        return can('generate purchasing report');
+    }
+
     #[Url]
     public ?array $data = [
         'start_date' => null,

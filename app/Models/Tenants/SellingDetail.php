@@ -13,7 +13,7 @@ class SellingDetail extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
+    protected $guarded = ['id'];
 
     public function selling()
     {
@@ -23,6 +23,13 @@ class SellingDetail extends Model
     public function product()
     {
         return $this->belongsTo(Product::class);
+    }
+
+    public function pricePerUnit(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->price / $this->qty,
+        );
     }
 
     public function totalPrice(): Attribute

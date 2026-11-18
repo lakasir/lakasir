@@ -24,6 +24,7 @@ class CreateUser extends Command
             ]);
             Artisan::call('db:seed', [
                 '--class' => 'PermissionSeeder',
+                '--force' => true,
             ]);
             $user->assignRole(Role::admin);
 

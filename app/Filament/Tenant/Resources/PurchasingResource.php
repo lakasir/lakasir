@@ -73,6 +73,7 @@ class PurchasingResource extends Resource
                     ->native(false)
                     ->required(),
                 FileUpload::make('image')
+                    ->disk(config('filesystems.upload_disk'))
                     ->translateLabel()
                     ->image(),
             ]);
@@ -137,7 +138,7 @@ class PurchasingResource extends Resource
                         ->form([
                             Select::make('status')
                                 ->required()
-                                ->options(Arr::where(PurchasingStatus::all(), function ($key) {
+                                ->options(Arr::where(PurchasingStatus::all()->toArray(), function ($key) {
                                     if ($key == PurchasingStatus::approved) {
                                         return can('approve purchasing');
                                     }
@@ -160,7 +161,7 @@ class PurchasingResource extends Resource
             ])
             ->filters([
                 SelectFilter::make('status')
-                    ->options(PurchasingStatus::all()),
+                    ->options(PurchasingStatus::all()->toArray()),
                 Filter::make('date')
                     ->form([
                         DatePicker::make('start_date')

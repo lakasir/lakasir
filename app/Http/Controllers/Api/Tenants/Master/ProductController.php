@@ -8,13 +8,16 @@ use App\Http\Filters\SearchFields;
 use App\Http\Requests\Tenants\Master\ProductRequest;
 use App\Http\Resources\ProductCollection;
 use App\Models\Tenants\Product;
+use Illuminate\Http\Request;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class ProductController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $perPage = $this->resolvePerPage($request);
+
         $products = QueryBuilder::for(Product::class)
             ->allowedFilters([
                 'name',
@@ -26,11 +29,11 @@ class ProductController extends Controller
                 'unit',
                 'show',
                 ...ComparisonFilter::setFilters('stock', ['gt', 'ge', 'lt', 'le', 'eq', 'ne']),
-                AllowedFilter::custom('global', new SearchFields, 'name,sku,barcode'),
+                AllowedFilter::custom('global', new SearchFields, 'name,sku,barcodes.code'),
             ])
             ->allowedIncludes(['category', 'images'])
             ->orderByDesc('created_at')
-            ->simplePaginate();
+            ->simplePaginate($perPage ?? (new Product())->getPerPage());
 
         return $this->buildResponse()
             ->setData(ProductCollection::collection($products))
@@ -46,13 +49,25 @@ class ProductController extends Controller
             ->present();
     }
 
-    public function show(Product $product)
+    public function show($product)
     {
-        $product->load(['category', 'stocks']);
-        $product = new ProductCollection($product);
+        $modelById = Product::find($product);
+        $modelByCode = Product::findByBarcodeOrSku($product);
+
+        if ($modelById && $modelByCode && $modelById->getKey() !== $modelByCode->getKey()) {
+            abort(409, 'Ambiguous product identifier');
+        }
+
+        $model = $modelById ?? $modelByCode;
+        if (! $model) {
+            abort(404, 'Product not found');
+        }
+
+        $model->load(['category', 'stocks']);
+        $model = new ProductCollection($model);
 
         return $this->buildResponse()
-            ->setData($product)
+            ->setData($model)
             ->present();
     }
 

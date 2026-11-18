@@ -30,15 +30,20 @@ trait TableProduct
                     ->where(function ($query) {
                         $query->where('type', 'product')
                             ->where(function ($query) {
-                                $query->where('stock', '>', 0)
-                                    ->orWhere('is_non_stock', true);
-                            });
+                                $query->whereHas('stocks', function ($query) {
+                                    $query->where('is_ready', 1)
+                                        ->where('type', 'in')
+                                        ->where('stock', '>', 0);
+                                })
+                                ->orWhere('is_non_stock', true);
+                            })
+                        ->orWhere('type', 'service');
                     })
                     ->where('show', true)
                     // ->orWhere('type', 'service')
-                    ->limit(12)
             )
-            ->paginated(false)
+            ->defaultPaginationPageOption(12)
+            ->paginationPageOptions([12])
             ->columns([
                 Stack::make([
                     ImageColumn::make('hero_image')
@@ -57,7 +62,14 @@ trait TableProduct
                         ->columnStart(0),
                     TextColumn::make('name')
                         ->size('lg')
-                        ->searchable(['sku', 'name', 'barcode'])
+                        ->searchable(query: function ($query, string $search): void {
+                            $query->where('sku', 'like', "%{$search}%")
+                                ->orWhere('name', 'like', "%{$search}%")
+                                ->orWhereHas('barcodes', function ($query) use ($search) {
+                                    $query->where('code', 'like', "%{$search}%")
+                                        ->where('is_active', true);
+                                });
+                        })
                         ->extraAttributes([
                             'class' => 'font-bold',
                         ]),
@@ -78,7 +90,7 @@ trait TableProduct
                         ->extraAttributes([
                             'class' => 'font-bold',
                         ])
-                        ->formatStateUsing(fn (Product $product) => __('Stock').': '.$product->stock),
+                        ->formatStateUsing(fn (Product $product) => __('Stock').': '.$product->stock_calculate),
                 ]),
             ])
             ->contentGrid([

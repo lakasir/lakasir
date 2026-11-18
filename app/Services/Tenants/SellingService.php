@@ -8,9 +8,11 @@ use App\Models\Tenants\PaymentMethod;
 use App\Models\Tenants\PriceUnit;
 use App\Models\Tenants\Product;
 use App\Models\Tenants\Selling;
+use App\Models\Tenants\Setting;
 use App\Services\Tenants\Traits\HasNumber;
 use App\Services\VoucherService;
 use Exception;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 
 class SellingService
@@ -22,12 +24,30 @@ class SellingService
         try {
             DB::beginTransaction();
             /** @var Selling $selling */
-            $selling = Selling::create($data);
+            $selling = Selling::create(Arr::only($data, [
+                'date',
+                'member_id',
+                'customer_number',
+                'payment_method_id',
+                'table_id',
+                'note',
+                'voucher',
+                'fee',
+                'payed_money',
+                'money_changes',
+                'total_price',
+                'total_cost',
+                'total_qty',
+                'total_discount_per_item',
+                'discount_price',
+                'tax',
+                'tax_price',
+            ]));
 
             SellingCreated::dispatch($selling, $data);
 
             /** @var Collection<Product> $products */
-            $products = Product::find($selling->sellingDetails->pluck('product_id'));
+            $products = Product::whereIn('id', $selling->sellingDetails->pluck('product_id'))->get();
             RecalculateEvent::dispatch($products, $data);
 
             DB::commit();
@@ -41,6 +61,9 @@ class SellingService
 
     public function mapProductRequest(array $data): array
     {
+        if (Setting::get('default_tax', 0) != 0 && !isset($data['tax'])) {
+            $data['tax'] = Setting::get('default_tax');
+        }
         $request = [];
         $payed_money = ($data['payed_money'] ?? 0);
         if (isset($data['friend_price']) && ! $data['friend_price']) {
@@ -84,9 +107,13 @@ class SellingService
                 'payed_money' => $payed_money,
             ];
         } else {
+            $total_cost = collect($data['products'] ?? [])->sum(function ($product) {
+                return (Product::find($product['product_id'] ?? null)?->initial_price ?? 0) * ($product['qty'] ?? 0);
+            });
             $request = [
                 'money_changes' => ($data['payed_money'] ?? 0) - $data['total_price'],
                 'payed_money' => $payed_money,
+                'total_cost' => $total_cost,
             ];
         }
 

@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Storage;
 
 class DeleteTempFile extends Command
 {
@@ -18,7 +19,7 @@ class DeleteTempFile extends Command
      *
      * @var string
      */
-    protected $description = 'Delete temp file';
+    protected $description = 'Delete temporary uploaded files that have not been moved to permanent storage';
 
     /**
      * Execute the console command.
@@ -27,9 +28,21 @@ class DeleteTempFile extends Command
      */
     public function handle()
     {
-        // $files = Storage::disk('tmp')->files();
-        // foreach ($files as $file) {
-        //     Storage::disk('tmp')->delete($file);
-        // }
+        $tmpDisk = config('filesystems.tmp_disk');
+        $disk = Storage::disk($tmpDisk);
+
+        $files = $disk->files();
+        $count = 0;
+
+        foreach ($files as $file) {
+            if ($disk->lastModified($file) < now()->subDay()->timestamp) {
+                $disk->delete($file);
+                $count++;
+            }
+        }
+
+        $this->info("Deleted {$count} temporary file(s).");
+
+        return self::SUCCESS;
     }
 }

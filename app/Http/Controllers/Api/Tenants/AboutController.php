@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Api\Tenants;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Tenants\AboutRequest;
 use App\Http\Resources\AboutResource;
 use App\Models\Tenants\About;
 use App\Models\Tenants\Setting;
 use App\Services\Tenants\AboutService;
-use Illuminate\Http\Request;
 
 class AboutController extends Controller
 {
@@ -18,19 +18,13 @@ class AboutController extends Controller
             ->present();
     }
 
-    public function update(Request $request, AboutService $aboutService)
+    public function update(AboutRequest $request, AboutService $aboutService)
     {
-        $this->validate($request, [
-            'shop_name' => ['nullable', 'string'],
-            'shop_location' => ['nullable', 'string'],
-            'business_type' => ['required', 'in:retail,wholesale,fnb,fashion,pharmacy,other'],
-            'other_business_type' => ['required_if:business_type,other'],
-            'owner_name' => ['nullable', 'string'],
-        ]);
+        $data = $request->validated();
 
-        $aboutService->createOrUpdate($request->all());
+        $aboutService->createOrUpdate($data);
 
-        Setting::set('currency', $request->currency ?? 'IDR');
+        Setting::set('currency', $data['currency'] ?? 'IDR');
 
         return $this->buildResponse()
             ->setMessage('About updated successfully')

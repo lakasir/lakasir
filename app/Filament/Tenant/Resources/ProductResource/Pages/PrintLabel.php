@@ -15,6 +15,7 @@ use Filament\Resources\Pages\Page;
 use Filament\Support\Colors\Color;
 use Filament\Support\Enums\Alignment;
 use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Number;
 use Picqer\Barcode\BarcodeGeneratorSVG;
 
@@ -54,7 +55,7 @@ class PrintLabel extends Page implements HasForms
 
         $product = $this->record;
         $fillable = collect();
-        $barcodeString = $product->barcode ?? $product->sku;
+        $barcodeString = $data['barcode'] ?? $product->sku;
         $barcode = $generator
             ->getBarcode($barcodeString, $generator::TYPE_CODE_128, 1, 30);
         for ($i = 0; $i < $data['qty']; $i++) {
@@ -96,6 +97,10 @@ class PrintLabel extends Page implements HasForms
                         TextInput::make('product')
                             ->default($this->record->name)
                             ->readOnly(),
+                        Select::make('barcode')
+                            ->hidden($this->record == null)
+                            ->options($this->record->barcodes->pluck('code', 'code'))
+                            ->required(),
                         Select::make('product')
                             ->hidden($this->record != null)
                             ->required($this->record != null)

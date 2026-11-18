@@ -15,24 +15,32 @@ class UploadController extends Controller
     {
         if ($request->file('file')->isValid()) {
             $name = Str::random(40) . '.' . $request->file('file')->extension();
-            Storage::disk('tmp')->put($name, file_get_contents($request->file('file')->getRealPath()));
-            UploadedFile::create([
+            $tmpDisk = config('filesystems.tmp_disk');
+
+            Storage::disk($tmpDisk)->put($name, file_get_contents($request->file('file')->getRealPath()));
+
+            $fullUrl = Storage::disk($tmpDisk)->url($name);
+
+            $uploadedFile = UploadedFile::create([
                 'name' => $name,
                 'original_name' => $originalName = $request->file('file')->getClientOriginalName(),
-                'url' => $url = optional(Storage::disk('tmp'))->url($name),
+                'url' => $fullUrl,
                 'mime_type' => $request->file('file')->getMimeType(),
                 'extension' => $request->file('file')->extension(),
                 'size' => $request->file('file')->getSize(),
-                'path' => storage_path('app/tmp/' . $name),
-                'disk' => 'tmp',
+                'relative_path' => $name,
+                'path' => '',
+                'disk' => $tmpDisk,
             ]);
         } else {
             throw new Exception('File is not valid');
         }
 
         return $this->success([
+            'id' => $uploadedFile->id,
             'name' => $name,
-            'url' => $url,
+            'relative_path' => $name,
+            'url' => $fullUrl,
             'original_name' => $originalName,
         ]);
     }

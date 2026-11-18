@@ -27,6 +27,11 @@ class ProductReport extends Page implements HasActions, HasForms
 
     protected static string $view = 'filament.tenant.pages.product-report';
 
+    public static function canAccess(): bool
+    {
+        return can('generate product report');
+    }
+
     #[Url]
     public ?array $data = [
         'start_date' => null,

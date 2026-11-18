@@ -19,6 +19,10 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->bind(Authenticatable::class, User::class);
+
+        if ($this->app->environment('local', 'development') && class_exists(\Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class)) {
+            $this->app->register(\Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
+        }
     }
 
     /**

@@ -34,6 +34,7 @@ use Illuminate\Support\Collection as CollectionSupport;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
+use App\Models\Tenants\Profile;
 
 class Cashier extends Page implements HasForms, HasTable
 {
@@ -44,6 +45,11 @@ class Cashier extends Page implements HasForms, HasTable
     protected static ?string $navigationIcon = 'heroicon-o-bolt';
 
     protected static string $view = 'filament.tenant.pages.cashier';
+
+    public static function canAccess(): bool
+    {
+        return can('create selling');
+    }
 
     public Collection $cartItems;
 
@@ -60,6 +66,8 @@ class Cashier extends Page implements HasForms, HasTable
     public float $tax;
 
     public string $currency;
+
+    public string $locale;
 
     public float $sub_total = 0;
 
@@ -78,6 +86,8 @@ class Cashier extends Page implements HasForms, HasTable
         $this->tax = (float) Setting::get('default_tax', 0);
 
         $this->currency = Setting::get('currency', 'IDR');
+
+        $this->locale = Profile::get()->locale ?? 'en';
 
         $this->cartItems = CartItem::query()
             ->select('*')

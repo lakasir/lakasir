@@ -3,13 +3,13 @@
     "type": "project",
     "description": "The Laravel Framework.",
     "keywords": ["framework", "laravel"],
-    "license": "MIT",
+    "license": "GPL-3.0-only",
     "require": {
-        "php": "^8.2",
+        "php": "^8.4",
         "aymanalhattami/filament-date-scopes-filter": "^1.0",
         "aymanalhattami/filament-page-with-sidebar": "^2.5",
         "barryvdh/laravel-dompdf": "^2.0",
-        "filament/filament": "^3.1",
+        "filament/filament": "^3.2",
         "guzzlehttp/guzzle": "^7.2",
         "kreait/laravel-firebase": "^5.8",
         "lakasir/has-crud-action": "dev-main",
@@ -20,8 +20,11 @@
         "laravel/tinker": "^2.9",
         "livewire/livewire": "^3.0",
         "livewire/volt": "^1.6",
-        "picqer/php-barcode-generator": "^2.4",
+        "maatwebsite/excel": "^3.1",
+        "picqer/php-barcode-generator": "^3.2",
         "predis/predis": "^2.2",
+        "sheenazien8/konstantiq": "^1.0",
+        "silviolleite/laravelpwa": "^2.0",
         "spatie/laravel-permission": "6.9.0",
         "spatie/laravel-query-builder": "^6.0",
         "stancl/tenancy": "^3.6",
@@ -60,7 +63,8 @@
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi",
-            "@php artisan filament:upgrade"
+            "@php artisan filament:upgrade",
+            "@php artisan app:version-sync"
         ],
         "post-update-cmd": [
             "@php artisan vendor:publish --tag=laravel-assets --ansi --force"

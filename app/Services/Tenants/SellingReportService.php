@@ -54,7 +54,7 @@ class SellingReportService
 
         /** @var Selling $selling */
         foreach ($sellings as $selling) {
-            $totalDiscountPerItem = 0;
+            $totalDiscountPerItemTemp = 0;
             $totalBeforeDiscountPerSelling = 0;
             $totalAfterDiscountPerSelling = 0;
             $totalNetProfitPerSelling = 0;
@@ -64,7 +64,7 @@ class SellingReportService
 
             /** @var SellingDetail $detail */
             foreach ($selling->sellingDetails as $detail) {
-                $totalDiscountPerItem += ($detail->discount_price ?? 0);
+                $totalDiscountPerItemTemp += ($detail->discount_price ?? 0);
                 $totalBeforeDiscountPerSelling += $detail->price;
                 $totalAfterDiscountPerSelling += ($detail->price - ($detail->discount_price ?? 0));
                 $totalNetProfitPerSelling += (($detail->price - $detail->cost) - ($detail->discount_price ?? 0));
@@ -95,7 +95,7 @@ class SellingReportService
             $totalNetProfitBeforeDiscountSelling += $totalNetProfitPerSelling;
             $totalNetProfitAfterDiscountSelling += ($totalNetProfitPerSelling - ($selling->discount_price ?? 0));
             $totalGrossProfit += $totalGrossProfitPerSelling;
-            $totalDiscountPerItem += $totalDiscountPerItem;
+            $totalDiscountPerItem += $totalDiscountPerItemTemp;
             $totalQty += $totalQtyPerSelling;
         }
 
@@ -103,6 +103,8 @@ class SellingReportService
             'total_cost' => $this->formatCurrency($totalCost),
             'total_gross' => $this->formatCurrency($totalGross),
             'total_net' => $this->formatCurrency($totalNet - $totalDiscount),
+            'total_net_price_after_discount_per_item' => $this->formatCurrency($totalNet),
+            'total_net_price_after_discount_selling' => $this->formatCurrency($totalNet - $totalDiscount),
             'total_discount' => $this->formatCurrency($totalDiscount),
             'total_discount_per_item' => $this->formatCurrency($totalDiscountPerItem),
             'total_gross_profit' => $this->formatCurrency($totalGross - $totalCost),

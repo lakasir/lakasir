@@ -8,7 +8,7 @@
 </div>
 
 ## Requirements
-* php 8.1
+* php 8.4
 * mysql 5.7 or higher
 * php-ext.* base on laravel extenstion requirement
 
@@ -49,13 +49,17 @@
 2. Navigate to the project directory: cd lakasir
 3. Install dependencies:
 4. Laravel:
-   * `composer install`
    * `cp .env.example .env`
    * edit the env based on your local configuration
+   * `composer install`
    * `php artisan key:generate`
    * `php artisan migrate --path=database/migrations/tenant --seed`
    * `php artisan filament:assets`
-5. Create the user using `php artisan app:create-user`
+   * `php artisan livewire:publish --assets`
+5. Javascript:
+  * `npm install`
+  * `npm run build or npm run dev`
+6. Create the user using `php artisan app:create-user`
 
 ## Usage
 * api: localdomain.test/api/test
@@ -65,7 +69,7 @@
 
 We welcome contributions from the community! If you'd like to contribute to Lakasir, please follow these steps:
 
-1. keep on eye on [project board](https://github.com/orgs/lakasir/projects/2/views/1)
+1. keep on eye on [roadmap](https://github.com/orgs/lakasir/discussions/321)
 2. Fork the repository.
 3. Create a new branch (git checkout -b feature/new-feature). 
 4. Make your changes and commit them (git commit -am 'Add new feature').
@@ -88,10 +92,10 @@ For any inquiries or support, please contact lakasirapp@gmail.com or you can ope
 
 ## Star History
 
-<a href="https://star-history.com/#lakasir/lakasir&Date">
+<a href="https://star-history.dera.page/#lakasir/lakasir&Date">
  <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=lakasir/lakasir&type=Date&theme=dark" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=lakasir/lakasir&type=Date" />
-   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=lakasir/lakasir&type=Date" />
+   <source media="(prefers-color-scheme: dark)" srcset="https://star-history.dera.page/svg?repos=lakasir/lakasir&type=Date&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://star-history.dera.page/svg?repos=lakasir/lakasir&type=Date" />
+   <img alt="Star History Chart" src="https://star-history.dera.page/svg?repos=lakasir/lakasir&type=Date" />
  </picture>
 </a>

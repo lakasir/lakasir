@@ -1,0 +1,118 @@
+name: 🚀 Lakasir Pre-release with Versioned Zip
+
+on:
+  push:
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+*'
+
+jobs:
+  build-and-release:
+    name: Build and Pre-release
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0
+        ports:
+          - 3306:3306
+        env:
+          MYSQL_DATABASE: lakasir
+          MYSQL_USER: lakasir
+          MYSQL_PASSWORD: secret
+          MYSQL_ROOT_PASSWORD: root
+        options: >-
+          --health-cmd="mysqladmin ping --silent"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    steps:
+      - name: ⬇️ Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: 🧰 Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          tools: composer
+
+      - name: 🛠️ Setup .env for pipeline
+        run: |
+          cp .env.example .env
+          echo "DB_CONNECTION=mysql" >> .env
+          echo "DB_HOST=127.0.0.1" >> .env
+          echo "DB_PORT=3306" >> .env
+          echo "DB_DATABASE=lakasir" >> .env
+          echo "DB_USERNAME=lakasir" >> .env
+          echo "DB_PASSWORD=secret" >> .env
+          echo "APP_KEY=base64:$(php -r 'echo base64_encode(random_bytes(32));')" >> .env
+
+      - name: 📦 Install PHP dependencies
+        run: composer install --optimize-autoloader --no-scripts
+
+      - name: ⚙️ Run artisan setup
+        env:
+          CACHE_DRIVER: array
+        run: |
+          php artisan migrate --force --path=database/migrations/tenant
+          php artisan filament:assets
+          php artisan livewire:publish --assets
+
+      - name: 📥 Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: 📦 Install JS dependencies
+        run: npm install
+
+      - name: 🛠️ Build frontend assets
+        run: npm run build
+
+      - name: 📝 Create version.txt
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/}
+          echo "$VERSION" > version.txt
+
+      - name: 📝 Add changelog header
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/}
+          TODAY=$(date +'%Y-%m-%d')
+          echo "## [${VERSION}] - ${TODAY}" > changelog-header.md
+          echo "" >> changelog-header.md
+          if [ -f CHANGELOG.md ]; then
+            cat CHANGELOG.md >> changelog-header.md
+          fi
+          mv changelog-header.md CHANGELOG.md
+
+      - name: 📁 Prepare standard release zip
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/}
+          mkdir release
+          rsync -av --progress ./ ./release \
+            --exclude .git \
+            --exclude .github \
+            --exclude node_modules \
+            --exclude tests \
+            --exclude storage/logs \
+            --exclude storage/framework/cache \
+            --exclude vendor/bin
+          cp version.txt release/version.txt
+          cp .env.example release/.env.example
+
+          cd release
+          zip -r ../lakasir-${VERSION}.zip ./*
+        shell: bash
+
+      - name: 🚀 Create GitHub Pre-release with ZIP
+        uses: softprops/action-gh-release@v2
+        with:
+          name: ${{ github.ref_name }}
+          tag_name: ${{ github.ref_name }}
+          body: ${{ steps.generate_notes.outputs.result }}
+          prerelease: true
+          files: lakasir-${{ github.ref_name }}.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

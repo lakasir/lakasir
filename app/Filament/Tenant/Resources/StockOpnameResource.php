@@ -74,7 +74,7 @@ class StockOpnameResource extends Resource
             ])
             ->filters([
                 SelectFilter::make('status')
-                    ->options(StockOpnameStatus::all()),
+                    ->options(StockOpnameStatus::all()->toArray()),
                 Filter::make('date')
                     ->form([
                         DatePicker::make('start_date')

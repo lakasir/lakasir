@@ -19,4 +19,9 @@ class Report extends Page
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
 
     protected static string $view = 'filament.tenant.pages.report';
+
+    public static function canAccess(): bool
+    {
+        return can('access report');
+    }
 }

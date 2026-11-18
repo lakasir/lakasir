@@ -1,0 +1,20 @@
+{
+    "agents": [
+        "claude_code",
+        "opencode"
+    ],
+    "guidelines": true,
+    "herd_mcp": true,
+    "mcp": true,
+    "nightwatch_mcp": false,
+    "packages": [
+        "filament/filament"
+    ],
+    "sail": false,
+    "skills": [
+        "pennant-development",
+        "livewire-development",
+        "volt-development",
+        "tailwindcss-development"
+    ]
+}

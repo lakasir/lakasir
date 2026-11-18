@@ -22,6 +22,11 @@ class Printer extends Page implements HasActions, HasForms
 
     protected static string $view = 'filament.tenant.pages.printer';
 
+    public static function canAccess(): bool
+    {
+        return can('access printer');
+    }
+
     public ?array $data = [];
 
     public function mount()

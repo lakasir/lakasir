@@ -15,7 +15,9 @@ class CategorySeeder extends Seeder
      */
     public function run()
     {
-        DB::statement('SET FOREIGN_KEY_CHECKS=0');
+        if (DB::getDriverName() !== 'sqlite') {
+            DB::statement('SET FOREIGN_KEY_CHECKS=0');
+        }
         Category::truncate();
         Category::create([
             'name' => "UMUM"
