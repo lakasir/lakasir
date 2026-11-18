@@ -7,6 +7,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Warehouse\Observers\RawMaterialObserver;
 
+/**
+ * One purchased ingredient, costed the way a recipe sheet does it:
+ *
+ *   bahan | input_qty input_unit | harga_total | base_qty base_unit | harga_per_base_unit | porsi_qty porsi_satuan | harga_porsi
+ *   Ayam  | 1 kg                 | 37000       | 1000 g                | 37                  | 83.33 g               | 3083
+ *
+ * `price_per_base_unit` is the single source of truth for cost; every recipe
+ * line prices itself as `price_per_base_unit * convert(porsi_qty)`.
+ */
 #[ObservedBy([RawMaterialObserver::class])]
 class RawMaterial extends Model
 {
@@ -14,91 +23,212 @@ class RawMaterial extends Model
 
     protected $guarded = ['id'];
 
-    /**
-     * Base units each supported unit converts to, and what they measure.
-     *
-     * Mass is expressed in grams, volume in millilitres, count in pieces.
-     * `price_per_unit` is the price of one whole unit (one kg, one litre),
-     * so a recipe asking for 200 g of an kg-priced material must pay a
-     * fraction of the kg price.
-     */
-    private const UNIT_FACTORS = [
-        'kg' => ['base' => 'g', 'factor' => 1000.0],
-        'hg' => ['base' => 'g', 'factor' => 100.0],
-        'dag' => ['base' => 'g', 'factor' => 10.0],
-        'g' => ['base' => 'g', 'factor' => 1.0],
-        'mg' => ['base' => 'g', 'factor' => 0.001],
-        'l' => ['base' => 'ml', 'factor' => 1000.0],
-        'dl' => ['base' => 'ml', 'factor' => 100.0],
-        'cl' => ['base' => 'ml', 'factor' => 10.0],
-        'ml' => ['base' => 'ml', 'factor' => 1.0],
-        'pcs' => ['base' => 'pcs', 'factor' => 1.0],
-        'piece' => ['base' => 'pcs', 'factor' => 1.0],
-        'butir' => ['base' => 'pcs', 'factor' => 1.0],
-        'sachet' => ['base' => 'pcs', 'factor' => 1.0],
+    protected $casts = [
+        'input_qty' => 'float',
+        'harga_total' => 'float',
+        'base_qty' => 'float',
+        'price_per_base_unit' => 'float',
+        'quantity' => 'float',
+    ];
+
+    /** Fallback factors, used before the units table exists (migrations). */
+    public const DEFAULT_UNIT_FACTORS = [
+        'mg' => ['family' => 'mass', 'factor' => 0.001],
+        'g' => ['family' => 'mass', 'factor' => 1.0],
+        'dag' => ['family' => 'mass', 'factor' => 10.0],
+        'hg' => ['family' => 'mass', 'factor' => 100.0],
+        'kg' => ['family' => 'mass', 'factor' => 1000.0],
+        'ml' => ['family' => 'volume', 'factor' => 1.0],
+        'cl' => ['family' => 'volume', 'factor' => 10.0],
+        'dl' => ['family' => 'volume', 'factor' => 100.0],
+        'l' => ['family' => 'volume', 'factor' => 1000.0],
+        'pcs' => ['family' => 'count', 'factor' => 1.0],
+        'pack' => ['family' => 'count', 'factor' => 1.0],
+        'tabung' => ['family' => 'count', 'factor' => 1.0],
+        'masakan' => ['family' => 'count', 'factor' => 1.0],
     ];
 
     /**
-     * Units a recipe line may be expressed in, limited to those measuring the
-     * same thing as the material's own unit.
+     * Common spellings mapped onto a canonical unit name.
+     */
+    private const UNIT_ALIASES = [
+        'gram' => 'g',
+        'gr' => 'g',
+        'kilo' => 'kg',
+        'kilogram' => 'kg',
+        'liter' => 'l',
+        'litre' => 'l',
+        'mililiter' => 'ml',
+        'milliliter' => 'ml',
+        'pcs' => 'pcs',
+        'pc' => 'pcs',
+        'piece' => 'pcs',
+        'butir' => 'pcs',
+        'biji' => 'pcs',
+        'bungkus' => 'pack',
+        'sachet' => 'pcs',
+    ];
+
+    public static function normalizeUnit(?string $unit): ?string
+    {
+        if ($unit === null) {
+            return null;
+        }
+
+        $unit = strtolower(trim($unit));
+
+        return self::UNIT_ALIASES[$unit] ?? $unit;
+    }
+
+    /**
+     * How many base units make one of `$unit`, e.g. kg => 1000 grams.
+     */
+    public static function unitFactor(?string $unit): ?float
+    {
+        $unit = self::normalizeUnit($unit);
+
+        if ($unit === null) {
+            return null;
+        }
+
+        $fromTable = Unit::query()->where('name', $unit)->value('factor');
+
+        if ($fromTable !== null) {
+            return (float) $fromTable;
+        }
+
+        return self::DEFAULT_UNIT_FACTORS[$unit]['factor'] ?? null;
+    }
+
+    public static function unitFamily(?string $unit): ?string
+    {
+        $unit = self::normalizeUnit($unit);
+
+        if ($unit === null) {
+            return null;
+        }
+
+        $fromTable = Unit::query()->where('name', $unit)->value('family');
+
+        if ($fromTable !== null) {
+            return $fromTable;
+        }
+
+        return self::DEFAULT_UNIT_FACTORS[$unit]['family'] ?? null;
+    }
+
+    /**
+     * Units a recipe line may be expressed in: those measuring the same thing
+     * as this material's base unit.
      *
      * @return array<string, string>
      */
     public static function unitOptions(?int $rawMaterialId): array
     {
-        $own = RawMaterial::query()->find($rawMaterialId)?->unit;
+        $own = self::normalizeUnit(self::query()->find($rawMaterialId)?->base_unit);
+        $family = self::unitFamily($own);
 
-        if ($own === null) {
-            return [];
+        if ($own === null || $family === null) {
+            return $own === null ? [] : [$own => strtoupper($own)];
         }
 
-        $base = self::UNIT_FACTORS[strtolower(trim($own))]['base'] ?? null;
+        $options = Unit::query()
+            ->where('family', $family)
+            ->orderBy('factor')
+            ->pluck('name')
+            ->all();
 
-        if ($base === null) {
-            return [$own => strtoupper($own)];
+        if ($options === []) {
+            $options = array_keys(array_filter(
+                self::DEFAULT_UNIT_FACTORS,
+                fn (array $definition) => $definition['family'] === $family,
+            ));
         }
 
-        $options = [];
-
-        foreach (self::UNIT_FACTORS as $unit => $definition) {
-            if ($definition['base'] === $base) {
-                $options[$unit] = strtoupper($unit);
-            }
-        }
-
-        return $options;
+        return collect($options)
+            ->mapWithKeys(fn (string $unit) => [$unit => strtoupper($unit)])
+            ->all();
     }
 
     /**
-     * Cost of a recipe line, converting the quantity into the material's
-     * own unit first.
+     * Convert `$quantity` from `$fromUnit` into this material's base unit.
      *
-     * `$quantity` is expressed in `$unit`, defaulting to the material's own
-     * unit so existing recipes that stored a bare quantity keep working.
+     * Returns null when the units cannot be reconciled, so callers can refuse
+     * to price rather than inventing a number.
      */
-    public function costFor(float $quantity, ?string $unit = null): float
+    public function toBaseUnits(float $quantity, ?string $fromUnit): ?float
     {
-        return (float) $this->price_per_unit * $this->toUnits($quantity, $unit ?? $this->unit);
+        $from = self::unitFactor($fromUnit);
+        $to = self::unitFactor($this->base_unit);
+
+        if ($from === null || $to === null || $to == 0.0) {
+            return null;
+        }
+
+        if (self::unitFamily($fromUnit) !== self::unitFamily($this->base_unit)) {
+            return null;
+        }
+
+        return $quantity * $from / $to;
     }
 
     /**
-     * Convert `$quantity` from `$fromUnit` into the material's own unit.
+     * Cost of one recipe line: porsi of this material, in `$unit`.
      *
-     * When either unit is unknown or the two measure different things there
-     * is no safe conversion, so the quantity is returned unchanged; that is
-     * the previous behaviour and keeps misconfigured data from silently
-     * changing price by a magic factor.
+     * Returns null when the unit is incompatible with the material, which the
+     * form surfaces as a validation error instead of a wrong price.
      */
-    public function toUnits(float $quantity, string $fromUnit): float
+    public function costFor(float $quantity, ?string $unit = null): ?float
     {
-        $from = self::UNIT_FACTORS[strtolower(trim($fromUnit))] ?? null;
-        $to = self::UNIT_FACTORS[strtolower(trim((string) $this->unit))] ?? null;
+        $unit ??= $this->base_unit;
 
-        if ($from === null || $to === null || $from['base'] !== $to['base']) {
-            return $quantity;
+        $inBase = $this->toBaseUnits($quantity, $unit);
+
+        if ($inBase === null) {
+            return null;
         }
 
-        return $quantity * $from['factor'] / $to['factor'];
+        return (float) $this->price_per_base_unit * $inBase;
+    }
+
+    /**
+     * Recompute base quantity and unit price from the purchase figures.
+     *
+     * @return bool whether the purchase could be costed
+     */
+    public function recalculateBaseUnitPrice(): bool
+    {
+        $baseUnit = $this->base_unit
+            ?: self::baseUnitFor(self::unitFamily($this->input_unit))
+            ?: 'pcs';
+
+        // A package declares its own unpacked size (1 pack = 24 pcs); anything
+        // else derives it from the unit factor (1 kg = 1000 g).
+        $override = $this->base_quantity_override;
+        $factor = self::unitFactor($this->input_unit);
+
+        $baseQty = $override !== null && (float) $override > 0
+            ? (float) $override
+            : ($factor !== null ? (float) $this->input_qty * $factor : null);
+
+        if ($baseQty === null || $baseQty <= 0 || (float) $this->harga_total <= 0) {
+            return false;
+        }
+
+        $this->base_qty = $baseQty;
+        $this->base_unit = $baseUnit;
+        $this->price_per_base_unit = (float) $this->harga_total / $baseQty;
+
+        return true;
+    }
+
+    public static function baseUnitFor(?string $family): ?string
+    {
+        return match ($family) {
+            'mass' => 'g',
+            'volume' => 'ml',
+            'count' => 'pcs',
+            default => null,
+        };
     }
 }
-

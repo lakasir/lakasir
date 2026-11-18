@@ -5,6 +5,8 @@ namespace Modules\Warehouse\Filament\Resources;
 use App\Models\Tenants\Profile;
 use App\Models\Tenants\Setting;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Get;
+use Filament\Forms\Set;
 use Filament\Forms\Form;
 use Filament\Support\RawJs;
 use Filament\Tables;
@@ -20,6 +22,43 @@ class RawMaterialResource extends ModuleResource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    /**
+     * Derive the base-unit figures from the purchase, mirroring the
+     * `base_qty = input_qty * factor` and `price_per_base_unit = harga_total / base_qty`
+     * columns of a recipe sheet.
+     */
+    private static function syncBasePricing(Get $get, Set $set): void
+    {
+        $factor = RawMaterial::unitFactor($get('input_unit'));
+        $inputQty = (float) $get('input_qty');
+        $hargaTotal = (float) $get('harga_total');
+
+        if ($inputQty <= 0) {
+            $set('base_qty', null);
+            $set('base_unit', null);
+            $set('price_per_base_unit', null);
+
+            return;
+        }
+
+        $override = $get('base_quantity_override');
+        $baseQty = $override !== null && (float) $override > 0
+            ? (float) $override
+            : ($factor !== null ? $inputQty * $factor : null);
+
+        if ($baseQty === null) {
+            $set('base_qty', null);
+            $set('base_unit', null);
+            $set('price_per_base_unit', null);
+
+            return;
+        }
+
+        $set('base_qty', $baseQty);
+        $set('base_unit', RawMaterial::baseUnitFor(RawMaterial::unitFamily($get('input_unit'))) ?? 'pcs');
+        $set('price_per_base_unit', $hargaTotal > 0 ? $hargaTotal / $baseQty : null);
+    }
+
     public static function getForm(): array
     {
         return [
@@ -32,19 +71,65 @@ class RawMaterialResource extends ModuleResource
                 )
                 ->hint(__('Leave it blank to auto generate'))
                 ->translateLabel(),
-            TextInput::make('quantity')
-                ->translateLabel()
+
+            TextInput::make('input_qty')
+                ->label(__('Purchase quantity'))
+                ->helperText(__('How much you bought, e.g. 1 for 1 kg, 25 for 25 kg'))
                 ->numeric()
+                ->minValue(0)
+                ->live(onBlur: true)
+                ->afterStateUpdated(fn (Get $get, Set $set) => self::syncBasePricing($get, $set))
+                ->columnSpan(1)
                 ->required(),
-            TextInput::make('unit')
-                ->translateLabel()
+            TextInput::make('input_unit')
+                ->label(__('Purchase unit'))
+                ->helperText(__('kg, g, l, ml, pcs, pack, tabung, masakan…'))
+                ->live(onBlur: true)
+                ->afterStateUpdated(fn (Get $get, Set $set) => self::syncBasePricing($get, $set))
+                ->columnSpan(1)
                 ->required(),
-            TextInput::make('price_per_unit')
-                ->translateLabel()
+            TextInput::make('harga_total')
+                ->label(__('Total price paid'))
                 ->mask(RawJs::make('$money($input)'))
                 ->stripCharacters(',')
                 ->numeric()
                 ->prefix(Setting::get('currency', 'IDR'))
+                ->live(onBlur: true)
+                ->afterStateUpdated(fn (Get $get, Set $set) => self::syncBasePricing($get, $set))
+                ->columnSpan(1)
+                ->required(),
+
+            TextInput::make('base_quantity_override')
+                ->label(__('Unpacked quantity (for packs)'))
+                ->helperText(__('Only for packaged goods: how many base units one purchase yields, e.g. 1 pack = 24 pcs. Leave blank for kg/g/l/ml.'))
+                ->numeric()
+                ->live(onBlur: true)
+                ->afterStateUpdated(fn (Get $get, Set $set) => self::syncBasePricing($get, $set))
+                ->columnSpan(1),
+            TextInput::make('base_qty')
+                ->label(__('Quantity in base unit'))
+                ->disabled()
+                ->dehydrated()
+                ->numeric()
+                ->columnSpan(1),
+            TextInput::make('base_unit')
+                ->label(__('Base unit'))
+                ->disabled()
+                ->dehydrated()
+                ->columnSpan(1),
+            TextInput::make('price_per_base_unit')
+                ->label(__('Price per base unit'))
+                ->disabled()
+                ->dehydrated()
+                ->numeric()
+                ->prefix(Setting::get('currency', 'IDR'))
+                ->columnSpan(1),
+
+            TextInput::make('quantity')
+                ->label(__('Stock on hand'))
+                ->helperText(__('In the base unit shown above'))
+                ->translateLabel()
+                ->numeric()
                 ->required(),
         ];
     }
@@ -66,11 +151,30 @@ class RawMaterialResource extends ModuleResource
                     ->searchable()
                     ->translateLabel(),
                 TextColumn::make('quantity')
-                    ->translateLabel(),
-                TextColumn::make('unit')
-                    ->translateLabel(),
-                TextColumn::make('price_per_unit')
-                    ->translateLabel()
+                    ->label(__('Stock on hand'))
+                    ->suffix(fn (RawMaterial $record) => ' '.str($record->base_unit)->upper()),
+                TextColumn::make('purchase')
+                    ->label(__('Purchase'))
+                    ->getStateUsing(fn (RawMaterial $record) => sprintf(
+                        '%s %s',
+                        (float) $record->input_qty,
+                        str($record->input_unit)->upper(),
+                    )),
+                TextColumn::make('harga_total')
+                    ->label(__('Total price'))
+                    ->money(
+                        currency: Setting::get('currency', 'IDR'),
+                        locale: Profile::get()->locale
+                    ),
+                TextColumn::make('base_qty')
+                    ->label(__('Base quantity'))
+                    ->getStateUsing(fn (RawMaterial $record) => sprintf(
+                        '%s %s',
+                        (float) $record->base_qty,
+                        str($record->base_unit)->upper(),
+                    )),
+                TextColumn::make('price_per_base_unit')
+                    ->label(__('Price per base unit'))
                     ->money(
                         currency: Setting::get('currency', 'IDR'),
                         locale: Profile::get()->locale

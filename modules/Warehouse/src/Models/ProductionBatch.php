@@ -14,16 +14,25 @@ class ProductionBatch extends Model
 
     protected $guarded = ['id'];
 
+    /**
+     * HPP for one produced unit: the whole batch cost spread over the batch.
+     */
+    public function hppPerUnit(): Attribute
+    {
+        return Attribute::get(fn () => $this->grand_total_cost / max(1, (int) $this->quantity_produced));
+    }
+
     public function estimationSellingPrice(): Attribute
     {
-        $totalCost = $this->total_cost + $this->added_cost;
-        $sellingPrice = $totalCost + ($totalCost + $this->margin / 100);
+        return Attribute::get(function () {
+            $sellingPrice = $this->hpp_per_unit * (1 + $this->margin / 100);
 
-        if ($this->complete_price) {
-            $sellingPrice = ceil($sellingPrice / 500) * 500;
-        }
+            if ($this->complete_price) {
+                $sellingPrice = ceil($sellingPrice / 500) * 500;
+            }
 
-        return Attribute::get(fn () => $sellingPrice);
+            return $sellingPrice;
+        });
     }
 
     public function grandTotalCost(): Attribute

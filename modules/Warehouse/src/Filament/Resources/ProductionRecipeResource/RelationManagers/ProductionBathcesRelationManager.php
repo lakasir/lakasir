@@ -84,8 +84,13 @@ class ProductionBathcesRelationManager extends RelationManager
                             if ($data['status'] == ProductionBatchType::finished) {
                                 $product = Product::find($productionBatch->product_id);
                                 foreach ($product->productionRecipeItems as $productRecipe) {
-                                    $totalMaterialUsed = $productRecipe->quantity_required * $productionBatch->quantity_produced;
+                                    $recipeUnit = $productRecipe->quantity_unit ?? $productRecipe->rawMaterial->base_unit;
+                                    $perUnit = $productRecipe->rawMaterial->toBaseUnits((float) $productRecipe->quantity_required, $recipeUnit) ?? 0;
+                                    $totalMaterialUsed = $perUnit * $productionBatch->quantity_produced;
                                     $rawMaterial = $productRecipe->rawMaterial;
+                                    $qtyProduced = max(1, (int) $productionBatch->quantity_produced);
+                                    $hppPerUnit = ($productionBatch->total_cost + $productionBatch->added_cost) / $qtyProduced;
+
                                     $rawMaterial->update([
                                         'quantity' => $rawMaterial->quantity - $totalMaterialUsed,
                                     ]);
@@ -93,7 +98,7 @@ class ProductionBathcesRelationManager extends RelationManager
                                 $stock = $stockService->create([
                                     'stock' => $productionBatch->quantity_produced,
                                     'is_ready' => true,
-                                    'initial_price' => $productionBatch->total_cost,
+                                    'initial_price' => $hppPerUnit,
                                     'selling_price' => $productionBatch->estimation_selling_price,
                                     'product_id' => $product->id,
                                 ]);

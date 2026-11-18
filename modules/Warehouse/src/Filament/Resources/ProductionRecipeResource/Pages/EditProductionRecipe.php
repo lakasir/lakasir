@@ -38,7 +38,7 @@ class EditProductionRecipe extends EditRecord
                                 ->options(RawMaterial::pluck('name', 'id'))
                                 ->live()
                                 ->suffix(function (Get $get) {
-                                    return RawMaterial::find($get('raw_material_id'))?->unit;
+                                    return RawMaterial::find($get('raw_material_id'))?->base_unit;
                                 })
                                 ->searchable(),
                             TextInput::make('quantity_required'),
