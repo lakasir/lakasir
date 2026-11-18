@@ -98,40 +98,12 @@ class ProductObserver extends AbstractObserver implements DataAwareRule
             'is_ready' => true,
         ]);
 
-        Event::dispatch(new ProductCreated($product, $this->moduleData($product)));
+        Event::dispatch(new ProductCreated($product));
     }
 
     public function updated(Product $product): void
     {
-        Event::dispatch(new ProductUpdated($product, $this->moduleData($product)));
+        Event::dispatch(new ProductUpdated($product));
     }
 
-    private function moduleData(Product $product): array
-    {
-        $data = request()->all();
-
-        foreach (getModules() as $modulePath) {
-            $composerFile = $modulePath.'/composer.json';
-
-            if (! is_file($composerFile)) {
-                continue;
-            }
-
-            $packageName = json_decode(file_get_contents($composerFile), true)['name'] ?? null;
-
-            if ($packageName === null) {
-                continue;
-            }
-
-            $statePath = Str::of($packageName)->snake('-')->lower()->value();
-            $recipes = array_values(array_filter(
-                (array) request()->input($statePath.'.recipes', []),
-                fn ($recipe) => ! empty($recipe['raw_material_id']),
-            ));
-
-            $data[$packageName] = ['recipes' => $recipes];
-        }
-
-        return $data;
-    }
 }

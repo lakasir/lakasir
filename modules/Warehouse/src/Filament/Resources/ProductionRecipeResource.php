@@ -70,7 +70,6 @@ class ProductionRecipeResource extends ModuleResource
             'index' => Pages\ListProductionRecipes::route('/'),
             'create' => Pages\CreateProductionRecipe::route('/create'),
             'view' => Pages\ViewProductionRecipe::route('/{record}'),
-            'edit' => Pages\EditProductionRecipe::route('/{record}/edit'),
         ];
     }
 }

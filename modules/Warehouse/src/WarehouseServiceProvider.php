@@ -2,31 +2,22 @@
 
 namespace Modules\Warehouse;
 
-use Illuminate\Support\Facades\Event;
-use Lakasir\LakasirModule\Events\ProductCreated;
-use Lakasir\LakasirModule\Events\ProductUpdated;
 use Lakasir\LakasirModule\Providers\ExtendModuleServiceProvider;
-use Modules\Warehouse\Models\ProductionRecipeItem;
 
+/**
+ * Recipes are now managed entirely from the Production Recipes menu
+ * (`/member/modules/warehouse/production-recipe`), not from the product form.
+ *
+ * This provider used to listen for ProductCreated/ProductUpdated and
+ * delete-and-recreate every recipe line from the event payload. With the
+ * product form no longer carrying recipe state that listener would wipe a
+ * product's recipe on every save, so it is gone.
+ */
 class WarehouseServiceProvider extends ExtendModuleServiceProvider
 {
     public function register()
     {
         parent::register();
-
-        Event::listen([ProductCreated::class, ProductUpdated::class], function (ProductCreated|ProductUpdated $event) {
-            $recipes = $event->data[getPackageModuleName('Warehouse')]['recipes'];
-            ProductionRecipeItem::whereProductId($event->product->id)->delete();
-
-            foreach ($recipes as $recipe) {
-                ProductionRecipeItem::query()->create([
-                    'product_id' => $event->product->id,
-                    'quantity_required' => $recipe['quantity_required'],
-                    'raw_material_id' => $recipe['raw_material_id'],
-                    'quantity_unit' => $recipe['quantity_unit'] ?? null,
-                ]);
-            }
-        });
     }
 
     public static function getTitle(): string
