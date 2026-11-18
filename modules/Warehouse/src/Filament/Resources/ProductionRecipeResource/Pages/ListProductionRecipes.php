@@ -10,10 +10,11 @@ class ListProductionRecipes extends ListRecords
 {
     protected static string $resource = ProductionRecipeResource::class;
 
-    // protected function getHeaderActions(): array
-    // {
-    //     return [
-    //         Actions\CreateAction::make(),
-    //     ];
-    // }
+    protected function getHeaderActions(): array
+    {
+        return [
+            Actions\CreateAction::make()
+                ->label(__('Add recipe')),
+        ];
+    }
 }
