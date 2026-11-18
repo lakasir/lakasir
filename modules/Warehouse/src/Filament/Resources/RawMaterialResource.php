@@ -11,9 +11,12 @@ use Filament\Forms\Form;
 use Filament\Support\RawJs;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Notifications\Notification;
 use Filament\Tables\Table;
+use Illuminate\Support\Collection;
 use Lakasir\LakasirModule\Abstracts\ModuleResource;
 use Modules\Warehouse\Filament\Resources\RawMaterialResource\Pages;
+use Modules\Warehouse\Models\ProductionRecipeItem;
 use Modules\Warehouse\Models\RawMaterial;
 use Modules\Warehouse\Support\Money;
 
@@ -184,13 +187,43 @@ class RawMaterialResource extends ModuleResource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\DeleteAction::make()
+                    ->disabled(fn (RawMaterial $record) => self::isUsedInRecipe($record))
+                    ->tooltip(fn (RawMaterial $record) => self::isUsedInRecipe($record)
+                        ? __('Used by a product recipe; remove it there first')
+                        : null),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()
+                        ->before(function (Tables\Actions\DeleteBulkAction $action, Collection $records) {
+                            $used = $records->filter(fn (RawMaterial $record) => self::isUsedInRecipe($record));
+
+                            if ($used->isEmpty()) {
+                                return;
+                            }
+
+                            Notification::make()
+                                ->danger()
+                                ->title(__('Some raw materials are used by product recipes'))
+                                ->body($used->pluck('name')->implode(', '))
+                                ->send();
+
+                            $action->cancel();
+                        }),
                 ]),
             ]);
+    }
+
+    /**
+     * A material referenced by a recipe line cannot be deleted: the foreign
+     * key would fail and the user would see a raw SQL error.
+     */
+    private static function isUsedInRecipe(RawMaterial $record): bool
+    {
+        return ProductionRecipeItem::query()
+            ->where('raw_material_id', $record->getKey())
+            ->exists();
     }
 
     public static function getRelations(): array
