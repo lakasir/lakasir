@@ -2,7 +2,10 @@
     "name": "laravel/laravel",
     "type": "project",
     "description": "The Laravel Framework.",
-    "keywords": ["framework", "laravel"],
+    "keywords": [
+        "framework",
+        "laravel"
+    ],
     "license": "GPL-3.0-only",
     "require": {
         "php": "^8.4",
@@ -13,6 +16,7 @@
         "guzzlehttp/guzzle": "^7.2",
         "kreait/laravel-firebase": "^5.8",
         "lakasir/has-crud-action": "dev-main",
+        "lakasir/lakasir-module": "*",
         "laravel-notification-channels/fcm": "^4.3",
         "laravel/framework": "^11.9",
         "laravel/pennant": "^1.8",
@@ -48,7 +52,9 @@
         "psr-4": {
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
-            "Database\\Seeders\\": "database/seeders/"
+            "Database\\Seeders\\": "database/seeders/",
+            "Modules\\": "modules/",
+            "Modules\\Warehouse\\": "modules/Warehouse/src"
         },
         "files": [
             "app/helpers.php"
@@ -91,6 +97,13 @@
             "pestphp/pest-plugin": true
         }
     },
-    "minimum-stability": "stable",
-    "prefer-stable": true
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "repositories": [
+        {
+            "name": "lakasir-module",
+            "type": "vcs",
+            "url": "https://github.com/lakasir/lakasir-module"
+        }
+    ]
 }

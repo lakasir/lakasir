@@ -190,7 +190,16 @@ return [
      */
     'migration_parameters' => [
         '--force' => true, // This needs to be true to run migrations in production.
-        '--path' => [database_path('migrations/tenant')],
+        '--path' => [
+            database_path('migrations/tenant'),
+            ...array_values(array_filter(
+                array_map(
+                    fn (string $dir) => $dir.'/database/migrations',
+                    is_dir(base_path('modules')) ? glob(base_path('modules').'/*', GLOB_ONLYDIR) : [],
+                ),
+                fn (string $path) => is_dir($path),
+            )),
+        ],
         '--realpath' => true,
     ],
 

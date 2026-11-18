@@ -7,7 +7,10 @@ use App\Models\Tenants\Barcode;
 use App\Models\Tenants\Product;
 use App\Services\Tenants\StockService;
 use Illuminate\Contracts\Validation\DataAwareRule;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Str;
+use Lakasir\LakasirModule\Events\ProductCreated;
+use Lakasir\LakasirModule\Events\ProductUpdated;
 use Laravel\Pennant\Feature;
 
 class ProductObserver extends AbstractObserver implements DataAwareRule
@@ -94,5 +97,41 @@ class ProductObserver extends AbstractObserver implements DataAwareRule
             'expired' => $this->data['expired'] ?? null,
             'is_ready' => true,
         ]);
+
+        Event::dispatch(new ProductCreated($product, $this->moduleData($product)));
+    }
+
+    public function updated(Product $product): void
+    {
+        Event::dispatch(new ProductUpdated($product, $this->moduleData($product)));
+    }
+
+    private function moduleData(Product $product): array
+    {
+        $data = request()->all();
+
+        foreach (getModules() as $modulePath) {
+            $composerFile = $modulePath.'/composer.json';
+
+            if (! is_file($composerFile)) {
+                continue;
+            }
+
+            $packageName = json_decode(file_get_contents($composerFile), true)['name'] ?? null;
+
+            if ($packageName === null) {
+                continue;
+            }
+
+            $statePath = Str::of($packageName)->snake('-')->lower()->value();
+            $recipes = array_values(array_filter(
+                (array) request()->input($statePath.'.recipes', []),
+                fn ($recipe) => ! empty($recipe['raw_material_id']),
+            ));
+
+            $data[$packageName] = ['recipes' => $recipes];
+        }
+
+        return $data;
     }
 }

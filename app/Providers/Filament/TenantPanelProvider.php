@@ -57,6 +57,7 @@ use Filament\Support\Assets\Js;
 use Filament\Support\Colors\Color;
 use Filament\Support\Facades\FilamentView;
 use Filament\View\PanelsRenderHook;
+use Lakasir\LakasirModule\LakasirModulePlugin;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -90,6 +91,7 @@ class TenantPanelProvider extends PanelProvider
         $url = request()->getHost();
         if ($this->isCentralDomainConfigured()) {
             $this->initializeTenantPanel($panel, $url);
+            $panel->plugin(LakasirModulePlugin::make());
         } else {
             $this->initializeDefaultPanel($panel);
         }

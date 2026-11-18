@@ -1,0 +1,21 @@
+{
+    "name": "lakasir/warehouse",
+    "autoload": {
+        "psr-4": {
+            "Modules\\Warehouse\\": "src",
+            "Modules\\Warehouse\\Database\\Factories\\": "database/factories",
+            "Modules\\Warehouse\\Database\\Seeders\\": "database/seeders"
+        }
+    },
+    "authors": [
+        {
+            "name": "lakasir",
+            "email": "lakasirapp@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "version": "1.0.0",
+    "require": {
+        "sheenazien8/konstantiq": "^1.0"
+    }
+}

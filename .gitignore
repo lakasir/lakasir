@@ -37,3 +37,8 @@ version.txt
 .env.before_lerd
 .mcp.json
 .lerd.yaml
+
+# Module dependencies (installed per-module by the module loader)
+/modules/*/vendor
+/modules/*/node_modules
+/modules/*/composer.lock

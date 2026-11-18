@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3e1c5a7565ff7592c595fe4ad157e01d",
+    "content-hash": "04d3d936495c483ae56a0186bbd39c19",
     "packages": [
         {
             "name": "anourvalar/eloquent-serialize",
@@ -3750,6 +3750,83 @@
                 "source": "https://github.com/lakasir/has-crud-action/tree/main"
             },
             "time": "2024-09-19T12:41:14+00:00"
+        },
+        {
+            "name": "lakasir/lakasir-module",
+            "version": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/lakasir/lakasir-module.git",
+                "reference": "b50dddcfdde6599828381dfb733e3dfe4042e03b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/lakasir/lakasir-module/zipball/b50dddcfdde6599828381dfb733e3dfe4042e03b",
+                "reference": "b50dddcfdde6599828381dfb733e3dfe4042e03b",
+                "shasum": ""
+            },
+            "require": {
+                "filament/filament": "^3.2",
+                "illuminate/support": "^11.9",
+                "php": "^8.1"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^9.4",
+                "phpunit/phpunit": "^10.5"
+            },
+            "default-branch": true,
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Lakasir\\LakasirModule\\LakasirModuleServiceProvider"
+                    ],
+                    "aliases": {
+                        "LakasirModule": "Lakasir\\LakasirModule\\LakasirModuleFacade"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Lakasir\\LakasirModule\\": "src"
+                },
+                "files": [
+                    "src/helpers.php"
+                ]
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Lakasir\\LakasirModule\\Tests\\": "tests"
+                }
+            },
+            "scripts": {
+                "test": [
+                    "vendor/bin/phpunit"
+                ],
+                "test-coverage": [
+                    "vendor/bin/phpunit --coverage-html coverage"
+                ]
+            },
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Lakasir",
+                    "email": "lakasirapp@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "homepage": "https://github.com/lakasir/lakasir-module",
+            "keywords": [
+                "lakasir",
+                "lakasir-module"
+            ],
+            "support": {
+                "source": "https://github.com/lakasir/lakasir-module/tree/main",
+                "issues": "https://github.com/lakasir/lakasir-module/issues"
+            },
+            "time": "2024-10-25T10:29:22+00:00"
         },
         {
             "name": "laracraft-tech/laravel-date-scopes",
@@ -17097,7 +17174,7 @@
         }
     ],
     "aliases": [],
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "stability-flags": {
         "lakasir/has-crud-action": 20
     },

@@ -28,6 +28,7 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Lakasir\LakasirModule\Forms\ExtendModuleForm;
 use Laravel\Pennant\Feature;
 
 class ProductResource extends Resource
@@ -185,6 +186,7 @@ class ProductResource extends Resource
             $this->generateTypeFormComponent()
                 ->columnSpan(1),
             $this->generateNonStockFormComponent(),
+            ...ExtendModuleForm::make('Product'),
         ];
     }
 
