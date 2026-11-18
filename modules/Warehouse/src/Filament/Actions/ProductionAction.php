@@ -107,7 +107,7 @@ class ProductionAction
                 ->live()
                 ->label(__('Warehouse::app.production_batches.complete_price_placeholder')),
             Placeholder::make('hpp_placeholder_content')
-                ->content(function (Get $get) use ($porsiCost) {
+                ->content(function (Get $get) use ($porsiCost, $product) {
                     $qty = max(1, (int) $get('quantity_produced'));
                     $batchCost = ($porsiCost * $qty) + Money::toFloat($get('added_cost'));
 
@@ -118,7 +118,7 @@ class ProductionAction
                 })
                 ->label(__('HPP per unit')),
             Placeholder::make('total_cost_placeholder_content')
-                ->content(function (Get $get) use ($porsiCost) {
+                ->content(function (Get $get) use ($porsiCost, $product) {
                     $qty = max(1, (int) $get('quantity_produced'));
                     $totalCost = ($porsiCost * $qty) + Money::toFloat($get('added_cost'));
                     $hpp = $totalCost / $qty;

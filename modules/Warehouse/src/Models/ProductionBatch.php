@@ -14,6 +14,39 @@ class ProductionBatch extends Model
 
     protected $guarded = ['id'];
 
+    protected $casts = [
+        'quantity_produced' => 'integer',
+        'total_cost' => 'float',
+        'added_cost' => 'float',
+        'margin' => 'float',
+        'complete_price' => 'boolean',
+    ];
+
+    protected static function booted(): void
+    {
+        static::creating(function (ProductionBatch $batch) {
+            if (blank($batch->code)) {
+                $batch->code = self::nextCode();
+            }
+        });
+    }
+
+    /**
+     * Batch codes follow BATCH-0001 style, continuing from the highest
+     * existing one so deleted batches do not cause collisions.
+     */
+    public static function nextCode(): string
+    {
+        $last = self::query()
+            ->where('code', 'like', 'BATCH-%')
+            ->orderByRaw('CAST(SUBSTRING(code, 7) AS UNSIGNED) DESC')
+            ->value('code');
+
+        $next = $last ? ((int) substr($last, 6)) + 1 : 1;
+
+        return 'BATCH-'.str_pad((string) $next, 4, '0', STR_PAD_LEFT);
+    }
+
     /**
      * HPP for one produced unit: the whole batch cost spread over the batch.
      */
