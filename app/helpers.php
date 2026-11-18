@@ -54,3 +54,14 @@ if (! function_exists('price_format')) {
         );
     }
 }
+
+if (! function_exists('module_plugin_exist')) {
+    /**
+     * Whether the lakasir-module runtime is installed, mirroring the check
+     * PR #222 used. Gates the module navigation entry and module hooks.
+     */
+    function module_plugin_exist(): bool
+    {
+        return class_exists(\Lakasir\LakasirModule\Events\TransactionSucceed::class);
+    }
+}

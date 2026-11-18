@@ -17,6 +17,7 @@ use App\Filament\Tenant\Pages\CartItem;
 use App\Filament\Tenant\Pages\Cashier;
 use App\Filament\Tenant\Pages\CashierReport;
 use App\Filament\Tenant\Pages\GeneralSetting;
+use App\Filament\Tenant\Pages\Modules;
 use App\Filament\Tenant\Pages\POS;
 use App\Filament\Tenant\Pages\Printer;
 use App\Filament\Tenant\Pages\ProductReport;
@@ -51,6 +52,7 @@ use Filament\Navigation\NavigationItem;
 use Filament\Pages;
 use Filament\Pages\Page;
 use Filament\Panel;
+use Filament\Facades\Filament;
 use Filament\PanelProvider;
 use Filament\Resources\Resource;
 use Filament\Support\Assets\Js;
@@ -205,6 +207,7 @@ class TenantPanelProvider extends PanelProvider
             NavigationGroup::make(__('Setting'))->collapsible(false)->items([
                 $this->generateNavigationItem(GeneralSetting::class),
                 $this->generateNavigationItem(Printer::class),
+                ...(module_plugin_exist() ? [$this->generateModulesNavigationItem()] : []),
             ]),
         ];
     }
@@ -318,5 +321,22 @@ class TenantPanelProvider extends PanelProvider
             ->icon($resource::getNavigationIcon())
             ->isActiveWhen(fn (): bool => $active)
             ->url(fn (): string => $resource::getUrl());
+    }
+
+    /**
+     * The modules page lives under the panel path. Its named route is only
+     * registered once the tenant panel finishes booting, which happens after
+     * the sidebar renders, so build the URL from the panel path instead of
+     * resolving it through the router.
+     */
+    private function generateModulesNavigationItem(): NavigationItem
+    {
+        $url = '/'.trim(Filament::getPanel('tenant')->getPath(), '/').'/'.Modules::getSlug();
+
+        return NavigationItem::make(Modules::getNavigationLabel())
+            ->visible(Modules::canAccess())
+            ->icon(Modules::getNavigationIcon())
+            ->isActiveWhen(fn (): bool => request()->is(ltrim($url, '/').'*'))
+            ->url($url);
     }
 }
