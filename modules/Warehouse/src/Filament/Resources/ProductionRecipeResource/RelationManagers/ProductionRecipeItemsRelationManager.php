@@ -28,6 +28,12 @@ class ProductionRecipeItemsRelationManager extends RelationManager
                 ->live(debounce: 500)
                 ->searchable()
                 ->options(fn (?ProductionRecipeItem $record, ?RelationManager $livewire) => self::availableRawMaterials($record, $livewire))
+                ->rule(fn (?ProductionRecipeItem $record, ?RelationManager $livewire) => function (string $attribute, $value, \Closure $fail) use ($record, $livewire) {
+                    if (self::isAlreadyOnRecipe((int) $value, $record, $livewire)) {
+                        $fail(__('This raw material is already on the recipe.'));
+                    }
+                })
+                ->required()
                 ->createOptionForm(RawMaterialResource::getForm())
                 ->createOptionUsing(function (array $data) {
                     return RawMaterial::create($data)->id;
@@ -95,6 +101,24 @@ class ProductionRecipeItemsRelationManager extends RelationManager
     }
 
     /**
+     * Whether a material already has a line on the recipe being edited.
+     */
+    private static function isAlreadyOnRecipe(int $rawMaterialId, ?ProductionRecipeItem $record, mixed $livewire): bool
+    {
+        $productId = $livewire?->getOwnerRecord()?->getKey();
+
+        if (! $productId) {
+            return false;
+        }
+
+        return ProductionRecipeItem::query()
+            ->where('product_id', $productId)
+            ->where('raw_material_id', $rawMaterialId)
+            ->when($record?->exists, fn ($query) => $query->whereKeyNot($record->getKey()))
+            ->exists();
+    }
+
+    /**
      * Raw materials that may still be added to this product's recipe.
      *
      * A material already on the recipe is filtered out so the same ingredient
@@ -102,6 +126,22 @@ class ProductionRecipeItemsRelationManager extends RelationManager
      *
      * @return array<int|string, string>
      */
+    /**
+     * Turn a duplicate-material insert into a field error instead of letting
+     * the unique index surface as a 500.
+     */
+    public function create(): void
+    {
+        try {
+            parent::create();
+        } catch (\Illuminate\Database\UniqueConstraintViolationException) {
+            \Filament\Notifications\Notification::make()
+                ->danger()
+                ->title(__('This raw material is already on the recipe.'))
+                ->send();
+        }
+    }
+
     private static function availableRawMaterials(?ProductionRecipeItem $record, mixed $livewire): array
     {
         $productId = $livewire?->getOwnerRecord()?->getKey();

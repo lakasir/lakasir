@@ -40,6 +40,7 @@ class CreateProductionRecipe extends CreateRecord
                 ->addActionLabel(__('Add to recipes'))
                 ->minItems(1)
                 ->required()
+                ->distinct()
                 ->schema(ProductionRecipeItemsRelationManager::getDefaultForm())
                 ->columnSpanFull(),
         ]);
