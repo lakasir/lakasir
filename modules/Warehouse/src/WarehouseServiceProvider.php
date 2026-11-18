@@ -23,6 +23,7 @@ class WarehouseServiceProvider extends ExtendModuleServiceProvider
                     'product_id' => $event->product->id,
                     'quantity_required' => $recipe['quantity_required'],
                     'raw_material_id' => $recipe['raw_material_id'],
+                    'quantity_unit' => $recipe['quantity_unit'] ?? null,
                 ]);
             }
         });

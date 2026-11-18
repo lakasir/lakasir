@@ -53,8 +53,10 @@ class ProductionAction
 
         /** @var ProductionRecipeItem $productionRecipeItem */
         foreach ($product->productionRecipeItems as $productionRecipeItem) {
-            $costPerRawMaterial = $productionRecipeItem->rawMaterial->price_per_unit * $productionRecipeItem->quantity_required;
-            $praTotalCost += $costPerRawMaterial;
+            $praTotalCost += $productionRecipeItem->rawMaterial?->costFor(
+                (float) $productionRecipeItem->quantity_required,
+                $productionRecipeItem->quantity_unit ?? $productionRecipeItem->rawMaterial->unit,
+            ) ?? 0;
         }
 
         return [

@@ -37,17 +37,42 @@ class ProductionRecipeItemsRelationManager extends RelationManager
                     $unit = RawMaterial::query()
                         ->find($get('raw_material_id'));
 
-                    return str($unit?->unit)?->upper();
+                    return str($get('quantity_unit') ?? $unit?->unit)?->upper();
                 })
                 ->live()
                 ->numeric()
                 ->afterStateUpdated(function ($get, $set, $state) {
                     $rawMaterial = RawMaterial::find($get('raw_material_id'));
-                    $costPerRaw = $rawMaterial->price_per_unit * $state;
 
-                    $set('price_per_need', $costPerRaw);
+                    if (! $rawMaterial) {
+                        return;
+                    }
+
+                    $set('price_per_need', $rawMaterial->costFor(
+                        (float) $state,
+                        $get('quantity_unit') ?? $rawMaterial->unit,
+                    ));
                 })
                 ->required(),
+            Select::make('quantity_unit')
+                ->label(__('Unit'))
+                ->options(fn (Get $get) => RawMaterial::unitOptions($get('raw_material_id')))
+                ->default(function (Get $get) {
+                    return RawMaterial::find($get('raw_material_id'))?->unit;
+                })
+                ->live()
+                ->afterStateUpdated(function ($get, $set, $state) {
+                    $rawMaterial = RawMaterial::find($get('raw_material_id'));
+
+                    if (! $rawMaterial) {
+                        return;
+                    }
+
+                    $set('price_per_need', $rawMaterial->costFor(
+                        (float) $get('quantity_required'),
+                        $state,
+                    ));
+                }),
             PriceInput::make('price_per_need')
                 ->readOnly(),
 
@@ -71,9 +96,14 @@ class ProductionRecipeItemsRelationManager extends RelationManager
                     ->label(__('Warehouse::app.production_recipe.raw_material')),
                 Tables\Columns\TextColumn::make('quantity_required')
                     ->label(__('Warehouse::app.production_recipe.quantity_required'))
-                    ->suffix(fn ($record) => ' '.str($record->rawMaterial->unit)->upper()),
+                    ->suffix(fn ($record) => ' '.str($record->quantity_unit ?? $record->rawMaterial?->unit)->upper()),
                 Tables\Columns\TextColumn::make('price_per_need')
-                    ->getStateUsing(fn (ProductionRecipeItem $record) => price_format($record->rawMaterial->price_per_unit * $record->quantity_required))
+                    ->getStateUsing(fn (ProductionRecipeItem $record) => price_format(
+                        $record->rawMaterial?->costFor(
+                            (float) $record->quantity_required,
+                            $record->quantity_unit ?? $record->rawMaterial->unit,
+                        ) ?? 0
+                    ))
                     ->label(__('Warehouse::app.production_recipe.price_per_need')),
             ])
             ->headerActions([

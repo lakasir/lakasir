@@ -25,7 +25,11 @@ class Form extends ModuleForm
             return [
                 'raw_material_id' => $recipeItem->raw_material_id,
                 'quantity_required' => $recipeItem->quantity_required,
-                'price_per_need' => $recipeItem->rawMaterial->price_per_unit * $recipeItem->quantity_required,
+                'quantity_unit' => $recipeItem->quantity_unit ?? $recipeItem->rawMaterial?->unit,
+                'price_per_need' => $recipeItem->rawMaterial?->costFor(
+                    (float) $recipeItem->quantity_required,
+                    $recipeItem->quantity_unit ?? $recipeItem->rawMaterial->unit,
+                ) ?? 0,
             ];
         });
 
