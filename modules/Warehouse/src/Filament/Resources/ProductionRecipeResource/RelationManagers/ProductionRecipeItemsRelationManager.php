@@ -76,9 +76,6 @@ class ProductionRecipeItemsRelationManager extends RelationManager
             Select::make('quantity_unit')
                 ->label(__('Unit'))
                 ->options(fn (Get $get) => RawMaterial::unitOptions($get('raw_material_id')))
-                ->default(function (Get $get) {
-                    return RawMaterial::find($get('raw_material_id'))?->base_unit;
-                })
                 ->live()
                 ->afterStateUpdated(function ($get, $set, $state) {
                     $rawMaterial = RawMaterial::find($get('raw_material_id'));

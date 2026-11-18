@@ -12,6 +12,7 @@ use Filament\Actions\Action;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
+use Lakasir\LakasirModule\Forms\ExtendModuleForm;
 
 class EditProduct extends EditRecord
 {
@@ -65,7 +66,9 @@ class EditProduct extends EditRecord
             ];
         })->toArray();
 
-        return $data;
+        // `$data` was replaced by attributesToArray(), so any module tab state
+        // has to be rebuilt from the record's own relations.
+        return ExtendModuleForm::fill($data, 'Product', $this->getRecord());
     }
 
     protected function mutateFormDataBeforeSave(array $data): array
