@@ -4,7 +4,6 @@ namespace Modules\Warehouse\Filament\Resources\ProductionRecipeResource\Relation
 
 use App\Filament\Tenant\Components\PriceInput;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Split;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
@@ -97,11 +96,12 @@ class ProductionRecipeItemsRelationManager extends RelationManager
 
     public function form(Form $form): Form
     {
+        // One field per row: `getDefaultForm()` is also used inline by the
+        // recipe repeater, where a Split reads well, but this create/edit
+        // modal needs the fields stacked.
         return $form
             ->columns(1)
-            ->schema([
-                Split::make(static::getDefaultForm()),
-            ]);
+            ->schema(static::getDefaultForm());
     }
 
     public function table(Table $table): Table
