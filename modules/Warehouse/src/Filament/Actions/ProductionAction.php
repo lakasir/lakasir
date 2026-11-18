@@ -15,6 +15,7 @@ use Illuminate\Support\HtmlString;
 use Modules\Warehouse\Models\Product;
 use Modules\Warehouse\Models\ProductionBatch;
 use Modules\Warehouse\Models\ProductionRecipeItem;
+use Modules\Warehouse\Support\Money;
 
 class ProductionAction
 {
@@ -108,7 +109,7 @@ class ProductionAction
             Placeholder::make('hpp_placeholder_content')
                 ->content(function (Get $get) use ($porsiCost) {
                     $qty = max(1, (int) $get('quantity_produced'));
-                    $batchCost = ($porsiCost * $qty) + price_string_to_float($get('added_cost') ?? '0');
+                    $batchCost = ($porsiCost * $qty) + Money::toFloat($get('added_cost'));
 
                     return new HtmlString(
                         "<p class='text-xl font-semibold'>".price_format($batchCost / $qty)
@@ -119,7 +120,7 @@ class ProductionAction
             Placeholder::make('total_cost_placeholder_content')
                 ->content(function (Get $get) use ($porsiCost) {
                     $qty = max(1, (int) $get('quantity_produced'));
-                    $totalCost = ($porsiCost * $qty) + price_string_to_float($get('added_cost') ?? '0');
+                    $totalCost = ($porsiCost * $qty) + Money::toFloat($get('added_cost'));
                     $hpp = $totalCost / $qty;
                     $estimationSellingPrice = $hpp * (1 + (float) $get('margin') / 100);
 

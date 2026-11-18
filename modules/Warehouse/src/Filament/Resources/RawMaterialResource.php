@@ -15,6 +15,7 @@ use Filament\Tables\Table;
 use Lakasir\LakasirModule\Abstracts\ModuleResource;
 use Modules\Warehouse\Filament\Resources\RawMaterialResource\Pages;
 use Modules\Warehouse\Models\RawMaterial;
+use Modules\Warehouse\Support\Money;
 
 class RawMaterialResource extends ModuleResource
 {
@@ -30,8 +31,9 @@ class RawMaterialResource extends ModuleResource
     private static function syncBasePricing(Get $get, Set $set): void
     {
         $factor = RawMaterial::unitFactor($get('input_unit'));
-        $inputQty = (float) $get('input_qty');
-        $hargaTotal = (float) $get('harga_total');
+        // Both fields may still be money-masked strings while typing.
+        $inputQty = Money::toFloat($get('input_qty'));
+        $hargaTotal = Money::toFloat($get('harga_total'));
 
         if ($inputQty <= 0) {
             $set('base_qty', null);
@@ -41,9 +43,9 @@ class RawMaterialResource extends ModuleResource
             return;
         }
 
-        $override = $get('base_quantity_override');
-        $baseQty = $override !== null && (float) $override > 0
-            ? (float) $override
+        $override = Money::toFloat($get('base_quantity_override'));
+        $baseQty = $override > 0
+            ? $override
             : ($factor !== null ? $inputQty * $factor : null);
 
         if ($baseQty === null) {
