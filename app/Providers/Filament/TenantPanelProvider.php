@@ -204,6 +204,7 @@ class TenantPanelProvider extends PanelProvider
             NavigationGroup::make(__('General'))->label('')->collapsible(false)->items([
                 $this->generateNavigationItem(VoucherResource::class, Voucher::class),
             ]),
+            ...$this->getModuleNavigationGroups(),
             NavigationGroup::make(__('Setting'))->collapsible(false)->items([
                 $this->generateNavigationItem(GeneralSetting::class),
                 $this->generateNavigationItem(Printer::class),
@@ -321,6 +322,70 @@ class TenantPanelProvider extends PanelProvider
             ->icon($resource::getNavigationIcon())
             ->isActiveWhen(fn (): bool => $active)
             ->url(fn (): string => $resource::getUrl());
+    }
+
+    /**
+     * Navigation for installed modules.
+     *
+     * Module resources are registered on the panel by LakasirModulePlugin, but
+     * this panel builds its sidebar by hand, so discovered resources get routes
+     * without a menu entry. Declare them here, resolving classes by name so the
+     * provider still loads when a module is not installed.
+     */
+    private function getModuleNavigationGroups(): array
+    {
+        if (! module_plugin_exist()) {
+            return [];
+        }
+
+        $groups = [];
+
+        foreach ($this->getModuleNavigationMap() as $module => $resources) {
+            $items = [];
+
+            foreach ($resources as $resource) {
+                if (! class_exists($resource)) {
+                    continue;
+                }
+
+                $url = $this->getTenantPanelPath().'/'.$resource::getSlug();
+
+                $items[] = NavigationItem::make($resource::getNavigationLabel() ?: class_basename($resource))
+                    ->visible($resource::canAccess())
+                    ->icon($resource::getNavigationIcon())
+                    ->isActiveWhen(fn (): bool => request()->is(ltrim($url, '/').'*'))
+                    ->url($url);
+            }
+
+            if ($items !== []) {
+                $groups[] = NavigationGroup::make(__($module))->items($items);
+            }
+        }
+
+        return $groups;
+    }
+
+    /**
+     * Module name keyed to the resources it wants in the sidebar.
+     *
+     * @return array<string, array<int, class-string>>
+     */
+    private function getModuleNavigationMap(): array
+    {
+        return [
+            'Warehouse' => [
+                \Modules\Warehouse\Filament\Resources\RawMaterialResource::class,
+                \Modules\Warehouse\Filament\Resources\ProductionRecipeResource::class,
+            ],
+        ];
+    }
+
+    /**
+     * The tenant panel path, without a leading slash (e.g. "member").
+     */
+    private function getTenantPanelPath(): string
+    {
+        return '/'.trim(Filament::getPanel('tenant')->getPath(), '/');
     }
 
     /**
