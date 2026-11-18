@@ -8,6 +8,7 @@ use Filament\Forms\Components\Split;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
+use Filament\Forms\Set;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Actions\CreateAction;
@@ -31,13 +32,31 @@ class ProductionRecipeItemsRelationManager extends RelationManager
                 ->createOptionForm(RawMaterialResource::getForm())
                 ->createOptionUsing(function (array $data) {
                     return RawMaterial::create($data)->id;
+                })
+                ->afterStateUpdated(function ($state, Get $get, Set $set) {
+                    // The unit list depends on the chosen material, so reset the
+                    // unit to that material's own and reprice with it.
+                    $rawMaterial = RawMaterial::find($state);
+
+                    if (! $rawMaterial) {
+                        $set('quantity_unit', null);
+                        $set('price_per_need', null);
+
+                        return;
+                    }
+
+                    $set('quantity_unit', $rawMaterial->base_unit);
+                    $set(
+                        'price_per_need',
+                        $rawMaterial->costFor((float) $get('quantity_required'), $rawMaterial->base_unit),
+                    );
                 }),
             TextInput::make('quantity_required')
                 ->suffix(function (Get $get) {
                     $unit = RawMaterial::query()
                         ->find($get('raw_material_id'));
 
-                    return str($get('quantity_unit') ?? $unit?->unit)?->upper();
+                    return str($get('quantity_unit') ?? $unit?->base_unit)?->upper();
                 })
                 ->live()
                 ->numeric()
@@ -50,7 +69,7 @@ class ProductionRecipeItemsRelationManager extends RelationManager
 
                     $set('price_per_need', $rawMaterial->costFor(
                         (float) $state,
-                        $get('quantity_unit') ?? $rawMaterial->unit,
+                        $get('quantity_unit') ?? $rawMaterial->base_unit,
                     ));
                 })
                 ->required(),
@@ -96,12 +115,12 @@ class ProductionRecipeItemsRelationManager extends RelationManager
                     ->label(__('Warehouse::app.production_recipe.raw_material')),
                 Tables\Columns\TextColumn::make('quantity_required')
                     ->label(__('Warehouse::app.production_recipe.quantity_required'))
-                    ->suffix(fn ($record) => ' '.str($record->quantity_unit ?? $record->rawMaterial?->unit)->upper()),
+                    ->suffix(fn ($record) => ' '.str($record->quantity_unit ?? $record->rawMaterial?->base_unit)->upper()),
                 Tables\Columns\TextColumn::make('price_per_need')
                     ->getStateUsing(fn (ProductionRecipeItem $record) => price_format(
                         $record->rawMaterial?->costFor(
                             (float) $record->quantity_required,
-                            $record->quantity_unit ?? $record->rawMaterial->unit,
+                            $record->quantity_unit ?? $record->rawMaterial->base_unit,
                         ) ?? 0
                     ))
                     ->label(__('Warehouse::app.production_recipe.price_per_need')),
