@@ -16,7 +16,7 @@ class Selling extends Model
 {
     use HasFactory, UseTimezoneAwareQuery;
 
-    protected $guarded = ['friend_price'];
+    protected $guarded = ['id', 'friend_price', 'code', 'user_id', 'is_paid', 'cash_drawer_id'];
 
     protected $appends = [
         'grand_total_price',

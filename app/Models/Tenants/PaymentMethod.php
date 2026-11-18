@@ -14,7 +14,7 @@ class PaymentMethod extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $guarded = [];
+    protected $guarded = ['id'];
 
     protected $casts = [
         'is_cash' => 'boolean',

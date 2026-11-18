@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Tenants\PrinterRequest;
 use App\Models\Tenants\Printer;
-use Illuminate\Http\Request;
 
 class PrinterController extends Controller
 {
@@ -15,32 +15,18 @@ class PrinterController extends Controller
             ->present();
     }
 
-    public function store(Request $request)
+    public function store(PrinterRequest $request)
     {
-        $request->validate([
-            'name' => 'required',
-            'ip_address' => 'required',
-            'port' => 'nullable',
-            'driver' => 'required',
-        ]);
-
-        Printer::create($request->all());
+        Printer::create($request->validated());
 
         return $this->buildResponse()
             ->setMessage('Data saved successfully')
             ->present();
     }
 
-    public function update(Request $request, Printer $printer)
+    public function update(PrinterRequest $request, Printer $printer)
     {
-        $request->validate([
-            'name' => 'required',
-            'ip_address' => 'required',
-            'port' => 'nullable',
-            'driver' => 'required',
-        ]);
-
-        $printer->update($request->all());
+        $printer->update($request->validated());
 
         return $this->buildResponse()
             ->setMessage('Data updated successfully')

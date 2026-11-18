@@ -493,6 +493,64 @@ test('cashier cannot create the sellig with expired voucher', function () {
         ->assertJsonValidationErrors('voucher');
 });
 
+test('cashier cannot mass assign server computed selling attributes', function () {
+    $user = User::first();
+    $other = User::factory()->create();
+
+    $response = actingAs($user)->postJson('/api/transaction/selling', [
+        'payed_money' => 20000,
+        'friend_price' => false,
+        'is_paid' => false,
+        'user_id' => $other->getKey(),
+        'total_cost' => 0,
+        'code' => 'X',
+        'cash_drawer_id' => 999,
+        'products' => [
+            [
+                'product_id' => $this->product->id,
+                'qty' => 1,
+            ],
+        ],
+    ]);
+
+    $response->assertOk();
+
+    $this->assertDatabaseHas('sellings', [
+        'user_id' => $user->getKey(),
+        'is_paid' => true,
+        'total_cost' => 10000,
+        'code' => 'SELL0001',
+        'cash_drawer_id' => null,
+    ]);
+});
+
+test('friend price selling computes total cost on the server', function () {
+    $user = User::first();
+
+    $response = actingAs($user)->postJson('/api/transaction/selling', [
+        'payed_money' => 15000,
+        'friend_price' => true,
+        'total_price' => 15000,
+        'total_qty' => 1,
+        'total_cost' => 0,
+        'products' => [
+            [
+                'product_id' => $this->product->id,
+                'qty' => 1,
+                'price' => 15000,
+                'discount_price' => 0,
+            ],
+        ],
+    ]);
+
+    $response->assertOk();
+
+    $this->assertDatabaseHas('sellings', [
+        'total_price' => 15000,
+        'total_cost' => 10000,
+    ]);
+});
+
 beforeEach(function () {
     Setting::set('selling_method', 'fifo');
     Cache::clear();
