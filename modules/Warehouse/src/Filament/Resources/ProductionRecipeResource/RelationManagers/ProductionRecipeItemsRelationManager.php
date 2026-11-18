@@ -27,7 +27,7 @@ class ProductionRecipeItemsRelationManager extends RelationManager
             Select::make('raw_material_id')
                 ->live(debounce: 500)
                 ->searchable()
-                ->options(RawMaterial::pluck('name', 'id'))
+                ->options(fn (?ProductionRecipeItem $record, ?RelationManager $livewire) => self::availableRawMaterials($record, $livewire))
                 ->createOptionForm(RawMaterialResource::getForm())
                 ->createOptionUsing(function (array $data) {
                     return RawMaterial::create($data)->id;
@@ -92,6 +92,31 @@ class ProductionRecipeItemsRelationManager extends RelationManager
                 ->readOnly(),
 
         ];
+    }
+
+    /**
+     * Raw materials that may still be added to this product's recipe.
+     *
+     * A material already on the recipe is filtered out so the same ingredient
+     * cannot appear twice; the row being edited keeps its own value visible.
+     *
+     * @return array<int|string, string>
+     */
+    private static function availableRawMaterials(?ProductionRecipeItem $record, mixed $livewire): array
+    {
+        $productId = $livewire?->getOwnerRecord()?->getKey();
+
+        $used = ProductionRecipeItem::query()
+            ->when($productId, fn ($query) => $query->where('product_id', $productId))
+            ->when($record?->exists, fn ($query) => $query->whereKeyNot($record->getKey()))
+            ->pluck('raw_material_id')
+            ->all();
+
+        return RawMaterial::query()
+            ->when($used !== [], fn ($query) => $query->whereNotIn('id', $used))
+            ->orderBy('name')
+            ->pluck('name', 'id')
+            ->all();
     }
 
     public function form(Form $form): Form
