@@ -17,6 +17,7 @@ use App\Http\Controllers\Api\Tenants\Settings\SecureInitialPriceController;
 use App\Http\Controllers\Api\Tenants\Transaction\CashDrawerController;
 use App\Http\Controllers\Api\Tenants\Transaction\DashboardController;
 use App\Http\Controllers\Api\Tenants\Transaction\SellingController;
+use App\Http\Controllers\Api\Tenants\Transaction\VoucherController;
 use App\Http\Controllers\Api\Tenants\UploadController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
@@ -152,6 +153,9 @@ Route::middleware([
 
                 Route::get('/selling', [SellingController::class, 'index'])->can('read selling');
                 Route::post('/selling', [SellingController::class, 'store'])->can('create selling');
+                Route::post('/voucher/check', [VoucherController::class, 'check'])
+                    ->can('create selling')
+                    ->name('transaction.voucher.check');
                 Route::get('/selling/{selling}', [SellingController::class, 'show'])->can('read selling');
                 Route::group(['prefix' => 'cash-drawer'], function () {
                     Route::get('/', [CashDrawerController::class, 'show']);
