@@ -159,6 +159,8 @@ Route::middleware([
                 Route::get('/selling/{selling}', [SellingController::class, 'show'])->can('read selling');
                 Route::group(['prefix' => 'cash-drawer'], function () {
                     Route::get('/', [CashDrawerController::class, 'show']);
+                    Route::get('/summary', [CashDrawerController::class, 'summary'])
+                        ->name('transaction.cash-drawer.summary');
                     Route::post('/', [CashDrawerController::class, 'store'])->can('open cash drawer');
                     Route::post('/close', [CashDrawerController::class, 'close'])->can('close cash drawer');
                 });
