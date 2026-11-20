@@ -55,7 +55,7 @@
           @foreach($record->sellingDetails as $detail)
             <tr>
               <td class="p-2 border">
-                <h3 class="text-primary">{{ $detail->product->name }}</h3><span class="text-sm text-secondary"></span></td>
+                <h3 class="text-primary">{{ $detail->product->name }}</h3><span class="text-sm text-secondary">{{ $detail->note }}</span></td>
               <td class="p-2 border text-center text-primary">{{ Number::currency($detail->price_per_unit, Setting::get('currency', 'IDR')) }}</td>
               <td class="p-2 border text-center text-primary">{{ $detail->qty }}</td>
               <td class="p-2 border text-center text-primary">{{ Number::currency($detail->discount_price, Setting::get('currency', 'IDR')) }}</td>
@@ -167,6 +167,9 @@
           let price = sellingDetail.price;
           let text = moneyFormat(sellingDetail.price / sellingDetail.qty) + ' x ' + sellingDetail.qty.toString();
           printerAction.table([sellingDetail.product.name, moneyFormat(sellingDetail.price / sellingDetail.qty) + ' x ' + sellingDetail.qty.toString()])
+          if (sellingDetail.note) {
+            printerAction.text(`  ${sellingDetail.note}`)
+          }
           if (sellingDetail.discount_price > 0) {
             price = price - sellingDetail.discount_price;
             printerAction
