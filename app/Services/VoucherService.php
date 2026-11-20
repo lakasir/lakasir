@@ -30,6 +30,28 @@ class VoucherService
         return null;
     }
 
+    /**
+     * Why the voucher cannot be applied to this price, or null when it can.
+     * Mirrors the conditions in applyable().
+     */
+    public function rejectionReason(string $code, float $price): ?string
+    {
+        /** @var ?Voucher $voucher */
+        $voucher = Voucher::whereCode($code)->first();
+        $today = today();
+
+        return match (true) {
+            ! $voucher => __('Voucher not found.'),
+            $today->lt($voucher->start_date) => __('Voucher is not active yet.'),
+            $today->gt($voucher->expired) => __('Voucher has expired.'),
+            $voucher->kuota <= 0 => __('Voucher quota is used up.'),
+            $voucher->minimal_buying > $price => __('Voucher needs a minimum purchase of :amount.', [
+                'amount' => price_format($voucher->minimal_buying),
+            ]),
+            default => null,
+        };
+    }
+
     public function calculate(): float
     {
         if (! $this->voucher) {
