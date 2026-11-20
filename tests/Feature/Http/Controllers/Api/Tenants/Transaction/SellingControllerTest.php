@@ -564,3 +564,52 @@ beforeEach(function () {
 
     $this->product = $product;
 });
+
+test('cashier can add a note to each selling line', function () {
+    $user = User::first();
+    $other = Product::factory()->create([
+        'initial_price' => 5000,
+        'selling_price' => 8000,
+        'stock' => 10,
+    ]);
+
+    $response = actingAs($user)->postJson('/api/transaction/selling', [
+        'payed_money' => 50000,
+        'friend_price' => false,
+        'products' => [
+            ['product_id' => $this->product->id, 'qty' => 1, 'note' => 'no sugar, extra ice'],
+            ['product_id' => $other->id, 'qty' => 1],
+        ],
+    ]);
+
+    $response->assertOk();
+
+    $this->assertDatabaseHas('selling_details', [
+        'product_id' => $this->product->id,
+        'note' => 'no sugar, extra ice',
+    ]);
+    $this->assertDatabaseHas('selling_details', [
+        'product_id' => $other->id,
+        'note' => null,
+    ]);
+
+    $sellingId = $response->json('data.id');
+
+    actingAs($user)->getJson("/api/transaction/selling/{$sellingId}")
+        ->assertOk()
+        ->assertJsonPath('data.selling_details.0.note', 'no sugar, extra ice')
+        ->assertJsonPath('data.selling_details.1.note', null);
+});
+
+test('selling line note must not exceed 255 characters', function () {
+    $user = User::first();
+
+    actingAs($user)->postJson('/api/transaction/selling', [
+        'payed_money' => 20000,
+        'friend_price' => false,
+        'products' => [
+            ['product_id' => $this->product->id, 'qty' => 1, 'note' => str_repeat('a', 256)],
+        ],
+    ])->assertUnprocessable()
+        ->assertJsonValidationErrors('products.0.note');
+});

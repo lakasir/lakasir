@@ -22,6 +22,7 @@ class SellingDetailCollection extends JsonResource
             'price' => $this->price,
             'discount' => $this->discount_price,
             'discount_price' => $this->price - $this->discount_price,
+            'note' => $this->note,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
             // 'selling' => $this->whenLoaded('selling'),

@@ -68,6 +68,7 @@ class TransactionSellingStoreRequest extends FormRequest
             'products.*.price' => ['required_if:friend_price,true', 'numeric'],
             'products.*.discount_price' => ['required_if:friend_price,true', 'numeric'],
             'products.*.qty' => ['required', 'numeric', 'min:1', new CheckProductStock],
+            'products.*.note' => ['nullable', 'string', 'max:255'],
         ];
     }
 
