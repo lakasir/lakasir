@@ -57,6 +57,8 @@ use Filament\Support\Assets\Js;
 use Filament\Support\Colors\Color;
 use Filament\Support\Facades\FilamentView;
 use Filament\View\PanelsRenderHook;
+use Lakasir\LakasirModule\LakasirModulePlugin;
+use Lakasir\LakasirModule\Navigation\ModuleNavigation;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -90,6 +92,7 @@ class TenantPanelProvider extends PanelProvider
         $url = request()->getHost();
         if ($this->isCentralDomainConfigured()) {
             $this->initializeTenantPanel($panel, $url);
+            $panel->plugin(LakasirModulePlugin::make());
         } else {
             $this->initializeDefaultPanel($panel);
         }
@@ -200,9 +203,11 @@ class TenantPanelProvider extends PanelProvider
             NavigationGroup::make(__('General'))->label('')->collapsible(false)->items([
                 $this->generateNavigationItem(VoucherResource::class, Voucher::class),
             ]),
+            ...ModuleNavigation::groups(),
             NavigationGroup::make(__('Setting'))->collapsible(false)->items([
                 $this->generateNavigationItem(GeneralSetting::class),
                 $this->generateNavigationItem(Printer::class),
+                ...(module_plugin_exist() ? [ModuleNavigation::managerItem()] : []),
             ]),
         ];
     }
@@ -317,4 +322,5 @@ class TenantPanelProvider extends PanelProvider
             ->isActiveWhen(fn (): bool => $active)
             ->url(fn (): string => $resource::getUrl());
     }
+
 }

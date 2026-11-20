@@ -37,3 +37,7 @@ version.txt
 .env.before_lerd
 .mcp.json
 .lerd.yaml
+
+# Module sources are git submodules; never vendor them into the app
+/modules/*/vendor
+/modules/*/node_modules

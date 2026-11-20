@@ -7,7 +7,10 @@ use App\Models\Tenants\Barcode;
 use App\Models\Tenants\Product;
 use App\Services\Tenants\StockService;
 use Illuminate\Contracts\Validation\DataAwareRule;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Str;
+use Lakasir\LakasirModule\Events\ProductCreated;
+use Lakasir\LakasirModule\Events\ProductUpdated;
 use Laravel\Pennant\Feature;
 
 class ProductObserver extends AbstractObserver implements DataAwareRule
@@ -94,5 +97,13 @@ class ProductObserver extends AbstractObserver implements DataAwareRule
             'expired' => $this->data['expired'] ?? null,
             'is_ready' => true,
         ]);
+
+        Event::dispatch(new ProductCreated($product));
     }
+
+    public function updated(Product $product): void
+    {
+        Event::dispatch(new ProductUpdated($product));
+    }
+
 }
