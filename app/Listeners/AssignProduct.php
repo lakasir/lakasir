@@ -8,6 +8,7 @@ use App\Models\Tenants\Product;
 use App\Models\Tenants\Selling;
 use App\Models\Tenants\SellingDetail;
 use App\Services\Tenants\StockService;
+use Illuminate\Support\Arr;
 
 class AssignProduct
 {
@@ -51,7 +52,15 @@ class AssignProduct
             $productRequest['cost'] = $product->initial_price * $productRequest['qty'];
 
             $sellingDetail = new SellingDetail();
-            $sellingDetail->fill($productRequest);
+            $sellingDetail->fill(Arr::only($productRequest, [
+                'product_id',
+                'qty',
+                'price',
+                'discount_price',
+                'price_unit_id',
+                'cost',
+                'note',
+            ]));
             $selling->sellingDetails()->save($sellingDetail);
             $sellingDetail->save();
         }

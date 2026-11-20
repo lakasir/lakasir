@@ -59,7 +59,7 @@ class Selling extends Model
 
     public function grandTotalPrice(): Attribute
     {
-        return Attribute::make(get: fn () => $this->total_price - $this->tax_price - $this->total_discount_per_item - $this->discount_price);
+        return Attribute::make(get: fn () => $this->total_price - $this->total_discount_per_item - $this->discount_price);
     }
 
     public function table(): BelongsTo

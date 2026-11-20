@@ -82,6 +82,12 @@ class PermissionSeeder extends Seeder
                         ],
                         'guard' => ['web', 'sanctum'],
                     ],
+                    'friend price' => [
+                        'permission' => [
+                            'use',
+                        ],
+                        'guard' => ['web', 'sanctum'],
+                    ],
                     'secure initial price' => [
                         'permission' => [
                             'enable', 'verify',

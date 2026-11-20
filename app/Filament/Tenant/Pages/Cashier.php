@@ -196,7 +196,9 @@ class Cashier extends Page implements HasForms, HasTable
                 }
             });
             $this->discount_price += floatval($discount_price);
-            $this->total_price = $this->sub_total + ($this->sub_total * $this->tax / 100) - $this->discount_price;
+            // Tax is charged on the price after discounts, as on the server (SellingService::calculate()).
+            $taxable = max(0, $this->sub_total - $this->discount_price);
+            $this->total_price = $taxable + ($taxable * $this->tax / 100);
         }
         $this->fillMember();
         $this->fillPayemntMethod();
@@ -258,7 +260,6 @@ class Cashier extends Page implements HasForms, HasTable
             'member_id' => Rule::requiredIf(fn () => $pMethod->is_credit),
             'due_date' => Rule::requiredIf(fn () => $pMethod->is_credit),
             'payed_money' => [
-                ! $pMethod->is_credit ? 'gte:total_price' : null,
                 Rule::requiredIf(fn () => ! $pMethod->is_credit),
             ],
             'total_price' => ['required_if:friend_price,true', 'numeric'],
@@ -274,7 +275,15 @@ class Cashier extends Page implements HasForms, HasTable
 
             return;
         }
-        $data = array_merge($request, $sellingService->mapProductRequest($request));
+        $data = $sellingService->mapProductRequest($request);
+        if (! $pMethod->is_credit && (float) ($request['payed_money'] ?? 0) < $data['amount_due']) {
+            throw ValidationException::withMessages([
+                'payed_money' => __('validation.gte.numeric', [
+                    'attribute' => 'payed money',
+                    'value' => $data['amount_due'],
+                ]),
+            ]);
+        }
         $selling = $sellingService->create($data);
         CartItem::query()
             ->cashier()
@@ -321,7 +330,9 @@ class Cashier extends Page implements HasForms, HasTable
             }
         });
         $this->discount_price += $voucher->calculate();
-        $this->total_price = $this->sub_total + ($this->sub_total * $this->tax / 100) - $this->discount_price;
+        // Tax is charged on the price after discounts, as on the server (SellingService::calculate()).
+        $taxable = max(0, $this->sub_total - $this->discount_price);
+        $this->total_price = $taxable + ($taxable * $this->tax / 100);
 
         return true;
     }
@@ -343,6 +354,8 @@ class Cashier extends Page implements HasForms, HasTable
             }
         });
 
-        $this->total_price = $this->sub_total + ($this->sub_total * $this->tax / 100) - $this->discount_price;
+        // Tax is charged on the price after discounts, as on the server (SellingService::calculate()).
+        $taxable = max(0, $this->sub_total - $this->discount_price);
+        $this->total_price = $taxable + ($taxable * $this->tax / 100);
     }
 }
