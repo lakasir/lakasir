@@ -15,8 +15,6 @@ use App\Models\Tenants\Selling;
 use App\Models\Tenants\Setting;
 use App\Models\Tenants\Table;
 use App\Models\Tenants\Voucher as TenantsVoucher;
-use App\Rules\CheckProductStock;
-use App\Rules\ShouldSameWithSellingDetail;
 use App\Services\Tenants\SellingService;
 use App\Services\VoucherService;
 use App\Traits\HasTranslatableResource;
@@ -31,9 +29,6 @@ use Filament\Support\RawJs;
 use Filament\Tables\Contracts\HasTable;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Collection as CollectionSupport;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
-use Illuminate\Validation\ValidationException;
 use App\Models\Tenants\Profile;
 
 class Cashier extends Page implements HasForms, HasTable
@@ -243,48 +238,8 @@ class Cashier extends Page implements HasForms, HasTable
             })->toArray(),
         ]);
 
-        $pMethod = PaymentMethod::find($request['payment_method_id']);
-        if (! $pMethod) {
-            $pMethod = PaymentMethod::create([
-                'name' => 'Cash',
-                'is_cash' => true,
-                'is_debit' => false,
-                'is_credit' => false,
-                'is_wallet' => false,
-                'icon' => 'assets/images/payment-methods/cash.png',
-            ]);
-        }
-        $validator = Validator::make($request, [
-            'fee' => ['numeric'],
-            'payment_method_id' => ['required'],
-            'member_id' => Rule::requiredIf(fn () => $pMethod->is_credit),
-            'due_date' => Rule::requiredIf(fn () => $pMethod->is_credit),
-            'payed_money' => [
-                Rule::requiredIf(fn () => ! $pMethod->is_credit),
-            ],
-            'total_price' => ['required_if:friend_price,true', 'numeric'],
-            'total_qty' => ['required_if:friend_price,true', 'numeric', new ShouldSameWithSellingDetail('qty', $request['products'])],
-            'friend_price' => ['required', 'boolean'],
-            'products' => ['required', 'array'],
-            'products.*.product_id' => ['required', 'exists:products,id'],
-            'products.*.price' => ['required_if:friend_price,true', 'numeric'],
-            'products.*.qty' => ['required', 'numeric', 'min:1', new CheckProductStock],
-        ]);
-        if ($validator->fails()) {
-            throw ValidationException::withMessages($validator->messages()->toArray());
-
-            return;
-        }
-        $data = $sellingService->mapProductRequest($request);
-        if (! $pMethod->is_credit && (float) ($request['payed_money'] ?? 0) < $data['amount_due']) {
-            throw ValidationException::withMessages([
-                'payed_money' => __('validation.gte.numeric', [
-                    'attribute' => 'payed money',
-                    'value' => $data['amount_due'],
-                ]),
-            ]);
-        }
-        $selling = $sellingService->create($data);
+        // Same rules and total checks as the API (TransactionSellingStoreRequest).
+        $selling = $sellingService->checkout($request);
         CartItem::query()
             ->cashier()
             ->delete();

@@ -3,6 +3,7 @@
 namespace App\Models\Tenants;
 
 use App\Features\ProductExpired;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -43,6 +44,20 @@ class Stock extends Model
     public function scopeProduct($query, $product_id)
     {
         return $query->where('product_id', $product_id);
+    }
+
+    /**
+     * Newest batch first: the batch entered last (created_at, then id for entries made in
+     * the same second). The batch date is not used, so a restock entered today but dated
+     * earlier is still the newest batch. The "normal" selling method sells from it and takes
+     * its price from it.
+     */
+    public function scopeNewestFirst(Builder $query): Builder
+    {
+        return $query
+            ->reorder()
+            ->orderByDesc('created_at')
+            ->orderByDesc('id');
     }
 
     public function scopeIn($query)

@@ -37,8 +37,11 @@ trait CartInteraction
             ) + 1;
         } else {
             if (!$data['amount']) {
-                $this->deleteCart(CartItem::whereProductId($product->getKey())->first());
+                CartItem::whereProductId($product->getKey())
+                    ->cashier()
+                    ->delete();
                 $this->mount();
+
                 return;
             }
             $qty = $data['amount'];
