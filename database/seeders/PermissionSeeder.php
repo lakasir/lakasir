@@ -136,6 +136,12 @@ class PermissionSeeder extends Seeder
                         ],
                         'guard' => ['web', 'sanctum'],
                     ],
+                    'purchasing report' => [
+                        'permission' => [
+                            'generate',
+                        ],
+                        'guard' => ['web', 'sanctum'],
+                    ],
                     'import product' => [
                         'permission' => [
                             '',
@@ -212,13 +218,19 @@ class PermissionSeeder extends Seeder
                         'permission' => [
                             'r',
                         ],
-                        'guard' => ['web'],
+                        'guard' => ['web', 'sanctum'],
                     ],
                     'sales overview' => [
                         'permission' => [
                             'r',
                         ],
-                        'guard' => ['web'],
+                        'guard' => ['web', 'sanctum'],
+                    ],
+                    'setting' => [
+                        'permission' => [
+                            'r', 'u',
+                        ],
+                        'guard' => ['web', 'sanctum'],
                     ],
                     'discount overview' => [
                         'permission' => [

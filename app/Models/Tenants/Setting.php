@@ -15,33 +15,34 @@ class Setting extends Model
 
     protected $fillable = ['key', 'value'];
 
+    private const CACHE_TTL_MINUTES = 3 * 60;
+
+    /**
+     * The stored value, or $default when the key has never been set.
+     *
+     * The cached entry is wrapped in an array so that a stored false, 0 or
+     * empty string is a value and not a cache miss, and the default is applied
+     * at read time: two callers asking for the same unset key with different
+     * defaults each get their own.
+     */
     public static function get($key, $default = null)
     {
-        $cacheKey = 'setting_'.$key;
-        $result = null;
-        if (! Cache::get('setting_'.$key)) {
-            $setting = self::where('key', $key)->first();
+        $cached = Cache::remember(
+            'setting_'.$key,
+            now()->addMinutes(self::CACHE_TTL_MINUTES),
+            fn () => ['value' => self::where('key', $key)->value('value')],
+        );
 
-            $result = $setting ? $setting->value ?? $default : $default;
-
-            Cache::put($cacheKey, $result, now()->addMinutes(3 * 60));
-
-            return $result;
-        }
-
-        return Cache::get($cacheKey);
+        return $cached['value'] ?? $default;
     }
 
     public static function set($key, $value)
     {
-        // Update the value in the database
         self::updateOrCreate(
             ['key' => $key],
             ['value' => $value]
         );
 
-        // Update the value in cache
-        $cacheKey = 'setting_'.$key;
-        Cache::put($cacheKey, $value, now()->addMinutes(3 * 60));
+        Cache::put('setting_'.$key, ['value' => $value], now()->addMinutes(self::CACHE_TTL_MINUTES));
     }
 }

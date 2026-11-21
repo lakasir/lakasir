@@ -3,44 +3,41 @@
 namespace App\Http\Controllers\Api\Tenants;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Tenants\UploadRequest;
 use App\Models\Tenants\UploadedFile;
-use Exception;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class UploadController extends Controller
 {
-    public function __invoke(Request $request)
+    public function __invoke(UploadRequest $request)
     {
-        if ($request->file('file')->isValid()) {
-            $name = Str::random(40) . '.' . $request->file('file')->extension();
-            $tmpDisk = config('filesystems.tmp_disk');
+        $file = $request->file('file');
+        $extension = $file->extension();
+        $name = Str::random(40).'.'.$extension;
+        $tmpDisk = config('filesystems.tmp_disk');
 
-            Storage::disk($tmpDisk)->put($name, file_get_contents($request->file('file')->getRealPath()));
+        // storeAs keeps the original name out of the path and writes the file
+        // once, instead of reading it into memory and putting it.
+        Storage::disk($tmpDisk)->putFileAs('', $file, $name);
 
-            $fullUrl = Storage::disk($tmpDisk)->url($name);
-
-            $uploadedFile = UploadedFile::create([
-                'name' => $name,
-                'original_name' => $originalName = $request->file('file')->getClientOriginalName(),
-                'url' => $fullUrl,
-                'mime_type' => $request->file('file')->getMimeType(),
-                'extension' => $request->file('file')->extension(),
-                'size' => $request->file('file')->getSize(),
-                'relative_path' => $name,
-                'path' => '',
-                'disk' => $tmpDisk,
-            ]);
-        } else {
-            throw new Exception('File is not valid');
-        }
+        $uploadedFile = UploadedFile::create([
+            'name' => $name,
+            'original_name' => $originalName = $file->getClientOriginalName(),
+            'url' => Storage::disk($tmpDisk)->url($name),
+            'mime_type' => $file->getMimeType(),
+            'extension' => $extension,
+            'size' => $file->getSize(),
+            'relative_path' => $name,
+            'path' => '',
+            'disk' => $tmpDisk,
+        ]);
 
         return $this->success([
             'id' => $uploadedFile->id,
             'name' => $name,
             'relative_path' => $name,
-            'url' => $fullUrl,
+            'url' => $uploadedFile->url,
             'original_name' => $originalName,
         ]);
     }

@@ -29,7 +29,6 @@ use App\Http\Controllers\ProductReportController;
 use App\Http\Controllers\SellingReportController;
 use App\Http\Middleware\InitializeTenancyByDomain;
 use App\Livewire\ResetPassword;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 
@@ -42,16 +41,22 @@ Route::middleware([
         Route::get('/', function () {
             return redirect()->to('/member');
         });
-        Route::get('/member/purchasing-report/generate', PurchasingReportController::class)
-            ->name('purchasing-report.generate');
-        Route::get('/member/selling-report/generate', SellingReportController::class)
-            ->name('selling-report.generate');
-        Route::get('/member/product-report/generate', ProductReportController::class)
-            ->name('product-report.generate');
-        Route::get('/member/cashier-report/generate', CashierReportController::class)
-            ->name('cashier-report.generate');
-        Route::view('/member/sellings/{selling}/print', 'filament.tenant.pages.selling.print-receipt')
-            ->name('selling.print');
+        // Report PDFs: the Filament tenant panel's own guard and each report's
+        // permission (the seeder gives them to the admin role).
+        Route::middleware('auth:web')->group(function () {
+            Route::get('/member/purchasing-report/generate', PurchasingReportController::class)
+                ->can('generate purchasing report')
+                ->name('purchasing-report.generate');
+            Route::get('/member/selling-report/generate', SellingReportController::class)
+                ->can('generate selling report')
+                ->name('selling-report.generate');
+            Route::get('/member/product-report/generate', ProductReportController::class)
+                ->can('generate product report')
+                ->name('product-report.generate');
+            Route::get('/member/cashier-report/generate', CashierReportController::class)
+                ->can('generate cashier report')
+                ->name('cashier-report.generate');
+        });
         Route::get('/reset-password/{token}', ResetPassword::class)
             ->middleware('guest')
             ->name('reset-password.index');
@@ -64,10 +69,11 @@ Route::middleware([
 ])
     ->prefix('api')
     ->group(function () {
+        // The POS app checks a shop domain with this before signing in, so it
+        // stays public and answers only whether the shop exists.
         Route::get('check', function () {
             return response()->json([
                 'tenant' => tenant('id'),
-                'tenant_email' => tenant()->tenancy_db_profile_email,
             ]);
         });
         Route::group(['prefix' => 'auth'], function () {
@@ -107,7 +113,8 @@ Route::middleware([
             });
 
             Route::group(['prefix' => 'master'], function () {
-                Route::resource('/supplier', SupplierController::class);
+                Route::resource('/supplier', SupplierController::class)
+                    ->middleware('method_and_permission:index@read supplier|store@create supplier|show@read supplier|destroy@delete supplier|update@update supplier');
                 Route::group(['prefix' => '/category'], function () {
                     Route::get('/', [CategoryController::class, 'index'])->can('read category');
                     Route::post('/', [CategoryController::class, 'store'])->can('create category');
@@ -137,18 +144,24 @@ Route::middleware([
             });
 
             Route::group(['prefix' => 'about'], function () {
+                // Readable by any signed-in user: the POS app needs the shop's
+                // name and address to print a receipt.
                 Route::get('/', [AboutController::class, 'index'])
                     ->name('about');
                 Route::put('/', [AboutController::class, 'update'])
+                    ->can('update about')
                     ->name('about.update');
             });
 
             Route::group(['prefix' => 'transaction'], function () {
                 Route::get('/dashboard/total-revenue', [DashboardController::class, 'totalRevenue'])
+                    ->can('read revenue overview')
                     ->name('transaction.dashboard.total-revenue');
                 Route::get('/dashboard/total-gross-profit', [DashboardController::class, 'totalGrossProfit'])
+                    ->can('read revenue overview')
                     ->name('transaction.dashboard.total-gross-profit');
                 Route::get('/dashboard/total-sales', [DashboardController::class, 'totalSales'])
+                    ->can('read sales overview')
                     ->name('transaction.dashboard.total-sales');
 
                 Route::get('/selling', [SellingController::class, 'index'])->can('read selling');
@@ -166,10 +179,11 @@ Route::middleware([
                 });
             });
 
-            // @TODO: this is should be using can permission
             Route::get('setting/{key}', [App\Http\Controllers\Api\Tenants\SettingController::class, 'show'])
+                ->can('read setting')
                 ->name('setting.show');
             Route::post('setting', [App\Http\Controllers\Api\Tenants\SettingController::class, 'store'])
+                ->can('update setting')
                 ->name('setting.store');
 
             Route::post('setting/secure-initial-price', [SecureInitialPriceController::class, 'store'])
@@ -208,14 +222,5 @@ Route::middleware([
                 Route::delete('/clear', [NotificationController::class, 'clear'])
                     ->name('notification.destroy');
             });
-
-            Route::get('/user', function (Request $request) {
-                return $request->user();
-            });
-
-        });
-
-        Route::get('/', function () {
-            return ['Laravel' => app()->version()];
         });
     });

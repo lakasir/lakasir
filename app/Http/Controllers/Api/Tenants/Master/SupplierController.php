@@ -4,43 +4,69 @@ namespace App\Http\Controllers\Api\Tenants\Master;
 
 use App\Http\Controllers\Controller;
 use App\Models\Tenants\Supplier;
-use Lakasir\HasCrudAction\Abstracts\HasCrudActionAbstract;
-use Lakasir\HasCrudAction\Interfaces\WithSimplePagination;
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use Spatie\QueryBuilder\QueryBuilder;
 
-class SupplierController extends HasCrudActionAbstract implements WithSimplePagination
+/**
+ * The supplier CRUD. Written out here rather than through the has-crud-action
+ * package: its index resolver hands the query builder a model instance, so
+ * `GET /api/master/supplier` was a 500. The shape of the responses is the same.
+ */
+class SupplierController extends Controller
 {
-    public static string $model = Supplier::class;
+    public function index()
+    {
+        $suppliers = QueryBuilder::for(Supplier::class)
+            ->allowedFilters(['email', 'name', 'phone_number', 'address', 'city', 'country'])
+            ->orderByDesc('created_at')
+            ->simplePaginate();
 
-    public function filter(): array
+        return $this->success($suppliers->items());
+    }
+
+    public function store(Request $request)
+    {
+        $this->validate($request, $this->rules());
+
+        $supplier = Supplier::create($request->all());
+
+        return $this->success($supplier, 'success creating items');
+    }
+
+    public function show(Supplier $supplier)
+    {
+        return $this->success($supplier);
+    }
+
+    public function update(Request $request, Supplier $supplier)
+    {
+        $this->validate($request, $this->rules($supplier));
+
+        $supplier->update($request->all());
+
+        return $this->success($supplier, 'success update items');
+    }
+
+    public function destroy(Supplier $supplier)
+    {
+        $supplier->delete();
+
+        return $this->success([], 'success delete items');
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function rules(?Supplier $supplier = null): array
     {
         return [
-            'email',
-            'name',
-            'phone_number',
-            'address',
-            'city',
-            'country',
+            'name' => ['required'],
+            'phone_number' => [Rule::unique('suppliers', 'phone_number')->ignore($supplier?->id)],
+            'email' => [Rule::unique('suppliers', 'email')->ignore($supplier?->id)],
+            'address' => ['nullable', 'string'],
+            'city' => ['nullable', 'string'],
+            'country' => ['nullable', 'string'],
         ];
-    }
-
-    public static function rules($id): array
-    {
-        return [
-            'phone_number' => "unique:suppliers,phone_number,{$id}",
-            'email' => "unique:suppliers,email,{$id}",
-            'name' => 'required',
-        ];
-    }
-
-    public function response($record)
-    {
-        return $this->buildResponse()
-            ->setData($record)
-            ->present();
-    }
-
-    public function buildResponse()
-    {
-        return (new Controller())->buildResponse();
     }
 }
