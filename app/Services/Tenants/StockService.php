@@ -15,9 +15,9 @@ class StockService
             /** @var Stock $lastStock */
             $lastStock = $product
                 ->stocks()
+                ->where('type', 'in')
                 ->where('stock', '>', 0)
-                ->orderBy('date', 'asc')
-                ->latest()
+                ->newestFirst()
                 ->first();
         } else {
             /** @var Stock $lastStock */
