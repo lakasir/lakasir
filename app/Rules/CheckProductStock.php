@@ -9,6 +9,11 @@ use Illuminate\Contracts\Validation\DataAwareRule;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Support\Str;
 
+/**
+ * Is the requested quantity still available? Runs once per line, but judges
+ * the product as a whole: two lines of the same product are summed, so
+ * 3 + 3 of a product with 5 in stock is refused.
+ */
 class CheckProductStock implements DataAwareRule, ValidationRule
 {
     /**
@@ -18,18 +23,12 @@ class CheckProductStock implements DataAwareRule, ValidationRule
      */
     protected $data = [];
 
-    /**
-     * key index from the data
-     *
-     * @var int
-     */
-    protected $index;
-
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         $index = Str::of($attribute)->explode('.')[1];
         $dataProduct = $this->data['products'][$index];
         $product = Product::find($dataProduct['product_id']);
+
         if (! $product) {
             $fail('The product is not found.');
 
@@ -38,14 +37,33 @@ class CheckProductStock implements DataAwareRule, ValidationRule
         if ($product->is_non_stock) {
             return;
         }
-        if (isset($dataProduct['price_unit_id']) && $dataProduct['price_unit_id'] != null) {
-            $value = PriceUnit::query()->find($dataProduct['price_unit_id'])->stock * $dataProduct['qty'];
-        }
-        $bool = $product?->stock < $value;
-
-        if ($bool) {
+        if ($product->stock < $this->requestedQty($product)) {
             $fail($this->message());
         }
+    }
+
+    /**
+     * The units of stock every line of this product asks for, in base units
+     * (a price unit multiplies the quantity).
+     */
+    private function requestedQty(Product $product): float
+    {
+        $qty = 0.0;
+
+        foreach ($this->data['products'] as $line) {
+            if ((int) $line['product_id'] !== $product->id) {
+                continue;
+            }
+            $lineQty = (float) $line['qty'];
+            $priceUnitId = $line['price_unit_id'] ?? null;
+            if ($priceUnitId) {
+                $priceUnit = PriceUnit::find($priceUnitId);
+                $lineQty *= (float) ($priceUnit?->stock ?? 1);
+            }
+            $qty += $lineQty;
+        }
+
+        return $qty;
     }
 
     public function setData($data)
