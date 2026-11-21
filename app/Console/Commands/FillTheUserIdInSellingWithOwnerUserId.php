@@ -17,13 +17,28 @@ class FillTheUserIdInSellingWithOwnerUserId extends Command
 
     /**
      * Execute the console command.
+     *
+     * The owner is read once and the sales are paged, so the command never
+     * loads the whole table or queries the owner per sale.
      */
     public function handle()
     {
-        Selling::all()->each(function (Selling $selling) {
-            $user = User::first();
-            $selling->user()->associate($user);
-            $selling->save();
-        });
+        $owner = User::first();
+
+        if (! $owner) {
+            $this->warn('No account to attribute the sales to.');
+
+            return;
+        }
+
+        Selling::query()
+            ->whereNull('user_id')
+            ->chunkById(200, function ($sellings) use ($owner) {
+                foreach ($sellings as $selling) {
+                    // saveQuietly: the observer would stamp the current user.
+                    $selling->user()->associate($owner);
+                    $selling->saveQuietly();
+                }
+            });
     }
 }
