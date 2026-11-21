@@ -23,14 +23,15 @@ test('suppliers need a supplier permission', function () {
     $user = cashier();
     $supplier = Supplier::create(['name' => 'PT Sumber']);
 
-    // Only the refusal is asserted: the owner's GET is a 500 in the
-    // has-crud-action index resolver today, unrelated to permissions
-    // (see the 500 card).
     actingAs($user)->getJson('/api/master/supplier')->assertForbidden();
     actingAs($user)->getJson("/api/master/supplier/{$supplier->id}")->assertForbidden();
     actingAs($user)->postJson('/api/master/supplier', ['name' => 'Baru'])->assertForbidden();
     actingAs($user)->putJson("/api/master/supplier/{$supplier->id}", ['name' => 'Baru'])->assertForbidden();
     actingAs($user)->deleteJson("/api/master/supplier/{$supplier->id}")->assertForbidden();
+
+    $owner = User::first();
+    actingAs($owner)->getJson('/api/master/supplier')->assertOk();
+    actingAs($owner)->deleteJson("/api/master/supplier/{$supplier->id}")->assertOk();
 });
 
 test('settings need a setting permission', function () {

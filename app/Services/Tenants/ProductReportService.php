@@ -12,11 +12,12 @@ class ProductReportService
 {
     public function generate(array $data)
     {
-        $timezone = Profile::get()->timezone;
+        $timezone = $this->timezone();
         $about = About::first();
-        $tzName = Carbon::parse($data['start_date'])->getTimezone()->getName();
-        $startDate = Carbon::parse($data['start_date'], $timezone)->setTimezone('UTC');
-        $endDate = Carbon::parse($data['end_date'], $timezone)->addDay()->setTimezone('UTC');
+        $tzName = Carbon::parse($data['start_date'] ?? now()->toDateString())->getTimezone()->getName();
+        // A missing date (the API allows null) means today, not a 500.
+        $startDate = Carbon::parse($data['start_date'] ?? now()->toDateString(), $timezone)->setTimezone('UTC');
+        $endDate = Carbon::parse($data['end_date'] ?? now()->toDateString(), $timezone)->addDay()->setTimezone('UTC');
 
         $products = Product::query()
             ->with(
@@ -120,5 +121,14 @@ class ProductReportService
     private function formatCurrency($value)
     {
         return Number::format($value);
+    }
+
+    /**
+     * The cashier's time zone, falling back to the app's when the profile has
+     * none (a fresh tenant, or a request without a signed-in user).
+     */
+    private function timezone(): string
+    {
+        return Profile::get()->timezone ?? config('app.timezone');
     }
 }
