@@ -29,7 +29,6 @@ use App\Http\Controllers\ProductReportController;
 use App\Http\Controllers\SellingReportController;
 use App\Http\Middleware\InitializeTenancyByDomain;
 use App\Livewire\ResetPassword;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 
@@ -70,10 +69,11 @@ Route::middleware([
 ])
     ->prefix('api')
     ->group(function () {
+        // The POS app checks a shop domain with this before signing in, so it
+        // stays public and answers only whether the shop exists.
         Route::get('check', function () {
             return response()->json([
                 'tenant' => tenant('id'),
-                'tenant_email' => tenant()->tenancy_db_profile_email,
             ]);
         });
         Route::group(['prefix' => 'auth'], function () {
@@ -222,14 +222,5 @@ Route::middleware([
                 Route::delete('/clear', [NotificationController::class, 'clear'])
                     ->name('notification.destroy');
             });
-
-            Route::get('/user', function (Request $request) {
-                return $request->user();
-            });
-
-        });
-
-        Route::get('/', function () {
-            return ['Laravel' => app()->version()];
         });
     });
