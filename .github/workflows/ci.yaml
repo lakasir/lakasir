@@ -31,7 +31,9 @@ jobs:
       - run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
       # Style: the whole tree follows the laravel preset, so a mis-formatted
       # file fails here instead of in review.
-      - run: vendor/bin/pint --test
+      # Explicit paths: Pint's `exclude` does not prune a nested directory
+      # such as a git worktree, and `bootstrap/cache` holds generated PHP.
+      - run: vendor/bin/pint --test app config database routes tests lang
       # Static analysis at level 5. The baseline holds today's findings; new
       # ones fail the build.
       - run: vendor/bin/phpstan analyse --no-progress --memory-limit=1G
