@@ -59,7 +59,7 @@ class Product extends Model
         return $this
             ->stocks()
             ->where('type', 'in')
-            ->when($usingNormalPrice, fn(Builder $query) => $query->orderBy('date')->latest())
+            ->when($usingNormalPrice, fn(Builder $query) => $query->newestFirst())
             ->when($usingFifoPrice, fn(Builder $query) => $query
                 ->where('stock', '>', 0)
                 ->orderBy('created_at')->orderBy('date'))

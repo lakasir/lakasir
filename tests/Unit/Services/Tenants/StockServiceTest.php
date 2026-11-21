@@ -168,3 +168,89 @@ describe('StockService reduceStock', function () {
         expect($this->product->fresh()->stock)->toBe(10.0);
     });
 });
+
+describe('normal selling method uses the newest batch', function () {
+    beforeEach(function () {
+        Setting::set('selling_method', 'normal');
+        Cache::clear();
+
+        $this->older = Stock::factory()->createQuietly([
+            'product_id' => $this->product->id,
+            'stock' => 5,
+            'initial_price' => 10000,
+            'selling_price' => 20000,
+            'type' => 'in',
+            'is_ready' => true,
+            'date' => now()->subDays(2)->format('Y-m-d'),
+            'created_at' => now()->subDays(2),
+        ]);
+        $this->newer = Stock::factory()->createQuietly([
+            'product_id' => $this->product->id,
+            'stock' => 5,
+            'initial_price' => 12000,
+            'selling_price' => 24000,
+            'type' => 'in',
+            'is_ready' => true,
+            'date' => now()->format('Y-m-d'),
+            'created_at' => now(),
+        ]);
+    });
+
+    test('reduceStock takes from the newest batch', function () {
+        (new StockService())->reduceStock($this->product, 3);
+
+        expect($this->newer->fresh()->stock)->toBe(2.0)
+            ->and($this->older->fresh()->stock)->toBe(5.0);
+    });
+
+    test('reduceStock moves on to the next newest batch when the newest runs out', function () {
+        (new StockService())->reduceStock($this->product, 7);
+
+        expect($this->newer->fresh()->stock)->toBe(0.0)
+            ->and($this->older->fresh()->stock)->toBe(3.0);
+    });
+
+    test('the product price comes from the newest batch', function () {
+        $product = $this->product->fresh();
+
+        expect((float) $product->initial_price_calculate)->toBe(12000.0)
+            ->and((float) $product->selling_price_calculate)->toBe(24000.0);
+    });
+
+    test('a batch entered later is newer even when it is dated earlier', function () {
+        $backdated = Stock::factory()->createQuietly([
+            'product_id' => $this->product->id,
+            'stock' => 5,
+            'initial_price' => 13000,
+            'selling_price' => 26000,
+            'type' => 'in',
+            'is_ready' => true,
+            'date' => now()->subDays(5)->format('Y-m-d'),
+            'created_at' => now()->addMinute(),
+        ]);
+
+        (new StockService())->reduceStock($this->product, 1);
+
+        expect($backdated->fresh()->stock)->toBe(4.0)
+            ->and($this->newer->fresh()->stock)->toBe(5.0)
+            ->and((float) $this->product->fresh()->selling_price_calculate)->toBe(26000.0);
+    });
+
+    test('of batches entered in the same second the last one is newest, whatever its date', function () {
+        $lastEntered = Stock::factory()->createQuietly([
+            'product_id' => $this->product->id,
+            'stock' => 5,
+            'initial_price' => 13000,
+            'selling_price' => 26000,
+            'type' => 'in',
+            'is_ready' => true,
+            'date' => now()->subDay()->format('Y-m-d'),
+            'created_at' => $this->newer->created_at,
+        ]);
+
+        (new StockService())->reduceStock($this->product, 1);
+
+        expect($lastEntered->fresh()->stock)->toBe(4.0)
+            ->and($this->newer->fresh()->stock)->toBe(5.0);
+    });
+});
