@@ -18,25 +18,22 @@ class Setting extends Model
     private const CACHE_TTL_MINUTES = 3 * 60;
 
     /**
-     * `has()` instead of a truthy `get()`: a stored false, 0 or empty string is
-     * a value, not a cache miss. Without this, a setting like
-     * `cash_drawer_enabled = false` was re-read from the database on every call
-     * and the caller's default would win on a miss.
+     * The stored value, or $default when the key has never been set.
+     *
+     * The cached entry is wrapped in an array so that a stored false, 0 or
+     * empty string is a value and not a cache miss, and the default is applied
+     * at read time: two callers asking for the same unset key with different
+     * defaults each get their own.
      */
     public static function get($key, $default = null)
     {
-        $cacheKey = 'setting_'.$key;
+        $cached = Cache::remember(
+            'setting_'.$key,
+            now()->addMinutes(self::CACHE_TTL_MINUTES),
+            fn () => ['value' => self::where('key', $key)->value('value')],
+        );
 
-        if (Cache::has($cacheKey)) {
-            return Cache::get($cacheKey);
-        }
-
-        $setting = self::where('key', $key)->first();
-        $result = $setting ? ($setting->value ?? $default) : $default;
-
-        Cache::put($cacheKey, $result, now()->addMinutes(self::CACHE_TTL_MINUTES));
-
-        return $result;
+        return $cached['value'] ?? $default;
     }
 
     public static function set($key, $value)
@@ -46,6 +43,6 @@ class Setting extends Model
             ['value' => $value]
         );
 
-        Cache::put('setting_'.$key, $value, now()->addMinutes(self::CACHE_TTL_MINUTES));
+        Cache::put('setting_'.$key, ['value' => $value], now()->addMinutes(self::CACHE_TTL_MINUTES));
     }
 }

@@ -46,8 +46,26 @@ test('a cached empty string is served from the cache', function () {
     expect(Setting::get('currency', 'IDR'))->toBe('');
 });
 
-test('a key that was never set falls back to the default', function () {
-    expect(Setting::get('never_set', 'fallback'))->toBe('fallback');
+test('a key that was never set falls back to the caller\'s own default', function () {
+    // Two screens ask about the same unset key with different defaults
+    // (the product table uses 10, the settings endpoint 0).
+    expect(Setting::get('never_set', 'fallback'))->toBe('fallback')
+        ->and(Setting::get('never_set', 10))->toBe(10)
+        ->and(Setting::get('never_set', 0))->toBe(0);
+});
+
+test('a cached value is read from the cache, not the database', function () {
+    Setting::set('default_tax', 7);
+    Setting::get('default_tax');
+
+    forgetRow('default_tax');
+
+    DB::enableQueryLog();
+    Setting::get('default_tax');
+    $queries = DB::getQueryLog();
+    DB::disableQueryLog();
+
+    expect($queries)->toBeEmpty();
 });
 
 test('set replaces the cached value', function () {
