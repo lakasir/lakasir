@@ -61,7 +61,15 @@ class SellingService
             $selling->save();
 
             if (! empty($data['voucher'])) {
-                (new VoucherService())->applyable($data['voucher'], $data['voucher_base_price'] ?? 0)?->reduceUsed();
+                // Another cashier may have taken the last one between the total
+                // check and here: refuse the sale instead of giving the
+                // discount without paying for it.
+                $used = (new VoucherService())->applyable($data['voucher'], $data['voucher_base_price'] ?? 0)?->reduceUsed();
+                if (! $used) {
+                    throw ValidationException::withMessages([
+                        'voucher' => __('voucher expired'),
+                    ]);
+                }
             }
 
             SellingCreated::dispatch($selling, $data);
