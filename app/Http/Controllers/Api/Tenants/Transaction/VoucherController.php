@@ -25,6 +25,9 @@ class VoucherController extends Controller
                 'name' => $applied->voucher->name,
                 'type' => $applied->voucher->type,
                 'nominal' => $applied->voucher->nominal,
+                // Sent so the POS knows when the voucher stops applying and
+                // does not have to re-check on every cart change.
+                'minimal_buying' => (float) $applied->voucher->minimal_buying,
                 'discount' => $discount,
                 'total_after_discount' => $totalPrice - $discount,
             ])

@@ -1,0 +1,90 @@
+services:
+    app:
+        restart: unless-stopped
+        build:
+            context: .
+            dockerfile: Dockerfile
+            args:
+                WWWUSER: ${WWWUSER:-1000}
+                WWWGROUP: ${WWWGROUP:-1000}
+        ports:
+            - '${APP_PORT:-80}:80'
+        volumes:
+            - '.:/var/www/html'
+            - '/var/www/html/vendor'
+            - '/var/www/html/node_modules'
+        networks:
+            - lakasir
+        depends_on:
+            mysql:
+                condition: service_healthy
+            redis:
+                condition: service_healthy
+        environment:
+            DB_HOST: mysql
+            DB_PORT: 3306
+            DB_DATABASE: ${DB_DATABASE:-lakasir}
+            DB_USERNAME: ${DB_USERNAME:-lakasir}
+            DB_PASSWORD: ${DB_PASSWORD:-secret}
+            REDIS_HOST: redis
+            REDIS_PORT: 6379
+            CACHE_DRIVER: redis
+            QUEUE_CONNECTION: redis
+            SESSION_DRIVER: redis
+            MAIL_HOST: mailpit
+            MAIL_PORT: 1025
+
+    mysql:
+        restart: unless-stopped
+        image: mysql:8.0
+        ports:
+            - '${FORWARD_DB_PORT:-3307}:3306'
+        environment:
+            MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-secret}
+            MYSQL_ROOT_HOST: '%'
+            MYSQL_DATABASE: ${DB_DATABASE:-lakasir}
+            MYSQL_USER: ${DB_APP_USER:-${DB_USERNAME:-lakasir}}
+            MYSQL_PASSWORD: ${DB_PASSWORD:-secret}
+        volumes:
+            - lakasir-mysql:/var/lib/mysql
+        networks:
+            - lakasir
+        healthcheck:
+            test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost', '-p${DB_PASSWORD:-secret}']
+            retries: 3
+            timeout: 5s
+            interval: 5s
+
+    redis:
+        restart: unless-stopped
+        image: redis:alpine
+        ports:
+            - '${FORWARD_REDIS_PORT:-6380}:6379'
+        volumes:
+            - lakasir-redis:/data
+        networks:
+            - lakasir
+        healthcheck:
+            test: ['CMD', 'redis-cli', 'ping']
+            retries: 3
+            timeout: 5s
+            interval: 5s
+
+    mailpit:
+        restart: unless-stopped
+        image: axllent/mailpit:v1.20.3
+        ports:
+            - '${FORWARD_MAILPIT_PORT:-1026}:1025'
+            - '${FORWARD_MAILPIT_DASHBOARD_PORT:-8026}:8025'
+        networks:
+            - lakasir
+
+networks:
+    lakasir:
+        driver: bridge
+
+volumes:
+    lakasir-mysql:
+        driver: local
+    lakasir-redis:
+        driver: local

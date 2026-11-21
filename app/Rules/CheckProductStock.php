@@ -35,7 +35,9 @@ class CheckProductStock implements DataAwareRule, ValidationRule
 
             return;
         }
-        if ($product->is_non_stock) {
+        // A service (or a non-stock product) has nothing to count: selling it
+        // does not consume stock, so its stock column must not block the sale.
+        if (! $product->tracksStock()) {
             return;
         }
         if ($product->stock < $this->requestedQty($product)) {

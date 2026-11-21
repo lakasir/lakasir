@@ -1,0 +1,361 @@
+{
+    "tenant": "tokotest",
+    "taken_at": "2026-11-18T23:54:55+00:00",
+    "tables": {
+        "units": [
+            {
+                "id": 1,
+                "name": "mg",
+                "family": "mass",
+                "factor": 0.001,
+                "created_at": "2026-11-18 13:19:07",
+                "updated_at": "2026-11-18 13:19:07"
+            },
+            {
+                "id": 2,
+                "name": "g",
+                "family": "mass",
+                "factor": 1,
+                "created_at": "2026-11-18 13:19:07",
+                "updated_at": "2026-11-18 13:19:07"
+            },
+            {
+                "id": 3,
+                "name": "dag",
+                "family": "mass",
+                "factor": 10,
+                "created_at": "2026-11-18 13:19:07",
+                "updated_at": "2026-11-18 13:19:07"
+            },
+            {
+                "id": 4,
+                "name": "hg",
+                "family": "mass",
+                "factor": 100,
+                "created_at": "2026-11-18 13:19:07",
+                "updated_at": "2026-11-18 13:19:07"
+            },
+            {
+                "id": 5,
+                "name": "kg",
+                "family": "mass",
+                "factor": 1000,
+                "created_at": "2026-11-18 13:19:07",
+                "updated_at": "2026-11-18 13:19:07"
+            },
+            {
+                "id": 6,
+                "name": "ml",
+                "family": "volume",
+                "factor": 1,
+                "created_at": "2026-11-18 13:19:07",
+                "updated_at": "2026-11-18 13:19:07"
+            },
+            {
+                "id": 7,
+                "name": "cl",
+                "family": "volume",
+                "factor": 10,
+                "created_at": "2026-11-18 13:19:07",
+                "updated_at": "2026-11-18 13:19:07"
+            },
+            {
+                "id": 8,
+                "name": "dl",
+                "family": "volume",
+                "factor": 100,
+                "created_at": "2026-11-18 13:19:07",
+                "updated_at": "2026-11-18 13:19:07"
+            },
+            {
+                "id": 9,
+                "name": "l",
+                "family": "volume",
+                "factor": 1000,
+                "created_at": "2026-11-18 13:19:07",
+                "updated_at": "2026-11-18 13:19:07"
+            },
+            {
+                "id": 10,
+                "name": "pcs",
+                "family": "count",
+                "factor": 1,
+                "created_at": "2026-11-18 13:19:07",
+                "updated_at": "2026-11-18 13:19:07"
+            },
+            {
+                "id": 11,
+                "name": "pack",
+                "family": "count",
+                "factor": 1,
+                "created_at": "2026-11-18 13:19:07",
+                "updated_at": "2026-11-18 13:19:07"
+            },
+            {
+                "id": 12,
+                "name": "tabung",
+                "family": "count",
+                "factor": 1,
+                "created_at": "2026-11-18 13:19:07",
+                "updated_at": "2026-11-18 13:19:07"
+            },
+            {
+                "id": 13,
+                "name": "masakan",
+                "family": "count",
+                "factor": 1,
+                "created_at": "2026-11-18 13:19:07",
+                "updated_at": "2026-11-18 13:19:07"
+            }
+        ],
+        "raw_materials": [
+            {
+                "id": 24,
+                "name": "Tepung",
+                "sku": "TEP-0024",
+                "input_qty": 25,
+                "input_unit": "kg",
+                "harga_total": 325000,
+                "base_qty": 25000,
+                "base_quantity_override": null,
+                "base_unit": "g",
+                "price_per_base_unit": 13,
+                "quantity": 1000,
+                "unit": "",
+                "price_per_unit": 0,
+                "created_at": "2026-11-18 13:28:10",
+                "updated_at": "2026-11-18 14:31:29"
+            },
+            {
+                "id": 25,
+                "name": "Minyak Goreng",
+                "sku": "MIN-0025",
+                "input_qty": 6,
+                "input_unit": "L",
+                "harga_total": 135000,
+                "base_qty": 6000,
+                "base_quantity_override": null,
+                "base_unit": "ml",
+                "price_per_base_unit": 22.5,
+                "quantity": 0,
+                "unit": "",
+                "price_per_unit": 0,
+                "created_at": "2026-11-18 13:47:22",
+                "updated_at": "2026-11-18 13:47:22"
+            },
+            {
+                "id": 26,
+                "name": "GAS",
+                "sku": "GAS-0026",
+                "input_qty": 1,
+                "input_unit": "tabung",
+                "harga_total": 25000,
+                "base_qty": 10,
+                "base_quantity_override": 10,
+                "base_unit": "pcs",
+                "price_per_base_unit": 2500,
+                "quantity": 0,
+                "unit": "",
+                "price_per_unit": 0,
+                "created_at": "2026-11-18 13:59:24",
+                "updated_at": "2026-11-18 14:03:49"
+            },
+            {
+                "id": 32,
+                "name": "Ayam",
+                "sku": "AYA-0027",
+                "input_qty": 1,
+                "input_unit": "kg",
+                "harga_total": 37000,
+                "base_qty": 1000,
+                "base_quantity_override": null,
+                "base_unit": "g",
+                "price_per_base_unit": 37,
+                "quantity": 1000,
+                "unit": "",
+                "price_per_unit": 0,
+                "created_at": "2026-11-18 14:10:59",
+                "updated_at": "2026-11-18 22:56:57"
+            },
+            {
+                "id": 33,
+                "name": "Bumbu",
+                "sku": "BUM-0033",
+                "input_qty": 500,
+                "input_unit": "g",
+                "harga_total": 50000,
+                "base_qty": 500,
+                "base_quantity_override": null,
+                "base_unit": "g",
+                "price_per_base_unit": 100,
+                "quantity": 0,
+                "unit": "",
+                "price_per_unit": 0,
+                "created_at": "2026-11-18 22:51:25",
+                "updated_at": "2026-11-18 22:51:25"
+            },
+            {
+                "id": 34,
+                "name": "Paper",
+                "sku": "PAP-0034",
+                "input_qty": 1,
+                "input_unit": "pack",
+                "harga_total": 20000,
+                "base_qty": 100,
+                "base_quantity_override": 100,
+                "base_unit": "pcs",
+                "price_per_base_unit": 200,
+                "quantity": 0,
+                "unit": "",
+                "price_per_unit": 0,
+                "created_at": "2026-11-18 22:51:59",
+                "updated_at": "2026-11-18 22:51:59"
+            },
+            {
+                "id": 35,
+                "name": "Saus",
+                "sku": "SAU-0035",
+                "input_qty": 1,
+                "input_unit": "pack",
+                "harga_total": 5000,
+                "base_qty": 24,
+                "base_quantity_override": 24,
+                "base_unit": "pcs",
+                "price_per_base_unit": 208.33333333333,
+                "quantity": 0,
+                "unit": "",
+                "price_per_unit": 0,
+                "created_at": "2026-11-18 22:52:27",
+                "updated_at": "2026-11-18 22:52:27"
+            },
+            {
+                "id": 36,
+                "name": "Plastik",
+                "sku": "PLA-0036",
+                "input_qty": 1,
+                "input_unit": "pack",
+                "harga_total": 6500,
+                "base_qty": 22,
+                "base_quantity_override": 22,
+                "base_unit": "pcs",
+                "price_per_base_unit": 295.45454545455,
+                "quantity": 0,
+                "unit": "",
+                "price_per_unit": 0,
+                "created_at": "2026-11-18 22:52:59",
+                "updated_at": "2026-11-18 22:52:59"
+            }
+        ],
+        "production_recipe_items": [
+            {
+                "id": 25,
+                "product_id": 12,
+                "raw_material_id": 24,
+                "quantity_required": 25,
+                "quantity_unit": "g",
+                "created_at": "2026-11-18 14:23:44",
+                "updated_at": "2026-11-18 14:23:44"
+            },
+            {
+                "id": 26,
+                "product_id": 12,
+                "raw_material_id": 25,
+                "quantity_required": 100,
+                "quantity_unit": "ml",
+                "created_at": "2026-11-18 14:24:07",
+                "updated_at": "2026-11-18 14:24:07"
+            },
+            {
+                "id": 27,
+                "product_id": 6,
+                "raw_material_id": 32,
+                "quantity_required": 100,
+                "quantity_unit": "g",
+                "created_at": "2026-11-18 14:30:05",
+                "updated_at": "2026-11-18 14:30:05"
+            },
+            {
+                "id": 38,
+                "product_id": 6,
+                "raw_material_id": 24,
+                "quantity_required": 62.5,
+                "quantity_unit": "g",
+                "created_at": "2026-11-18 14:40:31",
+                "updated_at": "2026-11-18 14:40:31"
+            },
+            {
+                "id": 39,
+                "product_id": 6,
+                "raw_material_id": 25,
+                "quantity_required": 8,
+                "quantity_unit": "ml",
+                "created_at": "2026-11-18 14:42:08",
+                "updated_at": "2026-11-18 14:42:08"
+            },
+            {
+                "id": 40,
+                "product_id": 6,
+                "raw_material_id": 26,
+                "quantity_required": 0.08,
+                "quantity_unit": "pcs",
+                "created_at": "2026-11-18 22:11:06",
+                "updated_at": "2026-11-18 22:21:11"
+            },
+            {
+                "id": 41,
+                "product_id": 19,
+                "raw_material_id": 24,
+                "quantity_required": 25,
+                "quantity_unit": "g",
+                "created_at": "2026-11-18 22:16:30",
+                "updated_at": "2026-11-18 22:16:30"
+            },
+            {
+                "id": 42,
+                "product_id": 19,
+                "raw_material_id": 26,
+                "quantity_required": 1,
+                "quantity_unit": "pcs",
+                "created_at": "2026-11-18 22:16:30",
+                "updated_at": "2026-11-18 22:16:30"
+            },
+            {
+                "id": 43,
+                "product_id": 6,
+                "raw_material_id": 33,
+                "quantity_required": 1,
+                "quantity_unit": "g",
+                "created_at": "2026-11-18 22:53:48",
+                "updated_at": "2026-11-18 22:53:48"
+            },
+            {
+                "id": 44,
+                "product_id": 6,
+                "raw_material_id": 34,
+                "quantity_required": 0.08,
+                "quantity_unit": "pcs",
+                "created_at": "2026-11-18 22:54:11",
+                "updated_at": "2026-11-18 22:54:11"
+            },
+            {
+                "id": 45,
+                "product_id": 6,
+                "raw_material_id": 36,
+                "quantity_required": 1,
+                "quantity_unit": "pcs",
+                "created_at": "2026-11-18 22:54:56",
+                "updated_at": "2026-11-18 22:54:56"
+            },
+            {
+                "id": 46,
+                "product_id": 6,
+                "raw_material_id": 35,
+                "quantity_required": 1,
+                "quantity_unit": "pcs",
+                "created_at": "2026-11-18 22:55:10",
+                "updated_at": "2026-11-18 22:55:10"
+            }
+        ],
+        "production_batches": []
+    }
+}
