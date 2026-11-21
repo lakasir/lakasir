@@ -52,9 +52,9 @@ class Product extends Model
 
     public function scopeStockLatestCalculateIn()
     {
-        $usingFifoPrice = Setting::get('selling_method', env('SELLING_METHOD', 'fifo')) == 'fifo';
-        $usingNormalPrice = Setting::get('selling_method', env('SELLING_METHOD', 'fifo')) == 'normal';
-        $usingLifoPrice = Setting::get('selling_method', env('SELLING_METHOD', 'fifo')) == 'lifo';
+        $usingFifoPrice = Setting::get('selling_method', config('setting.selling_method')) == 'fifo';
+        $usingNormalPrice = Setting::get('selling_method', config('setting.selling_method')) == 'normal';
+        $usingLifoPrice = Setting::get('selling_method', config('setting.selling_method')) == 'lifo';
 
         return $this
             ->stocks()

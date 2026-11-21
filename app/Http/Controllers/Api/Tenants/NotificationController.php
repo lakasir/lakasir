@@ -28,18 +28,20 @@ class NotificationController extends Controller
 
     public function update($notification, Product $product)
     {
-        $notification = User::find(auth()->id())
+        // Scoped to the signed-in user: someone else's id is a 404, not a 500
+        // on a null notification.
+        $found = User::findOrFail(auth()->id())
             ->notifications()
             ->where('id', $notification)
-            ->first();
-        $data = array_values(Arr::where($notification->data, function ($data) use ($product) {
-            return $data['id'] != $product->id;
+            ->firstOrFail();
+        $data = array_values(Arr::where($found->data ?? [], function ($data) use ($product) {
+            return ($data['id'] ?? null) != $product->id;
         }));
-        $notification->data = $data;
-        $notification->save();
+        $found->data = $data;
+        $found->save();
 
-        if (count($notification->data) == 0) {
-            $notification->delete();
+        if (count($found->data) == 0) {
+            $found->delete();
         }
 
         return $this->buildResponse()

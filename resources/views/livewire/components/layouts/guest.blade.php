@@ -11,8 +11,8 @@
     <!-- Open Graph tags for social media -->
     <meta property="og:title" content="Lakasir - Aplikasi Point of Sale (POS) Gratis">
     <meta property="og:description" content="Lakasir merupakan aplikasi point of sale (POS) yang memudahkan pengelolaan bisnis Anda. unduh secara gratis">
-    <meta property="og:url" content="{{ env('APP_URL') }}">
-    <meta property="og:image" content="{{ env('APP_URL') }}/assets/logo/image.png">
+    <meta property="og:url" content="{{ config('app.url') }}">
+    <meta property="og:image" content="{{ config('app.url') }}/assets/logo/image.png">
     <meta property="og:type" content="website">
 
     <!-- Twitter Card tags for Twitter -->
@@ -20,7 +20,7 @@
     <meta name="twitter:site" content="@yourtwitterhandle">
     <meta name="twitter:title" content="Lakasir - Aplikasi Point of Sale (POS) Gratis">
     <meta name="twitter:description" content="Lakasir merupakan aplikasi point of sale (POS) yang memudahkan pengelolaan bisnis Anda. unduh secara gratis">
-    <meta name="twitter:image" content="{{ env('APP_URL') }}/assets/logo/image.png">
+    <meta name="twitter:image" content="{{ config('app.url') }}/assets/logo/image.png">
 
     <title>{{ config('app.name', 'Laravel') }}</title>
     @filamentStyles

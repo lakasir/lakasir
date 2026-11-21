@@ -69,14 +69,23 @@ class VoucherService
         return $discount;
     }
 
-    public function reduceUsed()
+    /**
+     * Use up one of the voucher's quota. The decrement is a single conditional
+     * UPDATE, so two cashiers selling the last voucher at the same time cannot
+     * both succeed. Returns false when the quota is already gone.
+     */
+    public function reduceUsed(): bool
     {
         if (! $this->voucher) {
             throw new Exception('You can\'t use calculate before assign the voucher code');
         }
 
-        $this->voucher->update([
-            'kuota' => $this->voucher->kuota - 1,
-        ]);
+        $affected = Voucher::whereKey($this->voucher->id)
+            ->where('kuota', '>', 0)
+            ->decrement('kuota');
+
+        $this->voucher->refresh();
+
+        return $affected > 0;
     }
 }
