@@ -175,3 +175,31 @@ test('the web cashier cannot sell while the cash drawer is enabled but not opene
 
     expect(Selling::count())->toBe(0);
 });
+
+test('setting a cart amount to zero only removes the current cashier\'s item', function () {
+    $other = User::factory()->create();
+    Setting::set('selling_method', 'fifo');
+    Cache::clear();
+    $product = Product::factory()->create(['stock' => 10]);
+    $othersItem = CartItem::factory()->create([
+        'user_id' => $other->id,
+        'product_id' => $product->id,
+        'qty' => 2,
+        'price' => 40000,
+    ]);
+    $user = User::first();
+    $mine = CartItem::factory()->create([
+        'user_id' => $user->id,
+        'product_id' => $product->id,
+        'qty' => 1,
+        'price' => 20000,
+    ]);
+    actingAs($user);
+    Filament::setCurrentPanel(Filament::getPanel('tenant'));
+
+    Livewire::test(Cashier::class)
+        ->call('addCart', $product->id, ['amount' => 0]);
+
+    expect(CartItem::find($othersItem->id))->not->toBeNull()
+        ->and(CartItem::find($mine->id))->toBeNull();
+});
