@@ -12,7 +12,7 @@ class ProductCollection extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'category' => $this->category,
-            'category_id' => $this->category->id,
+            'category_id' => $this->category?->id,
             'initial_price' => $this->initial_price,
             'selling_price' => $this->selling_price,
             'type' => $this->type,

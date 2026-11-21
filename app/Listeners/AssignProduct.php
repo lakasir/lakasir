@@ -35,7 +35,7 @@ class AssignProduct
 
             /** @var Product $product */
             $product = $catalog->product((int) $productRequest['product_id']);
-            if (! $product->is_non_stock) {
+            if ($product->tracksStock()) {
                 if ($priceUnit) {
                     $this->reduceStock($product, $priceUnit->stock * $productRequest['qty']);
                 } else {

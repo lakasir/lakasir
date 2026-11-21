@@ -141,7 +141,10 @@ class SellingService
         if (! empty($data['voucher'])) {
             $voucher = (new VoucherService)->applyable($data['voucher'], $voucherBasePrice);
             if ($voucher) {
-                $discountPrice = $voucher->calculate();
+                // Capped at the cart, exactly as /voucher/check caps it: a flat
+                // voucher larger than the cart must give the same answer in both
+                // places instead of passing the check and failing the sale.
+                $discountPrice = min($voucher->calculate(), $voucherBasePrice);
                 $voucherApplied = true;
             }
         }

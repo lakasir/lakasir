@@ -60,6 +60,11 @@ class StockService
     {
         $qty = (float) $qty;
 
+        // Nothing to take: a service or a non-stock product.
+        if (! $product->tracksStock()) {
+            return;
+        }
+
         if (DB::transactionLevel() === 0) {
             // Nothing to lock against: behave as before, one batch at a time.
             $this->reduceUnlocked($product, $qty);

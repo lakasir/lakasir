@@ -51,6 +51,16 @@ class Product extends Model
             ->where('is_ready', 1);
     }
 
+    /**
+     * Does selling this product take stock out of the shelf? A non-stock
+     * product and a service have nothing to count, whatever their stock
+     * column says.
+     */
+    public function tracksStock(): bool
+    {
+        return ! $this->is_non_stock && $this->type !== 'service';
+    }
+
     public function cartItems(): HasMany
     {
         return $this->hasMany(CartItem::class)

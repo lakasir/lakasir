@@ -6,6 +6,7 @@ use App\Models\Tenants\User;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
@@ -47,13 +48,14 @@ class LoginRequest extends FormRequest
         $this->ensureIsNotRateLimited();
 
         if (! Auth::guard('web')->attempt($this->only('email', 'password'), $this->boolean('remember'))) {
+            // Only after the password check failed: an unverified account with
+            // the *right* password gets the verification message, a wrong
+            // password is always "these credentials do not match".
             $user = User::where('email', $this->email)->first();
-            if ($user) {
-                if (! $user->hasVerifiedEmail()) {
-                    throw ValidationException::withMessages([
-                        'email' => 'Email is not verified, please check your email to verify your account',
-                    ]);
-                }
+            if ($user && $user->hasVerifiedEmail() === false && Hash::check($this->password, $user->password)) {
+                throw ValidationException::withMessages([
+                    'email' => 'Email is not verified, please check your email to verify your account',
+                ]);
             }
             RateLimiter::hit($this->throttleKey());
 
