@@ -33,7 +33,7 @@ class StockService
         return $lastStock;
     }
 
-    public function addStock(Product $product, $qty): void
+    public function addStock(Product $product, float $qty): void
     {
         $lastStock = $this->adjustStockPrepare($product);
 
@@ -56,7 +56,7 @@ class StockService
      *
      * @throws ValidationException
      */
-    public function reduceStock(Product $product, $qty): void
+    public function reduceStock(Product $product, float $qty): void
     {
         $qty = (float) $qty;
 
@@ -140,7 +140,7 @@ class StockService
         }
     }
 
-    public function create($data, ?Purchasing $purchasing = null): Stock
+    public function create(array $data, ?Purchasing $purchasing = null): Stock
     {
         $data['stock'] = $data['stock'] ?? 0;
         $data['date'] = $data['date'] ?? now();

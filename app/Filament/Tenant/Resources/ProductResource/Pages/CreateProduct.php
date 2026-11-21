@@ -6,7 +6,6 @@ use App\Filament\Tenant\Resources\ProductResource;
 use App\Filament\Tenant\Resources\Traits\RedirectToIndex;
 use App\Models\Tenants\Barcode;
 use App\Models\Tenants\Product;
-use App\Observers\ProductObserver;
 use App\Services\Tenants\ProductService;
 use Filament\Resources\Pages\CreateRecord;
 
@@ -27,10 +26,6 @@ class CreateProduct extends CreateRecord
     protected function mutateFormDataBeforeCreate(array $data): array
     {
         $this->barcodesData = $data['barcodes'] ?? [];
-
-        if (!empty($this->barcodesData)) {
-            ProductObserver::setTempBarcodesData($this->barcodesData);
-        }
         unset($data['barcodes']);
 
         return $data;
@@ -53,6 +48,11 @@ class CreateProduct extends CreateRecord
         $stock->save();
 
         if (!empty($this->barcodesData)) {
+            // The observer wrote a fallback barcode; the form's codes replace
+            // it, so the product has every code it was created with and only
+            // those.
+            $product->barcodes()->delete();
+
             foreach ($this->barcodesData as $barcodeData) {
                 if (!empty($barcodeData['code'])) {
                     $product->barcodes()->create([

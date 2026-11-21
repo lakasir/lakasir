@@ -69,8 +69,8 @@ class AssignProduct
         }
     }
 
-    private function reduceStock(Product $product, $qty)
+    private function reduceStock(Product $product, float|int $qty): void
     {
-        $this->stockService->reduceStock($product, $qty);
+        $this->stockService->reduceStock($product, (float) $qty);
     }
 }
