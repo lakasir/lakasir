@@ -17,7 +17,7 @@ class StockService
      */
     private function adjustStockPrepare(Product $product): ?Stock
     {
-        if (Setting::get('selling_method', env('SELLING_METHOD', 'fifo')) == 'normal') {
+        if (Setting::get('selling_method', config('setting.selling_method')) == 'normal') {
             /** @var Stock $lastStock */
             $lastStock = $product
                 ->stocks()
@@ -69,7 +69,7 @@ class StockService
 
         /** @var Product $locked */
         $locked = Product::whereKey($product->id)->lockForUpdate()->firstOrFail();
-        $method = Setting::get('selling_method', env('SELLING_METHOD', 'fifo'));
+        $method = Setting::get('selling_method', config('setting.selling_method'));
         $batches = $locked->stocks()
             ->where('type', 'in')
             ->where('stock', '>', 0)

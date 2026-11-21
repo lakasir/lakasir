@@ -21,7 +21,7 @@ class StockRunsOut extends Notification
     public function via(User $user)
     {
         if ($user->fcm_token) {
-            if (env('FIREBASE_CREDENTIALS')) {
+            if (config('services.firebase_credentials')) {
                 return [FcmChannel::class, 'database'];
             }
         }
