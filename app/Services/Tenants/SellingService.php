@@ -33,7 +33,7 @@ class SellingService
      * calculate(); the voucher's quota is only used up here, once the
      * sale is valid and inside the transaction.
      */
-    public function create(array $data)
+    public function create(array $data): Selling
     {
         try {
             DB::beginTransaction();
