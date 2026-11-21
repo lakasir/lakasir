@@ -113,7 +113,8 @@ Route::middleware([
             });
 
             Route::group(['prefix' => 'master'], function () {
-                Route::resource('/supplier', SupplierController::class);
+                Route::resource('/supplier', SupplierController::class)
+                    ->middleware('method_and_permission:index@read supplier|store@create supplier|show@read supplier|destroy@delete supplier|update@update supplier');
                 Route::group(['prefix' => '/category'], function () {
                     Route::get('/', [CategoryController::class, 'index'])->can('read category');
                     Route::post('/', [CategoryController::class, 'store'])->can('create category');
@@ -143,18 +144,24 @@ Route::middleware([
             });
 
             Route::group(['prefix' => 'about'], function () {
+                // Readable by any signed-in user: the POS app needs the shop's
+                // name and address to print a receipt.
                 Route::get('/', [AboutController::class, 'index'])
                     ->name('about');
                 Route::put('/', [AboutController::class, 'update'])
+                    ->can('update about')
                     ->name('about.update');
             });
 
             Route::group(['prefix' => 'transaction'], function () {
                 Route::get('/dashboard/total-revenue', [DashboardController::class, 'totalRevenue'])
+                    ->can('read revenue overview')
                     ->name('transaction.dashboard.total-revenue');
                 Route::get('/dashboard/total-gross-profit', [DashboardController::class, 'totalGrossProfit'])
+                    ->can('read revenue overview')
                     ->name('transaction.dashboard.total-gross-profit');
                 Route::get('/dashboard/total-sales', [DashboardController::class, 'totalSales'])
+                    ->can('read sales overview')
                     ->name('transaction.dashboard.total-sales');
 
                 Route::get('/selling', [SellingController::class, 'index'])->can('read selling');
@@ -172,10 +179,11 @@ Route::middleware([
                 });
             });
 
-            // @TODO: this is should be using can permission
             Route::get('setting/{key}', [App\Http\Controllers\Api\Tenants\SettingController::class, 'show'])
+                ->can('read setting')
                 ->name('setting.show');
             Route::post('setting', [App\Http\Controllers\Api\Tenants\SettingController::class, 'store'])
+                ->can('update setting')
                 ->name('setting.store');
 
             Route::post('setting/secure-initial-price', [SecureInitialPriceController::class, 'store'])
