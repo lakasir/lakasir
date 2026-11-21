@@ -50,11 +50,55 @@ class Product extends Model
             ->where('user_id', Filament::auth()->id());
     }
 
+    /**
+     * The same window as stockLatestCalculateIn(), as an aggregate column, so a
+     * whole grid of products costs one query instead of one per card.
+     */
+    public function scopeWithAvailableStock(Builder $query): Builder
+    {
+        $method = Setting::get('selling_method', config('setting.selling_method'));
+
+        return $query->withSum(
+            ['stocks as available_stock' => function (Builder $stocks) use ($method) {
+                $stocks->where('type', 'in');
+
+                if ($method !== 'normal') {
+                    $stocks->where('stock', '>', 0);
+                }
+            }],
+            'stock',
+        );
+    }
+
+    /**
+     * The signed-in cashier's cart line for this product. Reads the eager-loaded
+     * relation when the grid loaded it, so rendering a card costs no query.
+     */
+    /**
+     * Stock on hand, from a list that already aggregated it when possible.
+     */
+    public function cartStockAvailable(): float
+    {
+        return (float) $this->stock_calculate;
+    }
+
+    public function cartItemForCashier(): ?CartItem
+    {
+        if ($this->relationLoaded('CartItems')) {
+            return $this->CartItems->first();
+        }
+
+        return $this->CartItems()->first();
+    }
+
     public function scopeStockLatestCalculateIn()
     {
-        $usingFifoPrice = Setting::get('selling_method', config('setting.selling_method')) == 'fifo';
-        $usingNormalPrice = Setting::get('selling_method', config('setting.selling_method')) == 'normal';
-        $usingLifoPrice = Setting::get('selling_method', config('setting.selling_method')) == 'lifo';
+        // Read once: the scope runs for every product a recalculated batch
+        // touches, and each read is a cache hit or a query.
+        $method = Setting::get('selling_method', config('setting.selling_method'));
+        $usingFifoPrice = $method == 'fifo';
+        $usingNormalPrice = $method == 'normal';
+        $usingLifoPrice = $method == 'lifo';
 
         return $this
             ->stocks()
@@ -72,11 +116,14 @@ class Product extends Model
     {
         return Attribute::make(
             get: function () {
-                $stock = $this
+                // A list that ran withAvailableStock() already has the number.
+                if (array_key_exists('available_stock', $this->attributes)) {
+                    return (float) ($this->attributes['available_stock'] ?? 0);
+                }
+
+                return $this
                     ->stockLatestCalculateIn()
                     ->sum('stock');
-
-                return $stock;
             },
             set: fn($value) => $value
         );
@@ -85,15 +132,7 @@ class Product extends Model
     public function initialPriceCalculate(): Attribute
     {
         return Attribute::make(
-            get: function ($value) {
-                $stock = $this
-                    ->stockLatestCalculateIn();
-                if ($stock?->first() == null) {
-                    return $this->initial_price ?? 0;
-                }
-
-                return $stock->first()->initial_price;
-            },
+            get: fn () => $this->firstStockOfWindow()?->initial_price ?? $this->initial_price ?? 0,
             set: fn($value) => $value
         );
     }
@@ -101,17 +140,19 @@ class Product extends Model
     public function sellingPriceCalculate(): Attribute
     {
         return Attribute::make(
-            get: function ($value) {
-                $stock = $this
-                    ->stockLatestCalculateIn();
-                if ($stock?->first() == null) {
-                    return $this->selling_price ?? 0;
-                }
-
-                return $stock->first()->selling_price;
-            },
+            get: fn () => $this->firstStockOfWindow()?->selling_price ?? $this->selling_price ?? 0,
             set: fn($value) => $value
         );
+    }
+
+    /**
+     * The batch the price comes from: the first row of the same window
+     * stockCalculate() sums. One query, shared by both price accessors for
+     * the length of the request.
+     */
+    private function firstStockOfWindow(): ?Stock
+    {
+        return once(fn () => $this->stockLatestCalculateIn()->first());
     }
 
     public function sellingPriceLabelCalculate(): Attribute
