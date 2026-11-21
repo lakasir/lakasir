@@ -21,7 +21,7 @@ class CreateStockOpname extends CreateRecord
 
     public function __construct()
     {
-        $this->stockOpnameService = new StockOpnameService();
+        $this->stockOpnameService = new StockOpnameService;
         $this->prefix = 'SO';
     }
 

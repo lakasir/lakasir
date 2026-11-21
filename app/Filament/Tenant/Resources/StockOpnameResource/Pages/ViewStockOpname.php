@@ -32,7 +32,7 @@ class ViewStockOpname extends ViewRecord
 
     public function __construct()
     {
-        $this->sOService = new StockOpnameService();
+        $this->sOService = new StockOpnameService;
     }
 
     protected function loads(): array
@@ -139,7 +139,7 @@ class ViewStockOpname extends ViewRecord
         $actual_stock = 1;
 
         $sOProductId = $stockOpname->stockOpnameItems()->where('product_id', $product->id);
-        $sItem = new StockOpnameItem();
+        $sItem = new StockOpnameItem;
         if ($sOProductId->exists()) {
             $sItem = $sOProductId->first();
             $actual_stock = $sItem->actual_stock + 1;

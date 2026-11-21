@@ -17,7 +17,7 @@ class EditPurchasing extends EditRecord
 
     public function __construct()
     {
-        $this->purchasingService = new PurchasingService();
+        $this->purchasingService = new PurchasingService;
     }
 
     public function getTitle(): string|Htmlable

@@ -4,6 +4,7 @@ namespace App\Filament\Tenant\Pages;
 
 use App\Jobs\RunAppUpdate;
 use App\Services\AppUpdateService;
+use App\Services\UpdateChecker;
 use Exception;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
@@ -36,7 +37,7 @@ class Update extends Page
 
     public function mount()
     {
-        $updateChecker = app(\App\Services\UpdateChecker::class);
+        $updateChecker = app(UpdateChecker::class);
 
         $this->currentVersion = $updateChecker->getCurrentVersion();
         $this->updateAvailable = $updateChecker->isUpdateAvailable();
@@ -47,7 +48,7 @@ class Update extends Page
 
     public function pollLogs()
     {
-        $key = "update:progress";
+        $key = 'update:progress';
         $this->updateLog = Cache::get($key, '');
     }
 
@@ -63,7 +64,7 @@ class Update extends Page
         }
 
         try {
-            dispatch(new RunAppUpdate());
+            dispatch(new RunAppUpdate);
         } catch (Exception $e) {
             report($e);
 

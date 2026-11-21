@@ -144,7 +144,7 @@ class StockService
     {
         $data['stock'] = $data['stock'] ?? 0;
         $data['date'] = $data['date'] ?? now();
-        $stock = new Stock();
+        $stock = new Stock;
         $data['init_stock'] = $data['stock'];
         $stock->fill($data);
         $stock->product()->associate(Product::find($data['product_id']));

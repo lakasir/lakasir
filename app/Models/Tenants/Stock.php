@@ -3,17 +3,16 @@
 namespace App\Models\Tenants;
 
 use App\Features\ProductExpired;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use App\Models\Tenants\Setting;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
 use Filament\Support\RawJs;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Str;
 use Laravel\Pennant\Feature;
 
@@ -79,12 +78,12 @@ class Stock extends Model
 
     public function totalSellingPrice(): Attribute
     {
-        return Attribute::make(get: fn() => $this->selling_price * $this->init_stock);
+        return Attribute::make(get: fn () => $this->selling_price * $this->init_stock);
     }
 
     public function totalInitialPrice(): Attribute
     {
-        return Attribute::make(get: fn() => $this->initial_price * $this->init_stock);
+        return Attribute::make(get: fn () => $this->initial_price * $this->init_stock);
     }
 
     public static function form(): array

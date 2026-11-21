@@ -11,7 +11,5 @@ class SellingCreated
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public function __construct(public Selling $selling, public array $data)
-    {
-    }
+    public function __construct(public Selling $selling, public array $data) {}
 }

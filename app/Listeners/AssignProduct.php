@@ -3,7 +3,6 @@
 namespace App\Listeners;
 
 use App\Events\SellingCreated;
-use App\Models\Tenants\PriceUnit;
 use App\Models\Tenants\Product;
 use App\Models\Tenants\Selling;
 use App\Models\Tenants\SellingDetail;
@@ -13,9 +12,7 @@ use Illuminate\Support\Arr;
 
 class AssignProduct
 {
-    public function __construct(public StockService $stockService)
-    {
-    }
+    public function __construct(public StockService $stockService) {}
 
     /**
      * Handle the event.
@@ -54,7 +51,7 @@ class AssignProduct
             }
             $productRequest['cost'] = $product->initial_price * $productRequest['qty'];
 
-            $sellingDetail = new SellingDetail();
+            $sellingDetail = new SellingDetail;
             $sellingDetail->fill(Arr::only($productRequest, [
                 'product_id',
                 'qty',

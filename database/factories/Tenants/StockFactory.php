@@ -7,7 +7,7 @@ use App\Models\Tenants\Stock;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Tenants\Stock>
+ * @extends Factory<Stock>
  */
 class StockFactory extends Factory
 {

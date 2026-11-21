@@ -20,7 +20,7 @@ class CategorySeeder extends Seeder
         }
         Category::truncate();
         Category::create([
-            'name' => "UMUM"
+            'name' => 'UMUM',
         ]);
     }
 }

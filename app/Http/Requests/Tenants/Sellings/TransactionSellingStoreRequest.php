@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Tenants\Sellings;
 
 use App\Models\Tenants\Selling;
+use App\Services\Tenants\CheckoutProducts;
 use App\Services\Tenants\SellingService;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
@@ -18,9 +19,7 @@ class TransactionSellingStoreRequest extends FormRequest
     /** Server-computed totals, set once the input has a valid shape. */
     private ?array $totals = null;
 
-    public function __construct(private SellingService $sellingService)
-    {
-    }
+    public function __construct(private SellingService $sellingService) {}
 
     public function authorize(): bool
     {
@@ -37,7 +36,7 @@ class TransactionSellingStoreRequest extends FormRequest
     {
         // Load the cart's products before the stock rule looks at them: the
         // whole cart in one query instead of one query per line.
-        app(\App\Services\Tenants\CheckoutProducts::class)->loadProducts($this->input('products', []));
+        app(CheckoutProducts::class)->loadProducts($this->input('products', []));
 
         return $this->sellingService->rules($this->all());
     }

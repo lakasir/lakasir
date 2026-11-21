@@ -2,8 +2,8 @@
 
 namespace App\Rules;
 
-use App\Models\Tenants\PriceUnit;
 use App\Models\Tenants\Product;
+use App\Services\Tenants\CheckoutProducts;
 use Closure;
 use Illuminate\Contracts\Validation\DataAwareRule;
 use Illuminate\Contracts\Validation\ValidationRule;
@@ -28,7 +28,7 @@ class CheckProductStock implements DataAwareRule, ValidationRule
         $index = Str::of($attribute)->explode('.')[1];
         $dataProduct = $this->data['products'][$index];
         // One lookup for the whole cart: the checkout has already loaded them.
-        $product = app(\App\Services\Tenants\CheckoutProducts::class)->product((int) $dataProduct['product_id']);
+        $product = app(CheckoutProducts::class)->product((int) $dataProduct['product_id']);
 
         if (! $product) {
             $fail('The product is not found.');
@@ -58,7 +58,7 @@ class CheckProductStock implements DataAwareRule, ValidationRule
             $lineQty = (float) $line['qty'];
             $priceUnitId = $line['price_unit_id'] ?? null;
             if ($priceUnitId) {
-                $priceUnit = app(\App\Services\Tenants\CheckoutProducts::class)->priceUnit((int) $priceUnitId);
+                $priceUnit = app(CheckoutProducts::class)->priceUnit((int) $priceUnitId);
                 $lineQty *= (float) ($priceUnit?->stock ?? 1);
             }
             $qty += $lineQty;

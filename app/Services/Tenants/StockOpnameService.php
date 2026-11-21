@@ -25,7 +25,7 @@ class StockOpnameService
 
     public function create(array $data): StockOpname
     {
-        $stockOpname = new StockOpname();
+        $stockOpname = new StockOpname;
         $stockOpname->fill($data);
         $stockOpname->save();
 

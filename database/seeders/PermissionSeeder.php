@@ -258,15 +258,15 @@ class PermissionSeeder extends Seeder
                     ],
                     'update app' => [
                         'permission' => [
-                            'can'
+                            'can',
                         ],
-                        'guard' => ['web', 'sanctum']
+                        'guard' => ['web', 'sanctum'],
                     ],
                     'restore app' => [
                         'permission' => [
-                            'can'
+                            'can',
                         ],
-                        'guard' => ['web', 'sanctum']
+                        'guard' => ['web', 'sanctum'],
                     ],
                     'general setting' => [
                         'permission' => [

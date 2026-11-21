@@ -16,11 +16,12 @@ class CreateProduct extends CreateRecord
     protected static string $resource = ProductResource::class;
 
     private ProductService $productService;
+
     private array $barcodesData = [];
 
     public function __construct()
     {
-        $this->productService = new ProductService();
+        $this->productService = new ProductService;
     }
 
     protected function mutateFormDataBeforeCreate(array $data): array
@@ -47,14 +48,14 @@ class CreateProduct extends CreateRecord
         $stock->expired = $this->data['expired'] ?? null;
         $stock->save();
 
-        if (!empty($this->barcodesData)) {
+        if (! empty($this->barcodesData)) {
             // The observer wrote a fallback barcode; the form's codes replace
             // it, so the product has every code it was created with and only
             // those.
             $product->barcodes()->delete();
 
             foreach ($this->barcodesData as $barcodeData) {
-                if (!empty($barcodeData['code'])) {
+                if (! empty($barcodeData['code'])) {
                     $product->barcodes()->create([
                         'code' => $barcodeData['code'],
                         'type' => $barcodeData['type'] ?? 'primary',

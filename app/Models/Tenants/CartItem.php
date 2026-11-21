@@ -80,8 +80,10 @@ class CartItem extends Model
                         return $path;
                     }
                     $uploadDisk = config('filesystems.upload_disk');
+
                     return Storage::disk($uploadDisk)->url($path);
                 }
+
                 // Inline pixels: under a tenant the asset root points at
                 // /tenancy/assets, which this app does not serve, and a
                 // third-party host fails on a shop with no internet.

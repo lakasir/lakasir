@@ -78,7 +78,7 @@ class ProductObserver extends AbstractObserver implements DataAwareRule
             ]);
         }
 
-        (new StockService())->create([
+        (new StockService)->create([
             'product_id' => $product->getKey(),
             'stock' => $product->stock ?? 0,
             'init_stock' => $product->stock ?? 0,

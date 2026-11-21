@@ -11,7 +11,6 @@ use Filament\Actions;
 use Filament\Actions\Action;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Arr;
 
 class EditProduct extends EditRecord
 {
@@ -23,7 +22,7 @@ class EditProduct extends EditRecord
 
     public function __construct()
     {
-        $this->productService = new ProductService();
+        $this->productService = new ProductService;
     }
 
     protected function getCancelFormAction(): Action
@@ -112,7 +111,7 @@ class EditProduct extends EditRecord
         $product->barcodes()->delete();
 
         foreach ($barcodesData as $barcodeData) {
-            if (!empty($barcodeData['code'])) {
+            if (! empty($barcodeData['code'])) {
                 $product->barcodes()->create([
                     'code' => $barcodeData['code'],
                     'type' => $barcodeData['type'] ?? 'primary',

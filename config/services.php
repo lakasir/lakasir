@@ -7,7 +7,6 @@ return [
      */
     'firebase_credentials' => env('FIREBASE_CREDENTIALS'),
 
-
     /*
     |--------------------------------------------------------------------------
     | Third Party Services

@@ -7,7 +7,6 @@ use Tests\RefreshDatabaseWithTenant;
 
 use function Pest\Laravel\actingAs;
 use function Pest\Laravel\postJson;
-use function Pest\Laravel\post;
 
 uses(RefreshDatabaseWithTenant::class);
 

@@ -6,7 +6,7 @@ use App\Tenant;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
 
-use function Pest\Laravel\{get};
+use function Pest\Laravel\get;
 use function Pest\Livewire\livewire;
 
 uses(RefreshDatabase::class);

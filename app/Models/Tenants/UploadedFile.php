@@ -5,6 +5,7 @@ namespace App\Models\Tenants;
 use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Support\Facades\Storage;
 
 /**
@@ -40,7 +41,7 @@ class UploadedFile extends Model
      * Resolve the storage disk instance for this file.
      * Uses the file's own disk attribute, falling back to config.
      */
-    public function resolveDisk(): \Illuminate\Filesystem\FilesystemAdapter
+    public function resolveDisk(): FilesystemAdapter
     {
         return Storage::disk($this->disk ?: config('filesystems.upload_disk'));
     }
@@ -66,7 +67,7 @@ class UploadedFile extends Model
     {
         if ($this->relative_path) {
             $disk = $this->resolveDisk();
-            $driver = config('filesystems.disks.' . ($this->disk ?: config('filesystems.upload_disk')) . '.driver');
+            $driver = config('filesystems.disks.'.($this->disk ?: config('filesystems.upload_disk')).'.driver');
             if ($driver === 'local' || $driver === 'public') {
                 return $disk->path($this->relative_path);
             }
@@ -90,7 +91,7 @@ class UploadedFile extends Model
             throw new Exception('File in temp directory is not found');
         }
 
-        $relativePath = $directory . '/' . $this->name;
+        $relativePath = $directory.'/'.$this->name;
         Storage::disk($uploadDisk)->putFileAs(
             $directory,
             Storage::disk($tmpDisk)->path($this->name),
@@ -133,7 +134,7 @@ class UploadedFile extends Model
                 Storage::disk($uploadDisk)->delete($this->relative_path);
             }
         } elseif ($this->name) {
-            Storage::disk($uploadDisk)->delete($directory . '/' . $this->name);
+            Storage::disk($uploadDisk)->delete($directory.'/'.$this->name);
         }
 
         $this->delete();

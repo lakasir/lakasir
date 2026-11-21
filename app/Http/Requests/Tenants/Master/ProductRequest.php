@@ -4,8 +4,8 @@ namespace App\Http\Requests\Tenants\Master;
 
 use App\Features\ProductExpired;
 use App\Features\ProductStock;
-use App\Models\Tenants\Product;
 use App\Models\Tenants\Barcode;
+use App\Models\Tenants\Product;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 

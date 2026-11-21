@@ -110,11 +110,11 @@ class Product extends Model
         return $this
             ->stocks()
             ->where('type', 'in')
-            ->when($usingNormalPrice, fn(Builder $query) => $query->newestFirst())
-            ->when($usingFifoPrice, fn(Builder $query) => $query
+            ->when($usingNormalPrice, fn (Builder $query) => $query->newestFirst())
+            ->when($usingFifoPrice, fn (Builder $query) => $query
                 ->where('stock', '>', 0)
                 ->orderBy('created_at')->orderBy('date'))
-            ->when($usingLifoPrice, fn(Builder $query) => $query
+            ->when($usingLifoPrice, fn (Builder $query) => $query
                 ->where('stock', '>', 0)
                 ->orderByDesc('created_at')->orderByDesc('date'));
     }
@@ -132,7 +132,7 @@ class Product extends Model
                     ->stockLatestCalculateIn()
                     ->sum('stock');
             },
-            set: fn($value) => $value
+            set: fn ($value) => $value
         );
     }
 
@@ -140,7 +140,7 @@ class Product extends Model
     {
         return Attribute::make(
             get: fn () => $this->firstStockOfWindow()?->initial_price ?? $this->initial_price ?? 0,
-            set: fn($value) => $value
+            set: fn ($value) => $value
         );
     }
 
@@ -148,7 +148,7 @@ class Product extends Model
     {
         return Attribute::make(
             get: fn () => $this->firstStockOfWindow()?->selling_price ?? $this->selling_price ?? 0,
-            set: fn($value) => $value
+            set: fn ($value) => $value
         );
     }
 
@@ -168,7 +168,7 @@ class Product extends Model
             get: function ($value) {
                 return Number::currency($this->initial_price, Setting::get('currency', 'IDR'));
             },
-            set: fn($value) => $value
+            set: fn ($value) => $value
         );
     }
 
@@ -179,8 +179,8 @@ class Product extends Model
     public function heroImages(): Attribute
     {
         return Attribute::make(
-            get: fn($value) => $value ? Str::of($value)->explode(',')->toArray() : [],
-            set: fn($value) => $value ? Arr::join(is_array($value) ? $value : $value->toArray(), ',') : null
+            get: fn ($value) => $value ? Str::of($value)->explode(',')->toArray() : [],
+            set: fn ($value) => $value ? Arr::join(is_array($value) ? $value : $value->toArray(), ',') : null
         );
     }
 
@@ -193,10 +193,12 @@ class Product extends Model
         return Attribute::make(
             get: function () {
                 $uploadDisk = config('filesystems.upload_disk');
+
                 return Arr::map($this->hero_images, function ($path) use ($uploadDisk) {
                     if (Str::startsWith($path, ['http://', 'https://'])) {
                         return $path;
                     }
+
                     return Storage::disk($uploadDisk)->url($path);
                 });
             }
@@ -206,7 +208,7 @@ class Product extends Model
     public function netProfit(): Attribute
     {
         return Attribute::make(
-            get: fn() => $this->selling_price - $this->initial_price
+            get: fn () => $this->selling_price - $this->initial_price
         );
     }
 
@@ -268,8 +270,10 @@ class Product extends Model
                         return $path;
                     }
                     $uploadDisk = config('filesystems.upload_disk');
+
                     return Storage::disk($uploadDisk)->url($path);
                 }
+
                 // Inline pixels: under a tenant the asset root points at
                 // /tenancy/assets, which this app does not serve, and a
                 // third-party host fails on a shop with no internet.
@@ -301,25 +305,20 @@ class Product extends Model
                     ->where('type', 'in')
                     ->where('stock', '>', 0);
             })
-            ->orWhere('is_non_stock', true);
+                ->orWhere('is_non_stock', true);
         });
     }
 
     /**
      * Get all barcodes associated with the product.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function barcodes(): HasMany
     {
         return $this->hasMany(Barcode::class);
     }
 
-
     /**
      * Get the primary and active barcode(s) for the product.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function primaryBarcode(): HasMany
     {
@@ -332,7 +331,7 @@ class Product extends Model
      * It first attempts to find the product via an active barcode,
      * then falls back to searching by the product's SKU.
      *
-     * @param string $code The barcode or SKU string to search for.
+     * @param  string  $code  The barcode or SKU string to search for.
      * @return ?Product The product model, or null if not found.
      */
     public static function findByBarcodeOrSku(string $code): ?Product
@@ -342,6 +341,7 @@ class Product extends Model
         if ($product) {
             return $product;
         }
+
         return static::where('sku', $code)->first();
     }
 }
