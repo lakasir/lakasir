@@ -21,7 +21,7 @@ class RunAppUpdate implements ShouldQueue
 
     public function __construct()
     {
-        $this->logKey = "update:progress";
+        $this->logKey = 'update:progress';
     }
 
     public function handle(): void

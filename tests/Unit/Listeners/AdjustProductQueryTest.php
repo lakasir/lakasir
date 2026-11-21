@@ -1,5 +1,6 @@
 <?php
 
+use App\Console\Commands\RecalculateAllProduct;
 use App\Events\RecalculateEvent;
 use App\Models\Tenants\Category;
 use App\Models\Tenants\Product;
@@ -59,7 +60,7 @@ test('recalculating 5 products does not cost a query per product', function () {
 });
 
 test('the recalculate command pages through the products instead of loading them all', function () {
-    $command = new App\Console\Commands\RecalculateAllProduct();
+    $command = new RecalculateAllProduct;
 
     DB::enableQueryLog();
     $command->handle();

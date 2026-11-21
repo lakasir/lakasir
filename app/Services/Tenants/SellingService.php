@@ -64,7 +64,7 @@ class SellingService
                 // Another cashier may have taken the last one between the total
                 // check and here: refuse the sale instead of giving the
                 // discount without paying for it.
-                $used = (new VoucherService())->applyable($data['voucher'], $data['voucher_base_price'] ?? 0)?->reduceUsed();
+                $used = (new VoucherService)->applyable($data['voucher'], $data['voucher_base_price'] ?? 0)?->reduceUsed();
                 if (! $used) {
                     throw ValidationException::withMessages([
                         'voucher' => __('voucher expired'),
@@ -139,7 +139,7 @@ class SellingService
         $voucherBasePrice = $subtotal - $totalDiscountPerItem;
         $voucherApplied = false;
         if (! empty($data['voucher'])) {
-            $voucher = (new VoucherService())->applyable($data['voucher'], $voucherBasePrice);
+            $voucher = (new VoucherService)->applyable($data['voucher'], $voucherBasePrice);
             if ($voucher) {
                 $discountPrice = $voucher->calculate();
                 $voucherApplied = true;
@@ -281,7 +281,7 @@ class SellingService
             $validator->errors()->add('voucher', __('voucher expired'));
         }
 
-        if ($totals['total_discount_per_item'] + $totals['discount_price'] > $totals['subtotal'] && ! $totals['friend_price']) {
+        if ($totals['subtotal'] < $totals['total_discount_per_item'] + $totals['discount_price'] && ! $totals['friend_price']) {
             $validator->errors()->add('discount_price', __('The discount cannot be more than the subtotal.'));
         }
 

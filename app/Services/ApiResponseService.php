@@ -16,18 +16,21 @@ class ApiResponseService
     public function setData($data): self
     {
         $this->data = $data;
+
         return $this;
     }
 
     public function setMessage($message): self
     {
         $this->message = $message;
+
         return $this;
     }
 
     public function setCode($code): self
     {
         $this->code = $code;
+
         return $this;
     }
 
@@ -35,25 +38,25 @@ class ApiResponseService
     {
         if ($this->data instanceof Paginator || isset($this->data->resource) && $this->data?->resource instanceof Paginator) {
             $this->setPaginator($this->data);
-        } else if ($this->data instanceof LengthAwarePaginator || isset($this->data->resource) && $this->data?->resource instanceof LengthAwarePaginator) {
+        } elseif ($this->data instanceof LengthAwarePaginator || isset($this->data->resource) && $this->data?->resource instanceof LengthAwarePaginator) {
             $this->setLengthAwarePaginator($this->data);
         }
 
         $response = [
             'success' => true,
             'data' => $this->data,
-            'message' => $this->message
+            'message' => $this->message,
         ];
 
         if ($this->code != 200) {
             $response['success'] = false;
         }
 
-        if ($this->message == "") {
+        if ($this->message == '') {
             unset($response['message']);
         }
 
-        if (!$this->data) {
+        if (! $this->data) {
             unset($response['data']);
         }
 

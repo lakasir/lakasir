@@ -49,21 +49,24 @@ class SwitchDiskCommand extends Command
         foreach ($files as $file) {
             $relativePath = $file->relative_path;
 
-            if (!$relativePath) {
+            if (! $relativePath) {
                 $this->warn("  Skipping file ID {$file->id}: no relative_path set.");
                 $failed++;
+
                 continue;
             }
 
-            if (!$fromDisk->exists($relativePath)) {
+            if (! $fromDisk->exists($relativePath)) {
                 $this->warn("  Skipping file ID {$file->id} ({$relativePath}): not found on source disk.");
                 $failed++;
+
                 continue;
             }
 
             if ($dryRun) {
                 $this->line("  Would copy: {$relativePath} (disk: {$from} → {$to})");
                 $copied++;
+
                 continue;
             }
 
@@ -72,6 +75,7 @@ class SwitchDiskCommand extends Command
                 if ($stream === false) {
                     $this->error("  Failed to open stream for {$relativePath}");
                     $failed++;
+
                     continue;
                 }
 

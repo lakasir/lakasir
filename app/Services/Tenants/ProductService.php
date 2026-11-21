@@ -19,7 +19,7 @@ class ProductService
     public function create(array $data): Product
     {
         return DB::transaction(function () use ($data) {
-            $product = new Product();
+            $product = new Product;
             $product->fill($this->fillable($data));
             $product->save();
             $this->syncPrimaryBarcode($product, $data['barcode'] ?? null);

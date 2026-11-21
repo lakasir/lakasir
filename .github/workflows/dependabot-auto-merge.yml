@@ -18,15 +18,19 @@ jobs:
         with:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
 
-      - name: Auto-merge Dependabot PRs for semver-minor updates
-        if: ${{steps.metadata.outputs.update-type == 'version-update:semver-minor'}}
+      # `gh pr merge --auto` only queues the merge: branch protection still has
+      # to require the CI check, or nothing gates it. Minor/patch dev updates
+      # are the ones worth queueing; a runtime dependency bump goes through
+      # review like any other change.
+      - name: Auto-merge Dependabot PRs for semver-minor dev updates
+        if: ${{ steps.metadata.outputs.update-type == 'version-update:semver-minor' && steps.metadata.outputs.dependency-type == 'direct:development' }}
         run: gh pr merge --auto --merge "$PR_URL"
         env:
           PR_URL: ${{github.event.pull_request.html_url}}
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
-      - name: Auto-merge Dependabot PRs for semver-patch updates
-        if: ${{steps.metadata.outputs.update-type == 'version-update:semver-patch'}}
+      - name: Auto-merge Dependabot PRs for semver-patch dev updates
+        if: ${{ steps.metadata.outputs.update-type == 'version-update:semver-patch' && steps.metadata.outputs.dependency-type == 'direct:development' }}
         run: gh pr merge --auto --merge "$PR_URL"
         env:
           PR_URL: ${{github.event.pull_request.html_url}}

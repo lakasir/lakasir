@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Tenants\PaymentMethod;
 use Illuminate\Database\Seeder;
 
 class PaymentMethodSeeder extends Seeder
@@ -12,7 +13,7 @@ class PaymentMethodSeeder extends Seeder
     public function run(): void
     {
         foreach ($this->data() as $data) {
-            \App\Models\Tenants\PaymentMethod::create($data);
+            PaymentMethod::create($data);
         }
     }
 

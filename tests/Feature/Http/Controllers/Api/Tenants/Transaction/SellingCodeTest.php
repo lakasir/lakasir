@@ -3,7 +3,10 @@
 use App\Models\Tenants\Category;
 use App\Models\Tenants\Product;
 use App\Models\Tenants\Selling;
+use App\Models\Tenants\SellingDetail;
 use App\Models\Tenants\User;
+use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\DB;
 use Tests\RefreshDatabaseWithTenant;
 
 use function Pest\Laravel\actingAs;
@@ -42,7 +45,7 @@ test('a deleted sale leaves no duplicate to reuse', function () {
 
     // A row count would reuse the code of the removed row.
     $selling = Selling::where('code', 'SELL0002')->first();
-    \App\Models\Tenants\SellingDetail::where('selling_id', $selling->id)->delete();
+    SellingDetail::where('selling_id', $selling->id)->delete();
     $selling->delete();
     ($this->sell)()->assertOk();
 
@@ -53,10 +56,10 @@ test('a deleted sale leaves no duplicate to reuse', function () {
 test('the database refuses a duplicate code', function () {
     ($this->sell)()->assertOk();
 
-    $this->expectException(\Illuminate\Database\QueryException::class);
+    $this->expectException(QueryException::class);
 
     // `code` is guarded on the model, so go straight at the column.
-    \Illuminate\Support\Facades\DB::table('sellings')->insert([
+    DB::table('sellings')->insert([
         'date' => now()->toDateString(),
         'code' => 'SELL0001',
         'payed_money' => 10000,

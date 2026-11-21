@@ -12,8 +12,5 @@ class StockOpnameItemService
         $soi->save();
     }
 
-    public function updateStatus(StockOpnameItem $soi, string $status)
-    {
-
-    }
+    public function updateStatus(StockOpnameItem $soi, string $status) {}
 }

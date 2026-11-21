@@ -26,7 +26,7 @@ test('it returns Development when version file does not exist', function () {
         File::delete($this->versionPath);
     }
 
-    $checker = new UpdateChecker();
+    $checker = new UpdateChecker;
 
     expect($checker->getCurrentVersion())->toBe('Development');
 });
@@ -34,7 +34,7 @@ test('it returns Development when version file does not exist', function () {
 test('it returns Development when version file is empty', function () {
     File::put($this->versionPath, '   ');
 
-    $checker = new UpdateChecker();
+    $checker = new UpdateChecker;
 
     expect($checker->getCurrentVersion())->toBe('Development');
 });
@@ -42,7 +42,7 @@ test('it returns Development when version file is empty', function () {
 test('it returns trimmed version from version file', function () {
     File::put($this->versionPath, " 1.2.3 \n");
 
-    $checker = new UpdateChecker();
+    $checker = new UpdateChecker;
 
     expect($checker->getCurrentVersion())->toBe('1.2.3');
 });

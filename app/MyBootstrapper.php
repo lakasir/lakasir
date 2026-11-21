@@ -12,7 +12,5 @@ class MyBootstrapper implements TenancyBootstrapper
         //
     }
 
-    public function revert()
-    {
-    }
+    public function revert() {}
 }

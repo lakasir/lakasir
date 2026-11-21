@@ -50,10 +50,10 @@ class ProductImport implements SkipsEmptyRows, ToModel, WithHeadingRow
             'stock' => (int) ($row['stock'] ?? 0),
             'initial_price' => $row['initial_price'] ?? 0,
             'selling_price' => $row['selling_price'] ?? 0,
-            'type' => !empty($row['type']) ? $row['type'] : 'product',
+            'type' => ! empty($row['type']) ? $row['type'] : 'product',
         ]);
 
-        if (!empty($row['barcode'])) {
+        if (! empty($row['barcode'])) {
             // The observer gives every new product a fallback barcode; the
             // imported one replaces it, so a scan finds one code, not two.
             $product->barcodes()->where('code', '!=', $row['barcode'])->delete();
@@ -67,7 +67,7 @@ class ProductImport implements SkipsEmptyRows, ToModel, WithHeadingRow
             $dataOtherPrice = Str::of($row['other_price'])->explode(',');
 
             /** @var PriceUnit $priceUnit */
-            $priceUnit = new PriceUnit();
+            $priceUnit = new PriceUnit;
             $priceUnit->fill([
                 'selling_price' => $dataOtherPrice[0],
                 'unit' => $dataOtherPrice[1],

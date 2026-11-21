@@ -69,9 +69,7 @@ class AuthServiceProvider extends ServiceProvider
         Table::class => TablePolicy::class,
     ];
 
-    public function register()
-    {
-    }
+    public function register() {}
 
     public function boot()
     {

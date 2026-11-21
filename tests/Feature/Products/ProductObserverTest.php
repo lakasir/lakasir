@@ -2,16 +2,11 @@
 
 use App\Models\Tenants\Category;
 use App\Models\Tenants\Product;
-use App\Models\Tenants\ProductImage;
-use App\Models\Tenants\UploadedFile;
-use App\Models\Tenants\User;
 use App\Observers\ProductObserver;
 use App\Services\Tenants\ProductService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Tests\RefreshDatabaseWithTenant;
-
-use function Pest\Laravel\actingAs;
 
 uses(RefreshDatabaseWithTenant::class);
 
@@ -37,7 +32,7 @@ test('a product whose category is missing still gets a sku prefix', function () 
     // A category row can be gone (soft-deleted, or a legacy product): the sku
     // prefix must not dereference null.
     $product->setRelation('category', null);
-    $prefix = (new ReflectionMethod(\App\Observers\ProductObserver::class, 'prefix'))->invoke(new \App\Observers\ProductObserver(), $product);
+    $prefix = (new ReflectionMethod(ProductObserver::class, 'prefix'))->invoke(new ProductObserver, $product);
 
     expect($prefix)->toBe('GEN-TAN-')
         ->and($product->fresh()->sku)->not->toBeNull()

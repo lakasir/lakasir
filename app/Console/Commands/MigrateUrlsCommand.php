@@ -57,7 +57,7 @@ class MigrateUrlsCommand extends Command
         $baseUrl = rtrim($baseUrl, '/');
 
         if (Str::startsWith($url, $baseUrl)) {
-            return Str::after($url, $baseUrl . '/');
+            return Str::after($url, $baseUrl.'/');
         }
 
         // Handle app-relative paths like /storage/profile/foo.jpg before the HTTP guard
@@ -65,7 +65,7 @@ class MigrateUrlsCommand extends Command
             return Str::after($url, '/storage/');
         }
 
-        if (!Str::startsWith($url, ['http://', 'https://'])) {
+        if (! Str::startsWith($url, ['http://', 'https://'])) {
             return $url;
         }
 
@@ -74,6 +74,7 @@ class MigrateUrlsCommand extends Command
             $path = ltrim($parsed['path'], '/');
             $path = Str::remove('storage/', $path);
             $path = Str::remove('tmp/', $path);
+
             return $path;
         }
 
@@ -84,7 +85,7 @@ class MigrateUrlsCommand extends Command
     {
         $query = UploadedFile::query();
 
-        if (!$force) {
+        if (! $force) {
             $query->where(function ($q) {
                 $q->whereNull('relative_path')->orWhere('relative_path', '');
             })->whereNotNull('url');
@@ -106,6 +107,7 @@ class MigrateUrlsCommand extends Command
 
             if (empty($relativePath)) {
                 $this->warn("  Skipping ID {$file->id}: could not determine relative path.");
+
                 continue;
             }
 
@@ -143,7 +145,7 @@ class MigrateUrlsCommand extends Command
                 $relativePaths[] = $this->stripUrl($url, $disk);
             }
 
-            if (!empty($relativePaths)) {
+            if (! empty($relativePaths)) {
                 $product->hero_images = implode(',', $relativePaths);
                 $product->save();
                 $updated++;
