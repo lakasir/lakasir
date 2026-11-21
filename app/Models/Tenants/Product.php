@@ -44,7 +44,7 @@ class Product extends Model
             ->where('is_ready', 1);
     }
 
-    public function CartItems(): HasMany
+    public function cartItems(): HasMany
     {
         return $this->hasMany(CartItem::class)
             ->where('user_id', Filament::auth()->id());
@@ -84,11 +84,11 @@ class Product extends Model
 
     public function cartItemForCashier(): ?CartItem
     {
-        if ($this->relationLoaded('CartItems')) {
-            return $this->CartItems->first();
+        if ($this->relationLoaded('cartItems')) {
+            return $this->cartItems->first();
         }
 
-        return $this->CartItems()->first();
+        return $this->cartItems()->first();
     }
 
     public function scopeStockLatestCalculateIn()
@@ -263,7 +263,9 @@ class Product extends Model
                     $uploadDisk = config('filesystems.upload_disk');
                     return Storage::disk($uploadDisk)->url($path);
                 }
-                return 'https://cdn4.iconfinder.com/data/icons/picture-sharing-sites/32/No_Image-1024.png';
+                // Shipped with the app: no request to a third-party host, and
+                // it renders on a shop with no internet.
+                return asset('assets/images/no-image.svg');
             }
         );
     }
