@@ -5,7 +5,6 @@ namespace App\Imports;
 use App\Models\Tenants\Category;
 use App\Models\Tenants\PriceUnit;
 use App\Models\Tenants\Product;
-use App\Observers\ProductObserver;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
 use Maatwebsite\Excel\Concerns\ToModel;
@@ -42,12 +41,6 @@ class ProductImport implements SkipsEmptyRows, ToModel, WithHeadingRow
             ['name' => $row['category'] ?? 'Uncategorized'],
         );
 
-        if (!empty($row['barcode'])) {
-            ProductObserver::setTempBarcodesData([
-                ['code' => $row['barcode'], 'type' => 'primary', 'is_active' => true]
-            ]);
-        }
-
         /** @var Product $product */
         $product = Product::create([
             'name' => $row['name'],
@@ -61,12 +54,13 @@ class ProductImport implements SkipsEmptyRows, ToModel, WithHeadingRow
         ]);
 
         if (!empty($row['barcode'])) {
-            $product->barcodes()->create([
-                'code' => $row['barcode'],
-                'type' => 'primary',
-                'description' => 'Imported barcode',
-                'is_active' => true,
-            ]);
+            // The observer gives every new product a fallback barcode; the
+            // imported one replaces it, so a scan finds one code, not two.
+            $product->barcodes()->where('code', '!=', $row['barcode'])->delete();
+            $product->barcodes()->updateOrCreate(
+                ['code' => $row['barcode']],
+                ['type' => 'primary', 'description' => __('Imported barcode'), 'is_active' => true],
+            );
         }
 
         if (isset($row['other_price']) && $row['other_price'] != null && $row['other_price'] != '') {

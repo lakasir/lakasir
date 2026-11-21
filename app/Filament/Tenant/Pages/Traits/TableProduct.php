@@ -28,7 +28,7 @@ trait TableProduct
                 // * show the product when the type is procut but that has a 0 stock and then has a is_non_stock true
                 Product::query()
                     ->withAvailableStock()
-                    ->with(['CartItems'])
+                    ->with(['cartItems'])
                     ->where(function ($query) {
                         $query->where('type', 'product')
                             ->where(function ($query) {

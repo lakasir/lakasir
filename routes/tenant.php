@@ -12,7 +12,6 @@ use App\Http\Controllers\Api\Tenants\NotificationController;
 use App\Http\Controllers\Api\Tenants\PaymentMethodController;
 use App\Http\Controllers\Api\Tenants\ProfileController;
 use App\Http\Controllers\Api\Tenants\RegisterFCMTokenController;
-use App\Http\Controllers\Api\Tenants\Reports\PurchasingReportController;
 use App\Http\Controllers\Api\Tenants\Settings\SecureInitialPriceController;
 use App\Http\Controllers\Api\Tenants\Transaction\CashDrawerController;
 use App\Http\Controllers\Api\Tenants\Transaction\DashboardController;
@@ -23,10 +22,8 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\VerifyEmailController;
-use App\Http\Controllers\CashierReportController;
 use App\Http\Controllers\PrinterController;
-use App\Http\Controllers\ProductReportController;
-use App\Http\Controllers\SellingReportController;
+use App\Http\Controllers\ReportController;
 use App\Http\Middleware\InitializeTenancyByDomain;
 use App\Livewire\ResetPassword;
 use Illuminate\Support\Facades\Route;
@@ -42,20 +39,16 @@ Route::middleware([
             return redirect()->to('/member');
         });
         // Report PDFs: the Filament tenant panel's own guard and each report's
-        // permission (the seeder gives them to the admin role).
+        // permission (the seeder gives them to the admin role). All four use
+        // ReportController; the route's `type` default picks the service, the
+        // view and the permission.
         Route::middleware('auth:web')->group(function () {
-            Route::get('/member/purchasing-report/generate', PurchasingReportController::class)
-                ->can('generate purchasing report')
-                ->name('purchasing-report.generate');
-            Route::get('/member/selling-report/generate', SellingReportController::class)
-                ->can('generate selling report')
-                ->name('selling-report.generate');
-            Route::get('/member/product-report/generate', ProductReportController::class)
-                ->can('generate product report')
-                ->name('product-report.generate');
-            Route::get('/member/cashier-report/generate', CashierReportController::class)
-                ->can('generate cashier report')
-                ->name('cashier-report.generate');
+            foreach (['selling', 'product', 'cashier', 'purchasing'] as $report) {
+                Route::get("/member/{$report}-report/generate", ReportController::class)
+                    ->defaults('type', $report)
+                    ->can("generate {$report} report")
+                    ->name("{$report}-report.generate");
+            }
         });
         Route::get('/reset-password/{token}', ResetPassword::class)
             ->middleware('guest')
@@ -194,14 +187,11 @@ Route::middleware([
                 ->name('setting.secure-initial-price.verify')
                 ->can('verify secure initial price');
 
-            Route::group(['prefix' => 'report'], function () {
-                Route::post('/cashier', CashierReportController::class)
-                    ->can('generate cashier report');
-                // Route::post('/selling', SellingReportController::class)
-                //     ->can('generate selling report');
-                // Route::post('/product', [App\Http\Controllers\Api\Tenants\Report\ProductReportController::class, 'index'])
-                //     ->can('generate product report');
-            });
+            // The API's cashier report is the same PDF as the web one, and
+            // keeps its original POST contract.
+            Route::post('/report/cashier', ReportController::class)
+                ->defaults('type', 'cashier')
+                ->name('api.report.cashier');
 
             Route::group(['prefix' => 'printer'], function () {
                 Route::get('/', [PrinterController::class, 'index'])

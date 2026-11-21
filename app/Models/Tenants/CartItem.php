@@ -75,7 +75,9 @@ class CartItem extends Model
                     $uploadDisk = config('filesystems.upload_disk');
                     return Storage::disk($uploadDisk)->url($path);
                 }
-                return 'https://cdn4.iconfinder.com/data/icons/picture-sharing-sites/32/No_Image-1024.png';
+                // Shipped with the app: no request to a third-party host, and
+                // it renders on a shop with no internet.
+                return asset('assets/images/no-image.svg');
             }
         );
     }

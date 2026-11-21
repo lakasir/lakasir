@@ -4,10 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Tenants\PrinterRequest;
 use App\Models\Tenants\Printer;
+use Illuminate\Http\JsonResponse;
 
 class PrinterController extends Controller
 {
-    public function index()
+    public function index(): JsonResponse
     {
         return $this->buildResponse()
             ->setData(Printer::all())
@@ -15,7 +16,7 @@ class PrinterController extends Controller
             ->present();
     }
 
-    public function store(PrinterRequest $request)
+    public function store(PrinterRequest $request): JsonResponse
     {
         Printer::create($request->validated());
 
@@ -24,7 +25,7 @@ class PrinterController extends Controller
             ->present();
     }
 
-    public function update(PrinterRequest $request, Printer $printer)
+    public function update(PrinterRequest $request, Printer $printer): JsonResponse
     {
         $printer->update($request->validated());
 
@@ -33,7 +34,7 @@ class PrinterController extends Controller
             ->present();
     }
 
-    public function destroy(Printer $printer)
+    public function destroy(Printer $printer): JsonResponse
     {
         $printer->delete();
 
