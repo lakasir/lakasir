@@ -20,7 +20,7 @@ class PurchasingService
 
     public function __construct()
     {
-        $this->stockService = new StockService();
+        $this->stockService = new StockService;
     }
 
     public function create(array $data): Purchasing

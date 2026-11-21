@@ -25,9 +25,8 @@ use Filament\Notifications\Notification;
 use Filament\Pages\Concerns\InteractsWithFormActions;
 use Filament\Pages\Page;
 use Illuminate\Support\Facades\Storage;
-
-use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 use Laravel\Pennant\Feature;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 class GeneralSetting extends Page implements HasActions, HasForms
 {
@@ -79,7 +78,7 @@ class GeneralSetting extends Page implements HasActions, HasForms
             'stock-opname' => Feature::active('stock-opname'),
             'voucher' => Feature::active('voucher'),
             'pos-v2' => Feature::active('pos-v2'),
-            'product-import' => Feature::active('product-import')
+            'product-import' => Feature::active('product-import'),
         ];
 
         $user = auth()->user();
@@ -147,7 +146,7 @@ class GeneralSetting extends Page implements HasActions, HasForms
                                 Checkbox::make('receivable')->inline(),
                                 Checkbox::make('stock-opname')->inline(),
                                 Checkbox::make('voucher')->inline(),
-                                Checkbox::make('pos-v2')->label("POS V2")->inline(),
+                                Checkbox::make('pos-v2')->label('POS V2')->inline(),
                                 Checkbox::make('product-import')->inline(),
                             ]),
                             Actions::make([

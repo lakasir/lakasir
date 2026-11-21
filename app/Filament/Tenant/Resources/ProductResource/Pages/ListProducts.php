@@ -31,7 +31,7 @@ class ListProducts extends ListRecords
                 ])->action(function (array $data) {
                     $uploadDisk = config('filesystems.upload_disk');
                     $filePath = $data['attachment'];
-                    $driver = config('filesystems.disks.' . $uploadDisk . '.driver');
+                    $driver = config('filesystems.disks.'.$uploadDisk.'.driver');
 
                     if ($driver === 'local' || $driver === 'public') {
                         $fullPath = Storage::disk($uploadDisk)->path($filePath);

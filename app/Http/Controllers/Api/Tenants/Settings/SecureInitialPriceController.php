@@ -12,7 +12,7 @@ class SecureInitialPriceController extends Controller
 {
     public function store(Request $request)
     {
-        if (!Setting::get('secure_initial_price_enabled', false)) {
+        if (! Setting::get('secure_initial_price_enabled', false)) {
             return $this->buildResponse()
                 ->setMessage('secure initial price is not enabled')
                 ->setCode(403)
@@ -25,14 +25,14 @@ class SecureInitialPriceController extends Controller
         ]);
 
         if ($request->filled('old_password')) {
-            if (!auth()->user()->secureInitialPrice) {
+            if (! auth()->user()->secureInitialPrice) {
                 return $this->buildResponse()
                     ->setMessage('secure initial price password has not been set')
                     ->setCode(403)
                     ->present();
             }
 
-            if (!Hash::check($request->old_password, auth()->user()->secureInitialPrice->password)) {
+            if (! Hash::check($request->old_password, auth()->user()->secureInitialPrice->password)) {
                 return $this->buildResponse()
                     ->setMessage('old password is not valid')
                     ->setCode(403)
@@ -66,7 +66,7 @@ class SecureInitialPriceController extends Controller
 
     public function verify(Request $request)
     {
-       if (!Setting::get('secure_initial_price_enabled', false)) {
+        if (! Setting::get('secure_initial_price_enabled', false)) {
             return $this->buildResponse()
                 ->setMessage('secure initial price is not enabled')
                 ->setCode(403)
@@ -87,7 +87,7 @@ class SecureInitialPriceController extends Controller
 
         $checkMethod = Hash::check($request->password, auth()->user()->password);
 
-        if (!$checkMethod) {
+        if (! $checkMethod) {
             return $this->buildResponse()
                 ->setMessage('secure initial price password is not valid')
                 ->setCode(403)

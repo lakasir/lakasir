@@ -13,7 +13,7 @@ class StockRequest extends FormRequest
 
     public function __construct()
     {
-        $this->stockService = new StockService();
+        $this->stockService = new StockService;
     }
 
     public function authorize()

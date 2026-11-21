@@ -3,7 +3,7 @@
 use App\Models\Tenants\Selling;
 use App\Models\Tenants\User;
 use App\Services\Tenants\DashboardService;
-use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 use Tests\RefreshDatabaseWithTenant;
 
 use function Pest\Laravel\actingAs;
@@ -37,7 +37,7 @@ test('revenue is the price after discounts and tax, gross profit subtracts the c
 
     $start = now()->startOfDay();
     $end = now()->endOfDay();
-    $service = new DashboardService();
+    $service = new DashboardService;
 
     expect($service->revenue($start, $end))->toEqual(93000.0)
         ->and($service->grossProfit($start, $end))->toEqual(33000.0);
@@ -46,7 +46,7 @@ test('revenue is the price after discounts and tax, gross profit subtracts the c
 test('unpaid sales are left out of every metric', function () {
     paidSale(['total_price' => 20000, 'tax_price' => 0, 'discount_price' => 0, 'total_discount_per_item' => 0, 'total_cost' => 10000]);
     // `is_paid` is guarded on the model, so mark the row unpaid in the column.
-    \Illuminate\Support\Facades\DB::table('sellings')->insert([
+    DB::table('sellings')->insert([
         'date' => now()->toDateString(),
         'code' => 'SELL9999',
         'payed_money' => 0,
@@ -60,7 +60,7 @@ test('unpaid sales are left out of every metric', function () {
 
     $start = now()->startOfDay();
     $end = now()->endOfDay();
-    $service = new DashboardService();
+    $service = new DashboardService;
 
     expect($service->revenue($start, $end))->toEqual(20000.0)
         ->and($service->sales($start, $end))->toBe(1);
@@ -83,25 +83,25 @@ test('the API answers the documented keys, with the old misspelling kept', funct
     expect($revenue->json('data.total_revenue'))->toEqual(0);
 
     $todayRevenue = actingAs($owner)
-        ->getJson("/api/transaction/dashboard/total-revenue?timezone=Asia/Jakarta")
+        ->getJson('/api/transaction/dashboard/total-revenue?timezone=Asia/Jakarta')
         ->assertOk()
         ->assertJsonStructure(['data' => ['total_revenue', 'total_prevous_revenue', 'total_previous_revenue', 'percentage_change']]);
 
     expect((float) $todayRevenue->json('data.total_revenue'))->toEqual(93000.0);
 
     actingAs($owner)
-        ->getJson("/api/transaction/dashboard/total-gross-profit?timezone=Asia/Jakarta")
+        ->getJson('/api/transaction/dashboard/total-gross-profit?timezone=Asia/Jakarta')
         ->assertOk()
         ->assertJsonPath('data.total_gross_profit', fn ($value) => (float) $value === 33000.0);
 
     actingAs($owner)
-        ->getJson("/api/transaction/dashboard/total-sales?timezone=Asia/Jakarta")
+        ->getJson('/api/transaction/dashboard/total-sales?timezone=Asia/Jakarta')
         ->assertOk()
         ->assertJsonPath('data.total_sales', 1);
 });
 
 test('a percentage change is not divided by zero', function () {
-    $service = new DashboardService();
+    $service = new DashboardService;
 
     expect($service->percentageChange(500, 0))->toBe(0)
         ->and($service->percentageChange(150, 100))->toBe(50);

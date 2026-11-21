@@ -7,7 +7,6 @@ use App\Models\Tenants\Selling;
 use App\Models\Tenants\SellingDetail;
 use App\Models\Tenants\User;
 use App\Services\Tenants\ProductReportService;
-use App\Services\Tenants\SellingReportService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Number;
 use Tests\RefreshDatabaseWithTenant;
@@ -58,7 +57,7 @@ beforeEach(function () {
 
 test('the product report does not query each product\'s sales', function () {
     DB::enableQueryLog();
-    $report = (new ProductReportService())->generate($this->range);
+    $report = (new ProductReportService)->generate($this->range);
     $log = DB::getQueryLog();
     DB::disableQueryLog();
 
@@ -74,7 +73,7 @@ test('the product report does not query each product\'s sales', function () {
 });
 
 test('the product report totals what the sale lines add up to', function () {
-    $report = (new ProductReportService())->generate($this->range);
+    $report = (new ProductReportService)->generate($this->range);
 
     // Three sales of three lines each: 9 units, 9 x 10.000 sold, 9 x 5.000 cost.
     // Number::format uses the app locale's separators, so compare through it.

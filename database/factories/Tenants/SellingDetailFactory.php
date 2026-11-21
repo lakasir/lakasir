@@ -6,7 +6,7 @@ use App\Models\Tenants\SellingDetail;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Tenants\SellingDetail>
+ * @extends Factory<SellingDetail>
  */
 class SellingDetailFactory extends Factory
 {
@@ -16,6 +16,7 @@ class SellingDetailFactory extends Factory
      * @var string
      */
     protected $model = SellingDetail::class;
+
     /**
      * Define the model's default state.
      *

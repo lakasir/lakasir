@@ -40,7 +40,7 @@ class PurchasingReport extends Page
 
     public function mount()
     {
-        $this->generate(new PurchasingReportService());
+        $this->generate(new PurchasingReportService);
     }
 
     public function form(Form $form): Form

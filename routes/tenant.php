@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\Tenants\NotificationController;
 use App\Http\Controllers\Api\Tenants\PaymentMethodController;
 use App\Http\Controllers\Api\Tenants\ProfileController;
 use App\Http\Controllers\Api\Tenants\RegisterFCMTokenController;
+use App\Http\Controllers\Api\Tenants\SettingController;
 use App\Http\Controllers\Api\Tenants\Settings\SecureInitialPriceController;
 use App\Http\Controllers\Api\Tenants\Transaction\CashDrawerController;
 use App\Http\Controllers\Api\Tenants\Transaction\DashboardController;
@@ -172,10 +173,10 @@ Route::middleware([
                 });
             });
 
-            Route::get('setting/{key}', [App\Http\Controllers\Api\Tenants\SettingController::class, 'show'])
+            Route::get('setting/{key}', [SettingController::class, 'show'])
                 ->can('read setting')
                 ->name('setting.show');
-            Route::post('setting', [App\Http\Controllers\Api\Tenants\SettingController::class, 'store'])
+            Route::post('setting', [SettingController::class, 'store'])
                 ->can('update setting')
                 ->name('setting.store');
 

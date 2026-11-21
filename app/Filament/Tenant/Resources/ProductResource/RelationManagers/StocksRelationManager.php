@@ -6,7 +6,6 @@ use App\Constants\StockType;
 use App\Events\RecalculateEvent;
 use App\Features\ProductExpired;
 use App\Filament\Tenant\Resources\ProductResource\Traits\HasProductForm;
-use App\Models\Tenants\Product;
 use App\Models\Tenants\Setting;
 use App\Models\Tenants\Stock;
 use App\Services\Tenants\StockService;

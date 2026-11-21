@@ -7,9 +7,7 @@ use App\Models\Tenants\Product;
 
 class AdjustProduct
 {
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     public function handle(RecalculateEvent $event): void
     {

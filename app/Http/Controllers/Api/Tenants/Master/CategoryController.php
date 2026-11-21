@@ -27,7 +27,7 @@ class CategoryController extends Controller
         $this->validate($request, [
             'name' => 'required',
         ]);
-        $category = new Category();
+        $category = new Category;
         $category->fill($request->all());
         $category->save();
 

@@ -39,7 +39,7 @@ describe('StockService addStock (Bug #16)', function () {
             'date' => now()->format('Y-m-d'),
         ]);
 
-        $stockService = new StockService();
+        $stockService = new StockService;
         $stockService->addStock($this->product, 3);
 
         expect($stock->fresh()->stock)->toBe(8.0);
@@ -49,7 +49,7 @@ describe('StockService addStock (Bug #16)', function () {
         $this->product->stock = 0;
         $this->product->save();
 
-        $stockService = new StockService();
+        $stockService = new StockService;
         $stockService->addStock($this->product, 10);
 
         expect($this->product->fresh()->stock)->toBe(10.0);
@@ -69,7 +69,7 @@ describe('StockService addStock (Bug #16)', function () {
             'date' => now()->format('Y-m-d'),
         ]);
 
-        $stockService = new StockService();
+        $stockService = new StockService;
         // Adding 5 to an entry that has 2 should result in 7 (NOT calling reduceStock)
         $stockService->addStock($this->product, 5);
 
@@ -87,7 +87,7 @@ describe('StockService addStock (Bug #16)', function () {
             'date' => now()->format('Y-m-d'),
         ]);
 
-        $stockService = new StockService();
+        $stockService = new StockService;
         $stockService->addStock($this->product, 100);
 
         expect($stock->fresh()->stock)->toBe(103.0);
@@ -109,7 +109,7 @@ describe('StockService addStock (Bug #16)', function () {
             ->where('type', 'in')
             ->sum('stock');
 
-        $stockService = new StockService();
+        $stockService = new StockService;
         $stockService->addStock($this->product, 10);
 
         $totalAfter = Stock::where('product_id', $this->product->id)
@@ -132,7 +132,7 @@ describe('StockService addStock (Bug #16)', function () {
             'date' => now()->format('Y-m-d'),
         ]);
 
-        $stockService = new StockService();
+        $stockService = new StockService;
         $stockService->addStock($this->product, 3);
         $stockService->addStock($this->product, 7);
 
@@ -152,7 +152,7 @@ describe('StockService reduceStock', function () {
             'date' => now()->format('Y-m-d'),
         ]);
 
-        $stockService = new StockService();
+        $stockService = new StockService;
         $stockService->reduceStock($this->product, 3);
 
         expect($stock->fresh()->stock)->toBe(7.0);
@@ -162,7 +162,7 @@ describe('StockService reduceStock', function () {
         $this->product->stock = 15;
         $this->product->save();
 
-        $stockService = new StockService();
+        $stockService = new StockService;
         $stockService->reduceStock($this->product, 5);
 
         expect($this->product->fresh()->stock)->toBe(10.0);
@@ -197,14 +197,14 @@ describe('normal selling method uses the newest batch', function () {
     });
 
     test('reduceStock takes from the newest batch', function () {
-        (new StockService())->reduceStock($this->product, 3);
+        (new StockService)->reduceStock($this->product, 3);
 
         expect($this->newer->fresh()->stock)->toBe(2.0)
             ->and($this->older->fresh()->stock)->toBe(5.0);
     });
 
     test('reduceStock moves on to the next newest batch when the newest runs out', function () {
-        (new StockService())->reduceStock($this->product, 7);
+        (new StockService)->reduceStock($this->product, 7);
 
         expect($this->newer->fresh()->stock)->toBe(0.0)
             ->and($this->older->fresh()->stock)->toBe(3.0);
@@ -229,7 +229,7 @@ describe('normal selling method uses the newest batch', function () {
             'created_at' => now()->addMinute(),
         ]);
 
-        (new StockService())->reduceStock($this->product, 1);
+        (new StockService)->reduceStock($this->product, 1);
 
         expect($backdated->fresh()->stock)->toBe(4.0)
             ->and($this->newer->fresh()->stock)->toBe(5.0)
@@ -248,7 +248,7 @@ describe('normal selling method uses the newest batch', function () {
             'created_at' => $this->newer->created_at,
         ]);
 
-        (new StockService())->reduceStock($this->product, 1);
+        (new StockService)->reduceStock($this->product, 1);
 
         expect($lastEntered->fresh()->stock)->toBe(4.0)
             ->and($this->newer->fresh()->stock)->toBe(5.0);

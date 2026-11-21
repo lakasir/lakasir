@@ -2,6 +2,7 @@
 
 use App\Models\Tenants\Product;
 use App\Models\Tenants\User;
+use App\Notifications\StockRunsOut;
 use Tests\RefreshDatabaseWithTenant;
 
 use function Pest\Laravel\actingAs;
@@ -33,7 +34,7 @@ test('a notification of another user is a 404', function () {
     $other = User::factory()->create();
     $owner = User::first();
 
-    $other->notify(new \App\Notifications\StockRunsOut([['id' => $product->id, 'name' => $product->name, 'stock' => 1]]));
+    $other->notify(new StockRunsOut([['id' => $product->id, 'name' => $product->name, 'stock' => 1]]));
 
     actingAs($owner)
         ->putJson("/api/notification/{$other->notifications()->first()->id}/{$product->id}")
