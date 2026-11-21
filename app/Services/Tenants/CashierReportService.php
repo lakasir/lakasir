@@ -29,8 +29,9 @@ class CashierReportService
             ->when(! empty($data['start_date']) && ! empty($data['end_date']), function (Builder $query) use ($startDate, $endDate) {
                 $query->whereBetween('date', [$startDate, $endDate]);
             })
-            ->orderBy('created_at', 'desc')
-            ->get();
+            ->orderByDesc('created_at')
+            // Paged: a shop's whole history is never held in memory at once.
+            ->lazyById(200, 'sellings.id');
 
         $header = [
             'shop_name' => $about?->shop_name,

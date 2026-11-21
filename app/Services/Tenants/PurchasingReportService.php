@@ -31,7 +31,9 @@ class PurchasingReportService
         $purchasings = Purchasing::query()
             ->with(['stocks.product', 'supplier'])
             ->whereBetween('date', [$startDate->format('Y-m-d'), $endDate->format('Y-m-d')])
-            ->get();
+            ->orderBy('id')
+            // Paged, so a year of purchases is not one big load.
+            ->lazyById(200, 'purchasings.id');
 
         $grand_total_initial_price = 0;
         $grand_total_selling_price = 0;
