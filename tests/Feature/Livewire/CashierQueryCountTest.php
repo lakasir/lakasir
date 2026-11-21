@@ -105,7 +105,7 @@ test('a cart line is read from the eager-loaded relation', function () {
     cashierRenderLog(2);
 
     actingAs(User::first());
-    $product = Product::with(['CartItems'])->whereHas('CartItems')->first();
+    $product = Product::with(['cartItems'])->whereHas('cartItems')->first();
 
     DB::flushQueryLog();
     DB::enableQueryLog();
