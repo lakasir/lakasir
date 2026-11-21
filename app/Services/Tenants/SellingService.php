@@ -108,10 +108,12 @@ class SellingService
         $totalDiscountPerItem = 0.0;
         $totalCost = 0.0;
 
+        $catalog = $this->catalog($data['products'] ?? []);
+
         foreach ($data['products'] ?? [] as $line) {
-            $product = Product::find($line['product_id']);
+            $product = $catalog->product((int) $line['product_id']);
             $qty = (float) $line['qty'];
-            $priceUnit = ! empty($line['price_unit_id']) ? PriceUnit::find($line['price_unit_id']) : null;
+            $priceUnit = $catalog->priceUnit(empty($line['price_unit_id']) ? null : (int) $line['price_unit_id']);
 
             $price = $priceUnit
                 ? (float) $priceUnit->selling_price * $qty
@@ -300,6 +302,21 @@ class SellingService
         }
 
         return $totals;
+    }
+
+    /**
+     * The cart's products and price units, one query per table for the whole
+     * sale. Shared with the rule and the detail writer through the container.
+     *
+     * @param  array<int, array<string, mixed>>  $lines
+     */
+    private function catalog(array $lines): CheckoutProducts
+    {
+        /** @var CheckoutProducts $catalog */
+        $catalog = app(CheckoutProducts::class);
+        $catalog->loadProducts($lines);
+
+        return $catalog;
     }
 
     private function paymentMethod(mixed $id): ?PaymentMethod

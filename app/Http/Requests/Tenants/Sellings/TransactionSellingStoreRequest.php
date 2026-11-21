@@ -35,6 +35,10 @@ class TransactionSellingStoreRequest extends FormRequest
 
     public function rules(): array
     {
+        // Load the cart's products before the stock rule looks at them: the
+        // whole cart in one query instead of one query per line.
+        app(\App\Services\Tenants\CheckoutProducts::class)->loadProducts($this->input('products', []));
+
         return $this->sellingService->rules($this->all());
     }
 
