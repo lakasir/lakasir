@@ -12,10 +12,7 @@ use Illuminate\Validation\ValidationException;
 
 class RegisterRequest extends FormRequest
 {
-    public function __construct(public RegisterTenant $registerTenant)
-    {
-
-    }
+    public function __construct(public RegisterTenant $registerTenant) {}
 
     /**
      * Get the validation rules that apply to the request.

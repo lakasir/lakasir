@@ -2,16 +2,18 @@
 
 namespace App\Http\Filters;
 
-use Spatie\QueryBuilder\Filters\Filter;
 use Illuminate\Database\Eloquent\Builder;
+use Spatie\QueryBuilder\Filters\Filter;
 
 class SearchFields implements Filter
 {
     public function __invoke(Builder $query, $value, string $fields): Builder
     {
-        if (!is_array($fields)) $fields = explode(',', $fields);
+        if (! is_array($fields)) {
+            $fields = explode(',', $fields);
+        }
 
-        $query->where(function($query) use ($fields, $value) {
+        $query->where(function ($query) use ($fields, $value) {
             foreach ($fields as $field) {
                 // Process nested relationship searches differently
                 if (stripos($field, '.')) {
@@ -19,7 +21,7 @@ class SearchFields implements Filter
                     $relation = $els[0];
                     $col = $els[1];
 
-                    $query->orWhereHas($relation, function($query) use ($value, $col) {
+                    $query->orWhereHas($relation, function ($query) use ($value, $col) {
                         $query->where($col, 'LIKE', "%$value%");
                     });
                 } else {

@@ -22,7 +22,7 @@ class StockOpnameItemsRelationManager extends RelationManager
 
     public function __construct()
     {
-        $this->soIService = new StockOpnameItemService();
+        $this->soIService = new StockOpnameItemService;
     }
 
     public function form(Form $form): Form

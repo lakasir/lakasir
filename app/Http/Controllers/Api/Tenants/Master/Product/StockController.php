@@ -18,7 +18,7 @@ class StockController extends Controller
 
         $stocks = $product->stocks()
             ->orderByDesc('created_at')
-            ->simplePaginate($perPage ?? (new Stock())->getPerPage());
+            ->simplePaginate($perPage ?? (new Stock)->getPerPage());
 
         return $this->buildResponse()
             ->setData(StockCollection::collection($stocks))
@@ -32,7 +32,7 @@ class StockController extends Controller
         RecalculateEvent::dispatch(collect([$product]), []);
 
         return $this->buildResponse()
-            ->setMessage('success creating stock for ' . $product->name)
+            ->setMessage('success creating stock for '.$product->name)
             ->present();
     }
 
@@ -45,7 +45,7 @@ class StockController extends Controller
         RecalculateEvent::dispatch(collect([$product]), []);
 
         return $this->buildResponse()
-            ->setMessage('success deleting stock for ' . $product->name)
+            ->setMessage('success deleting stock for '.$product->name)
             ->present();
     }
 }

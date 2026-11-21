@@ -2,10 +2,11 @@
 
 namespace Database\Factories\Tenants;
 
+use App\Models\CartItem;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\CartItem>
+ * @extends Factory<CartItem>
  */
 class CartItemsFactory extends Factory
 {

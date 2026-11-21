@@ -37,12 +37,12 @@ trait TableProduct
                                         ->where('type', 'in')
                                         ->where('stock', '>', 0);
                                 })
-                                ->orWhere('is_non_stock', true);
+                                    ->orWhere('is_non_stock', true);
                             })
-                        ->orWhere('type', 'service');
+                            ->orWhere('type', 'service');
                     })
                     ->where('show', true)
-                    // ->orWhere('type', 'service')
+                // ->orWhere('type', 'service')
             )
             ->defaultPaginationPageOption(12)
             ->paginationPageOptions([12])

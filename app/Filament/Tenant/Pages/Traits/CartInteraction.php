@@ -34,10 +34,10 @@ trait CartInteraction
                 CartItem::whereProductId($product->getKey())
                     ->cashier()
                     ->first()
-                ->qty ?? 0
+                    ->qty ?? 0
             ) + 1;
         } else {
-            if (!$data['amount']) {
+            if (! $data['amount']) {
                 CartItem::whereProductId($product->getKey())
                     ->cashier()
                     ->delete();

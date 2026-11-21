@@ -12,7 +12,7 @@ class ReceivableService
 {
     public function create(Selling $selling, array $data = [])
     {
-        $receivable = new Receivable();
+        $receivable = new Receivable;
         $receivable->fill([
             'total_receivable' => $selling->total_price,
             'rest_receivable' => $selling->total_price - $selling->payed_money,
@@ -23,7 +23,7 @@ class ReceivableService
         $receivable->save();
 
         collect($data['products'])->each(function ($item) use ($receivable) {
-            $receivableItem = new ReceivableItem();
+            $receivableItem = new ReceivableItem;
             $receivableItem->fill([
                 'price' => $item['price'] / $item['qty'],
                 'subtotal' => $item['price'],

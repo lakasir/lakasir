@@ -47,7 +47,7 @@ class Controller extends BaseController
 
     public function buildResponse(): ApiResponseService
     {
-        return new ApiResponseService();
+        return new ApiResponseService;
     }
 
     protected function resolvePerPage(Request $request): ?int

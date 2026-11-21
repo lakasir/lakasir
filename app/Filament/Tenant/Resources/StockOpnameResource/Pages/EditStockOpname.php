@@ -23,7 +23,7 @@ class EditStockOpname extends EditRecord
 
     public function __construct()
     {
-        $this->stockOpnameService = new StockOpnameService();
+        $this->stockOpnameService = new StockOpnameService;
     }
 
     protected function loads(): array

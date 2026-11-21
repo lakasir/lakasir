@@ -75,7 +75,7 @@ describe('StockController store dispatches RecalculateEvent (Bug #13)', function
             ]);
 
         $response->assertOk()
-            ->assertJsonPath('message', 'success creating stock for ' . $this->product->name);
+            ->assertJsonPath('message', 'success creating stock for '.$this->product->name);
 
         // Product stock should be recalculated via RecalculateEvent
         $freshProduct = $this->product->fresh();

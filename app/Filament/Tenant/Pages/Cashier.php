@@ -11,6 +11,7 @@ use App\Models\Tenants\About;
 use App\Models\Tenants\CartItem;
 use App\Models\Tenants\Member;
 use App\Models\Tenants\PaymentMethod;
+use App\Models\Tenants\Profile;
 use App\Models\Tenants\Selling;
 use App\Models\Tenants\Setting;
 use App\Models\Tenants\Table;
@@ -29,7 +30,6 @@ use Filament\Support\RawJs;
 use Filament\Tables\Contracts\HasTable;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Collection as CollectionSupport;
-use App\Models\Tenants\Profile;
 
 class Cashier extends Page implements HasForms, HasTable
 {
@@ -270,7 +270,7 @@ class Cashier extends Page implements HasForms, HasTable
 
     private function validateVoucher(string $code): bool
     {
-        $voucherService = new VoucherService();
+        $voucherService = new VoucherService;
         $voucher = $voucherService->applyable($code, $this->total_price);
         if (! $voucher) {
             Notification::make('voucher_not_found')

@@ -1,7 +1,6 @@
 <?php
 
 use App\Imports\ProductImport;
-use App\Models\Tenants\Barcode;
 use App\Models\Tenants\Category;
 use App\Models\Tenants\Product;
 use Tests\RefreshDatabaseWithTenant;
@@ -14,7 +13,7 @@ beforeEach(function () {
 
 describe('ProductImport barcode handling', function () {
     test('import with barcode creates exactly 1 barcode with correct code', function () {
-        $import = new ProductImport();
+        $import = new ProductImport;
         $product = $import->model([
             'name' => 'Test Product',
             'barcode' => 'IMP-001',
@@ -36,7 +35,7 @@ describe('ProductImport barcode handling', function () {
     });
 
     test('import without barcode auto-generates one barcode', function () {
-        $import = new ProductImport();
+        $import = new ProductImport;
         $product = $import->model([
             'name' => 'Test Product',
             'category' => 'Uncategorized',
@@ -55,7 +54,7 @@ describe('ProductImport barcode handling', function () {
     });
 
     test('import with empty barcode string still auto-generates one barcode', function () {
-        $import = new ProductImport();
+        $import = new ProductImport;
         $product = $import->model([
             'name' => 'Test Product',
             'barcode' => '',

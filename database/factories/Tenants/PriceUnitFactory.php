@@ -2,10 +2,11 @@
 
 namespace Database\Factories\Tenants;
 
+use App\Models\PriceUnit;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\PriceUnit>
+ * @extends Factory<PriceUnit>
  */
 class PriceUnitFactory extends Factory
 {

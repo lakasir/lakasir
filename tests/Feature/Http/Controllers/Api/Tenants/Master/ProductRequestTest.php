@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Requests\Tenants\Master\ProductRequest;
 use App\Models\Tenants\Category;
 use App\Models\Tenants\Product;
 use App\Models\Tenants\User;
@@ -31,7 +32,7 @@ test('a product is created through the controller, not the request', function ()
 });
 
 test('the request carries no side effects of its own', function () {
-    $methods = get_class_methods(App\Http\Requests\Tenants\Master\ProductRequest::class);
+    $methods = get_class_methods(ProductRequest::class);
 
     // Validation only: the writes moved to ProductService.
     foreach (['created', 'updated', 'deleteImages'] as $gone) {

@@ -86,7 +86,7 @@ class ProductResource extends Resource
                     ->translateLabel(),
                 TextColumn::make('stocks_sum_stock')
                     ->sum('stocks', 'stock')
-                    ->label("stocks")
+                    ->label('stocks')
                     ->toggleable()
                     ->translateLabel()
                     ->visible(Feature::active(ProductStock::class))
@@ -197,13 +197,13 @@ class ProductResource extends Resource
     {
         return $infolist->schema([
             Infolists\Components\ImageEntry::make('hero_images'),
-            Infolists\Components\TextEntry::make('name')
+            TextEntry::make('name')
                 ->translateLabel(),
-            Infolists\Components\TextEntry::make('category.name')
+            TextEntry::make('category.name')
                 ->translateLabel(),
-            Infolists\Components\TextEntry::make('sku')
+            TextEntry::make('sku')
                 ->translateLabel(),
-            Infolists\Components\TextEntry::make('primaryBarcode.code')
+            TextEntry::make('primaryBarcode.code')
                 ->label(__('Barcodes'))
                 ->translateLabel(),
             //            Infolists\Components\TextEntry::make('stocks_sum_stock')
@@ -212,20 +212,20 @@ class ProductResource extends Resource
             //                ->icon(fn (int $state) => $state <= Setting::get('minimum_stock_nofication', 0) ? 'heroicon-s-exclamation-triangle' : '')
             //                ->iconColor(Color::Yellow)
             //                ->translateLabel(),
-            Infolists\Components\TextEntry::make('is_non_stock')
+            TextEntry::make('is_non_stock')
                 ->badge()
                 ->getStateUsing(function (Product $product) {
                     return $product->is_non_stock ? __('Yes') : __('No');
                 })
                 ->color('primary')
                 ->translateLabel(),
-            Infolists\Components\TextEntry::make('unit')
+            TextEntry::make('unit')
                 ->translateLabel(),
-            Infolists\Components\TextEntry::make('initial_price')
+            TextEntry::make('initial_price')
                 ->money(Setting::get('currency', 'IDR'))
                 ->size(TextEntry\TextEntrySize::Large)
                 ->translateLabel(),
-            Infolists\Components\TextEntry::make('selling_price')
+            TextEntry::make('selling_price')
                 ->money(Setting::get('currency', 'IDR'))
                 ->size(TextEntry\TextEntrySize::Large)
                 ->translateLabel(),

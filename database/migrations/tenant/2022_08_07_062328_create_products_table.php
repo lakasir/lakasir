@@ -20,8 +20,8 @@ return new class extends Migration
             $table->double('stock');
             $table->double('initial_price');
             $table->double('selling_price');
-            $table->string('unit')->default("PCS");
-            $table->string('type')->default("product");
+            $table->string('unit')->default('PCS');
+            $table->string('type')->default('product');
             $table->timestamps();
         });
     }
