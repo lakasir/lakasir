@@ -136,6 +136,12 @@ class PermissionSeeder extends Seeder
                         ],
                         'guard' => ['web', 'sanctum'],
                     ],
+                    'purchasing report' => [
+                        'permission' => [
+                            'generate',
+                        ],
+                        'guard' => ['web', 'sanctum'],
+                    ],
                     'import product' => [
                         'permission' => [
                             '',

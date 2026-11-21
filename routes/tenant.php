@@ -42,16 +42,22 @@ Route::middleware([
         Route::get('/', function () {
             return redirect()->to('/member');
         });
-        Route::get('/member/purchasing-report/generate', PurchasingReportController::class)
-            ->name('purchasing-report.generate');
-        Route::get('/member/selling-report/generate', SellingReportController::class)
-            ->name('selling-report.generate');
-        Route::get('/member/product-report/generate', ProductReportController::class)
-            ->name('product-report.generate');
-        Route::get('/member/cashier-report/generate', CashierReportController::class)
-            ->name('cashier-report.generate');
-        Route::view('/member/sellings/{selling}/print', 'filament.tenant.pages.selling.print-receipt')
-            ->name('selling.print');
+        // Report PDFs: the Filament tenant panel's own guard and each report's
+        // permission (the seeder gives them to the admin role).
+        Route::middleware('auth:web')->group(function () {
+            Route::get('/member/purchasing-report/generate', PurchasingReportController::class)
+                ->can('generate purchasing report')
+                ->name('purchasing-report.generate');
+            Route::get('/member/selling-report/generate', SellingReportController::class)
+                ->can('generate selling report')
+                ->name('selling-report.generate');
+            Route::get('/member/product-report/generate', ProductReportController::class)
+                ->can('generate product report')
+                ->name('product-report.generate');
+            Route::get('/member/cashier-report/generate', CashierReportController::class)
+                ->can('generate cashier report')
+                ->name('cashier-report.generate');
+        });
         Route::get('/reset-password/{token}', ResetPassword::class)
             ->middleware('guest')
             ->name('reset-password.index');
