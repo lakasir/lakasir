@@ -96,7 +96,7 @@ state([
         <div class="box-border flex flex-wrap items-center justify-between -mx-4 text-indigo-900">
           <div class="relative z-10 flex items-center w-auto px-4 leading-10 lg:flex-grow-0 lg:flex-shrink-0 lg:text-left">
             <a href="/" class="flex box-border font-sans text-2xl font-bold text-left text-gray-900 no-underline bg-transparent cursor-pointer focus:no-underline items-end gap-x-2">
-              <img src="{{ env('APP_URL') }}/assets/logo/image.png" class="h-10"> <p>Lakasir</p>
+              <img src="{{ config('app.url') }}/assets/logo/image.png" class="h-10"> <p>Lakasir</p>
             </a>
           </div>
 
