@@ -7,6 +7,7 @@ use App\Models\Tenants\PriceUnit;
 use App\Models\Tenants\Product;
 use App\Models\Tenants\Selling;
 use App\Models\Tenants\SellingDetail;
+use App\Services\Tenants\CheckoutProducts;
 use App\Services\Tenants\StockService;
 use Illuminate\Support\Arr;
 
@@ -26,15 +27,17 @@ class AssignProduct
 
     private function assignTheProducts(Selling $selling, array $data)
     {
+        // The checkout already loaded the cart's products and price units.
+        $catalog = app(CheckoutProducts::class);
+        $catalog->loadProducts($data['products']);
+
         foreach ($data['products'] as $productRequest) {
-            /** @var ?PriceUnit $priceUnit */
-            $priceUnit = null;
-            if (isset($productRequest['price_unit_id']) && $productRequest['price_unit_id'] != null) {
-                $priceUnit = PriceUnit::find($productRequest['price_unit_id']);
-            }
+            $priceUnit = $catalog->priceUnit(
+                empty($productRequest['price_unit_id']) ? null : (int) $productRequest['price_unit_id'],
+            );
 
             /** @var Product $product */
-            $product = Product::find($productRequest['product_id']);
+            $product = $catalog->product((int) $productRequest['product_id']);
             if (! $product->is_non_stock) {
                 if ($priceUnit) {
                     $this->reduceStock($product, $priceUnit->stock * $productRequest['qty']);
@@ -61,8 +64,8 @@ class AssignProduct
                 'cost',
                 'note',
             ]));
+            // save() through the relation already inserts the row.
             $selling->sellingDetails()->save($sellingDetail);
-            $sellingDetail->save();
         }
     }
 
