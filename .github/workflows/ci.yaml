@@ -18,6 +18,24 @@ on:
       - 1.x
 
 jobs:
+  lint:
+    name: Lint & static analysis
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.4
+          coverage: none
+          tools: composer
+      - run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+      # Style: the whole tree follows the laravel preset, so a mis-formatted
+      # file fails here instead of in review.
+      - run: vendor/bin/pint --test
+      # Static analysis at level 5. The baseline holds today's findings; new
+      # ones fail the build.
+      - run: vendor/bin/phpstan analyse --no-progress --memory-limit=1G
+
   build:
     name: Unit Test
     runs-on: ubuntu-latest
