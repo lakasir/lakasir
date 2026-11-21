@@ -16,21 +16,24 @@ class FillSellingMissingValue extends Command
 
     /**
      * Execute the console command.
+     *
+     * Pages through the sales so a shop with years of history does not load
+     * every sale, its details and its products into memory at once.
      */
     public function handle()
     {
-        Selling::all()->each(function ($selling) {
-            $total_net_price = 0;
-            $selling->sellingDetails->each(function ($sellingDetail) use (&$total_net_price) {
-                $net_price = $sellingDetail->product->initial_price * $sellingDetail->qty;
-                $sellingDetail->update([
-                    'cost' => $net_price,
-                ]);
-                $total_net_price += $net_price;
+        Selling::query()
+            ->with(['sellingDetails.product:id,initial_price'])
+            ->chunkById(200, function ($sellings) {
+                foreach ($sellings as $selling) {
+                    $totalNetPrice = 0;
+                    foreach ($selling->sellingDetails as $sellingDetail) {
+                        $netPrice = $sellingDetail->product->initial_price * $sellingDetail->qty;
+                        $sellingDetail->update(['cost' => $netPrice]);
+                        $totalNetPrice += $netPrice;
+                    }
+                    $selling->update(['total_cost' => $totalNetPrice]);
+                }
             });
-            $selling->update([
-                'total_cost' => $total_net_price,
-            ]);
-        });
     }
 }

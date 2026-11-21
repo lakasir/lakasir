@@ -86,7 +86,8 @@ class SellingResource extends Resource
             ->filters([
                 SelectFilter::make('user_id')
                     ->label(__('Cashier'))
-                    ->options(User::all()->mapWithKeys(fn (User $user) => [$user->id => $user->cashier_name])),
+                    // Only the three columns the label needs, not whole models.
+                    ->options(User::query()->get(['id', 'name', 'email'])->mapWithKeys(fn (User $user) => [$user->id => $user->cashier_name])),
                 Filter::make('date')
                     ->form([
                         DatePicker::make('start_date')

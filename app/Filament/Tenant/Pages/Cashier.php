@@ -86,7 +86,9 @@ class Cashier extends Page implements HasForms, HasTable
 
         $this->cartItems = CartItem::query()
             ->select('*')
-            ->with('product')
+            // priceUnit is read once per line in calculateTotalPrice(); the
+            // price-setting panel then reads product->priceUnits per line.
+            ->with(['product.priceUnits', 'priceUnit'])
             ->orderByDesc('created_at')
             ->cashier()
             ->get();
