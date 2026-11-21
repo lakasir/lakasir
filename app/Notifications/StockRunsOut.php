@@ -14,9 +14,7 @@ use NotificationChannels\Fcm\Resources\Notification as FcmNotification;
 
 class StockRunsOut extends Notification
 {
-    public function __construct(private array $data)
-    {
-    }
+    public function __construct(private array $data) {}
 
     public function via(User $user)
     {
@@ -77,52 +75,56 @@ class StockRunsOut extends Notification
         return $convertedArray;
     }
 
-    public function toFcm(User $notifiable): FcmMessage
+    public function toFcm(User $notifiable): ?FcmMessage
     {
-        if ($notifiable->fcm_token) {
-            $locale = $notifiable?->profile?->locale ?? 'en';
-            App::setLocale($locale);
-            $productName = [
-                'product' => $this->data[0]['name'],
-            ];
-            $description = $this->data[0]['stock'] > 0
-                ? __('notifications.stocks.single-runs-out', $productName)
-                : __('notifications.stocks.single-out-of-stock', $productName);
-            $body = $description;
-
-            $title = __('notifications.stocks.title');
-            if (count($this->data) > 0) {
-                $body = __('notifications.stocks.multiple-runs-out', [
-                    'count' => count($this->data),
-                ]);
-            }
-
-            return (
-                new FcmMessage(
-                    notification: new FcmNotification(
-                        title: $title,
-                        body: $body,
-                    )
-                ))
-                    ->data([
-                        'title' => $title,
-                        'body' => $body,
-                    ])
-                    ->custom([
-                        'android' => [
-                            'notification' => [
-                                'color' => '#0A0A0A',
-                            ],
-                            'fcm_options' => [
-                                'analytics_label' => 'analytics',
-                            ],
-                        ],
-                        'apns' => [
-                            'fcm_options' => [
-                                'analytics_label' => 'analytics',
-                            ],
-                        ],
-                    ]);
+        // No token means nothing to push to; `via()` already skipped this
+        // channel in that case.
+        if (! $notifiable->fcm_token) {
+            return null;
         }
+
+        $locale = $notifiable?->profile?->locale ?? 'en';
+        App::setLocale($locale);
+        $productName = [
+            'product' => $this->data[0]['name'],
+        ];
+        $description = $this->data[0]['stock'] > 0
+            ? __('notifications.stocks.single-runs-out', $productName)
+            : __('notifications.stocks.single-out-of-stock', $productName);
+        $body = $description;
+
+        $title = __('notifications.stocks.title');
+        if (count($this->data) > 0) {
+            $body = __('notifications.stocks.multiple-runs-out', [
+                'count' => count($this->data),
+            ]);
+        }
+
+        return (
+            new FcmMessage(
+                notification: new FcmNotification(
+                    title: $title,
+                    body: $body,
+                )
+            ))
+                ->data([
+                    'title' => $title,
+                    'body' => $body,
+                ])
+                ->custom([
+                    'android' => [
+                        'notification' => [
+                            'color' => '#0A0A0A',
+                        ],
+                        'fcm_options' => [
+                            'analytics_label' => 'analytics',
+                        ],
+                    ],
+                    'apns' => [
+                        'fcm_options' => [
+                            'analytics_label' => 'analytics',
+                        ],
+                    ],
+                ]);
     }
 }
