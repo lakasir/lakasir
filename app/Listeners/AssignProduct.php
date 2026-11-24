@@ -3,17 +3,16 @@
 namespace App\Listeners;
 
 use App\Events\SellingCreated;
-use App\Models\Tenants\PriceUnit;
 use App\Models\Tenants\Product;
 use App\Models\Tenants\Selling;
 use App\Models\Tenants\SellingDetail;
+use App\Services\Tenants\CheckoutProducts;
 use App\Services\Tenants\StockService;
+use Illuminate\Support\Arr;
 
 class AssignProduct
 {
-    public function __construct(public StockService $stockService)
-    {
-    }
+    public function __construct(public StockService $stockService) {}
 
     /**
      * Handle the event.
@@ -25,16 +24,18 @@ class AssignProduct
 
     private function assignTheProducts(Selling $selling, array $data)
     {
+        // The checkout already loaded the cart's products and price units.
+        $catalog = app(CheckoutProducts::class);
+        $catalog->loadProducts($data['products']);
+
         foreach ($data['products'] as $productRequest) {
-            /** @var ?PriceUnit $priceUnit */
-            $priceUnit = null;
-            if (isset($productRequest['price_unit_id']) && $productRequest['price_unit_id'] != null) {
-                $priceUnit = PriceUnit::find($productRequest['price_unit_id']);
-            }
+            $priceUnit = $catalog->priceUnit(
+                empty($productRequest['price_unit_id']) ? null : (int) $productRequest['price_unit_id'],
+            );
 
             /** @var Product $product */
-            $product = Product::find($productRequest['product_id']);
-            if (! $product->is_non_stock) {
+            $product = $catalog->product((int) $productRequest['product_id']);
+            if ($product->tracksStock()) {
                 if ($priceUnit) {
                     $this->reduceStock($product, $priceUnit->stock * $productRequest['qty']);
                 } else {
@@ -50,15 +51,23 @@ class AssignProduct
             }
             $productRequest['cost'] = $product->initial_price * $productRequest['qty'];
 
-            $sellingDetail = new SellingDetail();
-            $sellingDetail->fill($productRequest);
+            $sellingDetail = new SellingDetail;
+            $sellingDetail->fill(Arr::only($productRequest, [
+                'product_id',
+                'qty',
+                'price',
+                'discount_price',
+                'price_unit_id',
+                'cost',
+                'note',
+            ]));
+            // save() through the relation already inserts the row.
             $selling->sellingDetails()->save($sellingDetail);
-            $sellingDetail->save();
         }
     }
 
-    private function reduceStock(Product $product, $qty)
+    private function reduceStock(Product $product, float|int $qty): void
     {
-        $this->stockService->reduceStock($product, $qty);
+        $this->stockService->reduceStock($product, (float) $qty);
     }
 }

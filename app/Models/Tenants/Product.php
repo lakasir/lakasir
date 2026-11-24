@@ -27,6 +27,13 @@ class Product extends Model
 {
     use HasFactory, SoftDeletes;
 
+    /**
+     * The image a product without a photo shows. Inline, so it needs no route
+     * and no third-party host: under a tenant the asset root points at
+     * /tenancy/assets, which this app does not serve.
+     */
+    public const PLACEHOLDER_IMAGE = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Crect width='200' height='200' fill='%23F3F4F6'/%3E%3Cpath d='M40 140l35-45 25 32 20-25 40 38z' fill='%23D1D5DB'/%3E%3Ccircle cx='70' cy='70' r='14' fill='%23D1D5DB'/%3E%3C/svg%3E";
+
     protected $guarded = ['id', 'hero_images_url', 'expired'];
 
     protected $appends = ['hero_image'];
@@ -44,26 +51,80 @@ class Product extends Model
             ->where('is_ready', 1);
     }
 
-    public function CartItems(): HasMany
+    /**
+     * Does selling this product take stock out of the shelf? A non-stock
+     * product and a service have nothing to count, whatever their stock
+     * column says.
+     */
+    public function tracksStock(): bool
+    {
+        return ! $this->is_non_stock && $this->type !== 'service';
+    }
+
+    public function cartItems(): HasMany
     {
         return $this->hasMany(CartItem::class)
             ->where('user_id', Filament::auth()->id());
     }
 
+    /**
+     * The same window as stockLatestCalculateIn(), as an aggregate column, so a
+     * whole grid of products costs one query instead of one per card.
+     */
+    public function scopeWithAvailableStock(Builder $query): Builder
+    {
+        $method = Setting::get('selling_method', config('setting.selling_method'));
+
+        return $query->withSum(
+            ['stocks as available_stock' => function (Builder $stocks) use ($method) {
+                $stocks->where('type', 'in');
+
+                if ($method !== 'normal') {
+                    $stocks->where('stock', '>', 0);
+                }
+            }],
+            'stock',
+        );
+    }
+
+    /**
+     * The signed-in cashier's cart line for this product. Reads the eager-loaded
+     * relation when the grid loaded it, so rendering a card costs no query.
+     */
+    /**
+     * Stock on hand, from a list that already aggregated it when possible.
+     */
+    public function cartStockAvailable(): float
+    {
+        return (float) $this->stock_calculate;
+    }
+
+    public function cartItemForCashier(): ?CartItem
+    {
+        if ($this->relationLoaded('cartItems')) {
+            return $this->cartItems->first();
+        }
+
+        return $this->cartItems()->first();
+    }
+
     public function scopeStockLatestCalculateIn()
     {
-        $usingFifoPrice = Setting::get('selling_method', env('SELLING_METHOD', 'fifo')) == 'fifo';
-        $usingNormalPrice = Setting::get('selling_method', env('SELLING_METHOD', 'fifo')) == 'normal';
-        $usingLifoPrice = Setting::get('selling_method', env('SELLING_METHOD', 'fifo')) == 'lifo';
+        // Read once: the scope runs for every product a recalculated batch
+        // touches, and each read is a cache hit or a query.
+        $method = Setting::get('selling_method', config('setting.selling_method'));
+        $usingFifoPrice = $method == 'fifo';
+        $usingNormalPrice = $method == 'normal';
+        $usingLifoPrice = $method == 'lifo';
 
         return $this
             ->stocks()
             ->where('type', 'in')
-            ->when($usingNormalPrice, fn(Builder $query) => $query->orderBy('date')->latest())
-            ->when($usingFifoPrice, fn(Builder $query) => $query
+            ->when($usingNormalPrice, fn (Builder $query) => $query->newestFirst())
+            ->when($usingFifoPrice, fn (Builder $query) => $query
                 ->where('stock', '>', 0)
                 ->orderBy('created_at')->orderBy('date'))
-            ->when($usingLifoPrice, fn(Builder $query) => $query
+            ->when($usingLifoPrice, fn (Builder $query) => $query
                 ->where('stock', '>', 0)
                 ->orderByDesc('created_at')->orderByDesc('date'));
     }
@@ -72,46 +133,43 @@ class Product extends Model
     {
         return Attribute::make(
             get: function () {
-                $stock = $this
+                // A list that ran withAvailableStock() already has the number.
+                if (array_key_exists('available_stock', $this->attributes)) {
+                    return (float) ($this->attributes['available_stock'] ?? 0);
+                }
+
+                return $this
                     ->stockLatestCalculateIn()
                     ->sum('stock');
-
-                return $stock;
             },
-            set: fn($value) => $value
+            set: fn ($value) => $value
         );
     }
 
     public function initialPriceCalculate(): Attribute
     {
         return Attribute::make(
-            get: function ($value) {
-                $stock = $this
-                    ->stockLatestCalculateIn();
-                if ($stock?->first() == null) {
-                    return $this->initial_price ?? 0;
-                }
-
-                return $stock->first()->initial_price;
-            },
-            set: fn($value) => $value
+            get: fn () => $this->firstStockOfWindow()?->initial_price ?? $this->initial_price ?? 0,
+            set: fn ($value) => $value
         );
     }
 
     public function sellingPriceCalculate(): Attribute
     {
         return Attribute::make(
-            get: function ($value) {
-                $stock = $this
-                    ->stockLatestCalculateIn();
-                if ($stock?->first() == null) {
-                    return $this->selling_price ?? 0;
-                }
-
-                return $stock->first()->selling_price;
-            },
-            set: fn($value) => $value
+            get: fn () => $this->firstStockOfWindow()?->selling_price ?? $this->selling_price ?? 0,
+            set: fn ($value) => $value
         );
+    }
+
+    /**
+     * The batch the price comes from: the first row of the same window
+     * stockCalculate() sums. One query, shared by both price accessors for
+     * the length of the request.
+     */
+    private function firstStockOfWindow(): ?Stock
+    {
+        return once(fn () => $this->stockLatestCalculateIn()->first());
     }
 
     public function sellingPriceLabelCalculate(): Attribute
@@ -120,7 +178,7 @@ class Product extends Model
             get: function ($value) {
                 return Number::currency($this->initial_price, Setting::get('currency', 'IDR'));
             },
-            set: fn($value) => $value
+            set: fn ($value) => $value
         );
     }
 
@@ -131,8 +189,8 @@ class Product extends Model
     public function heroImages(): Attribute
     {
         return Attribute::make(
-            get: fn($value) => $value ? Str::of($value)->explode(',')->toArray() : [],
-            set: fn($value) => $value ? Arr::join(is_array($value) ? $value : $value->toArray(), ',') : null
+            get: fn ($value) => $value ? Str::of($value)->explode(',')->toArray() : [],
+            set: fn ($value) => $value ? Arr::join(is_array($value) ? $value : $value->toArray(), ',') : null
         );
     }
 
@@ -145,10 +203,12 @@ class Product extends Model
         return Attribute::make(
             get: function () {
                 $uploadDisk = config('filesystems.upload_disk');
+
                 return Arr::map($this->hero_images, function ($path) use ($uploadDisk) {
                     if (Str::startsWith($path, ['http://', 'https://'])) {
                         return $path;
                     }
+
                     return Storage::disk($uploadDisk)->url($path);
                 });
             }
@@ -158,7 +218,7 @@ class Product extends Model
     public function netProfit(): Attribute
     {
         return Attribute::make(
-            get: fn() => $this->selling_price - $this->initial_price
+            get: fn () => $this->selling_price - $this->initial_price
         );
     }
 
@@ -220,9 +280,14 @@ class Product extends Model
                         return $path;
                     }
                     $uploadDisk = config('filesystems.upload_disk');
+
                     return Storage::disk($uploadDisk)->url($path);
                 }
-                return 'https://cdn4.iconfinder.com/data/icons/picture-sharing-sites/32/No_Image-1024.png';
+
+                // Inline pixels: under a tenant the asset root points at
+                // /tenancy/assets, which this app does not serve, and a
+                // third-party host fails on a shop with no internet.
+                return self::PLACEHOLDER_IMAGE;
             }
         );
     }
@@ -250,25 +315,20 @@ class Product extends Model
                     ->where('type', 'in')
                     ->where('stock', '>', 0);
             })
-            ->orWhere('is_non_stock', true);
+                ->orWhere('is_non_stock', true);
         });
     }
 
     /**
      * Get all barcodes associated with the product.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function barcodes(): HasMany
     {
         return $this->hasMany(Barcode::class);
     }
 
-
     /**
      * Get the primary and active barcode(s) for the product.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function primaryBarcode(): HasMany
     {
@@ -281,7 +341,7 @@ class Product extends Model
      * It first attempts to find the product via an active barcode,
      * then falls back to searching by the product's SKU.
      *
-     * @param string $code The barcode or SKU string to search for.
+     * @param  string  $code  The barcode or SKU string to search for.
      * @return ?Product The product model, or null if not found.
      */
     public static function findByBarcodeOrSku(string $code): ?Product
@@ -291,6 +351,7 @@ class Product extends Model
         if ($product) {
             return $product;
         }
+
         return static::where('sku', $code)->first();
     }
 }

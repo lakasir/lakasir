@@ -14,9 +14,10 @@
 use App\Services\RegisterTenant;
 use App\Tenant;
 use Illuminate\Support\Facades\DB;
+use Tests\TestCase;
 
 uses(
-    Tests\TestCase::class,
+    TestCase::class,
     // Illuminate\Foundation\Testing\RefreshDatabase::class,
 )->in('Feature', 'Unit');
 
@@ -59,7 +60,7 @@ function mockTenant(): Tenant
         'shop_name' => 'Toko Testing',
         'business_type' => 'Retail',
     ];
-    $sRegisterTenant = new RegisterTenant();
+    $sRegisterTenant = new RegisterTenant;
     $tenant = $sRegisterTenant->create($data);
 
     return $tenant;

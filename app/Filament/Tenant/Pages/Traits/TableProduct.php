@@ -27,6 +27,8 @@ trait TableProduct
                 // * show the product when the type is service but that has a 0 stock
                 // * show the product when the type is procut but that has a 0 stock and then has a is_non_stock true
                 Product::query()
+                    ->withAvailableStock()
+                    ->with(['cartItems'])
                     ->where(function ($query) {
                         $query->where('type', 'product')
                             ->where(function ($query) {
@@ -35,12 +37,12 @@ trait TableProduct
                                         ->where('type', 'in')
                                         ->where('stock', '>', 0);
                                 })
-                                ->orWhere('is_non_stock', true);
+                                    ->orWhere('is_non_stock', true);
                             })
-                        ->orWhere('type', 'service');
+                            ->orWhere('type', 'service');
                     })
                     ->where('show', true)
-                    // ->orWhere('type', 'service')
+                // ->orWhere('type', 'service')
             )
             ->defaultPaginationPageOption(12)
             ->paginationPageOptions([12])
@@ -127,12 +129,10 @@ trait TableProduct
                     ->action(fn (Product $product, array $data) => $this->addCart($product, $data))
                     ->hiddenLabel(),
                 Action::make('cart')
-                    ->label(function (Product $product) {
-                        return $product->CartItems()->first()?->qty ?? '';
-                    })
+                    ->label(fn (Product $product) => $product->cartItemForCashier()?->qty ?? '')
                     ->color('white')
                     ->icon('heroicon-o-shopping-bag')
-                    ->hidden(fn (Product $product) => ! $product->CartItems()->exists()),
+                    ->hidden(fn (Product $product) => $product->cartItemForCashier() === null),
             ]);
     }
 }

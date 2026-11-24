@@ -7,8 +7,10 @@ use App\Models\Tenants\PaymentMethod;
 use App\Traits\HasTranslatableResource;
 use Filament\Forms\Components\Card;
 use Filament\Forms\Components\Checkbox;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
@@ -34,7 +36,20 @@ class PaymentMethodResource extends Resource
                     Checkbox::make('is_debit')->inline(),
                     Checkbox::make('is_credit')->inline(),
                     Checkbox::make('is_wallet')->inline(),
+                    Checkbox::make('is_qris')
+                        ->label('Is QRIS')
+                        ->inline()
+                        ->live(),
                 ]),
+                FileUpload::make('qris_image')
+                    ->label(__('QRIS image'))
+                    ->helperText(__('The static merchant QRIS code shown to the customer in the POS app.'))
+                    ->disk(config('filesystems.upload_disk'))
+                    ->directory('qris')
+                    ->image()
+                    ->visible(fn (Get $get): bool => (bool) $get('is_qris'))
+                    ->required(fn (Get $get): bool => (bool) $get('is_qris'))
+                    ->columnSpanFull(),
             ]);
     }
 
@@ -76,6 +91,16 @@ class PaymentMethodResource extends Resource
                     ->badge()
                     ->getStateUsing(function (PaymentMethod $pMethod) {
                         return $pMethod->is_wallet ? 'Yes' : 'No';
+                    })
+                    ->color(fn (string $state): string => match ($state) {
+                        'No' => 'danger',
+                        'Yes' => 'success',
+                    }),
+                TextColumn::make('is_qris')
+                    ->label('Is QRIS')
+                    ->badge()
+                    ->getStateUsing(function (PaymentMethod $pMethod) {
+                        return $pMethod->is_qris ? 'Yes' : 'No';
                     })
                     ->color(fn (string $state): string => match ($state) {
                         'No' => 'danger',

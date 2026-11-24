@@ -14,7 +14,7 @@ class UpdateApp extends Command
     public function handle()
     {
         try {
-            $appUpdateService = new AppUpdateService();
+            $appUpdateService = new AppUpdateService;
             $appUpdateService->update();
         } catch (\Exception $e) {
             $this->error($e->getMessage());

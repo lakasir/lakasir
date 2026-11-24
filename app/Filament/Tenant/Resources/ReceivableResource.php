@@ -30,7 +30,7 @@ class ReceivableResource extends Resource
 
     public static function table(Table $table): Table
     {
-        $self = new self();
+        $self = new self;
 
         return $table
             ->defaultSort('created_at', 'desc')

@@ -352,5 +352,8 @@
     "Import product": "Import product",
     "Point the cursor to this input first then scan the barcode": "Point the cursor to this input first then scan the barcode",
     "Profile": "Profile",
-    "Language": "Language"
+    "Language": "Language",
+    "Auto-generated code": "Auto-generated code",
+    "Imported barcode": "Imported barcode",
+    "Page {PAGE_NUM} of {PAGE_COUNT}": "Page {PAGE_NUM} of {PAGE_COUNT}"
 }

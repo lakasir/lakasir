@@ -82,6 +82,12 @@ class PermissionSeeder extends Seeder
                         ],
                         'guard' => ['web', 'sanctum'],
                     ],
+                    'friend price' => [
+                        'permission' => [
+                            'use',
+                        ],
+                        'guard' => ['web', 'sanctum'],
+                    ],
                     'secure initial price' => [
                         'permission' => [
                             'enable', 'verify',
@@ -125,6 +131,12 @@ class PermissionSeeder extends Seeder
                         'guard' => ['web', 'sanctum'],
                     ],
                     'product report' => [
+                        'permission' => [
+                            'generate',
+                        ],
+                        'guard' => ['web', 'sanctum'],
+                    ],
+                    'purchasing report' => [
                         'permission' => [
                             'generate',
                         ],
@@ -206,13 +218,19 @@ class PermissionSeeder extends Seeder
                         'permission' => [
                             'r',
                         ],
-                        'guard' => ['web'],
+                        'guard' => ['web', 'sanctum'],
                     ],
                     'sales overview' => [
                         'permission' => [
                             'r',
                         ],
-                        'guard' => ['web'],
+                        'guard' => ['web', 'sanctum'],
+                    ],
+                    'setting' => [
+                        'permission' => [
+                            'r', 'u',
+                        ],
+                        'guard' => ['web', 'sanctum'],
                     ],
                     'discount overview' => [
                         'permission' => [
@@ -240,15 +258,15 @@ class PermissionSeeder extends Seeder
                     ],
                     'update app' => [
                         'permission' => [
-                            'can'
+                            'can',
                         ],
-                        'guard' => ['web', 'sanctum']
+                        'guard' => ['web', 'sanctum'],
                     ],
                     'restore app' => [
                         'permission' => [
-                            'can'
+                            'can',
                         ],
-                        'guard' => ['web', 'sanctum']
+                        'guard' => ['web', 'sanctum'],
                     ],
                     'general setting' => [
                         'permission' => [

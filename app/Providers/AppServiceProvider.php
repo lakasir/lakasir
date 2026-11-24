@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use App\Models\Tenants\User;
+use App\Services\Tenants\CheckoutProducts;
+use Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
@@ -20,8 +22,12 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->bind(Authenticatable::class, User::class);
 
-        if ($this->app->environment('local', 'development') && class_exists(\Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class)) {
-            $this->app->register(\Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
+        // One product/price-unit cache per request: the checkout's rule, total
+        // calculation and detail writer all ask it for the same rows.
+        $this->app->scoped(CheckoutProducts::class);
+
+        if ($this->app->environment('local', 'development') && class_exists(IdeHelperServiceProvider::class)) {
+            $this->app->register(IdeHelperServiceProvider::class);
         }
     }
 

@@ -59,7 +59,7 @@ trait HasProductForm
                     ->required(),
             ])
             ->createOptionUsing(function (array $data): int {
-                $category = new Category();
+                $category = new Category;
                 $category->fill($data);
                 $category->save();
 
@@ -160,7 +160,7 @@ trait HasProductForm
                 TextInput::make('code')
                     ->label(__('Barcode'))
                     ->required()
-                    ->rules(fn($get) => [new UniqueBarcode($get('id'))])
+                    ->rules(fn ($get) => [new UniqueBarcode($get('id'))])
                     ->helperText(__('Point the cursor to this input first then scan the barcode'))
                     ->columnSpan(2)
                     ->translateLabel()
@@ -170,17 +170,15 @@ trait HasProductForm
                             ->icon('heroicon-o-camera')
                             ->label('Scan')
                             ->modalHeading('Scan a barcode')
-                            ->modalContent(fn (Action $action) =>
-                            view('filament.components.barcode-scanner', [
-                                'statePath' => $action->getComponent()->getStatePath()
+                            ->modalContent(fn (Action $action) => view('filament.components.barcode-scanner', [
+                                'statePath' => $action->getComponent()->getStatePath(),
                             ]))
                             ->modalWidth('lg')
                             ->closeModalByClickingAway(false)
                             ->modalCloseButton(false)
                             ->modalSubmitAction(false)
                             ->modalCancelAction(
-                                fn(StaticAction $action) =>
-                                $action->label('Cancel')
+                                fn (StaticAction $action) => $action->label('Cancel')
                                     ->extraAttributes([
                                         'id' => 'close-barcode-scanner-button',
                                     ])

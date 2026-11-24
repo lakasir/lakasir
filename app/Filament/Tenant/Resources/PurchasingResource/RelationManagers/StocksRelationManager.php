@@ -30,8 +30,8 @@ class StocksRelationManager extends RelationManager
 
     public function __construct()
     {
-        $this->stockService = new StockService();
-        $this->purchasingService = new PurchasingService();
+        $this->stockService = new StockService;
+        $this->purchasingService = new PurchasingService;
     }
 
     public function form(Form $form): Form

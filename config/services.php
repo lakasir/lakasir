@@ -1,6 +1,11 @@
 <?php
 
 return [
+    /*
+     * Path to the Firebase service-account JSON. Without it, notifications
+     * fall back to the database channel only.
+     */
+    'firebase_credentials' => env('FIREBASE_CREDENTIALS'),
 
     /*
     |--------------------------------------------------------------------------

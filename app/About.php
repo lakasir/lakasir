@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 /**
  * @property int $id
@@ -13,8 +14,9 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $business_type
  * @property string|null $other_business_type
  * @property string|null $photo
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|About newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|About newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|About query()
@@ -27,6 +29,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|About whereShopLocation($value)
  * @method static \Illuminate\Database\Eloquent\Builder|About whereShopName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|About whereUpdatedAt($value)
+ *
  * @mixin \Eloquent
  * @mixin IdeHelperAbout
  */

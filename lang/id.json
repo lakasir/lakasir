@@ -369,5 +369,8 @@
     "Import product": "Impor produk",
     "Point the cursor to this input first then scan the barcode": "Arahkan kursor ke input ini dan lalu scan barkodenya",
     "Profile": "Profil",
-    "Language": "Bahasa"
+    "Language": "Bahasa",
+    "Auto-generated code": "Kode dibuat otomatis",
+    "Imported barcode": "Barcode hasil impor",
+    "Page {PAGE_NUM} of {PAGE_COUNT}": "Halaman {PAGE_NUM} dari {PAGE_COUNT}"
 }

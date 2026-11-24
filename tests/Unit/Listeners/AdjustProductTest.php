@@ -160,7 +160,7 @@ describe('RecalculateEvent type safety (Bug #11)', function () {
             'date' => now()->format('Y-m-d'),
         ]);
 
-        $listener = new AdjustProduct();
+        $listener = new AdjustProduct;
         $event = new RecalculateEvent($this->product, ['some' => 'data']);
 
         $listener->handle($event);

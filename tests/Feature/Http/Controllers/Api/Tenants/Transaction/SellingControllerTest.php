@@ -2,6 +2,7 @@
 
 use App\Constants\VoucherType;
 use App\Events\RecalculateEvent;
+use App\Features\Discount;
 use App\Models\Tenants\CashDrawer;
 use App\Models\Tenants\Member;
 use App\Models\Tenants\Product;
@@ -10,6 +11,7 @@ use App\Models\Tenants\Stock;
 use App\Models\Tenants\User;
 use App\Models\Tenants\Voucher;
 use Illuminate\Support\Facades\Cache;
+use Laravel\Pennant\Feature;
 use Tests\RefreshDatabaseWithTenant;
 
 use function Pest\Laravel\actingAs;
@@ -92,12 +94,12 @@ test('cashier can create the selling transaction with customer number', function
 });
 
 test('cashier can create the selling with tax price', function () {
+    Setting::set('default_tax', 10);
     $user = User::first();
 
     $response = actingAs($user)->postJson('/api/transaction/selling', [
         'payed_money' => 22000,
         'friend_price' => false,
-        'tax' => 10,
         'products' => [
             [
                 'product_id' => $this->product->id,
@@ -285,6 +287,7 @@ test('cashier cannot create the sellings transaction with normal selling method 
 });
 
 test('cashier can create the seling with manual discount', function () {
+    Feature::activate(Discount::class);
     $user = User::first();
 
     $response = actingAs($user)->postJson('/api/transaction/selling', [
@@ -312,6 +315,7 @@ test('cashier can create the seling with manual discount', function () {
 });
 
 test('cashier can create the seling with manual discount using payed money less than total price', function () {
+    Feature::activate(Discount::class);
     $user = User::first();
 
     $response = actingAs($user)->postJson('/api/transaction/selling', [
@@ -340,6 +344,7 @@ test('cashier can create the seling with manual discount using payed money less 
 });
 
 test('cashier can create the selling with discount per item', function () {
+    Feature::activate(Discount::class);
     $user = User::first();
 
     $response = actingAs($user)->postJson('/api/transaction/selling', [
@@ -376,6 +381,7 @@ test('cashier can create the selling with discount per item', function () {
 });
 
 test('cashier can create the selling with discount per item using payed money less than total price', function () {
+    Feature::activate(Discount::class);
     $user = User::first();
 
     $response = actingAs($user)->postJson('/api/transaction/selling', [
@@ -530,6 +536,7 @@ test('friend price selling computes total cost on the server', function () {
     $response = actingAs($user)->postJson('/api/transaction/selling', [
         'payed_money' => 15000,
         'friend_price' => true,
+        'note' => 'regular customer',
         'total_price' => 15000,
         'total_qty' => 1,
         'total_cost' => 0,
@@ -546,7 +553,10 @@ test('friend price selling computes total cost on the server', function () {
     $response->assertOk();
 
     $this->assertDatabaseHas('sellings', [
-        'total_price' => 15000,
+        'friend_price' => true,
+        'total_price' => 20000,
+        'discount_price' => 5000,
+        'money_changes' => 0,
         'total_cost' => 10000,
     ]);
 });
@@ -563,4 +573,53 @@ beforeEach(function () {
         ]);
 
     $this->product = $product;
+});
+
+test('cashier can add a note to each selling line', function () {
+    $user = User::first();
+    $other = Product::factory()->create([
+        'initial_price' => 5000,
+        'selling_price' => 8000,
+        'stock' => 10,
+    ]);
+
+    $response = actingAs($user)->postJson('/api/transaction/selling', [
+        'payed_money' => 50000,
+        'friend_price' => false,
+        'products' => [
+            ['product_id' => $this->product->id, 'qty' => 1, 'note' => 'no sugar, extra ice'],
+            ['product_id' => $other->id, 'qty' => 1],
+        ],
+    ]);
+
+    $response->assertOk();
+
+    $this->assertDatabaseHas('selling_details', [
+        'product_id' => $this->product->id,
+        'note' => 'no sugar, extra ice',
+    ]);
+    $this->assertDatabaseHas('selling_details', [
+        'product_id' => $other->id,
+        'note' => null,
+    ]);
+
+    $sellingId = $response->json('data.id');
+
+    actingAs($user)->getJson("/api/transaction/selling/{$sellingId}")
+        ->assertOk()
+        ->assertJsonPath('data.selling_details.0.note', 'no sugar, extra ice')
+        ->assertJsonPath('data.selling_details.1.note', null);
+});
+
+test('selling line note must not exceed 255 characters', function () {
+    $user = User::first();
+
+    actingAs($user)->postJson('/api/transaction/selling', [
+        'payed_money' => 20000,
+        'friend_price' => false,
+        'products' => [
+            ['product_id' => $this->product->id, 'qty' => 1, 'note' => str_repeat('a', 256)],
+        ],
+    ])->assertUnprocessable()
+        ->assertJsonValidationErrors('products.0.note');
 });

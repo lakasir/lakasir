@@ -15,6 +15,10 @@ class CashDrawer extends Model
 
     protected $guarded = ['id'];
 
+    protected $casts = [
+        'closed_at' => 'datetime',
+    ];
+
     public function openedBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'opened_by');

@@ -39,7 +39,9 @@ class Profile extends Model
 
     public static function get(array $key = ['*']): Profile
     {
-        return Profile::select($key)->whereUserId(auth()->id())->first() ?? new Profile();
+        // once(): one query per request, however many prices the cashier grid
+        // renders (price_format() asks for the locale on every cell).
+        return once(fn () => Profile::select($key)->whereUserId(auth()->id())->first() ?? new Profile);
     }
 
     public static function form(): array

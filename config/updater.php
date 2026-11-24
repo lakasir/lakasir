@@ -26,6 +26,6 @@ return [
     ],
     'commands_after_update' => [
         'npm install',
-        'npm run build'
-    ]
+        'npm run build',
+    ],
 ];

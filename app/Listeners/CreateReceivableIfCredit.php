@@ -7,9 +7,7 @@ use App\Services\Tenants\ReceivableService;
 
 class CreateReceivableIfCredit
 {
-    public function __construct(private ReceivableService $receivableService)
-    {
-    }
+    public function __construct(private ReceivableService $receivableService) {}
 
     public function handle(SellingCreated $event): void
     {

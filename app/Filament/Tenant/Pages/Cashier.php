@@ -11,12 +11,11 @@ use App\Models\Tenants\About;
 use App\Models\Tenants\CartItem;
 use App\Models\Tenants\Member;
 use App\Models\Tenants\PaymentMethod;
+use App\Models\Tenants\Profile;
 use App\Models\Tenants\Selling;
 use App\Models\Tenants\Setting;
 use App\Models\Tenants\Table;
 use App\Models\Tenants\Voucher as TenantsVoucher;
-use App\Rules\CheckProductStock;
-use App\Rules\ShouldSameWithSellingDetail;
 use App\Services\Tenants\SellingService;
 use App\Services\VoucherService;
 use App\Traits\HasTranslatableResource;
@@ -31,10 +30,6 @@ use Filament\Support\RawJs;
 use Filament\Tables\Contracts\HasTable;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Collection as CollectionSupport;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
-use Illuminate\Validation\ValidationException;
-use App\Models\Tenants\Profile;
 
 class Cashier extends Page implements HasForms, HasTable
 {
@@ -91,7 +86,9 @@ class Cashier extends Page implements HasForms, HasTable
 
         $this->cartItems = CartItem::query()
             ->select('*')
-            ->with('product')
+            // priceUnit is read once per line in calculateTotalPrice(); the
+            // price-setting panel then reads product->priceUnits per line.
+            ->with(['product.priceUnits', 'priceUnit'])
             ->orderByDesc('created_at')
             ->cashier()
             ->get();
@@ -196,7 +193,9 @@ class Cashier extends Page implements HasForms, HasTable
                 }
             });
             $this->discount_price += floatval($discount_price);
-            $this->total_price = $this->sub_total + ($this->sub_total * $this->tax / 100) - $this->discount_price;
+            // Tax is charged on the price after discounts, as on the server (SellingService::calculate()).
+            $taxable = max(0, $this->sub_total - $this->discount_price);
+            $this->total_price = $taxable + ($taxable * $this->tax / 100);
         }
         $this->fillMember();
         $this->fillPayemntMethod();
@@ -241,41 +240,8 @@ class Cashier extends Page implements HasForms, HasTable
             })->toArray(),
         ]);
 
-        $pMethod = PaymentMethod::find($request['payment_method_id']);
-        if (! $pMethod) {
-            $pMethod = PaymentMethod::create([
-                'name' => 'Cash',
-                'is_cash' => true,
-                'is_debit' => false,
-                'is_credit' => false,
-                'is_wallet' => false,
-                'icon' => 'assets/images/payment-methods/cash.png',
-            ]);
-        }
-        $validator = Validator::make($request, [
-            'fee' => ['numeric'],
-            'payment_method_id' => ['required'],
-            'member_id' => Rule::requiredIf(fn () => $pMethod->is_credit),
-            'due_date' => Rule::requiredIf(fn () => $pMethod->is_credit),
-            'payed_money' => [
-                ! $pMethod->is_credit ? 'gte:total_price' : null,
-                Rule::requiredIf(fn () => ! $pMethod->is_credit),
-            ],
-            'total_price' => ['required_if:friend_price,true', 'numeric'],
-            'total_qty' => ['required_if:friend_price,true', 'numeric', new ShouldSameWithSellingDetail('qty', $request['products'])],
-            'friend_price' => ['required', 'boolean'],
-            'products' => ['required', 'array'],
-            'products.*.product_id' => ['required', 'exists:products,id'],
-            'products.*.price' => ['required_if:friend_price,true', 'numeric'],
-            'products.*.qty' => ['required', 'numeric', 'min:1', new CheckProductStock],
-        ]);
-        if ($validator->fails()) {
-            throw ValidationException::withMessages($validator->messages()->toArray());
-
-            return;
-        }
-        $data = array_merge($request, $sellingService->mapProductRequest($request));
-        $selling = $sellingService->create($data);
+        // Same rules and total checks as the API (TransactionSellingStoreRequest).
+        $selling = $sellingService->checkout($request);
         CartItem::query()
             ->cashier()
             ->delete();
@@ -304,7 +270,7 @@ class Cashier extends Page implements HasForms, HasTable
 
     private function validateVoucher(string $code): bool
     {
-        $voucherService = new VoucherService();
+        $voucherService = new VoucherService;
         $voucher = $voucherService->applyable($code, $this->total_price);
         if (! $voucher) {
             Notification::make('voucher_not_found')
@@ -321,7 +287,9 @@ class Cashier extends Page implements HasForms, HasTable
             }
         });
         $this->discount_price += $voucher->calculate();
-        $this->total_price = $this->sub_total + ($this->sub_total * $this->tax / 100) - $this->discount_price;
+        // Tax is charged on the price after discounts, as on the server (SellingService::calculate()).
+        $taxable = max(0, $this->sub_total - $this->discount_price);
+        $this->total_price = $taxable + ($taxable * $this->tax / 100);
 
         return true;
     }
@@ -343,6 +311,8 @@ class Cashier extends Page implements HasForms, HasTable
             }
         });
 
-        $this->total_price = $this->sub_total + ($this->sub_total * $this->tax / 100) - $this->discount_price;
+        // Tax is charged on the price after discounts, as on the server (SellingService::calculate()).
+        $taxable = max(0, $this->sub_total - $this->discount_price);
+        $this->total_price = $taxable + ($taxable * $this->tax / 100);
     }
 }

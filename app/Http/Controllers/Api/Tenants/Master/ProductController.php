@@ -8,6 +8,7 @@ use App\Http\Filters\SearchFields;
 use App\Http\Requests\Tenants\Master\ProductRequest;
 use App\Http\Resources\ProductCollection;
 use App\Models\Tenants\Product;
+use App\Services\Tenants\ProductService;
 use Illuminate\Http\Request;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
@@ -33,16 +34,16 @@ class ProductController extends Controller
             ])
             ->allowedIncludes(['category', 'images'])
             ->orderByDesc('created_at')
-            ->simplePaginate($perPage ?? (new Product())->getPerPage());
+            ->simplePaginate($perPage ?? (new Product)->getPerPage());
 
         return $this->buildResponse()
             ->setData(ProductCollection::collection($products))
             ->present();
     }
 
-    public function store(ProductRequest $request)
+    public function store(ProductRequest $request, ProductService $products)
     {
-        $request->created();
+        $products->create($request->validated());
 
         return $this->buildResponse()
             ->setMessage('success creating items')
@@ -71,19 +72,18 @@ class ProductController extends Controller
             ->present();
     }
 
-    public function update(ProductRequest $request)
+    public function update(ProductRequest $request, ProductService $products)
     {
-        $request->updated();
+        $products->update(Product::findOrFail($request->route('product')), $request->validated());
 
         return $this->buildResponse()
             ->setMessage('success updating items')
             ->present();
     }
 
-    public function destroy(Product $product, ProductRequest $request)
+    public function destroy(Product $product, ProductService $products)
     {
-        $request->deleteImages();
-        $product->delete();
+        $products->delete($product);
 
         return $this->buildResponse()
             ->setMessage('success deleting items')

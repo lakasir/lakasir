@@ -38,7 +38,7 @@ class RegisterTenant
                 'other_business_type' => $data['other_business_type'] ?? null,
             ]);
 
-            $user->notify(new DomainCreated());
+            $user->notify(new DomainCreated);
 
             Artisan::call('db:seed', [
                 '--class' => 'PermissionSeeder',
