@@ -37,3 +37,12 @@ version.txt
 .env.before_lerd
 .mcp.json
 .lerd.yaml
+
+# Local tooling and scratch files (not part of the project)
+.agents/
+.claude/
+.github/copilot-instructions.md
+# Database dumps and backups dropped in the project root
+/*.sql
+docker-compose.yml.bak
+modules-*-backup-*.json
