@@ -20,8 +20,8 @@ class SellingReportService
         $startDate = Carbon::parse($data['start_date'] ?? now()->toDateString(), $timezone)->setTimezone('UTC');
         $endDate = Carbon::parse($data['end_date'] ?? now()->toDateString(), $timezone)->addDay()->setTimezone('UTC');
 
-        // lazyById pages the sales (and eager-loads their lines) instead of
-        // holding the whole window — a year of sales — in memory at once.
+        // Paged (and eager-loading each page's lines) instead of holding the
+        // whole window — a year of sales — in memory at once.
         $sellings = Selling::query()
             ->select()
             ->with(
@@ -32,8 +32,11 @@ class SellingReportService
             ->when(! empty($data['start_date']) && ! empty($data['end_date']), function (Builder $query) use ($startDate, $endDate) {
                 $query->whereBetween('date', [$startDate, $endDate]);
             })
-            ->orderByDesc('created_at')
-            ->lazyById(200, 'sellings.id');
+            // lazyByIdDesc pages by id, newest first, and owns the ordering:
+            // mixing it with an orderBy on another column (created_at) made the
+            // cursor skip rows, and the third argument is the *result key*
+            // (`id`), not the qualified column.
+            ->lazyByIdDesc(200, 'id');
 
         $header = [
             'shop_name' => $about?->shop_name,

@@ -22,6 +22,10 @@ class ProductReportService
         // loading each product's details and aggregating them in PHP.
         $rows = SellingDetail::query()
             ->selectRaw('selling_details.product_id')
+            // Read when the rows are rendered: grouping by these columns does
+            // not put them in the result.
+            ->selectRaw('products.sku as sku')
+            ->selectRaw('products.name as name')
             ->selectRaw('SUM(selling_details.qty) as qty')
             ->selectRaw('SUM(selling_details.price) as price')
             ->selectRaw('SUM(selling_details.cost) as cost')
