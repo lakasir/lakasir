@@ -15,8 +15,8 @@ class RetailSeeder extends Seeder
     public function run(): void
     {
         $this->call(CategorySeeder::class, true);
-        Stock::truncate();
-        Product::truncate();
+        Stock::query()->delete();
+        Product::query()->delete();
 
         $path = 'database/seeders/retail_product.sql';
         if (file_exists($path)) {

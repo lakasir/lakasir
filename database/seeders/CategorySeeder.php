@@ -15,12 +15,20 @@ class CategorySeeder extends Seeder
      */
     public function run()
     {
+        // truncate() ignores the company scope, so it would empty every shop's
+        // categories. Delete only this company's rows.
         if (DB::getDriverName() !== 'sqlite') {
             DB::statement('SET FOREIGN_KEY_CHECKS=0');
         }
-        Category::truncate();
+
+        Category::query()->delete();
+
         Category::create([
             'name' => 'UMUM',
         ]);
+
+        if (DB::getDriverName() !== 'sqlite') {
+            DB::statement('SET FOREIGN_KEY_CHECKS=1');
+        }
     }
 }
