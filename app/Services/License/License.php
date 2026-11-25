@@ -61,6 +61,15 @@ class License
         $this->claims = null;
     }
 
+    /**
+     * Drop the memoised claims, so the next read verifies the stored token
+     * again. Needed after a refresh replaced it in the same request.
+     */
+    public function forgetClaims(): void
+    {
+        $this->claims = null;
+    }
+
     public function claims(): array
     {
         return $this->claims ??= $this->verify(LicenseToken::token());

@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\Api\Cloud\ProvisionController;
 use App\Http\Controllers\Api\Tenants\AboutController;
 use App\Http\Controllers\Api\Tenants\Master\CategoryController;
 use App\Http\Controllers\Api\Tenants\Master\MemberController;
@@ -61,6 +62,12 @@ Route::middleware([
 ])
     ->prefix('api')
     ->group(function () {
+        // Cloud provisioning: lets a hosted customer's shop be created here.
+        // Guarded by a shared secret inside the controller, and 404 when the
+        // secret is not configured at all.
+        Route::post('cloud/provision', ProvisionController::class)
+            ->name('api.cloud.provision');
+
         // The POS app checks a shop domain with this before signing in, so it
         // stays public and answers only whether the shop exists.
         Route::get('check', function () {

@@ -15,6 +15,18 @@ return [
     'signing_key' => env('LICENSE_PRIVATE_KEY'),
 
     /*
+    | Where the license is verified and refreshed. Only a hosted customer sets
+    | this; a self-hosted install leaves it empty and pastes a token by hand.
+    */
+    'cloud_url' => env('LICENSE_CLOUD_URL'),
+
+    /*
+    | Shared secret a lakasir-cloud install must present to provision a company
+    | on this server. Empty disables the endpoint entirely.
+    */
+    'provision_secret' => env('LICENSE_PROVISION_SECRET'),
+
+    /*
     | How long an expired token keeps working. A shop that cannot reach the
     | network, or whose install is offline for a while, must not stop trading.
     */
