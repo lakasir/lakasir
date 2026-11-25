@@ -2,6 +2,8 @@
 
 namespace App\Models\Tenants;
 
+use App\Models\Company;
+use App\Traits\BelongsToCompany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
@@ -11,7 +13,7 @@ use Illuminate\Support\Facades\Cache;
  */
 class Setting extends Model
 {
-    use HasFactory;
+    use BelongsToCompany, HasFactory;
 
     protected $fillable = ['key', 'value'];
 
@@ -28,7 +30,7 @@ class Setting extends Model
     public static function get($key, $default = null)
     {
         $cached = Cache::remember(
-            'setting_'.$key,
+            self::cacheKey($key),
             now()->addMinutes(self::CACHE_TTL_MINUTES),
             fn () => ['value' => self::where('key', $key)->value('value')],
         );
@@ -43,6 +45,15 @@ class Setting extends Model
             ['value' => $value]
         );
 
-        Cache::put('setting_'.$key, ['value' => $value], now()->addMinutes(self::CACHE_TTL_MINUTES));
+        Cache::put(self::cacheKey($key), ['value' => $value], now()->addMinutes(self::CACHE_TTL_MINUTES));
+    }
+
+    /**
+     * One entry per company: without the suffix the first company to read a
+     * key decides the value every other company sees.
+     */
+    private static function cacheKey(string $key): string
+    {
+        return 'setting_'.Company::currentId().'_'.$key;
     }
 }

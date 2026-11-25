@@ -25,15 +25,14 @@ use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\PrinterController;
 use App\Http\Controllers\ReportController;
-use App\Http\Middleware\InitializeTenancyByDomain;
+use App\Http\Middleware\IdentifyCompany;
 use App\Livewire\ResetPassword;
+use App\Models\Company;
 use Illuminate\Support\Facades\Route;
-use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 
 Route::middleware([
     'web',
-    InitializeTenancyByDomain::class,
-    PreventAccessFromCentralDomains::class,
+    IdentifyCompany::class,
 ])
     ->group(function () {
         Route::get('/', function () {
@@ -58,8 +57,7 @@ Route::middleware([
 
 Route::middleware([
     'api',
-    InitializeTenancyByDomain::class,
-    PreventAccessFromCentralDomains::class,
+    IdentifyCompany::class,
 ])
     ->prefix('api')
     ->group(function () {
@@ -67,7 +65,7 @@ Route::middleware([
         // stays public and answers only whether the shop exists.
         Route::get('check', function () {
             return response()->json([
-                'tenant' => tenant('id'),
+                'tenant' => Company::currentId(),
             ]);
         });
         Route::group(['prefix' => 'auth'], function () {

@@ -3,6 +3,7 @@
 namespace App\Models\Tenants;
 
 use App\Filament\Tenant\Resources\Traits\HasUploadFileField;
+use App\Traits\BelongsToCompany;
 use Filament\Forms\Components\Actions;
 use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Components\FileUpload;
@@ -18,7 +19,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class About extends Model
 {
-    use HasFactory,
+    use BelongsToCompany, HasFactory,
         HasUploadFileField;
 
     protected $guarded = ['id'];

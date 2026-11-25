@@ -4,7 +4,6 @@ use App\Providers\AppServiceProvider;
 use App\Providers\EventServiceProvider;
 use App\Providers\Filament\TenantPanelProvider;
 use App\Providers\RouteServiceProvider;
-use App\Providers\TenancyServiceProvider;
 use App\Providers\VoltServiceProvider;
 use Illuminate\Auth\AuthServiceProvider;
 use Illuminate\Auth\Passwords\PasswordResetServiceProvider;
@@ -229,7 +228,6 @@ return [
         EventServiceProvider::class,
         RouteServiceProvider::class,
         VoltServiceProvider::class,
-        TenancyServiceProvider::class,
         TenantPanelProvider::class,
     ],
 

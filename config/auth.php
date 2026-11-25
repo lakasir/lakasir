@@ -42,10 +42,6 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
-        'tenant' => [
-            'driver' => 'session',
-            'provider' => 'tenants',
-        ],
     ],
 
     /*
@@ -67,11 +63,6 @@ return [
 
     'providers' => [
         'users' => [
-            'driver' => 'eloquent',
-            'model' => User::class,
-        ],
-
-        'tenants' => [
             'driver' => 'eloquent',
             'model' => User::class,
         ],

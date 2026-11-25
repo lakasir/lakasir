@@ -2,6 +2,7 @@
 
 namespace App\Models\Tenants;
 
+use App\Traits\BelongsToCompany;
 use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -23,7 +24,7 @@ use Illuminate\Support\Facades\Storage;
  */
 class UploadedFile extends Model
 {
-    use HasFactory;
+    use BelongsToCompany, HasFactory;
 
     protected $fillable = [
         'name',

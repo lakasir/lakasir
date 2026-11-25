@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Company;
 use App\Models\Tenants\About;
 use App\Models\Tenants\Category;
 use App\Models\Tenants\Product;
@@ -18,6 +19,7 @@ uses(RefreshDatabaseWithTenant::class);
 function saleDaysAgo(int $daysAgo, Product $product, float $price = 10000): void
 {
     $id = DB::table('sellings')->insertGetId([
+        'company_id' => Company::currentId(),
         'date' => now()->subDays($daysAgo)->toDateString(),
         'code' => 'SELL'.str_pad((string) (DB::table('sellings')->count() + 1), 4, '0', STR_PAD_LEFT),
         'payed_money' => $price,
@@ -31,6 +33,7 @@ function saleDaysAgo(int $daysAgo, Product $product, float $price = 10000): void
     ]);
 
     DB::table('selling_details')->insert([
+        'company_id' => Company::currentId(),
         'selling_id' => $id,
         'product_id' => $product->id,
         'qty' => 1,

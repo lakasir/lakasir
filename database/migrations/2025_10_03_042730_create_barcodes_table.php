@@ -13,14 +13,17 @@ return new class extends Migration
     {
         Schema::create('barcodes', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('company_id')->index();
             $table->foreignId('product_id')->constrained()->onDelete('cascade');
-            $table->string('code')->unique();
+            $table->string('code');
             $table->string('type')->default('primary'); // primary, secondary, internal, etc.
             $table->string('description')->nullable();
             $table->boolean('is_active')->default(true);
             $table->timestamps();
 
             $table->index('product_id');
+
+            $table->unique(['company_id', 'code']);
         });
     }
 

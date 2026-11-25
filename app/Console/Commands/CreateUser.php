@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Constants\Role;
+use App\Models\Company;
 use App\Models\Tenants\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
@@ -11,26 +12,34 @@ class CreateUser extends Command
 {
     protected $signature = 'app:create-user';
 
-    protected $description = 'Create user for standalone lakasir';
+    protected $description = 'Create the owner user and, when none exists, the first company';
 
-    public function handle()
+    public function handle(): int
     {
-        if (config('tenancy.central_domains')[0] === null) {
-            $user = User::create([
-                'name' => $this->ask('name'),
-                'email' => $this->ask('email'),
-                'password' => bcrypt($this->ask('password')),
-                'is_owner' => true,
-            ]);
-            Artisan::call('db:seed', [
-                '--class' => 'PermissionSeeder',
-                '--force' => true,
-            ]);
-            $user->assignRole(Role::admin);
+        $company = Company::first() ?? Company::create([
+            'name' => $this->ask('shop name'),
+        ]);
 
-            $this->info('User created successfully, please open '.config('app.url').'/member/login');
-        } else {
-            $this->error("You can't run this command on multi tenant");
-        }
+        $company->makeCurrent();
+
+        $user = User::create([
+            'name' => $this->ask('name'),
+            'email' => $this->ask('email'),
+            'password' => bcrypt($this->ask('password')),
+            'is_owner' => true,
+        ]);
+
+        $user->companies()->attach($company->id);
+
+        Artisan::call('db:seed', [
+            '--class' => 'PermissionSeeder',
+            '--force' => true,
+        ]);
+
+        $user->assignRole(Role::admin);
+
+        $this->info('User created, open '.config('app.url').'/member/login');
+
+        return self::SUCCESS;
     }
 }

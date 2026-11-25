@@ -2,7 +2,10 @@
     "name": "laravel/laravel",
     "type": "project",
     "description": "The Laravel Framework.",
-    "keywords": ["framework", "laravel"],
+    "keywords": [
+        "framework",
+        "laravel"
+    ],
     "license": "GPL-3.0-only",
     "require": {
         "php": "^8.4",
@@ -27,7 +30,6 @@
         "silviolleite/laravelpwa": "^2.0",
         "spatie/laravel-permission": "6.9.0",
         "spatie/laravel-query-builder": "^6.0",
-        "stancl/tenancy": "^3.6",
         "tapp/filament-timezone-field": "^3.0"
     },
     "require-dev": {

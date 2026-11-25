@@ -2,6 +2,7 @@
 
 namespace App\Models\Tenants;
 
+use App\Models\Company;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasAvatar;
 use Filament\Models\Contracts\HasName;
@@ -9,6 +10,7 @@ use Filament\Panel;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -61,6 +63,11 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName
     public function canAccessPanel(Panel $panel): bool
     {
         return true;
+    }
+
+    public function companies(): BelongsToMany
+    {
+        return $this->belongsToMany(Company::class, 'user_companies');
     }
 
     public function profile(): HasOne

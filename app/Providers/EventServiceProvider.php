@@ -16,9 +16,7 @@ use App\Observers\MemberObserver;
 use App\Observers\ProductObserver;
 use App\Observers\SellingObserver;
 use App\Observers\StockOpnameObserver;
-use App\Observers\TenantObserver;
 use App\Observers\UserObserver;
-use App\Tenant;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -51,7 +49,6 @@ class EventServiceProvider extends ServiceProvider
     protected $observers = [
         Member::class => [MemberObserver::class],
         Selling::class => [SellingObserver::class],
-        Tenant::class => [TenantObserver::class],
         Product::class => [ProductObserver::class],
         User::class => [UserObserver::class],
         StockOpname::class => [StockOpnameObserver::class],

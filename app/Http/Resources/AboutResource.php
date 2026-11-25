@@ -2,7 +2,7 @@
 
 namespace App\Http\Resources;
 
-use App\About;
+use App\Models\Tenants\About;
 use App\Models\Tenants\Setting;
 use App\Models\Tenants\User;
 use Illuminate\Http\Request;

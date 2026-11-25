@@ -15,11 +15,15 @@ return new class extends Migration
     {
         Schema::create('members', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('company_id')->index();
             $table->string('name');
-            $table->string('code')->unique();
+            $table->string('code');
             $table->string('address')->nullable();
-            $table->string('email')->nullable()->unique();
+            $table->string('email')->nullable();
             $table->timestamps();
+
+            $table->unique(['company_id', 'code']);
+            $table->unique(['company_id', 'email']);
         });
     }
 
