@@ -16,6 +16,7 @@ use App\Features\Voucher;
 use App\Filament\Tenant\Pages\CartItem;
 use App\Filament\Tenant\Pages\Cashier;
 use App\Filament\Tenant\Pages\CashierReport;
+use App\Filament\Tenant\Pages\Companies;
 use App\Filament\Tenant\Pages\GeneralSetting;
 use App\Filament\Tenant\Pages\POS;
 use App\Filament\Tenant\Pages\Printer;
@@ -25,6 +26,7 @@ use App\Filament\Tenant\Pages\Report;
 use App\Filament\Tenant\Pages\SellingReport;
 use App\Filament\Tenant\Pages\TenantLogin;
 use App\Filament\Tenant\Resources\CategoryResource;
+use App\Filament\Tenant\Resources\CompanyResource;
 use App\Filament\Tenant\Resources\MemberResource;
 use App\Filament\Tenant\Resources\PaymentMethodResource;
 use App\Filament\Tenant\Resources\PermissionResource;
@@ -197,6 +199,8 @@ class TenantPanelProvider extends PanelProvider
             NavigationGroup::make(__('Setting'))->collapsible(false)->items([
                 $this->generateNavigationItem(GeneralSetting::class),
                 $this->generateNavigationItem(Printer::class),
+                $this->generateNavigationItem(CompanyResource::class),
+                $this->generateNavigationItem(Companies::class),
             ]),
         ];
     }

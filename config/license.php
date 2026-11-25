@@ -21,6 +21,13 @@ return [
     'grace_days' => (int) env('LICENSE_GRACE_DAYS', 30),
 
     /*
+    | Days a hosted company runs before it needs a paid subscription. Only
+    | lakasir-cloud provisioning starts a trial; a self-hosted install never
+    | does, so it is never charged.
+    */
+    'trial_days' => (int) env('LICENSE_TRIAL_DAYS', 30),
+
+    /*
     | Limits used when no token is present. null means unlimited, which keeps
     | existing installs working; set numbers here once a free tier exists.
     */

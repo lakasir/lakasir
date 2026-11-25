@@ -2,11 +2,10 @@
 
 namespace App\Console\Commands;
 
-use App\Constants\Role;
 use App\Models\Company;
 use App\Models\Tenants\User;
+use App\Services\ProvisionCompany;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Artisan;
 
 class CreateUser extends Command
 {
@@ -14,14 +13,8 @@ class CreateUser extends Command
 
     protected $description = 'Create the owner user and, when none exists, the first company';
 
-    public function handle(): int
+    public function handle(ProvisionCompany $provision): int
     {
-        $company = Company::first() ?? Company::create([
-            'name' => $this->ask('shop name'),
-        ]);
-
-        $company->makeCurrent();
-
         $user = User::create([
             'name' => $this->ask('name'),
             'email' => $this->ask('email'),
@@ -29,14 +22,12 @@ class CreateUser extends Command
             'is_owner' => true,
         ]);
 
-        $user->companies()->attach($company->id);
+        // A local install never starts a trial: self-hosting is free.
+        $company = Company::first()
+            ?? $provision->create(['name' => $this->ask('shop name'), 'owner' => $user]);
 
-        Artisan::call('db:seed', [
-            '--class' => 'PermissionSeeder',
-            '--force' => true,
-        ]);
-
-        $user->assignRole(Role::admin);
+        $company->makeCurrent();
+        $company->users()->syncWithoutDetaching([$user->id]);
 
         $this->info('User created, open '.config('app.url').'/member/login');
 

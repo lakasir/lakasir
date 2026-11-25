@@ -15,11 +15,39 @@ class Company extends Model
         'name',
         'domain',
         'enabled',
+        'trial_ends_at',
+        'provisioned_by',
     ];
 
     protected $casts = [
         'enabled' => 'boolean',
+        'trial_ends_at' => 'datetime',
     ];
+
+    /**
+     * A hosted shop runs on a trial until it subscribes. A local one has no
+     * trial date at all, which is what makes self-hosting free forever.
+     */
+    public function onTrial(): bool
+    {
+        return $this->trial_ends_at !== null && $this->trial_ends_at->isFuture();
+    }
+
+    public function trialExpired(): bool
+    {
+        return $this->trial_ends_at !== null && $this->trial_ends_at->isPast();
+    }
+
+    public function trialDaysLeft(): ?int
+    {
+        if (! $this->onTrial()) {
+            return null;
+        }
+
+        // Carbon 3 returns a float, and a trial set to "30 days from now" is
+        // 29.9999 days away, which truncates to 29. Round up.
+        return (int) ceil(now()->diffInDays($this->trial_ends_at, true));
+    }
 
     public function users()
     {

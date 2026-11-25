@@ -181,6 +181,30 @@ parameters:
 			path: app/Filament/Tenant/Pages/CashierReport.php
 
 		-
+			message: '#^Call to an undefined static method App\\Filament\\Tenant\\Pages\\Companies\:\:getRouteBaseName\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Filament/Tenant/Pages/Companies.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 3
+			path: app/Filament/Tenant/Pages/Companies.php
+
+		-
+			message: '#^Unsafe call to private method App\\Filament\\Tenant\\Pages\\Companies\:\:getPageNavigationLabel\(\) through static\:\:\.$#'
+			identifier: staticClassAccess.privateMethod
+			count: 1
+			path: app/Filament/Tenant/Pages/Companies.php
+
+		-
+			message: '#^Unsafe usage of new static\(\)\.$#'
+			identifier: new.static
+			count: 1
+			path: app/Filament/Tenant/Pages/Companies.php
+
+		-
 			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$address\.$#'
 			identifier: property.notFound
 			count: 1
@@ -515,6 +539,24 @@ parameters:
 			identifier: new.static
 			count: 1
 			path: app/Filament/Tenant/Resources/CategoryResource.php
+
+		-
+			message: '#^Call to an undefined static method App\\Filament\\Tenant\\Resources\\CompanyResource\:\:getNavigationItemActiveRoutePattern\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Filament/Tenant/Resources/CompanyResource.php
+
+		-
+			message: '#^Unsafe call to private method App\\Filament\\Tenant\\Resources\\CompanyResource\:\:getPageNavigationLabel\(\) through static\:\:\.$#'
+			identifier: staticClassAccess.privateMethod
+			count: 1
+			path: app/Filament/Tenant/Resources/CompanyResource.php
+
+		-
+			message: '#^Unsafe usage of new static\(\)\.$#'
+			identifier: new.static
+			count: 1
+			path: app/Filament/Tenant/Resources/CompanyResource.php
 
 		-
 			message: '#^Access to an undefined static property static\(App\\Filament\\Tenant\\Resources\\MemberResource\)\:\:\$title\.$#'
