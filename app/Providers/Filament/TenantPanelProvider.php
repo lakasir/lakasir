@@ -100,7 +100,7 @@ class TenantPanelProvider extends PanelProvider
         );
 
         FilamentView::registerRenderHook(
-            PanelsRenderHook::USER_MENU_BEFORE,
+            PanelsRenderHook::TOPBAR_START,
             fn (): View => view('filament.tenant.shop-switcher')
         );
 
@@ -226,16 +226,14 @@ class TenantPanelProvider extends PanelProvider
         ];
     }
 
+    /**
+     * The sidebar names the product, not the shop: the shop is the switcher's
+     * job, and an About lookup here runs before the company is resolved, so it
+     * would show the previous shop's name for one request after a switch.
+     */
     private function configureBrand(Panel $panel): void
     {
-        try {
-            $about = About::first();
-
-            $panel->brandName($about->shop_name ?? 'Your Brand')
-                ->brandLogo($about->photo ?? null);
-        } catch (\Throwable) {
-            // DB not available during build/package-discovery
-        }
+        $panel->brandName(config('app.name'));
     }
 
     private function isNonFnbBusiness(): bool
