@@ -16,7 +16,6 @@ use App\Features\Voucher;
 use App\Filament\Tenant\Pages\CartItem;
 use App\Filament\Tenant\Pages\Cashier;
 use App\Filament\Tenant\Pages\CashierReport;
-use App\Filament\Tenant\Pages\Companies;
 use App\Filament\Tenant\Pages\GeneralSetting;
 use App\Filament\Tenant\Pages\POS;
 use App\Filament\Tenant\Pages\Printer;
@@ -48,7 +47,6 @@ use Filament\Forms\Components\DatePicker;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
-use Filament\Navigation\MenuItem;
 use Filament\Navigation\NavigationBuilder;
 use Filament\Navigation\NavigationGroup;
 use Filament\Navigation\NavigationItem;
@@ -101,6 +99,11 @@ class TenantPanelProvider extends PanelProvider
             fn () => view('version-indicator')
         );
 
+        FilamentView::registerRenderHook(
+            PanelsRenderHook::USER_MENU_BEFORE,
+            fn (): View => view('filament.tenant.shop-switcher')
+        );
+
         if (app()->environment('demo')) {
             FilamentView::registerRenderHook(
                 PanelsRenderHook::BODY_START,
@@ -135,13 +138,6 @@ class TenantPanelProvider extends PanelProvider
             ->path('/member')
             ->login(TenantLogin::class)
             ->navigation(fn (NavigationBuilder $navigationBuilder) => $this->buildNavigation($navigationBuilder))
-            ->userMenuItems([
-                MenuItem::make()
-                    ->label(fn (): string => __('Switch shop'))
-                    ->icon('heroicon-o-arrows-right-left')
-                    ->url(fn (): string => Companies::getUrl())
-                    ->visible(fn (): bool => auth()->user()?->companies()->count() > 1),
-            ])
             ->discoverResources(in: app_path('Filament/Tenant/Resources'), for: 'App\\Filament\\Tenant\\Resources')
             ->discoverPages(in: app_path('Filament/Tenant/Pages'), for: 'App\\Filament\\Tenant\\Pages')
             ->discoverWidgets(in: app_path('Filament/Tenant/Widgets'), for: 'App\\Filament\\Tenant\\Widgets')

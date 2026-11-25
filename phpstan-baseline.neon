@@ -181,30 +181,6 @@ parameters:
 			path: app/Filament/Tenant/Pages/CashierReport.php
 
 		-
-			message: '#^Call to an undefined static method App\\Filament\\Tenant\\Pages\\Companies\:\:getRouteBaseName\(\)\.$#'
-			identifier: staticMethod.notFound
-			count: 1
-			path: app/Filament/Tenant/Pages/Companies.php
-
-		-
-			message: '#^Unreachable statement \- code above always terminates\.$#'
-			identifier: deadCode.unreachable
-			count: 3
-			path: app/Filament/Tenant/Pages/Companies.php
-
-		-
-			message: '#^Unsafe call to private method App\\Filament\\Tenant\\Pages\\Companies\:\:getPageNavigationLabel\(\) through static\:\:\.$#'
-			identifier: staticClassAccess.privateMethod
-			count: 1
-			path: app/Filament/Tenant/Pages/Companies.php
-
-		-
-			message: '#^Unsafe usage of new static\(\)\.$#'
-			identifier: new.static
-			count: 1
-			path: app/Filament/Tenant/Pages/Companies.php
-
-		-
 			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$address\.$#'
 			identifier: property.notFound
 			count: 1
@@ -1583,6 +1559,18 @@ parameters:
 			identifier: property.notFound
 			count: 1
 			path: app/Listeners/CreateReceivableIfCredit.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model&object\{pivot\: Illuminate\\Database\\Eloquent\\Relations\\Pivot\}\:\:\$enabled\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Livewire/ShopSwitcher.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model&object\{pivot\: Illuminate\\Database\\Eloquent\\Relations\\Pivot\}\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Livewire/ShopSwitcher.php
 
 		-
 			message: '#^Class App\\Models\\User not found\.$#'
