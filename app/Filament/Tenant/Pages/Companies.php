@@ -22,6 +22,9 @@ class Companies extends Page
 
     protected static string $view = 'filament.tenant.pages.companies';
 
+    /** Reachable from the user menu, not the sidebar. */
+    protected static bool $shouldRegisterNavigation = false;
+
     public static function canAccess(): bool
     {
         return can('access general setting');
