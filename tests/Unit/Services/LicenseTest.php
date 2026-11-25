@@ -1,7 +1,7 @@
 <?php
 
-use App\Models\Tenants\Setting;
-use App\Services\License\License;
+use App\Models\License;
+use App\Services\License\License as LicenseGate;
 use Tests\RefreshDatabaseWithTenant;
 
 uses(RefreshDatabaseWithTenant::class);
@@ -22,7 +22,7 @@ function signClaims(array $claims): array
 }
 
 beforeEach(function () {
-    Setting::set('license.token', '');
+    License::put('');
 });
 
 it('a token signed with the trusted key grants its limits and features', function () {
@@ -34,7 +34,7 @@ it('a token signed with the trusted key grants its limits and features', functio
 
     config(['license.public_key' => $publicKey]);
 
-    $license = app(License::class);
+    $license = app(LicenseGate::class);
     $license->store($token);
 
     expect($license->plan())->toBe('pro')
@@ -52,7 +52,7 @@ it('a token signed with another key is rejected', function () {
 
     config(['license.public_key' => $otherPublicKey]);
 
-    $license = app(License::class);
+    $license = app(LicenseGate::class);
     $license->store($token);
 
     expect($license->licensed())->toBeFalse()
@@ -69,7 +69,7 @@ it('a tampered payload is rejected', function () {
     $forged = json_decode(base64_decode($payload), true);
     $forged['limits']['users'] = 99999;
 
-    $license = app(License::class);
+    $license = app(LicenseGate::class);
     $license->store(base64_encode(json_encode($forged)).'.'.$signature);
 
     expect($license->licensed())->toBeFalse();
@@ -83,14 +83,14 @@ it('an expired token still works inside the grace period and stops after it', fu
 
     config(['license.public_key' => $publicKey, 'license.grace_days' => 30]);
 
-    $license = app(License::class);
+    $license = app(LicenseGate::class);
     $license->store($token);
 
     expect($license->licensed())->toBeTrue();
 
     config(['license.grace_days' => 1]);
 
-    $license = app(License::class);
+    $license = app(LicenseGate::class);
     $license->store($token);
 
     expect($license->licensed())->toBeFalse();
@@ -103,11 +103,23 @@ it('without a token the free configuration applies', function () {
         'license.free.features' => ['purchasing'],
     ]);
 
-    $license = app(License::class);
+    $license = app(LicenseGate::class);
 
     expect($license->licensed())->toBeFalse()
         ->and($license->plan())->toBe('free')
         ->and($license->allows('users', 0))->toBeTrue()
         ->and($license->allows('users', 1))->toBeFalse()
         ->and($license->allowsFeature('purchasing'))->toBeTrue();
+});
+
+test('the token belongs to the install, so a second company sees it', function () {
+    [$publicKey, $token] = signClaims(['plan' => 'pro', 'limits' => ['users' => 5]]);
+    config(['license.public_key' => $publicKey]);
+
+    app(LicenseGate::class)->store($token);
+
+    $second = mockCompany('Toko Lain');
+
+    expect(app(LicenseGate::class)->plan())->toBe('pro')
+        ->and($second->id)->not->toBe(null);
 });

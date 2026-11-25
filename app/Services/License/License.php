@@ -2,7 +2,7 @@
 
 namespace App\Services\License;
 
-use App\Models\Tenants\Setting;
+use App\Models\License as LicenseToken;
 
 class License
 {
@@ -56,14 +56,14 @@ class License
 
     public function store(string $token): void
     {
-        Setting::set('license.token', $token);
+        LicenseToken::put($token);
 
         $this->claims = null;
     }
 
     public function claims(): array
     {
-        return $this->claims ??= $this->verify((string) Setting::get('license.token', ''));
+        return $this->claims ??= $this->verify(LicenseToken::token());
     }
 
     private function verify(string $token): array

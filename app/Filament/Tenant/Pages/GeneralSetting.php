@@ -3,12 +3,13 @@
 namespace App\Filament\Tenant\Pages;
 
 use App\Filament\Tenant\Resources\Traits\RefreshThePage;
+use App\Models\License;
 use App\Models\Tenants\About;
 use App\Models\Tenants\Profile;
 use App\Models\Tenants\Setting;
 use App\Models\Tenants\UploadedFile;
 use App\Models\Tenants\User;
-use App\Services\License\License;
+use App\Services\License\License as LicenseGate;
 use App\Services\Tenants\AboutService;
 use App\Traits\HasTranslatableResource;
 use Filament\Actions\Contracts\HasActions;
@@ -89,8 +90,8 @@ class GeneralSetting extends Page implements HasActions, HasForms
         ];
 
         $this->license = [
-            'token' => (string) Setting::get('license.token', ''),
-            'plan' => app(License::class)->plan(),
+            'token' => License::token(),
+            'plan' => app(LicenseGate::class)->plan(),
         ];
 
         $user = auth()->user();
@@ -192,7 +193,7 @@ class GeneralSetting extends Page implements HasActions, HasForms
         ]);
     }
 
-    public function saveLicense(License $license): void
+    public function saveLicense(LicenseGate $license): void
     {
         $token = trim((string) $this->license['token']);
 
