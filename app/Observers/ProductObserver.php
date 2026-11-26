@@ -99,5 +99,4 @@ class ProductObserver extends AbstractObserver implements DataAwareRule
     {
         Event::dispatch(new ProductUpdated($product));
     }
-
 }

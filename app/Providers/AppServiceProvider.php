@@ -2,14 +2,17 @@
 
 namespace App\Providers;
 
+use App\Http\Middleware\SetCurrentCompany;
 use App\Models\Tenants\User;
 use App\Services\Tenants\CheckoutProducts;
 use Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Pennant\Feature;
+use Livewire\Livewire;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -65,6 +68,13 @@ class AppServiceProvider extends ServiceProvider
 
             return $columns ? $query : $this;
         });
+        Livewire::setUpdateRoute(function ($handle) {
+            return Route::post('/livewire/update', $handle)->middleware([
+                'web',
+                SetCurrentCompany::class,
+            ]);
+        });
+
         Feature::resolveScopeUsing(fn ($driver) => null);
         Feature::discover();
     }

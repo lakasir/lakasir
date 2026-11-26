@@ -16,7 +16,7 @@
         "guzzlehttp/guzzle": "^7.2",
         "kreait/laravel-firebase": "^5.8",
         "lakasir/has-crud-action": "dev-main",
-        "lakasir/lakasir-module": "dev-main",
+        "lakasir/lakasir-module": "^1.0",
         "laravel-notification-channels/fcm": "^4.3",
         "laravel/framework": "^11.9",
         "laravel/pennant": "^1.8",
@@ -97,5 +97,14 @@
         }
     },
     "minimum-stability": "dev",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../lakasir-module",
+            "options": {
+                "symlink": true
+            }
+        }
+    ]
 }

@@ -5,6 +5,7 @@ use App\Models\Tenants\Setting;
 use App\Models\Tenants\User;
 use Filament\Facades\Filament;
 use Illuminate\Support\Number;
+use Lakasir\LakasirModule\Events\TransactionSucceed;
 
 if (! function_exists('hasFeatureAndPermission')) {
     function hasFeatureAndPermission(string $feature, ?string $permission = null): bool
@@ -48,6 +49,6 @@ if (! function_exists('module_plugin_exist')) {
      */
     function module_plugin_exist(): bool
     {
-        return class_exists(\Lakasir\LakasirModule\Events\TransactionSucceed::class);
+        return class_exists(TransactionSucceed::class);
     }
 }

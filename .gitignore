@@ -38,9 +38,11 @@ version.txt
 .mcp.json
 .lerd.yaml
 
-# Module sources are git submodules; never vendor them into the app
-/modules/*/vendor
-/modules/*/node_modules
+# Modules are installed at runtime (zip/registry) and stay untracked. A module
+# under development is committed as a submodule: add a `!/modules/<Name>` line
+# below it. The trailing slash matters — `!/modules/<Name>/` does not re-include.
+/modules/*
+# !/modules/Warehouse
 
 # Local tooling and scratch files (not part of the project)
 .agents/

@@ -59,8 +59,6 @@ use Filament\Support\Assets\Js;
 use Filament\Support\Colors\Color;
 use Filament\Support\Facades\FilamentView;
 use Filament\View\PanelsRenderHook;
-use Lakasir\LakasirModule\LakasirModulePlugin;
-use Lakasir\LakasirModule\Navigation\ModuleNavigation;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -71,6 +69,8 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Illuminate\View\View;
+use Lakasir\LakasirModule\LakasirModulePlugin;
+use Lakasir\LakasirModule\Navigation\ModuleNavigation;
 
 class TenantPanelProvider extends PanelProvider
 {
@@ -281,5 +281,4 @@ class TenantPanelProvider extends PanelProvider
             ->isActiveWhen(fn (): bool => $active)
             ->url(fn (): string => $resource::getUrl());
     }
-
 }
