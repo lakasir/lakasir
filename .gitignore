@@ -42,7 +42,7 @@ version.txt
 # under development is committed as a submodule: add a `!/modules/<Name>` line
 # below it. The trailing slash matters — `!/modules/<Name>/` does not re-include.
 /modules/*
-# !/modules/Warehouse
+!/modules/Warehouse
 
 # Local tooling and scratch files (not part of the project)
 .agents/
