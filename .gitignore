@@ -41,3 +41,15 @@ version.txt
 # Module sources are git submodules; never vendor them into the app
 /modules/*/vendor
 /modules/*/node_modules
+
+# Local tooling and scratch files (not part of the project)
+.agents/
+.claude/
+.github/copilot-instructions.md
+# Database dumps and backups dropped in the project root
+/*.sql
+docker-compose.yml.bak
+modules-*-backup-*.json
+
+# Per-machine test env (was tracked with another machine's DB values)
+.env.testing

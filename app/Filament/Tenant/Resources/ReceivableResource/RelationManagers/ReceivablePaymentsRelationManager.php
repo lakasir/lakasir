@@ -28,7 +28,7 @@ class ReceivablePaymentsRelationManager extends RelationManager
 
     public function __construct()
     {
-        $this->dPService = new ReceivablePaymentService();
+        $this->dPService = new ReceivablePaymentService;
     }
 
     public static function canViewForRecord(Model|Receivable $ownerRecord, string $pageClass): bool

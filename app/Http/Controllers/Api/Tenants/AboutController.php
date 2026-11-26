@@ -14,7 +14,7 @@ class AboutController extends Controller
     public function index()
     {
         return $this->buildResponse()
-            ->setData(new AboutResource(About::first()))
+            ->setData(new AboutResource(About::first() ?? new About))
             ->present();
     }
 

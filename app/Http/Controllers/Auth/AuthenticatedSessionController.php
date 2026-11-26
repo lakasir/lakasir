@@ -4,16 +4,19 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Models\Tenants\User;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Pennant\Feature;
+use Laravel\Sanctum\PersonalAccessToken;
 
 class AuthenticatedSessionController extends Controller
 {
     public function store(LoginRequest $request)
     {
         $request->authenticate();
-        /** @var \App\Models\Tenants\User $user */
+        /** @var User $user */
         $user = $request->user();
         $token = $request->user()->createToken($user->getRememberTokenName());
 
@@ -28,13 +31,21 @@ class AuthenticatedSessionController extends Controller
         ]);
     }
 
-    public function destroy(Request $request)
+    public function destroy(Request $request): Response
     {
-        Auth::guard('web')->logout();
+        $token = $request->user()?->currentAccessToken();
 
-        $request->session()->invalidate();
+        if ($token instanceof PersonalAccessToken) {
+            $token->delete();
+        }
 
-        $request->session()->regenerateToken();
+        if ($request->hasSession()) {
+            Auth::guard('web')->logout();
+
+            $request->session()->invalidate();
+
+            $request->session()->regenerateToken();
+        }
 
         return response()->noContent();
     }

@@ -15,7 +15,6 @@ use Filament\Resources\Pages\Page;
 use Filament\Support\Colors\Color;
 use Filament\Support\Enums\Alignment;
 use Illuminate\Contracts\Support\Htmlable;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Number;
 use Picqer\Barcode\BarcodeGeneratorSVG;
 
@@ -51,7 +50,7 @@ class PrintLabel extends Page implements HasForms
     public function applySetting()
     {
         $data = $this->form->getState();
-        $generator = new BarcodeGeneratorSVG();
+        $generator = new BarcodeGeneratorSVG;
 
         $product = $this->record;
         $fillable = collect();

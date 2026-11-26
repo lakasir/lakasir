@@ -25,7 +25,7 @@ class StockOpnameService
 
     public function create(array $data): StockOpname
     {
-        $stockOpname = new StockOpname();
+        $stockOpname = new StockOpname;
         $stockOpname->fill($data);
         $stockOpname->save();
 
@@ -64,9 +64,9 @@ class StockOpnameService
             }
             foreach ($so->stockOpnameItems as $soItem) {
                 if ($soItem->missing_stock < 0) {
-                    $this->stockService->addStock($soItem->product, $soItem->missing_stock * -1);
+                    $this->stockService->addStock($soItem->product, (float) $soItem->missing_stock * -1);
                 } else {
-                    $this->stockService->reduceStock($soItem->product, $soItem->missing_stock);
+                    $this->stockService->reduceStock($soItem->product, (float) $soItem->missing_stock);
                 }
             }
             RecalculateEvent::dispatch(Product::whereIn('id', $so->stockOpnameItems->pluck('product_id'))->get(), []);

@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Tenants\User;
+
 return [
 
     /*
@@ -40,10 +42,6 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
-        'tenant' => [
-            'driver' => 'session',
-            'provider' => 'tenants',
-        ],
     ],
 
     /*
@@ -66,12 +64,7 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => App\Models\Tenants\User::class,
-        ],
-
-        'tenants' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\Tenants\User::class,
+            'model' => User::class,
         ],
 
         // 'users' => [

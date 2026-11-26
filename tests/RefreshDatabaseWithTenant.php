@@ -3,31 +3,27 @@
 namespace Tests;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\URL;
+use Laravel\Pennant\FeatureManager;
 
+/**
+ * One database now. Every test gets a company in context, and one owner user
+ * attached to it, because the global scope, the company_id column and the
+ * permission checks all depend on there being a shop.
+ */
 trait RefreshDatabaseWithTenant
 {
-    use RefreshDatabase {
-        beginDatabaseTransaction as parentBeginDatabaseTransaction;
-    }
+    use RefreshDatabase;
 
-    /**
-     * We need to hook initialize tenancy _before_ we start the database
-     * transaction, otherwise it cannot find the tenant connection.
-     */
-    public function beginDatabaseTransaction()
+    protected function setUpTraits()
     {
-        $this->initializeTenant();
+        $uses = parent::setUpTraits();
 
-        $this->parentBeginDatabaseTransaction();
-    }
+        // Pennant resolves each flag once per process, and a flag one test
+        // turns on would otherwise stay on for the next one.
+        app(FeatureManager::class)->flushCache();
 
-    public function initializeTenant()
-    {
-        $tenant = mockTenant();
+        mockTenant();
 
-        tenancy()->initialize($tenant);
-
-        URL::forceRootUrl("http://{$tenant->domains[0]->domain}");
+        return $uses;
     }
 }

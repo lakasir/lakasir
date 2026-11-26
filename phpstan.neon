@@ -1,0 +1,12 @@
+includes:
+    - vendor/larastan/larastan/extension.neon
+    # Existing findings are recorded here so the check is usable today;
+    # shrink the baseline as the code gets typed (CARD-28).
+    - phpstan-baseline.neon
+
+parameters:
+    paths:
+        - app
+    level: 5
+    excludePaths:
+        - app/Filament/**/Widgets/*.php

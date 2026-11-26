@@ -7,7 +7,7 @@ use App\Models\Tenants\Product;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Tenants\Product>
+ * @extends Factory<Product>
  */
 class ProductFactory extends Factory
 {
@@ -26,9 +26,9 @@ class ProductFactory extends Factory
     public function definition()
     {
         return [
-            'category_id' => Category::all()->random(),
+            'category_id' => Category::factory(),
             'name' => $this->faker->company(),
-            'stock' => $this->faker->randomDigit(),
+            'stock' => $this->faker->numberBetween(1, 100),
             'initial_price' => rand(50000, 60000),
             'selling_price' => rand(60000, 70000),
             'unit' => 'PCS',

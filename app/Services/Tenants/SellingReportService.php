@@ -14,11 +14,14 @@ class SellingReportService
 {
     public function generate(array $data)
     {
-        $timezone = Profile::get()->timezone;
+        $timezone = $this->timezone();
         $about = About::first();
-        $startDate = Carbon::parse($data['start_date'], $timezone)->setTimezone('UTC');
-        $endDate = Carbon::parse($data['end_date'], $timezone)->addDay()->setTimezone('UTC');
+        // A missing date (the API allows null) means today, not a 500.
+        $startDate = Carbon::parse($data['start_date'] ?? now()->toDateString(), $timezone)->setTimezone('UTC');
+        $endDate = Carbon::parse($data['end_date'] ?? now()->toDateString(), $timezone)->addDay()->setTimezone('UTC');
 
+        // Paged (and eager-loading each page's lines) instead of holding the
+        // whole window — a year of sales — in memory at once.
         $sellings = Selling::query()
             ->select()
             ->with(
@@ -26,11 +29,14 @@ class SellingReportService
                 'sellingDetails.product:id,name,initial_price,selling_price,sku',
                 'user:id,name,email'
             )
-            ->when($data['start_date'] && $data['end_date'], function (Builder $query) use ($startDate, $endDate) {
+            ->when(! empty($data['start_date']) && ! empty($data['end_date']), function (Builder $query) use ($startDate, $endDate) {
                 $query->whereBetween('date', [$startDate, $endDate]);
             })
-            ->orderBy('created_at', 'desc')
-            ->get();
+            // lazyByIdDesc pages by id, newest first, and owns the ordering:
+            // mixing it with an orderBy on another column (created_at) made the
+            // cursor skip rows, and the third argument is the *result key*
+            // (`id`), not the qualified column.
+            ->lazyByIdDesc(200, 'id');
 
         $header = [
             'shop_name' => $about?->shop_name,
@@ -76,10 +82,11 @@ class SellingReportService
                     'code' => $selling->code,
                     'sku' => $detail->product->sku,
                     'name' => $detail->product->name,
-                    'selling_price' => $this->formatCurrency($detail->price / $detail->qty),
+                    // qty 0 cannot happen through checkout, but a legacy row must not crash the report.
+                    'selling_price' => $this->formatCurrency($detail->qty > 0 ? $detail->price / $detail->qty : $detail->price),
                     'selling' => $this->formatCurrency($detail->price - ($detail->discount_price ?? 0)),
                     'discount_price' => $this->formatCurrency($detail->discount_price ?? 0),
-                    'initial_price' => $this->formatCurrency($detail->cost / $detail->qty),
+                    'initial_price' => $this->formatCurrency($detail->qty > 0 ? $detail->cost / $detail->qty : $detail->cost),
                     'qty' => $detail->qty,
                     'cost' => $detail->cost,
                     'total_after_discount' => $this->formatCurrency($detail->price - ($detail->discount_price ?? 0)),
@@ -123,5 +130,14 @@ class SellingReportService
     private function formatCurrency($value)
     {
         return Number::format($value);
+    }
+
+    /**
+     * The cashier's time zone, falling back to the app's when the profile has
+     * none (a fresh tenant, or a request without a signed-in user).
+     */
+    private function timezone(): string
+    {
+        return Profile::get()->timezone ?? config('app.timezone');
     }
 }

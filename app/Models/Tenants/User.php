@@ -2,6 +2,7 @@
 
 namespace App\Models\Tenants;
 
+use App\Models\Company;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasAvatar;
 use Filament\Models\Contracts\HasName;
@@ -9,6 +10,7 @@ use Filament\Panel;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -35,7 +37,6 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName
         'email',
         'password',
         'fcm_token',
-        'is_owner',
     ];
 
     /**
@@ -61,6 +62,36 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName
     public function canAccessPanel(Panel $panel): bool
     {
         return true;
+    }
+
+    public function companies(): BelongsToMany
+    {
+        return $this->belongsToMany(Company::class, 'user_companies')
+            ->withPivot('is_owner');
+    }
+
+    /**
+     * Ownership is per membership, never per person: in one box serving many
+     * customers a login can belong to several shops, and an owner of one must
+     * not be an owner of the others.
+     */
+    public function isOwner(?int $companyId = null): bool
+    {
+        $companyId ??= Company::currentId();
+
+        if ($companyId === null) {
+            return false;
+        }
+
+        return (bool) $this->companies()
+            ->whereKey($companyId)
+            ->wherePivot('is_owner', true)
+            ->exists();
+    }
+
+    public function ownsAnyCompany(): bool
+    {
+        return (bool) $this->companies()->wherePivot('is_owner', true)->exists();
     }
 
     public function profile(): HasOne
@@ -110,8 +141,22 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName
         return $this->fcm_token;
     }
 
+    /**
+     * The owner of the shop in context. Ownership is per membership, so this
+     * looks at the pivot for the current company instead of a users column.
+     */
     public function scopeOwner(Builder $builder)
     {
-        return $builder->whereIsOwner(true);
+        $companyId = Company::currentId();
+
+        if ($companyId === null) {
+            return $builder->whereRaw('1 = 0');
+        }
+
+        return $builder->whereHas(
+            'companies',
+            fn ($q) => $q->where('companies.id', $companyId)
+                ->where('user_companies.is_owner', true),
+        );
     }
 }

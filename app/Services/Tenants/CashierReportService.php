@@ -13,11 +13,12 @@ class CashierReportService
 {
     public function generate(array $data)
     {
-        $timezone = Profile::get()->timezone;
+        $timezone = $this->timezone();
         $about = About::first();
-        $tzName = Carbon::parse($data['start_date'])->getTimezone()->getName();
-        $startDate = Carbon::parse($data['start_date'], $timezone)->setTimezone('UTC');
-        $endDate = Carbon::parse($data['end_date'], $timezone)->addDay()->setTimezone('UTC');
+        $tzName = Carbon::parse($data['start_date'] ?? now()->toDateString())->getTimezone()->getName();
+        // A missing date (the API allows null) means today, not a 500.
+        $startDate = Carbon::parse($data['start_date'] ?? now()->toDateString(), $timezone)->setTimezone('UTC');
+        $endDate = Carbon::parse($data['end_date'] ?? now()->toDateString(), $timezone)->addDay()->setTimezone('UTC');
         $sellings = Selling::query()
             ->select('id', 'code', 'user_id', 'created_at', 'total_price', 'total_cost', 'discount_price')
             ->with(
@@ -25,11 +26,12 @@ class CashierReportService
                 'sellingDetails.product:id,name,initial_price,selling_price',
                 'user:id,name,email'
             )
-            ->when($data['start_date'] && $data['end_date'], function (Builder $query) use ($startDate, $endDate) {
+            ->when(! empty($data['start_date']) && ! empty($data['end_date']), function (Builder $query) use ($startDate, $endDate) {
                 $query->whereBetween('date', [$startDate, $endDate]);
             })
-            ->orderBy('created_at', 'desc')
-            ->get();
+            // Paged by id, newest first: a shop's whole history is never held
+            // in memory at once, and the cursor and the ordering agree.
+            ->lazyByIdDesc(200, 'id');
 
         $header = [
             'shop_name' => $about?->shop_name,
@@ -129,5 +131,14 @@ class CashierReportService
     private function formatCurrency($value)
     {
         return Number::format($value);
+    }
+
+    /**
+     * The cashier's time zone, falling back to the app's when the profile has
+     * none (a fresh tenant, or a request without a signed-in user).
+     */
+    private function timezone(): string
+    {
+        return Profile::get()->timezone ?? config('app.timezone');
     }
 }

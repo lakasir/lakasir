@@ -31,7 +31,6 @@
         "silviolleite/laravelpwa": "^2.0",
         "spatie/laravel-permission": "6.9.0",
         "spatie/laravel-query-builder": "^6.0",
-        "stancl/tenancy": "^3.6",
         "tapp/filament-timezone-field": "^3.0"
     },
     "require-dev": {
@@ -39,7 +38,9 @@
         "barryvdh/laravel-ide-helper": "^3.0",
         "fakerphp/faker": "^1.9.1",
         "laradumps/laradumps": "^3.0",
+        "larastan/larastan": "^3.15",
         "laravel-lang/common": "^6.2",
+        "laravel/pint": "^1.32",
         "laravel/sail": "^1.0.1",
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^8.0",

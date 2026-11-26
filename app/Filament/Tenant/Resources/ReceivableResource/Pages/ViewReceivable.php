@@ -22,7 +22,7 @@ class ViewReceivable extends ViewRecord
 
     public function __construct()
     {
-        $this->dPService = new ReceivablePaymentService();
+        $this->dPService = new ReceivablePaymentService;
     }
 
     protected function getHeaderActions(): array
@@ -49,7 +49,7 @@ class ViewReceivable extends ViewRecord
 
     public function getTitle(): string|Htmlable
     {
-        /** @var receivable $receivable */
+        /** @var Receivable $receivable */
         $receivable = $this->record;
 
         return '#'.$receivable->selling->code;

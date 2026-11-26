@@ -22,7 +22,7 @@ class CreatePurchasing extends CreateRecord
 
     public function __construct()
     {
-        $this->purchasingService = new PurchasingService();
+        $this->purchasingService = new PurchasingService;
         $this->prefix = 'PO';
     }
 

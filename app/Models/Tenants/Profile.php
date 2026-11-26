@@ -3,6 +3,7 @@
 namespace App\Models\Tenants;
 
 use App\Filament\Tenant\Resources\Traits\HasUploadFileField;
+use App\Traits\BelongsToCompany;
 use Filament\Forms\Components\Actions;
 use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Components\FileUpload;
@@ -21,7 +22,7 @@ use Tapp\FilamentTimezoneField\Forms\Components\TimezoneSelect;
  */
 class Profile extends Model
 {
-    use HasFactory,
+    use BelongsToCompany, HasFactory,
         HasUploadFileField;
 
     protected $fillable = [
@@ -39,7 +40,9 @@ class Profile extends Model
 
     public static function get(array $key = ['*']): Profile
     {
-        return Profile::select($key)->whereUserId(auth()->id())->first() ?? new Profile();
+        // once(): one query per request, however many prices the cashier grid
+        // renders (price_format() asks for the locale on every cell).
+        return once(fn () => Profile::select($key)->whereUserId(auth()->id())->first() ?? new Profile);
     }
 
     public static function form(): array

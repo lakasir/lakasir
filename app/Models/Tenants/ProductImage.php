@@ -2,6 +2,7 @@
 
 namespace App\Models\Tenants;
 
+use App\Traits\BelongsToCompany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
@@ -11,7 +12,7 @@ use Illuminate\Support\Facades\Storage;
  */
 class ProductImage extends Model
 {
-    use HasFactory;
+    use BelongsToCompany, HasFactory;
 
     protected $guarded = ['id'];
 
@@ -24,7 +25,7 @@ class ProductImage extends Model
     {
         $value = $this->attributes['name'];
         $uploadDisk = config('filesystems.upload_disk');
-        $driver = config('filesystems.disks.' . $uploadDisk . '.driver');
+        $driver = config('filesystems.disks.'.$uploadDisk.'.driver');
 
         if ($driver === 'local' || $driver === 'public') {
             return Storage::disk($uploadDisk)->path($value);

@@ -10,13 +10,12 @@ use Illuminate\Support\Number;
 
 class PurchasingReportService
 {
-    public function generate(?array $data)
+    public function generate(array $data)
     {
-        $profile = Profile::get();
-        $timezone = $profile->timezone;
+        $timezone = $this->timezone();
         $about = About::first();
-        $startDate = Carbon::parse($data['start_date']);
-        $endDate = Carbon::parse($data['end_date']);
+        $startDate = Carbon::parse($data['start_date'] ?? now()->toDateString());
+        $endDate = Carbon::parse($data['end_date'] ?? now()->toDateString());
 
         $header = [
             'shop_name' => $about?->shop_name,
@@ -32,7 +31,9 @@ class PurchasingReportService
         $purchasings = Purchasing::query()
             ->with(['stocks.product', 'supplier'])
             ->whereBetween('date', [$startDate->format('Y-m-d'), $endDate->format('Y-m-d')])
-            ->get();
+            ->orderBy('id')
+            // Paged, so a year of purchases is not one big load.
+            ->lazyById(200, 'purchasings.id');
 
         $grand_total_initial_price = 0;
         $grand_total_selling_price = 0;
@@ -75,5 +76,14 @@ class PurchasingReportService
             'footer' => $footer,
             'header' => $header,
         ];
+    }
+
+    /**
+     * The cashier's time zone, falling back to the app's when the profile has
+     * none (a fresh tenant, or a request without a signed-in user).
+     */
+    private function timezone(): string
+    {
+        return Profile::get()->timezone ?? config('app.timezone');
     }
 }

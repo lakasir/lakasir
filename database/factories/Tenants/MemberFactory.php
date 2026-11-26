@@ -2,10 +2,11 @@
 
 namespace Database\Factories\Tenants;
 
+use App\Models\Tenants\Member;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Tenants\Member>
+ * @extends Factory<Member>
  */
 class MemberFactory extends Factory
 {
@@ -18,9 +19,9 @@ class MemberFactory extends Factory
     {
         return [
             'name' => $this->faker->name,
-            'code' => "CUS0001",
+            'code' => 'CUS'.$this->faker->unique()->numerify('####'),
             'address' => $this->faker->streetAddress,
-            'email' => $this->faker->email
+            'email' => $this->faker->email,
         ];
     }
 }

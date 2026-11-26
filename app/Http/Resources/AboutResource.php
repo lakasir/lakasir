@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Tenants\About;
 use App\Models\Tenants\Setting;
 use App\Models\Tenants\User;
 use Illuminate\Http\Request;
@@ -10,7 +11,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 /**
- * @mixin \App\About
+ * @mixin About
  */
 class AboutResource extends JsonResource
 {

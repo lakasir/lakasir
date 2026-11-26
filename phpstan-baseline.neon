@@ -1,0 +1,2366 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$product\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Console/Commands/FillSellingMissingValue.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$qty\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Console/Commands/FillSellingMissingValue.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>disk" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 3
+			path: app/Console/Commands/MigrateUrlsCommand.php
+
+		-
+			message: '#^Parameter \#1 \$products of event class App\\Events\\RecalculateEvent constructor expects App\\Models\\Tenants\\Product\|Illuminate\\Support\\Collection\<int\|string, App\\Models\\Tenants\\Product\> in App\\Events\\RecalculateEvent\:\:dispatch\(\), Illuminate\\Database\\Eloquent\\Collection\<int, App\\Models\\Tenants\\Product\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Console/Commands/RecalculateAllProduct.php
+
+		-
+			message: '#^Strict comparison using \=\=\= between resource\|null and false will always evaluate to false\.$#'
+			identifier: identical.alwaysFalse
+			count: 1
+			path: app/Console/Commands/SwitchDiskCommand.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$qty\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Filament/Tenant/Pages/CartItem.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$selling_price\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Filament/Tenant/Pages/CartItem.php
+
+		-
+			message: '#^Access to an undefined static property static\(App\\Filament\\Tenant\\Pages\\CartItem\)\:\:\$label\.$#'
+			identifier: staticProperty.notFound
+			count: 1
+			path: app/Filament/Tenant/Pages/CartItem.php
+
+		-
+			message: '#^Call to an undefined static method App\\Filament\\Tenant\\Pages\\CartItem\:\:getRouteBaseName\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Filament/Tenant/Pages/CartItem.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 3
+			path: app/Filament/Tenant/Pages/CartItem.php
+
+		-
+			message: '#^Unsafe call to private method App\\Filament\\Tenant\\Pages\\CartItem\:\:getPageNavigationLabel\(\) through static\:\:\.$#'
+			identifier: staticClassAccess.privateMethod
+			count: 1
+			path: app/Filament/Tenant/Pages/CartItem.php
+
+		-
+			message: '#^Unsafe usage of new static\(\)\.$#'
+			identifier: new.static
+			count: 1
+			path: app/Filament/Tenant/Pages/CartItem.php
+
+		-
+			message: '#^Access to an undefined property App\\Filament\\Tenant\\Pages\\Cashier\:\:\$storeCartForm\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Filament/Tenant/Pages/Cashier.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Tenants\\Product\:\:\$stock_calculate\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Filament/Tenant/Pages/Cashier.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$qty\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Filament/Tenant/Pages/Cashier.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$selling_price\.$#'
+			identifier: property.notFound
+			count: 3
+			path: app/Filament/Tenant/Pages/Cashier.php
+
+		-
+			message: '#^Binary operation "\+\=" between float and 0\|''''\|''0''\|array\{\}\|float\|false\|null results in an error\.$#'
+			identifier: assignOp.invalid
+			count: 1
+			path: app/Filament/Tenant/Pages/Cashier.php
+
+		-
+			message: '#^Call to an undefined static method App\\Filament\\Tenant\\Pages\\Cashier\:\:getRouteBaseName\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Filament/Tenant/Pages/Cashier.php
+
+		-
+			message: '#^Called ''pluck'' on Laravel collection, but could have been retrieved as a query\.$#'
+			identifier: larastan.noUnnecessaryCollectionCall
+			count: 1
+			path: app/Filament/Tenant/Pages/Cashier.php
+
+		-
+			message: '#^Parameter \#1 \$callback of method Illuminate\\Database\\Eloquent\\Collection\<\(int\|string\),Illuminate\\Database\\Eloquent\\Model\>\:\:map\(\) expects callable\(Illuminate\\Database\\Eloquent\\Model, int\|string\)\: array\{product_id\: int\<0, max\>, qty\: float, price\: float\|null, discount_price\: float, price_unit_id\: int\<0, max\>\|null\}, Closure\(App\\Models\\Tenants\\CartItem\)\: array\{product_id\: int\<0, max\>, qty\: float, price\: float\|null, discount_price\: float, price_unit_id\: int\<0, max\>\|null\} given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Filament/Tenant/Pages/Cashier.php
+
+		-
+			message: '#^Parameter \#1 \$callback of method Illuminate\\Support\\Collection\<\(int\|string\),Illuminate\\Database\\Eloquent\\Model\>\:\:each\(\) expects callable\(Illuminate\\Database\\Eloquent\\Model, int\|string\)\: mixed, Closure\(App\\Models\\Tenants\\CartItem\)\: void given\.$#'
+			identifier: argument.type
+			count: 3
+			path: app/Filament/Tenant/Pages/Cashier.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 3
+			path: app/Filament/Tenant/Pages/Cashier.php
+
+		-
+			message: '#^Unsafe call to private method App\\Filament\\Tenant\\Pages\\Cashier\:\:getPageNavigationLabel\(\) through static\:\:\.$#'
+			identifier: staticClassAccess.privateMethod
+			count: 1
+			path: app/Filament/Tenant/Pages/Cashier.php
+
+		-
+			message: '#^Unsafe usage of new static\(\)\.$#'
+			identifier: new.static
+			count: 1
+			path: app/Filament/Tenant/Pages/Cashier.php
+
+		-
+			message: '#^Call to an undefined static method App\\Filament\\Tenant\\Pages\\CashierReport\:\:getRouteBaseName\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Filament/Tenant/Pages/CashierReport.php
+
+		-
+			message: '#^Parameter \#1 \$rules of method App\\Filament\\Tenant\\Pages\\CashierReport\:\:validate\(\) expects array\<string, array\<mixed\>\>\|null, array\<string, string\> given\.$#'
+			identifier: argument.type
+			count: 2
+			path: app/Filament/Tenant/Pages/CashierReport.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 3
+			path: app/Filament/Tenant/Pages/CashierReport.php
+
+		-
+			message: '#^Unsafe call to private method App\\Filament\\Tenant\\Pages\\CashierReport\:\:generateNavigationItem\(\) through static\:\:\.$#'
+			identifier: staticClassAccess.privateMethod
+			count: 4
+			path: app/Filament/Tenant/Pages/CashierReport.php
+
+		-
+			message: '#^Unsafe call to private method App\\Filament\\Tenant\\Pages\\CashierReport\:\:getPageNavigationLabel\(\) through static\:\:\.$#'
+			identifier: staticClassAccess.privateMethod
+			count: 1
+			path: app/Filament/Tenant/Pages/CashierReport.php
+
+		-
+			message: '#^Unsafe usage of new static\(\)\.$#'
+			identifier: new.static
+			count: 1
+			path: app/Filament/Tenant/Pages/CashierReport.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$address\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Filament/Tenant/Pages/GeneralSetting.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$locale\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Filament/Tenant/Pages/GeneralSetting.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$phone\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Filament/Tenant/Pages/GeneralSetting.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$photo\.$#'
+			identifier: property.notFound
+			count: 4
+			path: app/Filament/Tenant/Pages/GeneralSetting.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$timezone\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Filament/Tenant/Pages/GeneralSetting.php
+
+		-
+			message: '#^Call to an undefined static method App\\Filament\\Tenant\\Pages\\GeneralSetting\:\:getRouteBaseName\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Filament/Tenant/Pages/GeneralSetting.php
+
+		-
+			message: '#^Parameter \#1 \$options of method Filament\\Forms\\Components\\Select\:\:options\(\) expects array\<array\<string\>\|string\>\|Closure\|Illuminate\\Contracts\\Support\\Arrayable\|string\|null, array\{0\: 0, 5\: 5, 10\: 10, 20\: 20, 50\: 50\} given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Filament/Tenant/Pages/GeneralSetting.php
+
+		-
+			message: '#^Parameter \#1 \$rules of method App\\Filament\\Tenant\\Pages\\GeneralSetting\:\:validate\(\) expects array\<string, array\<mixed\>\>\|null, array\<string, string\> given\.$#'
+			identifier: argument.type
+			count: 2
+			path: app/Filament/Tenant/Pages/GeneralSetting.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 3
+			path: app/Filament/Tenant/Pages/GeneralSetting.php
+
+		-
+			message: '#^Unsafe call to private method App\\Filament\\Tenant\\Pages\\GeneralSetting\:\:getPageNavigationLabel\(\) through static\:\:\.$#'
+			identifier: staticClassAccess.privateMethod
+			count: 1
+			path: app/Filament/Tenant/Pages/GeneralSetting.php
+
+		-
+			message: '#^Unsafe usage of new static\(\)\.$#'
+			identifier: new.static
+			count: 1
+			path: app/Filament/Tenant/Pages/GeneralSetting.php
+
+		-
+			message: '#^Access to an undefined property App\\Filament\\Tenant\\Pages\\POS\:\:\$category\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Filament/Tenant/Pages/POS.php
+
+		-
+			message: '#^Access to an undefined property App\\Filament\\Tenant\\Pages\\POS\:\:\$search\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Filament/Tenant/Pages/POS.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$qty\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Filament/Tenant/Pages/POS.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$selling_price\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Filament/Tenant/Pages/POS.php
+
+		-
+			message: '#^Call to an undefined static method App\\Filament\\Tenant\\Pages\\POS\:\:getRouteBaseName\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Filament/Tenant/Pages/POS.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 3
+			path: app/Filament/Tenant/Pages/POS.php
+
+		-
+			message: '#^Unsafe call to private method App\\Filament\\Tenant\\Pages\\POS\:\:getPageNavigationLabel\(\) through static\:\:\.$#'
+			identifier: staticClassAccess.privateMethod
+			count: 1
+			path: app/Filament/Tenant/Pages/POS.php
+
+		-
+			message: '#^Unsafe usage of new static\(\)\.$#'
+			identifier: new.static
+			count: 1
+			path: app/Filament/Tenant/Pages/POS.php
+
+		-
+			message: '#^Access to an undefined property App\\Filament\\Tenant\\Pages\\Printer\:\:\$form\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Filament/Tenant/Pages/Printer.php
+
+		-
+			message: '#^Access to an undefined static property static\(App\\Filament\\Tenant\\Pages\\Printer\)\:\:\$label\.$#'
+			identifier: staticProperty.notFound
+			count: 1
+			path: app/Filament/Tenant/Pages/Printer.php
+
+		-
+			message: '#^Call to an undefined static method App\\Filament\\Tenant\\Pages\\Printer\:\:getRouteBaseName\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Filament/Tenant/Pages/Printer.php
+
+		-
+			message: '#^Parameter \#1 \$rules of method Filament\\Pages\\BasePage\:\:validate\(\) expects array\<string, array\<mixed\>\>\|null, array\<string, string\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Filament/Tenant/Pages/Printer.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 3
+			path: app/Filament/Tenant/Pages/Printer.php
+
+		-
+			message: '#^Unsafe call to private method App\\Filament\\Tenant\\Pages\\Printer\:\:getPageNavigationLabel\(\) through static\:\:\.$#'
+			identifier: staticClassAccess.privateMethod
+			count: 1
+			path: app/Filament/Tenant/Pages/Printer.php
+
+		-
+			message: '#^Unsafe usage of new static\(\)\.$#'
+			identifier: new.static
+			count: 1
+			path: app/Filament/Tenant/Pages/Printer.php
+
+		-
+			message: '#^Call to an undefined static method App\\Filament\\Tenant\\Pages\\ProductReport\:\:getRouteBaseName\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Filament/Tenant/Pages/ProductReport.php
+
+		-
+			message: '#^Parameter \#1 \$rules of method App\\Filament\\Tenant\\Pages\\ProductReport\:\:validate\(\) expects array\<string, array\<mixed\>\>\|null, array\<string, string\> given\.$#'
+			identifier: argument.type
+			count: 2
+			path: app/Filament/Tenant/Pages/ProductReport.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 3
+			path: app/Filament/Tenant/Pages/ProductReport.php
+
+		-
+			message: '#^Unsafe call to private method App\\Filament\\Tenant\\Pages\\ProductReport\:\:generateNavigationItem\(\) through static\:\:\.$#'
+			identifier: staticClassAccess.privateMethod
+			count: 4
+			path: app/Filament/Tenant/Pages/ProductReport.php
+
+		-
+			message: '#^Unsafe call to private method App\\Filament\\Tenant\\Pages\\ProductReport\:\:getPageNavigationLabel\(\) through static\:\:\.$#'
+			identifier: staticClassAccess.privateMethod
+			count: 1
+			path: app/Filament/Tenant/Pages/ProductReport.php
+
+		-
+			message: '#^Unsafe usage of new static\(\)\.$#'
+			identifier: new.static
+			count: 1
+			path: app/Filament/Tenant/Pages/ProductReport.php
+
+		-
+			message: '#^Call to an undefined static method App\\Filament\\Tenant\\Pages\\PurchasingReport\:\:getRouteBaseName\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Filament/Tenant/Pages/PurchasingReport.php
+
+		-
+			message: '#^Parameter \#1 \$rules of method App\\Filament\\Tenant\\Pages\\PurchasingReport\:\:validate\(\) expects array\<string, array\<mixed\>\>\|null, array\<string, string\> given\.$#'
+			identifier: argument.type
+			count: 2
+			path: app/Filament/Tenant/Pages/PurchasingReport.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 3
+			path: app/Filament/Tenant/Pages/PurchasingReport.php
+
+		-
+			message: '#^Unsafe call to private method App\\Filament\\Tenant\\Pages\\PurchasingReport\:\:generateNavigationItem\(\) through static\:\:\.$#'
+			identifier: staticClassAccess.privateMethod
+			count: 4
+			path: app/Filament/Tenant/Pages/PurchasingReport.php
+
+		-
+			message: '#^Unsafe call to private method App\\Filament\\Tenant\\Pages\\PurchasingReport\:\:getPageNavigationLabel\(\) through static\:\:\.$#'
+			identifier: staticClassAccess.privateMethod
+			count: 1
+			path: app/Filament/Tenant/Pages/PurchasingReport.php
+
+		-
+			message: '#^Unsafe usage of new static\(\)\.$#'
+			identifier: new.static
+			count: 1
+			path: app/Filament/Tenant/Pages/PurchasingReport.php
+
+		-
+			message: '#^Call to an undefined static method App\\Filament\\Tenant\\Pages\\Report\:\:getRouteBaseName\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Filament/Tenant/Pages/Report.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 3
+			path: app/Filament/Tenant/Pages/Report.php
+
+		-
+			message: '#^Unsafe call to private method App\\Filament\\Tenant\\Pages\\Report\:\:generateNavigationItem\(\) through static\:\:\.$#'
+			identifier: staticClassAccess.privateMethod
+			count: 4
+			path: app/Filament/Tenant/Pages/Report.php
+
+		-
+			message: '#^Unsafe call to private method App\\Filament\\Tenant\\Pages\\Report\:\:getPageNavigationLabel\(\) through static\:\:\.$#'
+			identifier: staticClassAccess.privateMethod
+			count: 1
+			path: app/Filament/Tenant/Pages/Report.php
+
+		-
+			message: '#^Unsafe usage of new static\(\)\.$#'
+			identifier: new.static
+			count: 1
+			path: app/Filament/Tenant/Pages/Report.php
+
+		-
+			message: '#^Call to an undefined static method App\\Filament\\Tenant\\Pages\\SellingReport\:\:getRouteBaseName\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Filament/Tenant/Pages/SellingReport.php
+
+		-
+			message: '#^Parameter \#1 \$rules of method App\\Filament\\Tenant\\Pages\\SellingReport\:\:validate\(\) expects array\<string, array\<mixed\>\>\|null, array\<string, string\> given\.$#'
+			identifier: argument.type
+			count: 2
+			path: app/Filament/Tenant/Pages/SellingReport.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 3
+			path: app/Filament/Tenant/Pages/SellingReport.php
+
+		-
+			message: '#^Unsafe call to private method App\\Filament\\Tenant\\Pages\\SellingReport\:\:generateNavigationItem\(\) through static\:\:\.$#'
+			identifier: staticClassAccess.privateMethod
+			count: 4
+			path: app/Filament/Tenant/Pages/SellingReport.php
+
+		-
+			message: '#^Unsafe call to private method App\\Filament\\Tenant\\Pages\\SellingReport\:\:getPageNavigationLabel\(\) through static\:\:\.$#'
+			identifier: staticClassAccess.privateMethod
+			count: 1
+			path: app/Filament/Tenant/Pages/SellingReport.php
+
+		-
+			message: '#^Unsafe usage of new static\(\)\.$#'
+			identifier: new.static
+			count: 1
+			path: app/Filament/Tenant/Pages/SellingReport.php
+
+		-
+			message: '#^Method App\\Filament\\Tenant\\Pages\\TenantLogin\:\:authenticate\(\) should return Filament\\Http\\Responses\\Auth\\LoginResponse\|null but returns Filament\\Http\\Responses\\Auth\\Contracts\\LoginResponse\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Filament/Tenant/Pages/TenantLogin.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 1
+			path: app/Filament/Tenant/Pages/TenantLogin.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>qty" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Filament/Tenant/Pages/Traits/TableProduct.php
+
+		-
+			message: '#^Access to an undefined static property static\(App\\Filament\\Tenant\\Resources\\CategoryResource\)\:\:\$title\.$#'
+			identifier: staticProperty.notFound
+			count: 2
+			path: app/Filament/Tenant/Resources/CategoryResource.php
+
+		-
+			message: '#^Call to an undefined static method App\\Filament\\Tenant\\Resources\\CategoryResource\:\:getNavigationItemActiveRoutePattern\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Filament/Tenant/Resources/CategoryResource.php
+
+		-
+			message: '#^Unsafe call to private method App\\Filament\\Tenant\\Resources\\CategoryResource\:\:getPageNavigationLabel\(\) through static\:\:\.$#'
+			identifier: staticClassAccess.privateMethod
+			count: 1
+			path: app/Filament/Tenant/Resources/CategoryResource.php
+
+		-
+			message: '#^Unsafe usage of new static\(\)\.$#'
+			identifier: new.static
+			count: 1
+			path: app/Filament/Tenant/Resources/CategoryResource.php
+
+		-
+			message: '#^Call to an undefined static method App\\Filament\\Tenant\\Resources\\CompanyResource\:\:getNavigationItemActiveRoutePattern\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Filament/Tenant/Resources/CompanyResource.php
+
+		-
+			message: '#^Unsafe call to private method App\\Filament\\Tenant\\Resources\\CompanyResource\:\:getPageNavigationLabel\(\) through static\:\:\.$#'
+			identifier: staticClassAccess.privateMethod
+			count: 1
+			path: app/Filament/Tenant/Resources/CompanyResource.php
+
+		-
+			message: '#^Unsafe usage of new static\(\)\.$#'
+			identifier: new.static
+			count: 1
+			path: app/Filament/Tenant/Resources/CompanyResource.php
+
+		-
+			message: '#^Access to an undefined static property static\(App\\Filament\\Tenant\\Resources\\MemberResource\)\:\:\$title\.$#'
+			identifier: staticProperty.notFound
+			count: 2
+			path: app/Filament/Tenant/Resources/MemberResource.php
+
+		-
+			message: '#^Call to an undefined static method App\\Filament\\Tenant\\Resources\\MemberResource\:\:getNavigationItemActiveRoutePattern\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Filament/Tenant/Resources/MemberResource.php
+
+		-
+			message: '#^Unsafe call to private method App\\Filament\\Tenant\\Resources\\MemberResource\:\:getPageNavigationLabel\(\) through static\:\:\.$#'
+			identifier: staticClassAccess.privateMethod
+			count: 1
+			path: app/Filament/Tenant/Resources/MemberResource.php
+
+		-
+			message: '#^Unsafe usage of new static\(\)\.$#'
+			identifier: new.static
+			count: 1
+			path: app/Filament/Tenant/Resources/MemberResource.php
+
+		-
+			message: '#^Access to an undefined static property static\(App\\Filament\\Tenant\\Resources\\PaymentMethodResource\)\:\:\$title\.$#'
+			identifier: staticProperty.notFound
+			count: 2
+			path: app/Filament/Tenant/Resources/PaymentMethodResource.php
+
+		-
+			message: '#^Call to an undefined static method App\\Filament\\Tenant\\Resources\\PaymentMethodResource\:\:getNavigationItemActiveRoutePattern\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Filament/Tenant/Resources/PaymentMethodResource.php
+
+		-
+			message: '#^Match expression does not handle remaining value\: string$#'
+			identifier: match.unhandled
+			count: 5
+			path: app/Filament/Tenant/Resources/PaymentMethodResource.php
+
+		-
+			message: '#^Unsafe call to private method App\\Filament\\Tenant\\Resources\\PaymentMethodResource\:\:getPageNavigationLabel\(\) through static\:\:\.$#'
+			identifier: staticClassAccess.privateMethod
+			count: 1
+			path: app/Filament/Tenant/Resources/PaymentMethodResource.php
+
+		-
+			message: '#^Unsafe usage of new static\(\)\.$#'
+			identifier: new.static
+			count: 1
+			path: app/Filament/Tenant/Resources/PaymentMethodResource.php
+
+		-
+			message: '#^Access to an undefined static property static\(App\\Filament\\Tenant\\Resources\\PermissionResource\)\:\:\$title\.$#'
+			identifier: staticProperty.notFound
+			count: 2
+			path: app/Filament/Tenant/Resources/PermissionResource.php
+
+		-
+			message: '#^Call to an undefined static method App\\Filament\\Tenant\\Resources\\PermissionResource\:\:getNavigationItemActiveRoutePattern\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Filament/Tenant/Resources/PermissionResource.php
+
+		-
+			message: '#^Unsafe call to private method App\\Filament\\Tenant\\Resources\\PermissionResource\:\:getPageNavigationLabel\(\) through static\:\:\.$#'
+			identifier: staticClassAccess.privateMethod
+			count: 1
+			path: app/Filament/Tenant/Resources/PermissionResource.php
+
+		-
+			message: '#^Unsafe usage of new static\(\)\.$#'
+			identifier: new.static
+			count: 1
+			path: app/Filament/Tenant/Resources/PermissionResource.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Filament/Tenant/Resources/ProductResource.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$sku\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Filament/Tenant/Resources/ProductResource.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$stock\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Filament/Tenant/Resources/ProductResource.php
+
+		-
+			message: '#^Access to an undefined static property static\(App\\Filament\\Tenant\\Resources\\ProductResource\)\:\:\$title\.$#'
+			identifier: staticProperty.notFound
+			count: 2
+			path: app/Filament/Tenant/Resources/ProductResource.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Builder\:\:nearestExpiredProduct\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Filament/Tenant/Resources/ProductResource.php
+
+		-
+			message: '#^Call to an undefined static method App\\Filament\\Tenant\\Resources\\ProductResource\:\:getNavigationItemActiveRoutePattern\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Filament/Tenant/Resources/ProductResource.php
+
+		-
+			message: '#^PHPDoc tag @var with type Illuminate\\Support\\Facades\\Storage is not subtype of native type Illuminate\\Contracts\\Filesystem\\Filesystem\.$#'
+			identifier: varTag.nativeType
+			count: 1
+			path: app/Filament/Tenant/Resources/ProductResource.php
+
+		-
+			message: '#^Unsafe call to private method App\\Filament\\Tenant\\Resources\\ProductResource\:\:getPageNavigationLabel\(\) through static\:\:\.$#'
+			identifier: staticClassAccess.privateMethod
+			count: 1
+			path: app/Filament/Tenant/Resources/ProductResource.php
+
+		-
+			message: '#^Unsafe usage of new static\(\)\.$#'
+			identifier: new.static
+			count: 1
+			path: app/Filament/Tenant/Resources/ProductResource.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$expired\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Filament/Tenant/Resources/ProductResource/Pages/CreateProduct.php
+
+		-
+			message: '#^Property App\\Models\\Tenants\\Product\:\:\$hero_images \(string\) does not accept array\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: app/Filament/Tenant/Resources/ProductResource/Pages/CreateProduct.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:barcodes\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Filament/Tenant/Resources/ProductResource/Pages/EditProduct.php
+
+		-
+			message: '#^Property App\\Models\\Tenants\\Product\:\:\$hero_images \(string\) does not accept array\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: app/Filament/Tenant/Resources/ProductResource/Pages/EditProduct.php
+
+		-
+			message: '#^Access to an undefined property App\\Filament\\Tenant\\Resources\\ProductResource\\Pages\\PrintLabel\:\:\$form\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Filament/Tenant/Resources/ProductResource/Pages/PrintLabel.php
+
+		-
+			message: '#^Parameter \#1 \$options of method Filament\\Forms\\Components\\Select\:\:options\(\) expects array\<array\<string\>\|string\>\|Closure\|Illuminate\\Contracts\\Support\\Arrayable\|string\|null, array\{1\: 1, 2\: 2, 3\: 3, 4\: 4\} given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Filament/Tenant/Resources/ProductResource/Pages/PrintLabel.php
+
+		-
+			message: '#^Cannot access property \$is_non_stock on Illuminate\\Database\\Eloquent\\Model\|int\|string\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Filament/Tenant/Resources/ProductResource/Pages/ViewProduct.php
+
+		-
+			message: '#^Cannot access property \$show on Illuminate\\Database\\Eloquent\\Model\|int\|string\.$#'
+			identifier: property.nonObject
+			count: 6
+			path: app/Filament/Tenant/Resources/ProductResource/Pages/ViewProduct.php
+
+		-
+			message: '#^Method App\\Filament\\Tenant\\Resources\\ProductResource\\Pages\\ViewProduct\:\:printLabel\(\) invoked with 1 parameter, 0 required\.$#'
+			identifier: arguments.count
+			count: 1
+			path: app/Filament/Tenant/Resources/ProductResource/Pages/ViewProduct.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Filament/Tenant/Resources/ProductResource/RelationManagers/StocksRelationManager.php
+
+		-
+			message: '#^Parameter \#1 \$products of event class App\\Events\\RecalculateEvent constructor expects App\\Models\\Tenants\\Product\|Illuminate\\Support\\Collection\<int\|string, App\\Models\\Tenants\\Product\> in App\\Events\\RecalculateEvent\:\:dispatch\(\), Illuminate\\Support\\Collection\<int, Illuminate\\Database\\Eloquent\\Model\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Filament/Tenant/Resources/ProductResource/RelationManagers/StocksRelationManager.php
+
+		-
+			message: '#^Parameter \#1 \$products of event class App\\Events\\RecalculateEvent constructor expects App\\Models\\Tenants\\Product\|Illuminate\\Support\\Collection\<int\|string, App\\Models\\Tenants\\Product\> in App\\Events\\RecalculateEvent\:\:dispatch\(\), Illuminate\\Support\\Collection\<int, Illuminate\\Database\\Eloquent\\Model\|null\> given\.$#'
+			identifier: argument.type
+			count: 2
+			path: app/Filament/Tenant/Resources/ProductResource/RelationManagers/StocksRelationManager.php
+
+		-
+			message: '#^Access to an undefined static property static\(App\\Filament\\Tenant\\Resources\\PurchasingResource\)\:\:\$title\.$#'
+			identifier: staticProperty.notFound
+			count: 2
+			path: app/Filament/Tenant/Resources/PurchasingResource.php
+
+		-
+			message: '#^Call to an undefined static method App\\Filament\\Tenant\\Resources\\PurchasingResource\:\:getNavigationItemActiveRoutePattern\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Filament/Tenant/Resources/PurchasingResource.php
+
+		-
+			message: '#^Match expression does not handle remaining value\: string$#'
+			identifier: match.unhandled
+			count: 2
+			path: app/Filament/Tenant/Resources/PurchasingResource.php
+
+		-
+			message: '#^Unsafe call to private method App\\Filament\\Tenant\\Resources\\PurchasingResource\:\:getPageNavigationLabel\(\) through static\:\:\.$#'
+			identifier: staticClassAccess.privateMethod
+			count: 1
+			path: app/Filament/Tenant/Resources/PurchasingResource.php
+
+		-
+			message: '#^Unsafe usage of new static\(\)\.$#'
+			identifier: new.static
+			count: 1
+			path: app/Filament/Tenant/Resources/PurchasingResource.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>phone_number" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Filament/Tenant/Resources/PurchasingResource.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$number\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Filament/Tenant/Resources/PurchasingResource/Pages/EditPurchasing.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$init_stock\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Filament/Tenant/Resources/PurchasingResource/Pages/ViewPurchasing.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$number\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Filament/Tenant/Resources/PurchasingResource/Pages/ViewPurchasing.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$status\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Filament/Tenant/Resources/PurchasingResource/Pages/ViewPurchasing.php
+
+		-
+			message: '#^Access to property \$user_id on an unknown class App\\Filament\\Tenant\\Resources\\PurchasingResource\\Pages\\StockOpname\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Filament/Tenant/Resources/PurchasingResource/Pages/ViewPurchasing.php
+
+		-
+			message: '#^Cannot access property \$status on Illuminate\\Database\\Eloquent\\Model\|int\|string\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Filament/Tenant/Resources/PurchasingResource/Pages/ViewPurchasing.php
+
+		-
+			message: '#^Negated boolean expression is always false\.$#'
+			identifier: booleanNot.alwaysFalse
+			count: 1
+			path: app/Filament/Tenant/Resources/PurchasingResource/Pages/ViewPurchasing.php
+
+		-
+			message: '#^PHPDoc tag @var for variable \$purchasing contains unknown class App\\Filament\\Tenant\\Resources\\PurchasingResource\\Pages\\StockOpname\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Filament/Tenant/Resources/PurchasingResource/Pages/ViewPurchasing.php
+
+		-
+			message: '#^PHPDoc tag @var with type App\\Filament\\Tenant\\Resources\\PurchasingResource\\Pages\\StockOpname is not subtype of native type Illuminate\\Database\\Eloquent\\Model\.$#'
+			identifier: varTag.nativeType
+			count: 1
+			path: app/Filament/Tenant/Resources/PurchasingResource/Pages/ViewPurchasing.php
+
+		-
+			message: '#^Parameter \#1 \$stock of method App\\Services\\Tenants\\StockService\:\:update\(\) expects App\\Models\\Tenants\\Stock, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Filament/Tenant/Resources/PurchasingResource/Pages/ViewPurchasing.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$status\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Filament/Tenant/Resources/PurchasingResource/RelationManagers/StocksRelationManager.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$total_initial_price\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Filament/Tenant/Resources/PurchasingResource/RelationManagers/StocksRelationManager.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$total_selling_price\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Filament/Tenant/Resources/PurchasingResource/RelationManagers/StocksRelationManager.php
+
+		-
+			message: '#^Parameter \#1 \$products of event class App\\Events\\RecalculateEvent constructor expects App\\Models\\Tenants\\Product\|Illuminate\\Support\\Collection\<int\|string, App\\Models\\Tenants\\Product\> in App\\Events\\RecalculateEvent\:\:dispatch\(\), Illuminate\\Support\\Collection\<int, Illuminate\\Database\\Eloquent\\Model\|null\> given\.$#'
+			identifier: argument.type
+			count: 3
+			path: app/Filament/Tenant/Resources/PurchasingResource/RelationManagers/StocksRelationManager.php
+
+		-
+			message: '#^Parameter \#1 \$purchasing of method App\\Services\\Tenants\\PurchasingService\:\:getUpdatedPrice\(\) expects App\\Models\\Tenants\\Purchasing, Illuminate\\Database\\Eloquent\\Model given\.$#'
+			identifier: argument.type
+			count: 2
+			path: app/Filament/Tenant/Resources/PurchasingResource/RelationManagers/StocksRelationManager.php
+
+		-
+			message: '#^Access to an undefined static property static\(App\\Filament\\Tenant\\Resources\\ReceivableResource\)\:\:\$title\.$#'
+			identifier: staticProperty.notFound
+			count: 2
+			path: app/Filament/Tenant/Resources/ReceivableResource.php
+
+		-
+			message: '#^Call to an undefined static method App\\Filament\\Tenant\\Resources\\ReceivableResource\:\:getNavigationItemActiveRoutePattern\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Filament/Tenant/Resources/ReceivableResource.php
+
+		-
+			message: '#^Match expression does not handle remaining value\: string$#'
+			identifier: match.unhandled
+			count: 6
+			path: app/Filament/Tenant/Resources/ReceivableResource.php
+
+		-
+			message: '#^Parameter \#1 \$statePath of method Filament\\Forms\\Components\\Field\:\:lte\(\) expects Closure\|string, float given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Filament/Tenant/Resources/ReceivableResource.php
+
+		-
+			message: '#^Unsafe call to private method App\\Filament\\Tenant\\Resources\\ReceivableResource\:\:getPageNavigationLabel\(\) through static\:\:\.$#'
+			identifier: staticClassAccess.privateMethod
+			count: 1
+			path: app/Filament/Tenant/Resources/ReceivableResource.php
+
+		-
+			message: '#^Unsafe usage of new static\(\)\.$#'
+			identifier: new.static
+			count: 1
+			path: app/Filament/Tenant/Resources/ReceivableResource.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$code\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Filament/Tenant/Resources/ReceivableResource/Pages/ViewReceivable.php
+
+		-
+			message: '#^Cannot access property \$status on Illuminate\\Database\\Eloquent\\Model\|int\|string\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Filament/Tenant/Resources/ReceivableResource/Pages/ViewReceivable.php
+
+		-
+			message: '#^Parameter \#1 \$receivable of method App\\Filament\\Tenant\\Resources\\ReceivableResource\\Pages\\ViewReceivable\:\:getFormPayment\(\) expects App\\Models\\Tenants\\Receivable, Illuminate\\Database\\Eloquent\\Model\|int\|string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Filament/Tenant/Resources/ReceivableResource/Pages/ViewReceivable.php
+
+		-
+			message: '#^Parameter \#1 \$statePath of method Filament\\Forms\\Components\\Field\:\:lte\(\) expects Closure\|string, float given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Filament/Tenant/Resources/ReceivableResource/Pages/ViewReceivable.php
+
+		-
+			message: '#^Parameter \#1 \$receivable of method App\\Filament\\Tenant\\Resources\\ReceivableResource\\RelationManagers\\ReceivablePaymentsRelationManager\:\:getFormPayment\(\) expects App\\Models\\Tenants\\Receivable, Illuminate\\Database\\Eloquent\\Model given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Filament/Tenant/Resources/ReceivableResource/RelationManagers/ReceivablePaymentsRelationManager.php
+
+		-
+			message: '#^Parameter \#1 \$statePath of method Filament\\Forms\\Components\\Field\:\:lte\(\) expects Closure\|string, float given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Filament/Tenant/Resources/ReceivableResource/RelationManagers/ReceivablePaymentsRelationManager.php
+
+		-
+			message: '#^Access to an undefined static property static\(App\\Filament\\Tenant\\Resources\\RoleResource\)\:\:\$title\.$#'
+			identifier: staticProperty.notFound
+			count: 2
+			path: app/Filament/Tenant/Resources/RoleResource.php
+
+		-
+			message: '#^Call to an undefined static method App\\Filament\\Tenant\\Resources\\RoleResource\:\:getNavigationItemActiveRoutePattern\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Filament/Tenant/Resources/RoleResource.php
+
+		-
+			message: '#^Unsafe call to private method App\\Filament\\Tenant\\Resources\\RoleResource\:\:getPageNavigationLabel\(\) through static\:\:\.$#'
+			identifier: staticClassAccess.privateMethod
+			count: 1
+			path: app/Filament/Tenant/Resources/RoleResource.php
+
+		-
+			message: '#^Unsafe usage of new static\(\)\.$#'
+			identifier: new.static
+			count: 1
+			path: app/Filament/Tenant/Resources/RoleResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Tenants\\User\:\:\$cashier_name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Filament/Tenant/Resources/SellingResource.php
+
+		-
+			message: '#^Access to an undefined static property static\(App\\Filament\\Tenant\\Resources\\SellingResource\)\:\:\$title\.$#'
+			identifier: staticProperty.notFound
+			count: 2
+			path: app/Filament/Tenant/Resources/SellingResource.php
+
+		-
+			message: '#^Call to an undefined static method App\\Filament\\Tenant\\Resources\\SellingResource\:\:getNavigationItemActiveRoutePattern\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Filament/Tenant/Resources/SellingResource.php
+
+		-
+			message: '#^Unsafe call to private method App\\Filament\\Tenant\\Resources\\SellingResource\:\:getPageNavigationLabel\(\) through static\:\:\.$#'
+			identifier: staticClassAccess.privateMethod
+			count: 1
+			path: app/Filament/Tenant/Resources/SellingResource.php
+
+		-
+			message: '#^Unsafe usage of new static\(\)\.$#'
+			identifier: new.static
+			count: 1
+			path: app/Filament/Tenant/Resources/SellingResource.php
+
+		-
+			message: '#^Method App\\Filament\\Tenant\\Resources\\SellingResource\\Pages\\ViewSelling\:\:getRecord\(\) should return App\\Models\\Tenants\\Selling but returns Illuminate\\Database\\Eloquent\\Model\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Filament/Tenant/Resources/SellingResource/Pages/ViewSelling.php
+
+		-
+			message: '#^Access to an undefined static property static\(App\\Filament\\Tenant\\Resources\\StockOpnameResource\)\:\:\$title\.$#'
+			identifier: staticProperty.notFound
+			count: 2
+			path: app/Filament/Tenant/Resources/StockOpnameResource.php
+
+		-
+			message: '#^Call to an undefined static method App\\Filament\\Tenant\\Resources\\StockOpnameResource\:\:getNavigationItemActiveRoutePattern\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Filament/Tenant/Resources/StockOpnameResource.php
+
+		-
+			message: '#^Match expression does not handle remaining value\: string$#'
+			identifier: match.unhandled
+			count: 2
+			path: app/Filament/Tenant/Resources/StockOpnameResource.php
+
+		-
+			message: '#^Parameter \#1 \$width of method Filament\\Forms\\Components\\Component\:\:maxWidth\(\) expects Closure\|Filament\\Support\\Enums\\MaxWidth\|string\|null, 10 given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Filament/Tenant/Resources/StockOpnameResource.php
+
+		-
+			message: '#^Unsafe call to private method App\\Filament\\Tenant\\Resources\\StockOpnameResource\:\:getPageNavigationLabel\(\) through static\:\:\.$#'
+			identifier: staticClassAccess.privateMethod
+			count: 1
+			path: app/Filament/Tenant/Resources/StockOpnameResource.php
+
+		-
+			message: '#^Unsafe usage of new static\(\)\.$#'
+			identifier: new.static
+			count: 1
+			path: app/Filament/Tenant/Resources/StockOpnameResource.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$number\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Filament/Tenant/Resources/StockOpnameResource/Pages/EditStockOpname.php
+
+		-
+			message: '#^Parameter \#1 \$stockOpname of method App\\Services\\Tenants\\StockOpnameService\:\:update\(\) expects App\\Models\\Tenants\\StockOpname, Illuminate\\Database\\Eloquent\\Model given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Filament/Tenant/Resources/StockOpnameResource/Pages/EditStockOpname.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Tenants\\StockOpname\:\:\$user_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Filament/Tenant/Resources/StockOpnameResource/Pages/ViewStockOpname.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$actual_stock\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Filament/Tenant/Resources/StockOpnameResource/Pages/ViewStockOpname.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$number\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Filament/Tenant/Resources/StockOpnameResource/Pages/ViewStockOpname.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$status\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Filament/Tenant/Resources/StockOpnameResource/Pages/ViewStockOpname.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:product\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Filament/Tenant/Resources/StockOpnameResource/Pages/ViewStockOpname.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:stockOpname\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Filament/Tenant/Resources/StockOpnameResource/Pages/ViewStockOpname.php
+
+		-
+			message: '#^Cannot access property \$status on Illuminate\\Database\\Eloquent\\Model\|int\|string\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Filament/Tenant/Resources/StockOpnameResource/Pages/ViewStockOpname.php
+
+		-
+			message: '#^Cannot access property \$user_id on Illuminate\\Database\\Eloquent\\Model\|int\|string\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Filament/Tenant/Resources/StockOpnameResource/Pages/ViewStockOpname.php
+
+		-
+			message: '#^Negated boolean expression is always false\.$#'
+			identifier: booleanNot.alwaysFalse
+			count: 1
+			path: app/Filament/Tenant/Resources/StockOpnameResource/Pages/ViewStockOpname.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$status\.$#'
+			identifier: property.notFound
+			count: 3
+			path: app/Filament/Tenant/Resources/StockOpnameResource/RelationManagers/StockOpnameItemsRelationManager.php
+
+		-
+			message: '#^Parameter \#1 \$width of method Filament\\Forms\\Components\\Component\:\:maxWidth\(\) expects Closure\|Filament\\Support\\Enums\\MaxWidth\|string\|null, 10 given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Filament/Tenant/Resources/StockOpnameResource/RelationManagers/StockOpnameItemsRelationManager.php
+
+		-
+			message: '#^Access to an undefined static property static\(App\\Filament\\Tenant\\Resources\\SupplierResource\)\:\:\$title\.$#'
+			identifier: staticProperty.notFound
+			count: 2
+			path: app/Filament/Tenant/Resources/SupplierResource.php
+
+		-
+			message: '#^Call to an undefined static method App\\Filament\\Tenant\\Resources\\SupplierResource\:\:getNavigationItemActiveRoutePattern\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Filament/Tenant/Resources/SupplierResource.php
+
+		-
+			message: '#^Unsafe call to private method App\\Filament\\Tenant\\Resources\\SupplierResource\:\:getPageNavigationLabel\(\) through static\:\:\.$#'
+			identifier: staticClassAccess.privateMethod
+			count: 1
+			path: app/Filament/Tenant/Resources/SupplierResource.php
+
+		-
+			message: '#^Unsafe usage of new static\(\)\.$#'
+			identifier: new.static
+			count: 1
+			path: app/Filament/Tenant/Resources/SupplierResource.php
+
+		-
+			message: '#^Access to an undefined static property static\(App\\Filament\\Tenant\\Resources\\TableResource\)\:\:\$title\.$#'
+			identifier: staticProperty.notFound
+			count: 2
+			path: app/Filament/Tenant/Resources/TableResource.php
+
+		-
+			message: '#^Call to an undefined static method App\\Filament\\Tenant\\Resources\\TableResource\:\:getNavigationItemActiveRoutePattern\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Filament/Tenant/Resources/TableResource.php
+
+		-
+			message: '#^Unsafe call to private method App\\Filament\\Tenant\\Resources\\TableResource\:\:getPageNavigationLabel\(\) through static\:\:\.$#'
+			identifier: staticClassAccess.privateMethod
+			count: 1
+			path: app/Filament/Tenant/Resources/TableResource.php
+
+		-
+			message: '#^Unsafe usage of new static\(\)\.$#'
+			identifier: new.static
+			count: 1
+			path: app/Filament/Tenant/Resources/TableResource.php
+
+		-
+			message: '#^Access to an undefined static property static\(App\\Filament\\Tenant\\Resources\\UserResource\)\:\:\$title\.$#'
+			identifier: staticProperty.notFound
+			count: 2
+			path: app/Filament/Tenant/Resources/UserResource.php
+
+		-
+			message: '#^Call to an undefined static method App\\Filament\\Tenant\\Resources\\UserResource\:\:getNavigationItemActiveRoutePattern\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Filament/Tenant/Resources/UserResource.php
+
+		-
+			message: '#^Unsafe call to private method App\\Filament\\Tenant\\Resources\\UserResource\:\:getPageNavigationLabel\(\) through static\:\:\.$#'
+			identifier: staticClassAccess.privateMethod
+			count: 1
+			path: app/Filament/Tenant/Resources/UserResource.php
+
+		-
+			message: '#^Unsafe usage of new static\(\)\.$#'
+			identifier: new.static
+			count: 1
+			path: app/Filament/Tenant/Resources/UserResource.php
+
+		-
+			message: '#^Access to an undefined static property static\(App\\Filament\\Tenant\\Resources\\VoucherResource\)\:\:\$title\.$#'
+			identifier: staticProperty.notFound
+			count: 2
+			path: app/Filament/Tenant/Resources/VoucherResource.php
+
+		-
+			message: '#^Call to an undefined method App\\Filament\\Tenant\\Resources\\VoucherResource\:\:getResource\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Filament/Tenant/Resources/VoucherResource.php
+
+		-
+			message: '#^Call to an undefined static method App\\Filament\\Tenant\\Resources\\VoucherResource\:\:getNavigationItemActiveRoutePattern\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Filament/Tenant/Resources/VoucherResource.php
+
+		-
+			message: '#^Unsafe call to private method App\\Filament\\Tenant\\Resources\\VoucherResource\:\:getPageNavigationLabel\(\) through static\:\:\.$#'
+			identifier: staticClassAccess.privateMethod
+			count: 1
+			path: app/Filament/Tenant/Resources/VoucherResource.php
+
+		-
+			message: '#^Unsafe usage of new static\(\)\.$#'
+			identifier: new.static
+			count: 1
+			path: app/Filament/Tenant/Resources/VoucherResource.php
+
+		-
+			message: '#^Parameter \#1 \$products of event class App\\Events\\RecalculateEvent constructor expects App\\Models\\Tenants\\Product\|Illuminate\\Support\\Collection\<int\|string, App\\Models\\Tenants\\Product\> in App\\Events\\RecalculateEvent\:\:dispatch\(\), Illuminate\\Support\\Collection\<int, App\\Models\\Tenants\\Product\> given\.$#'
+			identifier: argument.type
+			count: 2
+			path: app/Http/Controllers/Api/Tenants/Master/Product/StockController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$photo\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Http/Controllers/Api/Tenants/ProfileController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$password\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/Api/Tenants/Settings/SecureInitialPriceController.php
+
+		-
+			message: '#^Parameter \#1 \$start of method App\\Services\\Tenants\\DashboardService\:\:grossProfit\(\) expects Illuminate\\Support\\Carbon, Carbon\\Carbon given\.$#'
+			identifier: argument.type
+			count: 2
+			path: app/Http/Controllers/Api/Tenants/Transaction/DashboardController.php
+
+		-
+			message: '#^Parameter \#1 \$start of method App\\Services\\Tenants\\DashboardService\:\:revenue\(\) expects Illuminate\\Support\\Carbon, Carbon\\Carbon given\.$#'
+			identifier: argument.type
+			count: 2
+			path: app/Http/Controllers/Api/Tenants/Transaction/DashboardController.php
+
+		-
+			message: '#^Parameter \#1 \$start of method App\\Services\\Tenants\\DashboardService\:\:sales\(\) expects Illuminate\\Support\\Carbon, Carbon\\Carbon given\.$#'
+			identifier: argument.type
+			count: 2
+			path: app/Http/Controllers/Api/Tenants/Transaction/DashboardController.php
+
+		-
+			message: '#^Parameter \#2 \$end of method App\\Services\\Tenants\\DashboardService\:\:grossProfit\(\) expects Illuminate\\Support\\Carbon, Carbon\\Carbon given\.$#'
+			identifier: argument.type
+			count: 2
+			path: app/Http/Controllers/Api/Tenants/Transaction/DashboardController.php
+
+		-
+			message: '#^Parameter \#2 \$end of method App\\Services\\Tenants\\DashboardService\:\:revenue\(\) expects Illuminate\\Support\\Carbon, Carbon\\Carbon given\.$#'
+			identifier: argument.type
+			count: 2
+			path: app/Http/Controllers/Api/Tenants/Transaction/DashboardController.php
+
+		-
+			message: '#^Parameter \#2 \$end of method App\\Services\\Tenants\\DashboardService\:\:sales\(\) expects Illuminate\\Support\\Carbon, Carbon\\Carbon given\.$#'
+			identifier: argument.type
+			count: 2
+			path: app/Http/Controllers/Api/Tenants/Transaction/DashboardController.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Builder\<App\\Models\\Tenants\\Selling\>\:\:defaultSort\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Http/Controllers/Api/Tenants/Transaction/SellingController.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model&object\{pivot\: Illuminate\\Database\\Eloquent\\Relations\\Pivot\}\:\:permissions\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Http/Controllers/Auth/AuthenticatedSessionController.php
+
+		-
+			message: '#^Parameter \#1 \$user of class Illuminate\\Auth\\Events\\Verified constructor expects Illuminate\\Contracts\\Auth\\MustVerifyEmail, App\\Models\\Tenants\\User\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Http/Controllers/Auth/VerifyEmailController.php
+
+		-
+			message: '#^Call to function is_array\(\) with string will always evaluate to false\.$#'
+			identifier: function.impossibleType
+			count: 1
+			path: app/Http/Filters/SearchFields.php
+
+		-
+			message: '#^Class Spatie\\Permission\\Middlewares\\PermissionMiddleware not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Http/Kernel.php
+
+		-
+			message: '#^Class Spatie\\Permission\\Middlewares\\RoleMiddleware not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Http/Kernel.php
+
+		-
+			message: '#^Class Spatie\\Permission\\Middlewares\\RoleOrPermissionMiddleware not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Http/Kernel.php
+
+		-
+			message: '#^Method App\\Http\\Middleware\\Authenticate\:\:redirectTo\(\) should return string\|null but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: app/Http/Middleware/Authenticate.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Relations\\HasMany\:\:primary\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Http/Requests/Tenants/Master/ProductRequest.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>business_type" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Http/Resources/AboutResource.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>other_business_type" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Http/Resources/AboutResource.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>photo" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Http/Resources/AboutResource.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>shop_location" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Http/Resources/AboutResource.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>shop_name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Http/Resources/AboutResource.php
+
+		-
+			message: '#^Using nullsafe property access on non\-nullable type \$this\(App\\Http\\Resources\\AboutResource\)\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Http/Resources/AboutResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\NotificationCollection\:\:\$created_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/NotificationCollection.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\NotificationCollection\:\:\$data\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/NotificationCollection.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\NotificationCollection\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/NotificationCollection.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\NotificationCollection\:\:\$type\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/NotificationCollection.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\ProductCollection\:\:\$category\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Http/Resources/ProductCollection.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\ProductCollection\:\:\$hero_images_url\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/ProductCollection.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\ProductCollection\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/ProductCollection.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\ProductCollection\:\:\$initial_price\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/ProductCollection.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\ProductCollection\:\:\$is_non_stock\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/ProductCollection.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\ProductCollection\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/ProductCollection.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\ProductCollection\:\:\$selling_price\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/ProductCollection.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\ProductCollection\:\:\$show\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/ProductCollection.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\ProductCollection\:\:\$sku\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/ProductCollection.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\ProductCollection\:\:\$stock\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/ProductCollection.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\ProductCollection\:\:\$type\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/ProductCollection.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\ProductCollection\:\:\$unit\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/ProductCollection.php
+
+		-
+			message: '#^Call to an undefined method App\\Http\\Resources\\ProductCollection\:\:barcodes\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Http/Resources/ProductCollection.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$address\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/ProfileResource.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$locale\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/ProfileResource.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/ProfileResource.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$phone\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/ProfileResource.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$photo\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/ProfileResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\SellingCollection\:\:\$grand_total_price\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/SellingCollection.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\StockCollection\:\:\$date\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/StockCollection.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\StockCollection\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/StockCollection.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\StockCollection\:\:\$init_stock\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/StockCollection.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\StockCollection\:\:\$initial_price\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/StockCollection.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\StockCollection\:\:\$product\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/StockCollection.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\StockCollection\:\:\$selling_price\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/StockCollection.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\StockCollection\:\:\$stock\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/StockCollection.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\StockCollection\:\:\$type\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/StockCollection.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>initial_price" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Listeners/AdjustProduct.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>selling_price" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Listeners/AdjustProduct.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$is_credit\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Listeners/CreateReceivableIfCredit.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model&object\{pivot\: Illuminate\\Database\\Eloquent\\Relations\\Pivot\}\:\:\$enabled\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Livewire/ShopSwitcher.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model&object\{pivot\: Illuminate\\Database\\Eloquent\\Relations\\Pivot\}\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Livewire/ShopSwitcher.php
+
+		-
+			message: '#^Class App\\Models\\User not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Models/Company.php
+
+		-
+			message: '#^Parameter \#1 \$related of method Illuminate\\Database\\Eloquent\\Model\:\:belongsToMany\(\) expects class\-string\<Illuminate\\Database\\Eloquent\\Model\>, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Models/Company.php
+
+		-
+			message: '#^PHPDoc tag @mixin contains unknown class App\\Models\\Tenants\\IdeHelperAbout\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Models/Tenants/About.php
+
+		-
+			message: '#^PHPDoc tag @var with type Illuminate\\Support\\Facades\\Storage is not subtype of native type Illuminate\\Contracts\\Filesystem\\Filesystem\.$#'
+			identifier: varTag.nativeType
+			count: 1
+			path: app/Models/Tenants/About.php
+
+		-
+			message: '#^Unsafe usage of new static\(\)\.$#'
+			identifier: new.static
+			count: 1
+			path: app/Models/Tenants/About.php
+
+		-
+			message: '#^Method App\\Models\\Tenants\\Barcode\:\:findProductByCode\(\) should return App\\Models\\Tenants\\Product\|null but returns Illuminate\\Database\\Eloquent\\Model\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Models/Tenants/Barcode.php
+
+		-
+			message: '#^PHPDoc tag @mixin contains unknown class App\\Models\\Tenants\\IdeHelperBarcode\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Models/Tenants/Barcode.php
+
+		-
+			message: '#^PHPDoc tag @mixin contains unknown class App\\Models\\Tenants\\IdeHelperCart\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Models/Tenants/Cart.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$hero_images\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/Tenants/CartItem.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$selling_price\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/Tenants/CartItem.php
+
+		-
+			message: '#^PHPDoc tag @mixin contains unknown class App\\Models\\Tenants\\IdeHelperCartItem\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Models/Tenants/CartItem.php
+
+		-
+			message: '#^PHPDoc tag @mixin contains unknown class App\\Models\\Tenants\\IdeHelperCashDrawer\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Models/Tenants/CashDrawer.php
+
+		-
+			message: '#^PHPDoc tag @mixin contains unknown class App\\Models\\Tenants\\IdeHelperCategory\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Models/Tenants/Category.php
+
+		-
+			message: '#^PHPDoc tag @mixin contains unknown class App\\Models\\Tenants\\IdeHelperImport\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Models/Tenants/Import.php
+
+		-
+			message: '#^PHPDoc tag @mixin contains unknown class App\\Models\\Tenants\\IdeHelperMember\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Models/Tenants/Member.php
+
+		-
+			message: '#^PHPDoc tag @mixin contains unknown class App\\Models\\Tenants\\IdeHelperNotification\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Models/Tenants/Notification.php
+
+		-
+			message: '#^PHPDoc tag @mixin contains unknown class App\\Models\\Tenants\\IdeHelperPaymentMethod\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Models/Tenants/PaymentMethod.php
+
+		-
+			message: '#^Property ''qris_image_url'' does not exist in model\.$#'
+			identifier: rules.modelAppends
+			count: 1
+			path: app/Models/Tenants/PaymentMethod.php
+
+		-
+			message: '#^Property ''type'' does not exist in model\.$#'
+			identifier: rules.modelAppends
+			count: 1
+			path: app/Models/Tenants/PaymentMethod.php
+
+		-
+			message: '#^PHPDoc tag @mixin contains unknown class App\\Models\\Tenants\\IdeHelperPriceUnit\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Models/Tenants/PriceUnit.php
+
+		-
+			message: '#^PHPDoc tag @mixin contains unknown class App\\Models\\Tenants\\IdeHelperPrinter\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Models/Tenants/Printer.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Tenants\\Product\:\:\$stock_calculate\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/Tenants/Product.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Builder\<Illuminate\\Database\\Eloquent\\Model\>\:\:newestFirst\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Models/Tenants/Product.php
+
+		-
+			message: '#^Method App\\Models\\Tenants\\Product\:\:cartItemForCashier\(\) should return App\\Models\\Tenants\\CartItem\|null but returns Illuminate\\Database\\Eloquent\\Model\|null\.$#'
+			identifier: return.type
+			count: 2
+			path: app/Models/Tenants/Product.php
+
+		-
+			message: '#^Method App\\Models\\Tenants\\Product\:\:firstStockOfWindow\(\) never returns App\\Models\\Tenants\\Stock so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: app/Models/Tenants/Product.php
+
+		-
+			message: '#^Method App\\Models\\Tenants\\Product\:\:firstStockOfWindow\(\) should return App\\Models\\Tenants\\Stock\|null but returns App\\Models\\Tenants\\Product\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Models/Tenants/Product.php
+
+		-
+			message: '#^Method Carbon\\Carbon\:\:addDay\(\) invoked with 1 parameter, 0 required\.$#'
+			identifier: arguments.count
+			count: 3
+			path: app/Models/Tenants/Product.php
+
+		-
+			message: '#^PHPDoc tag @mixin contains unknown class App\\Models\\Tenants\\IdeHelperProduct\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Models/Tenants/Product.php
+
+		-
+			message: '#^Parameter \#1 \$array of static method Illuminate\\Support\\Arr\:\:map\(\) expects array, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Models/Tenants/Product.php
+
+		-
+			message: '#^Parameter \#1 \$value of function count expects array\|Countable, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Models/Tenants/Product.php
+
+		-
+			message: '#^Property ''hero_image'' does not exist in model\.$#'
+			identifier: rules.modelAppends
+			count: 1
+			path: app/Models/Tenants/Product.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>initial_price" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Models/Tenants/Product.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>selling_price" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Models/Tenants/Product.php
+
+		-
+			message: '#^PHPDoc tag @mixin contains unknown class App\\Models\\Tenants\\IdeHelperProductImage\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Models/Tenants/ProductImage.php
+
+		-
+			message: '#^PHPDoc tag @mixin contains unknown class App\\Models\\Tenants\\IdeHelperProfile\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Models/Tenants/Profile.php
+
+		-
+			message: '#^PHPDoc tag @var with type Illuminate\\Support\\Facades\\Storage is not subtype of native type Illuminate\\Contracts\\Filesystem\\Filesystem\.$#'
+			identifier: varTag.nativeType
+			count: 1
+			path: app/Models/Tenants/Profile.php
+
+		-
+			message: '#^Unsafe usage of new static\(\)\.$#'
+			identifier: new.static
+			count: 1
+			path: app/Models/Tenants/Profile.php
+
+		-
+			message: '#^PHPDoc tag @mixin contains unknown class App\\Models\\Tenants\\IdeHelperPurchasing\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Models/Tenants/Purchasing.php
+
+		-
+			message: '#^PHPDoc tag @mixin contains unknown class App\\Models\\Tenants\\IdeHelperReceivable\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Models/Tenants/Receivable.php
+
+		-
+			message: '#^PHPDoc tag @mixin contains unknown class App\\Models\\Tenants\\IdeHelperReceivableItem\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Models/Tenants/ReceivableItem.php
+
+		-
+			message: '#^PHPDoc tag @mixin contains unknown class App\\Models\\Tenants\\IdeHelperReceivablePayment\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Models/Tenants/ReceivablePayment.php
+
+		-
+			message: '#^PHPDoc tag @mixin contains unknown class App\\Models\\Tenants\\IdeHelperRole\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Models/Tenants/Role.php
+
+		-
+			message: '#^PHPDoc tag @mixin contains unknown class App\\Models\\Tenants\\IdeHelperSecureInitialPrice\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Models/Tenants/SecureInitialPrice.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$timezone\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/Tenants/Selling.php
+
+		-
+			message: '#^PHPDoc tag @mixin contains unknown class App\\Models\\Tenants\\IdeHelperSelling\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Models/Tenants/Selling.php
+
+		-
+			message: '#^Property ''grand_total_price'' does not exist in model\.$#'
+			identifier: rules.modelAppends
+			count: 1
+			path: app/Models/Tenants/Selling.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 1
+			path: app/Models/Tenants/Selling.php
+
+		-
+			message: '#^PHPDoc tag @mixin contains unknown class App\\Models\\Tenants\\IdeHelperSellingDetail\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Models/Tenants/SellingDetail.php
+
+		-
+			message: '#^PHPDoc tag @mixin contains unknown class App\\Models\\Tenants\\IdeHelperSetting\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Models/Tenants/Setting.php
+
+		-
+			message: '#^PHPDoc tag @mixin contains unknown class App\\Models\\Tenants\\IdeHelperStock\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Models/Tenants/Stock.php
+
+		-
+			message: '#^Property ''total_initial_price'' does not exist in model\.$#'
+			identifier: rules.modelAppends
+			count: 1
+			path: app/Models/Tenants/Stock.php
+
+		-
+			message: '#^Property ''total_selling_price'' does not exist in model\.$#'
+			identifier: rules.modelAppends
+			count: 1
+			path: app/Models/Tenants/Stock.php
+
+		-
+			message: '#^PHPDoc tag @mixin contains unknown class App\\Models\\Tenants\\IdeHelperStockOpname\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Models/Tenants/StockOpname.php
+
+		-
+			message: '#^PHPDoc tag @mixin contains unknown class App\\Models\\Tenants\\IdeHelperStockOpnameItem\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Models/Tenants/StockOpnameItem.php
+
+		-
+			message: '#^PHPDoc tag @mixin contains unknown class App\\Models\\Tenants\\IdeHelperSupplier\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Models/Tenants/Supplier.php
+
+		-
+			message: '#^PHPDoc tag @mixin contains unknown class App\\Models\\Tenants\\IdeHelperTable\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Models/Tenants/Table.php
+
+		-
+			message: '#^PHPDoc tag @mixin contains unknown class App\\Models\\Tenants\\IdeHelperUploadedFile\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Models/Tenants/UploadedFile.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$photo\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/Tenants/User.php
+
+		-
+			message: '#^PHPDoc tag @mixin contains unknown class App\\Models\\Tenants\\IdeHelperUser\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Models/Tenants/User.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\Tenants\\User\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/Tenants/User.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\Tenants\\User\:\:\$hidden is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$hidden\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/Tenants/User.php
+
+		-
+			message: '#^PHPDoc tag @mixin contains unknown class App\\Models\\Tenants\\IdeHelperVoucher\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Models/Tenants/Voucher.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$locale\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Notifications/StockRunsOut.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>locale" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Notifications/StockRunsOut.php
+
+		-
+			message: '#^Parameter \#1 \$string of function str_pad expects string, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Observers/MemberObserver.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Tenants\\Product\:\:\$expired\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Observers/ProductObserver.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Observers/ProductObserver.php
+
+		-
+			message: '#^Parameter \#1 \$string of static method Illuminate\\Support\\Str\:\:of\(\) expects string, int\<0, max\> given\.$#'
+			identifier: argument.type
+			count: 2
+			path: app/Observers/ProductObserver.php
+
+		-
+			message: '#^Parameter \#2 \$pad of method Illuminate\\Support\\Stringable\:\:padLeft\(\) expects string, int given\.$#'
+			identifier: argument.type
+			count: 2
+			path: app/Observers/ProductObserver.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Observers/ProductObserver.php
+
+		-
+			message: '#^Access to property \$roles on an unknown class App\\Models\\Admin\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Providers/AuthServiceProvider.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:permissions\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Providers/AuthServiceProvider.php
+
+		-
+			message: '#^Parameter \$user of anonymous function has invalid type App\\Models\\Admin\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Providers/AuthServiceProvider.php
+
+		-
+			message: '#^PHPDoc type array of property App\\Providers\\EventServiceProvider\:\:\$observers is not covariant with PHPDoc type array\<string, array\<int, object\|string\>\|object\|string\> of overridden property Illuminate\\Foundation\\Support\\Providers\\EventServiceProvider\:\:\$observers\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Providers/EventServiceProvider.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>stock" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Rules/CheckProductStock.php
+
+		-
+			message: '#^Method App\\Services\\ApiResponseService\:\:setLengthAwarePaginator\(\) invoked with 1 parameter, 0 required\.$#'
+			identifier: arguments.count
+			count: 1
+			path: app/Services/ApiResponseService.php
+
+		-
+			message: '#^Using nullsafe property access on non\-nullable type object\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 2
+			path: app/Services/ApiResponseService.php
+
+		-
+			message: '#^Property App\\Services\\AppUpdateService\:\:\$artisanAfterRestore \(array\|null\) is never assigned null so it can be removed from the property type\.$#'
+			identifier: property.unusedType
+			count: 1
+			path: app/Services/AppUpdateService.php
+
+		-
+			message: '#^Property App\\Services\\AppUpdateService\:\:\$artisanAfterUpdate \(array\|null\) is never assigned null so it can be removed from the property type\.$#'
+			identifier: property.unusedType
+			count: 1
+			path: app/Services/AppUpdateService.php
+
+		-
+			message: '#^Property App\\Services\\AppUpdateService\:\:\$commandsAfterUpdate \(array\|null\) is never assigned null so it can be removed from the property type\.$#'
+			identifier: property.unusedType
+			count: 1
+			path: app/Services/AppUpdateService.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Tenants\\About\:\:\$owner_name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Tenants/CashierReportService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$cost\.$#'
+			identifier: property.notFound
+			count: 7
+			path: app/Services/Tenants/CashierReportService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$email\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Tenants/CashierReportService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Tenants/CashierReportService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$price\.$#'
+			identifier: property.notFound
+			count: 9
+			path: app/Services/Tenants/CashierReportService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$product\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Tenants/CashierReportService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$qty\.$#'
+			identifier: property.notFound
+			count: 3
+			path: app/Services/Tenants/CashierReportService.php
+
+		-
+			message: '#^Parameter \#1 \$callback of method Illuminate\\Database\\Eloquent\\Collection\<int,Illuminate\\Database\\Eloquent\\Model\>\:\:map\(\) contains unresolvable type\.$#'
+			identifier: argument.unresolvableType
+			count: 1
+			path: app/Services/Tenants/CashierReportService.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Services/Tenants/CashierReportService.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Tenants\\About\:\:\$owner_name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Tenants/ProductReportService.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Tenants\\SellingDetail\:\:\$code\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Tenants/ProductReportService.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Tenants\\SellingDetail\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Tenants/ProductReportService.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Tenants\\SellingDetail\:\:\$selling_discount_price\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Tenants/ProductReportService.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Tenants\\SellingDetail\:\:\$sku\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Tenants/ProductReportService.php
+
+		-
+			message: '#^Argument of an invalid type string supplied for foreach, only iterables are supported\.$#'
+			identifier: foreach.nonIterable
+			count: 1
+			path: app/Services/Tenants/ProductService.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Relations\\HasMany\:\:primary\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Services/Tenants/ProductService.php
+
+		-
+			message: '#^Property App\\Models\\Tenants\\Product\:\:\$hero_images \(string\) does not accept array\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: app/Services/Tenants/ProductService.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Tenants\\About\:\:\$owner_name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Tenants/PurchasingReportService.php
+
+		-
+			message: '#^Iterating over an object of an unknown class App\\Services\\Tenants\\Collection\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Services/Tenants/PurchasingReportService.php
+
+		-
+			message: '#^PHPDoc tag @var for variable \$purchasings contains unknown class App\\Services\\Tenants\\Collection\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Services/Tenants/PurchasingReportService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$is_ready\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Tenants/PurchasingService.php
+
+		-
+			message: '#^Parameter \#1 \$callback of method Illuminate\\Support\\Collection\<int,Illuminate\\Database\\Eloquent\\Model\>\:\:each\(\) expects callable\(Illuminate\\Database\\Eloquent\\Model, int\)\: mixed, Closure\(App\\Models\\Tenants\\Stock\)\: void given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/Tenants/PurchasingService.php
+
+		-
+			message: '#^Parameter \#1 \$products of event class App\\Events\\RecalculateEvent constructor expects App\\Models\\Tenants\\Product\|Illuminate\\Support\\Collection\<int\|string, App\\Models\\Tenants\\Product\> in App\\Events\\RecalculateEvent\:\:dispatch\(\), Illuminate\\Database\\Eloquent\\Collection\<int, App\\Models\\Tenants\\Product\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/Tenants/PurchasingService.php
+
+		-
+			message: '#^Parameter \#1 \$string of function str_pad expects string, \(float\|int\) given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/Tenants/PurchasingService.php
+
+		-
+			message: '#^Property App\\Services\\Tenants\\PurchasingService\:\:\$stockService is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: app/Services/Tenants/PurchasingService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$last_billing_date\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Tenants/ReceivablePaymentService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$receivablePayments\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Tenants/ReceivablePaymentService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$rest_receivable\.$#'
+			identifier: property.notFound
+			count: 4
+			path: app/Services/Tenants/ReceivablePaymentService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$status\.$#'
+			identifier: property.notFound
+			count: 3
+			path: app/Services/Tenants/ReceivablePaymentService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$total_receivable\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Tenants/ReceivablePaymentService.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:receivablePayments\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Services/Tenants/ReceivablePaymentService.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 1
+			path: app/Services/Tenants/ReceivablePaymentService.php
+
+		-
+			message: '#^Method Carbon\\Carbon\:\:addWeek\(\) invoked with 1 parameter, 0 required\.$#'
+			identifier: arguments.count
+			count: 1
+			path: app/Services/Tenants/ReceivableService.php
+
+		-
+			message: '#^Parameter \#4 \$font of method Dompdf\\Canvas\:\:page_text\(\) expects string, null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/Tenants/ReportPdf.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Tenants\\About\:\:\$owner_name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Tenants/SellingReportService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Tenants/SellingReportService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$sku\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Tenants/SellingReportService.php
+
+		-
+			message: '#^Access to an undefined property App\\Services\\Tenants\\SellingService\:\:\$model\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Tenants/SellingService.php
+
+		-
+			message: '#^PHPDoc tag @var for variable \$products contains unknown class App\\Services\\Tenants\\Collection\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Services/Tenants/SellingService.php
+
+		-
+			message: '#^Parameter \#1 \$string of function str_pad expects string, \(float\|int\) given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/Tenants/SellingService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$missing_stock\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Tenants/StockOpnameService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$product\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Services/Tenants/StockOpnameService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$stock\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Services/Tenants/StockOpnameService.php
+
+		-
+			message: '#^Parameter \#1 \$callback of method Illuminate\\Support\\Collection\<int,Illuminate\\Database\\Eloquent\\Model\>\:\:each\(\) expects callable\(Illuminate\\Database\\Eloquent\\Model, int\)\: mixed, Closure\(App\\Models\\Tenants\\StockOpnameItem\)\: void given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/Tenants/StockOpnameService.php
+
+		-
+			message: '#^Parameter \#1 \$products of event class App\\Events\\RecalculateEvent constructor expects App\\Models\\Tenants\\Product\|Illuminate\\Support\\Collection\<int\|string, App\\Models\\Tenants\\Product\> in App\\Events\\RecalculateEvent\:\:dispatch\(\), Illuminate\\Database\\Eloquent\\Collection\<int, App\\Models\\Tenants\\Product\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/Tenants/StockOpnameService.php
+
+		-
+			message: '#^Parameter \#1 \$string of function str_pad expects string, \(float\|int\) given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/Tenants/StockOpnameService.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Builder\<Illuminate\\Database\\Eloquent\\Model\>\:\:newestFirst\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Services/Tenants/StockService.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Relations\\HasMany\:\:newestFirst\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Services/Tenants/StockService.php
+
+		-
+			message: '#^Method App\\Services\\Tenants\\StockService\:\:adjustStockPrepare\(\) never returns null so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: app/Services/Tenants/StockService.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>id" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Services/Tenants/Traits/HasNumber.php
+
+		-
+			message: '#^Negated boolean expression is always false\.$#'
+			identifier: booleanNot.alwaysFalse
+			count: 3
+			path: app/Services/VoucherService.php
+
+		-
+			message: '#^Using nullsafe property access on non\-nullable type App\\Models\\Tenants\\Voucher\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Services/VoucherService.php
+

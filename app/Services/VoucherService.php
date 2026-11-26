@@ -30,6 +30,28 @@ class VoucherService
         return null;
     }
 
+    /**
+     * Why the voucher cannot be applied to this price, or null when it can.
+     * Mirrors the conditions in applyable().
+     */
+    public function rejectionReason(string $code, float $price): ?string
+    {
+        /** @var ?Voucher $voucher */
+        $voucher = Voucher::whereCode($code)->first();
+        $today = today();
+
+        return match (true) {
+            ! $voucher => __('Voucher not found.'),
+            $today->lt($voucher->start_date) => __('Voucher is not active yet.'),
+            $today->gt($voucher->expired) => __('Voucher has expired.'),
+            $voucher->kuota <= 0 => __('Voucher quota is used up.'),
+            $voucher->minimal_buying > $price => __('Voucher needs a minimum purchase of :amount.', [
+                'amount' => price_format($voucher->minimal_buying),
+            ]),
+            default => null,
+        };
+    }
+
     public function calculate(): float
     {
         if (! $this->voucher) {
@@ -47,14 +69,23 @@ class VoucherService
         return $discount;
     }
 
-    public function reduceUsed()
+    /**
+     * Use up one of the voucher's quota. The decrement is a single conditional
+     * UPDATE, so two cashiers selling the last voucher at the same time cannot
+     * both succeed. Returns false when the quota is already gone.
+     */
+    public function reduceUsed(): bool
     {
         if (! $this->voucher) {
             throw new Exception('You can\'t use calculate before assign the voucher code');
         }
 
-        $this->voucher->update([
-            'kuota' => $this->voucher->kuota - 1,
-        ]);
+        $affected = Voucher::whereKey($this->voucher->id)
+            ->where('kuota', '>', 0)
+            ->decrement('kuota');
+
+        $this->voucher->refresh();
+
+        return $affected > 0;
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Models\Tenants;
 
+use App\Traits\BelongsToCompany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -12,7 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class Purchasing extends Model
 {
-    use HasFactory;
+    use BelongsToCompany, HasFactory;
 
     protected $guarded = ['id'];
 

@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Constants\Role;
-use App\Models\Tenants\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Collection;
 use Spatie\Permission\Models\Permission;
@@ -16,10 +15,6 @@ class PermissionSeeder extends Seeder
         $this->deletePermission();
         $permissions = $this->getPermissions();
         $permissions->each(fn ($roles) => $this->savePermission($roles));
-
-        if ($user = User::first()) {
-            $user->assignRole(Role::admin);
-        }
     }
 
     private function crudRolePermission(): array
@@ -82,6 +77,12 @@ class PermissionSeeder extends Seeder
                         ],
                         'guard' => ['web', 'sanctum'],
                     ],
+                    'friend price' => [
+                        'permission' => [
+                            'use',
+                        ],
+                        'guard' => ['web', 'sanctum'],
+                    ],
                     'secure initial price' => [
                         'permission' => [
                             'enable', 'verify',
@@ -125,6 +126,12 @@ class PermissionSeeder extends Seeder
                         'guard' => ['web', 'sanctum'],
                     ],
                     'product report' => [
+                        'permission' => [
+                            'generate',
+                        ],
+                        'guard' => ['web', 'sanctum'],
+                    ],
+                    'purchasing report' => [
                         'permission' => [
                             'generate',
                         ],
@@ -206,13 +213,19 @@ class PermissionSeeder extends Seeder
                         'permission' => [
                             'r',
                         ],
-                        'guard' => ['web'],
+                        'guard' => ['web', 'sanctum'],
                     ],
                     'sales overview' => [
                         'permission' => [
                             'r',
                         ],
-                        'guard' => ['web'],
+                        'guard' => ['web', 'sanctum'],
+                    ],
+                    'setting' => [
+                        'permission' => [
+                            'r', 'u',
+                        ],
+                        'guard' => ['web', 'sanctum'],
                     ],
                     'discount overview' => [
                         'permission' => [
@@ -240,15 +253,15 @@ class PermissionSeeder extends Seeder
                     ],
                     'update app' => [
                         'permission' => [
-                            'can'
+                            'can',
                         ],
-                        'guard' => ['web', 'sanctum']
+                        'guard' => ['web', 'sanctum'],
                     ],
                     'restore app' => [
                         'permission' => [
-                            'can'
+                            'can',
                         ],
-                        'guard' => ['web', 'sanctum']
+                        'guard' => ['web', 'sanctum'],
                     ],
                     'general setting' => [
                         'permission' => [
@@ -330,8 +343,14 @@ class PermissionSeeder extends Seeder
 
     private function givePermissionToRole($role, $permission): void
     {
+        // Roles are per team, so the lookup must not match another shop's role
+        // of the same name. create() would fill company_id from the current
+        // team itself, but firstOrCreate cannot, hence the explicit pair.
         /** @var ModelsRole $role */
-        $role = ModelsRole::where('name', $role[0])->firstOrCreate(['name' => $role[0]]);
+        $role = ModelsRole::firstOrCreate([
+            'name' => $role[0],
+            'company_id' => getPermissionsTeamId(),
+        ]);
         $role->permissions()->syncWithoutDetaching($permission);
     }
 

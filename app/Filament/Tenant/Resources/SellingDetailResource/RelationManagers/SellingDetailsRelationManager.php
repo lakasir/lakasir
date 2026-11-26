@@ -34,6 +34,10 @@ class SellingDetailsRelationManager extends RelationManager
             ->columns([
                 Tables\Columns\TextColumn::make('product.name')
                     ->translateLabel(),
+                Tables\Columns\TextColumn::make('note')
+                    ->translateLabel()
+                    ->placeholder('-')
+                    ->toggleable(),
                 Tables\Columns\TextColumn::make('qty')
                     ->translateLabel(),
                 Tables\Columns\TextColumn::make('price')

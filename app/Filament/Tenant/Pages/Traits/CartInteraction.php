@@ -11,7 +11,8 @@ trait CartInteraction
 {
     private function validateStock(Product $product, $qty): bool
     {
-        $available = $product->stock_calculate;
+        // One query for the number the grid already shows, not a fresh sum.
+        $available = $product->cartStockAvailable();
         if (! $product->is_non_stock && ($available < 0 || $available < $qty)) {
             Notification::make()
                 ->title(__('Stock is out'))
@@ -33,12 +34,15 @@ trait CartInteraction
                 CartItem::whereProductId($product->getKey())
                     ->cashier()
                     ->first()
-                ->qty ?? 0
+                    ->qty ?? 0
             ) + 1;
         } else {
-            if (!$data['amount']) {
-                $this->deleteCart(CartItem::whereProductId($product->getKey())->first());
+            if (! $data['amount']) {
+                CartItem::whereProductId($product->getKey())
+                    ->cashier()
+                    ->delete();
                 $this->mount();
+
                 return;
             }
             $qty = $data['amount'];

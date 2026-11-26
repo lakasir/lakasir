@@ -4,16 +4,9 @@ namespace App\Http\Requests\Tenants\Master;
 
 use App\Features\ProductExpired;
 use App\Features\ProductStock;
-use App\Models\Tenants\Category;
-use App\Models\Tenants\Product;
-use App\Models\Tenants\ProductImage;
-use App\Models\Tenants\UploadedFile;
 use App\Models\Tenants\Barcode;
-use App\Services\Tenants\ProductService;
-use Exception;
+use App\Models\Tenants\Product;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 
 class ProductRequest extends FormRequest
@@ -89,109 +82,5 @@ class ProductRequest extends FormRequest
                 ] : [],
             ],
         ];
-    }
-
-    public function created(): void
-    {
-        try {
-            DB::beginTransaction();
-            $product = new Product();
-            $product->fill($this->merging());
-            $product->save();
-            $this->syncPrimaryBarcode($product);
-            $this->uploadImage($product);
-            DB::commit();
-        } catch (Exception $e) {
-            DB::rollBack();
-            throw $e;
-        }
-    }
-
-    public function updated(): void
-    {
-        try {
-            DB::beginTransaction();
-            $product = Product::findorfail($this->route('product'));
-            $product->fill($this->merging());
-            $product->update();
-            $this->syncPrimaryBarcode($product);
-            $this->uploadImage($product);
-            DB::commit();
-        } catch (Exception $e) {
-            DB::rollBack();
-            throw $e;
-        }
-    }
-
-    private function merging(): array
-    {
-        return $this->merge([
-            'category_id' => Category::findorfail($this->category)->id,
-        ])->except('category', 'images', 'barcode');
-    }
-
-    private function syncPrimaryBarcode(Product $product): void
-    {
-        if (! $this->filled('barcode')) {
-            return;
-        }
-
-        $barcodeCode = $this->barcode;
-        $product->barcodes()
-            ->primary()
-            ->active()
-            ->where('code', '!=', $barcodeCode)
-            ->update(['is_active' => false]);
-
-        $barcode = $product->barcodes()->where('code', $barcodeCode)->first();
-        if ($barcode) {
-            $barcode->update([
-                'type' => 'primary',
-                'is_active' => true,
-            ]);
-
-            return;
-        }
-
-        $product->barcodes()->create([
-            'code' => $barcodeCode,
-            'type' => 'primary',
-            'description' => 'API barcode',
-            'is_active' => true,
-        ]);
-    }
-
-    private function images(): ?array
-    {
-        return $this->images;
-    }
-
-    private function uploadImage(Product $product): void
-    {
-        if ($this->filled('hero_images_uploaded_file_id')) {
-            $uploadedFileId = $this->hero_images_uploaded_file_id;
-
-            $existingFile = UploadedFile::find($uploadedFileId);
-
-            if ($existingFile && $existingFile->relative_path !== ($product->hero_images[0] ?? '')) {
-                $productService = new ProductService();
-                $heroImages = $productService->proceedUploadImage([$uploadedFileId], $product);
-                $product->hero_images = $heroImages;
-                $product->save();
-            }
-        }
-    }
-
-    public function deleteImages(): void
-    {
-        $uploadDisk = config('filesystems.upload_disk');
-        $product = $this->route('product');
-        $images = ProductImage::where('product_id', $product->id)->get();
-        foreach ($images as $image) {
-            if (Storage::disk($uploadDisk)->exists($image->name)) {
-                Storage::disk($uploadDisk)->delete($image->name);
-            }
-            $image->delete();
-        }
     }
 }

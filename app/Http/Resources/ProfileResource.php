@@ -2,13 +2,14 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Tenants\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Laravel\Pennant\Feature;
 
-/** @mixin \App\Models\Tenants\User */
+/** @mixin User */
 class ProfileResource extends JsonResource
 {
     /**

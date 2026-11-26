@@ -18,6 +18,26 @@ on:
       - 1.x
 
 jobs:
+  lint:
+    name: Lint & static analysis
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.4
+          coverage: none
+          tools: composer
+      - run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+      # Style: the whole tree follows the laravel preset, so a mis-formatted
+      # file fails here instead of in review.
+      # Explicit paths: Pint's `exclude` does not prune a nested directory
+      # such as a git worktree, and `bootstrap/cache` holds generated PHP.
+      - run: vendor/bin/pint --test app config database routes tests lang
+      # Static analysis at level 5. The baseline holds today's findings; new
+      # ones fail the build.
+      - run: vendor/bin/phpstan analyse --no-progress --memory-limit=1G
+
   build:
     name: Unit Test
     runs-on: ubuntu-latest
@@ -26,7 +46,7 @@ jobs:
         php-version: [8.4]
     services:
       mysql:
-        image: mysql:5.7
+        image: mysql:8.0
         ports:
           - 3306:3306
         env:
@@ -55,5 +75,7 @@ jobs:
       - name: Setup database Unit Test
         run: php artisan app:migrate-testing-database
 
-      - name: Setup database and Run Unit Test
-        run: bash test.sh
+      - name: Run the tests
+        # Plain `php artisan test`: the old test.sh treated exit code 2 as a
+        # pass, so a run that failed to boot could look green.
+        run: php artisan test

@@ -7,7 +7,7 @@ use App\Models\Tenants\Selling;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Tenants\Selling>
+ * @extends Factory<Selling>
  */
 class SellingFactory extends Factory
 {
@@ -26,7 +26,7 @@ class SellingFactory extends Factory
     public function definition()
     {
         return [
-            'member_id' => Member::all()->random(),
+            'member_id' => Member::factory(),
             'date' => now(),
             'payed_money' => $this->randPayedMoney(rand(0, 2)),
         ];
@@ -35,6 +35,7 @@ class SellingFactory extends Factory
     private function randPayedMoney($randIndex)
     {
         $payedOptionMoney = [200000, 500000, 100000];
+
         return $payedOptionMoney[$randIndex];
     }
 }
