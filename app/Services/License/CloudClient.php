@@ -89,8 +89,6 @@ class CloudClient
             return ['ok' => false, 'message' => 'The licence server returned no token.'];
         }
 
-        // Store only what this install can verify: a token signed by another
-        // key must not overwrite a working one.
         $previous = \App\Models\License::token();
 
         $this->license->store($token);

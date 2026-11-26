@@ -55,11 +55,10 @@ class DemoSeeder extends Seeder
             [
                 'name' => 'Pemilik Toko',
                 'password' => bcrypt('password'),
-                'is_owner' => true,
             ],
         );
 
-        $user->companies()->syncWithoutDetaching([$company->id]);
+        $user->companies()->syncWithoutDetaching([$company->id => ['is_owner' => true]]);
 
         return $user;
     }
@@ -111,9 +110,6 @@ class DemoSeeder extends Seeder
                     'show' => true,
                 ],
             );
-
-            // ProductObserver already wrote the opening stock row from
-            // $product->stock, so there is nothing to add here.
 
             $products[] = $product;
         }

@@ -1993,12 +1993,6 @@ parameters:
 			path: app/Observers/ProductObserver.php
 
 		-
-			message: '#^Access to property \$is_owner on an unknown class App\\Models\\Admin\.$#'
-			identifier: class.notFound
-			count: 1
-			path: app/Providers/AuthServiceProvider.php
-
-		-
 			message: '#^Access to property \$roles on an unknown class App\\Models\\Admin\.$#'
 			identifier: class.notFound
 			count: 1

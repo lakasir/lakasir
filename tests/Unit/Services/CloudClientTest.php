@@ -86,7 +86,6 @@ test('a token signed by the wrong key never replaces a working one', function ()
         sodium_crypto_sign_detached($payload, sodium_crypto_sign_secretkey($otherKeypair))
     );
 
-    // One fake, two responses in order: the good one, then the forged one.
     Http::fake([
         'cloud.test/*' => Http::sequence()
             ->push(['data' => ['token' => $good]])

@@ -39,7 +39,6 @@ class ProvisionController extends Controller
             'trial_days' => ['nullable', 'integer', 'min:0'],
         ]);
 
-        // Idempotent by name: a retried call must not make a second shop.
         $company = Company::where('name', $data['name'])->first();
         $created = false;
 
@@ -49,7 +48,6 @@ class ProvisionController extends Controller
                 [
                     'name' => $data['owner_name'],
                     'password' => bcrypt($data['owner_password']),
-                    'is_owner' => true,
                 ],
             );
 

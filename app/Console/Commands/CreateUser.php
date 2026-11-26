@@ -19,15 +19,13 @@ class CreateUser extends Command
             'name' => $this->ask('name'),
             'email' => $this->ask('email'),
             'password' => bcrypt($this->ask('password')),
-            'is_owner' => true,
         ]);
 
-        // A local install never starts a trial: self-hosting is free.
         $company = Company::first()
             ?? $provision->create(['name' => $this->ask('shop name'), 'owner' => $user]);
 
         $company->makeCurrent();
-        $company->users()->syncWithoutDetaching([$user->id]);
+        $company->users()->syncWithoutDetaching([$user->id => ['is_owner' => true]]);
 
         $this->info('User created, open '.config('app.url').'/member/login');
 

@@ -38,7 +38,7 @@ function mockTenant(string $name = 'toko_testing'): Company
         ['password' => bcrypt('password')],
     );
 
-    $user->companies()->syncWithoutDetaching([$company->id]);
+    $user->companies()->syncWithoutDetaching([$company->id => ['is_owner' => true]]);
 
     foreach (['PermissionSeeder', 'PaymentMethodSeeder'] as $seeder) {
         Artisan::call('db:seed', ['--class' => $seeder, '--force' => true]);

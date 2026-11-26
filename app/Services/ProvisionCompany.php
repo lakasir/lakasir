@@ -62,7 +62,9 @@ class ProvisionCompany
 
     private function attachOwner(Company $company, User $owner): void
     {
-        $owner->companies()->syncWithoutDetaching([$company->id]);
+        $owner->companies()->syncWithoutDetaching([
+            $company->id => ['is_owner' => true],
+        ]);
 
         $owner->assignRole(Role::admin);
     }

@@ -17,7 +17,6 @@ class UserSeeder extends Seeder
             [
                 'name' => 'Super Admin',
                 'password' => bcrypt(env('ADMIN_PASSWORD', 'password')),
-                'is_owner' => true,
             ],
         );
 
@@ -25,7 +24,7 @@ class UserSeeder extends Seeder
             ?? app(ProvisionCompany::class)->create(['name' => 'Lakasir', 'owner' => $user]);
 
         $company->makeCurrent();
-        $company->users()->syncWithoutDetaching([$user->id]);
+        $company->users()->syncWithoutDetaching([$user->id => ['is_owner' => true]]);
 
         if (! $user->hasRole(Role::admin)) {
             $user->assignRole(Role::admin);

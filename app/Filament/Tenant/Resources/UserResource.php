@@ -4,6 +4,7 @@ namespace App\Filament\Tenant\Resources;
 
 use App\Features\Role;
 use App\Filament\Tenant\Resources\UserResource\Pages;
+use App\Models\Company;
 use App\Models\Tenants\User;
 use App\Traits\HasTranslatableResource;
 use Filament\Forms\Components\Select;
@@ -11,7 +12,6 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Columns\BooleanColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Hash;
@@ -63,7 +63,11 @@ class UserResource extends Resource
     {
         return $table
             ->query(function () {
-                return User::query()->whereNot('id', auth()->id());
+                $companyId = Company::currentId();
+
+                return User::query()
+                    ->whereHas('companies', fn ($q) => $q->whereKey($companyId))
+                    ->whereNot('id', auth()->id());
             })
             ->defaultSort('created_at', 'desc')
             ->columns([
@@ -79,7 +83,10 @@ class UserResource extends Resource
                 TextColumn::make('roles.0.name')
                     ->visible(hasFeatureAndPermission(Role::class))
                     ->label('Role'),
-                BooleanColumn::make('is_owner'),
+                Tables\Columns\IconColumn::make('owner_in_shop')
+                    ->label('Owner')
+                    ->boolean()
+                    ->getStateUsing(fn (User $record): bool => $record->isOwner()),
             ])
             ->filters([
                 Tables\Filters\TrashedFilter::make(),
@@ -98,9 +105,7 @@ class UserResource extends Resource
 
     public static function getRelations(): array
     {
-        return [
-            //
-        ];
+        return [];
     }
 
     public static function getPages(): array

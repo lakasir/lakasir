@@ -9,8 +9,6 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('licenses', function (Blueprint $table) {
-            // The key the customer was given by lakasir-cloud. Kept so the
-            // install can refresh its own token without the customer retyping.
             $table->string('key')->nullable()->after('id');
             $table->timestamp('last_refreshed_at')->nullable()->after('token');
             $table->string('last_refresh_error')->nullable()->after('last_refreshed_at');

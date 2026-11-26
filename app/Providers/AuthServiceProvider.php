@@ -73,7 +73,7 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
         Gate::after(function (User|Admin $user, $ability) {
-            if ($user->is_owner) {
+            if ($user instanceof User && $user->isOwner()) {
                 return true;
             }
             if (in_array($ability, $this->defaultAbility)) {
