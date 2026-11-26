@@ -1,3 +1,0 @@
-[submodule "modules/Warehouse"]
-	path = modules/Warehouse
-	url = git@github.com:lakasir/warehouse-module.git

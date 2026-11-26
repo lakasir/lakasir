@@ -38,11 +38,11 @@ version.txt
 .mcp.json
 .lerd.yaml
 
-# Modules are installed at runtime (zip/registry) and stay untracked. A module
-# under development is committed as a submodule: add a `!/modules/<Name>` line
-# below it. The trailing slash matters — `!/modules/<Name>/` does not re-include.
+# Modules are installed at runtime (zip/registry) and never tracked. To develop
+# one, clone it next to this project and symlink it in:
+#   ln -s ../../warehouse-module modules/Warehouse
+# The loader follows the link, and the installer refuses to overwrite it.
 /modules/*
-!/modules/Warehouse
 
 # Local tooling and scratch files (not part of the project)
 .agents/
