@@ -15,6 +15,8 @@ use Filament\Tables;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 
 class CompanyResource extends Resource
 {
@@ -50,6 +52,9 @@ class CompanyResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(function(Builder $query) {
+                return $query->hasUser();
+            })
             ->columns([
                 TextColumn::make('name')
                     ->searchable()

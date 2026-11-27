@@ -2,9 +2,12 @@
 
 namespace App\Models;
 
+use App\Models\Tenants\User;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\PermissionRegistrar;
 
 class Company extends Model
@@ -57,6 +60,11 @@ class Company extends Model
     public function isCurrent(): bool
     {
         return static::getCurrent()?->id === $this->id;
+    }
+
+    public function scopeHasUser(Builder $builder): Builder
+    {
+        return $builder->whereHas('users', fn(Builder $builder) => $builder->where('user_id', Auth::id()));
     }
 
     public function makeCurrent(): static
