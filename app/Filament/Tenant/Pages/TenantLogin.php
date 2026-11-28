@@ -19,8 +19,6 @@ class TenantLogin extends Login
             throw ValidationException::withMessages([
                 'data.email' => 'You do not have permission to access the web app',
             ]);
-
-            return null;
         }
         $user->profile()->updateOrCreate(
             [
