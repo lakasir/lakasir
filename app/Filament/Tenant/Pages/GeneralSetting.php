@@ -271,9 +271,9 @@ class GeneralSetting extends Page implements HasActions, HasForms
     public function saveAbout(AboutService $aboutService): void
     {
         $this->validate([
-            'about.shop_name' => 'required',
-            'about.business_type' => 'required',
-            'about.shop_location' => 'required',
+            'about.shop_name' => ['required'],
+            'about.business_type' => ['required'],
+            'about.shop_location' => ['required'],
         ]);
 
         if (isset($this->about['photo']) && $this->about['photo'] != null && array_values($this->about['photo'])[0] instanceof TemporaryUploadedFile) {
@@ -316,10 +316,10 @@ class GeneralSetting extends Page implements HasActions, HasForms
     public function saveProfile(): void
     {
         $this->validate([
-            'profile.name' => 'nullable|string|max:255',
-            'profile.email' => 'required|email|unique:users,email,'.auth()->id(),
-            'profile.timezone' => 'required',
-            'profile.locale' => 'required',
+            'profile.name' => ['nullable', 'string', 'max:255'],
+            'profile.email' => ['required', 'email', 'unique:users,email,'.auth()->id()],
+            'profile.timezone' => ['required'],
+            'profile.locale' => ['required'],
             'profile.password' => ['nullable', 'confirmed', Password::default()],
         ]);
 
@@ -344,6 +344,7 @@ class GeneralSetting extends Page implements HasActions, HasForms
             }
             $user->save();
 
+            /** @var Profile $profile */
             $profile = $user->profile()->updateOrCreate([], Arr::except($data, ['name', 'email']));
 
             if (! feature('edit-profile')) {

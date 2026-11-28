@@ -201,7 +201,7 @@ parameters:
 		-
 			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$photo\.$#'
 			identifier: property.notFound
-			count: 4
+			count: 1
 			path: app/Filament/Tenant/Pages/GeneralSetting.php
 
 		-
@@ -220,12 +220,6 @@ parameters:
 			message: '#^Parameter \#1 \$options of method Filament\\Forms\\Components\\Select\:\:options\(\) expects array\<array\<string\>\|string\>\|Closure\|Illuminate\\Contracts\\Support\\Arrayable\|string\|null, array\{0\: 0, 5\: 5, 10\: 10, 20\: 20, 50\: 50\} given\.$#'
 			identifier: argument.type
 			count: 1
-			path: app/Filament/Tenant/Pages/GeneralSetting.php
-
-		-
-			message: '#^Parameter \#1 \$rules of method App\\Filament\\Tenant\\Pages\\GeneralSetting\:\:validate\(\) expects array\<string, array\<mixed\>\>\|null, array\<string, string\> given\.$#'
-			identifier: argument.type
-			count: 2
 			path: app/Filament/Tenant/Pages/GeneralSetting.php
 
 		-
