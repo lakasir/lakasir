@@ -27,7 +27,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
   </head>
-  <body>
+  <body class="bg-[color:var(--ui-surface-2)] font-sans text-[color:var(--ui-text)] antialiased">
     {{ $slot }}
     @livewireScripts
     @filamentScripts

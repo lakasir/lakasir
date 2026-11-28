@@ -44,6 +44,7 @@ use App\Http\Middleware\IdentifyCompany;
 use App\Http\Middleware\LocalizationMiddleware;
 use App\Http\Middleware\SetCurrentCompany;
 use App\Models\Tenants\About;
+use Filament\FontProviders\LocalFontProvider;
 use Filament\Forms\Components\DatePicker;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -125,6 +126,7 @@ class TenantPanelProvider extends PanelProvider
             ->darkMode(config('app.dark_mode', true))
             ->databaseNotifications()
             ->id('tenant')
+            ->font('Figtree', provider: LocalFontProvider::class)
             ->viteTheme('resources/css/filament/tenant/theme.css')
             ->colors(['primary' => Color::hex('#FF6600')])
             ->assets([

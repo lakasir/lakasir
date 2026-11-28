@@ -62,6 +62,7 @@ class PaymentMethodResource extends Resource
                     ->searchable(),
                 TextColumn::make('is_cash')
                     ->badge()
+                    ->icon(fn (string $state): string => $state === 'Yes' ? 'heroicon-s-banknotes' : 'heroicon-s-x-circle')
                     ->getStateUsing(function (PaymentMethod $pMethod) {
                         return $pMethod->is_cash ? 'Yes' : 'No';
                     })
@@ -71,6 +72,7 @@ class PaymentMethodResource extends Resource
                     }),
                 TextColumn::make('is_debit')
                     ->badge()
+                    ->icon(fn (string $state): string => $state === 'Yes' ? 'heroicon-s-credit-card' : 'heroicon-s-x-circle')
                     ->getStateUsing(function (PaymentMethod $pMethod) {
                         return $pMethod->is_debit ? 'Yes' : 'No';
                     })
@@ -80,6 +82,7 @@ class PaymentMethodResource extends Resource
                     }),
                 TextColumn::make('is_credit')
                     ->badge()
+                    ->icon(fn (string $state): string => $state === 'Yes' ? 'heroicon-s-credit-card' : 'heroicon-s-x-circle')
                     ->getStateUsing(function (PaymentMethod $pMethod) {
                         return $pMethod->is_credit ? 'Yes' : 'No';
                     })
@@ -89,6 +92,7 @@ class PaymentMethodResource extends Resource
                     }),
                 TextColumn::make('is_wallet')
                     ->badge()
+                    ->icon(fn (string $state): string => $state === 'Yes' ? 'heroicon-s-wallet' : 'heroicon-s-x-circle')
                     ->getStateUsing(function (PaymentMethod $pMethod) {
                         return $pMethod->is_wallet ? 'Yes' : 'No';
                     })
@@ -99,6 +103,7 @@ class PaymentMethodResource extends Resource
                 TextColumn::make('is_qris')
                     ->label('Is QRIS')
                     ->badge()
+                    ->icon(fn (string $state): string => $state === 'Yes' ? 'heroicon-s-qr-code' : 'heroicon-s-x-circle')
                     ->getStateUsing(function (PaymentMethod $pMethod) {
                         return $pMethod->is_qris ? 'Yes' : 'No';
                     })

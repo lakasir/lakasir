@@ -64,8 +64,8 @@ class ReceivableResource extends Resource
                         __('Paid off') => 'success',
                     })
                     ->icon(fn (string $state): string => match ($state) {
-                        __('Paid off') => 'heroicon-o-check-circle',
-                        __('Unpaid') => 'heroicon-o-exclamation-circle',
+                        __('Paid off') => 'heroicon-s-check-circle',
+                        __('Unpaid') => 'heroicon-s-exclamation-circle',
                     })
                     ->color(fn (string $state): string => match ($state) {
                         __('Unpaid') => 'danger',
@@ -129,8 +129,8 @@ class ReceivableResource extends Resource
                     __('Paid off') => 'success',
                 })
                 ->icon(fn (string $state): string => match ($state) {
-                    __('Paid off') => 'heroicon-o-check-circle',
-                    __('Unpaid') => 'heroicon-o-exclamation-circle',
+                    __('Paid off') => 'heroicon-s-check-circle',
+                    __('Unpaid') => 'heroicon-s-exclamation-circle',
                 }),
         ]);
 

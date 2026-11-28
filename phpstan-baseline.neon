@@ -13,24 +13,6 @@ parameters:
 			path: app/Console/Commands/FillSellingMissingValue.php
 
 		-
-			message: '#^Using nullsafe property access "\?\-\>disk" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
-			identifier: nullsafe.neverNull
-			count: 3
-			path: app/Console/Commands/MigrateUrlsCommand.php
-
-		-
-			message: '#^Parameter \#1 \$products of event class App\\Events\\RecalculateEvent constructor expects App\\Models\\Tenants\\Product\|Illuminate\\Support\\Collection\<int\|string, App\\Models\\Tenants\\Product\> in App\\Events\\RecalculateEvent\:\:dispatch\(\), Illuminate\\Database\\Eloquent\\Collection\<int, App\\Models\\Tenants\\Product\> given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Console/Commands/RecalculateAllProduct.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between resource\|null and false will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: app/Console/Commands/SwitchDiskCommand.php
-
-		-
 			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$qty\.$#'
 			identifier: property.notFound
 			count: 1
@@ -52,12 +34,6 @@ parameters:
 			message: '#^Call to an undefined static method App\\Filament\\Tenant\\Pages\\CartItem\:\:getRouteBaseName\(\)\.$#'
 			identifier: staticMethod.notFound
 			count: 1
-			path: app/Filament/Tenant/Pages/CartItem.php
-
-		-
-			message: '#^Unreachable statement \- code above always terminates\.$#'
-			identifier: deadCode.unreachable
-			count: 3
 			path: app/Filament/Tenant/Pages/CartItem.php
 
 		-
@@ -115,24 +91,6 @@ parameters:
 			path: app/Filament/Tenant/Pages/Cashier.php
 
 		-
-			message: '#^Parameter \#1 \$callback of method Illuminate\\Database\\Eloquent\\Collection\<\(int\|string\),Illuminate\\Database\\Eloquent\\Model\>\:\:map\(\) expects callable\(Illuminate\\Database\\Eloquent\\Model, int\|string\)\: array\{product_id\: int\<0, max\>, qty\: float, price\: float\|null, discount_price\: float, price_unit_id\: int\<0, max\>\|null\}, Closure\(App\\Models\\Tenants\\CartItem\)\: array\{product_id\: int\<0, max\>, qty\: float, price\: float\|null, discount_price\: float, price_unit_id\: int\<0, max\>\|null\} given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Filament/Tenant/Pages/Cashier.php
-
-		-
-			message: '#^Parameter \#1 \$callback of method Illuminate\\Support\\Collection\<\(int\|string\),Illuminate\\Database\\Eloquent\\Model\>\:\:each\(\) expects callable\(Illuminate\\Database\\Eloquent\\Model, int\|string\)\: mixed, Closure\(App\\Models\\Tenants\\CartItem\)\: void given\.$#'
-			identifier: argument.type
-			count: 3
-			path: app/Filament/Tenant/Pages/Cashier.php
-
-		-
-			message: '#^Unreachable statement \- code above always terminates\.$#'
-			identifier: deadCode.unreachable
-			count: 3
-			path: app/Filament/Tenant/Pages/Cashier.php
-
-		-
 			message: '#^Unsafe call to private method App\\Filament\\Tenant\\Pages\\Cashier\:\:getPageNavigationLabel\(\) through static\:\:\.$#'
 			identifier: staticClassAccess.privateMethod
 			count: 1
@@ -148,18 +106,6 @@ parameters:
 			message: '#^Call to an undefined static method App\\Filament\\Tenant\\Pages\\CashierReport\:\:getRouteBaseName\(\)\.$#'
 			identifier: staticMethod.notFound
 			count: 1
-			path: app/Filament/Tenant/Pages/CashierReport.php
-
-		-
-			message: '#^Parameter \#1 \$rules of method App\\Filament\\Tenant\\Pages\\CashierReport\:\:validate\(\) expects array\<string, array\<mixed\>\>\|null, array\<string, string\> given\.$#'
-			identifier: argument.type
-			count: 2
-			path: app/Filament/Tenant/Pages/CashierReport.php
-
-		-
-			message: '#^Unreachable statement \- code above always terminates\.$#'
-			identifier: deadCode.unreachable
-			count: 3
 			path: app/Filament/Tenant/Pages/CashierReport.php
 
 		-
@@ -217,18 +163,6 @@ parameters:
 			path: app/Filament/Tenant/Pages/GeneralSetting.php
 
 		-
-			message: '#^Parameter \#1 \$options of method Filament\\Forms\\Components\\Select\:\:options\(\) expects array\<array\<string\>\|string\>\|Closure\|Illuminate\\Contracts\\Support\\Arrayable\|string\|null, array\{0\: 0, 5\: 5, 10\: 10, 20\: 20, 50\: 50\} given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Filament/Tenant/Pages/GeneralSetting.php
-
-		-
-			message: '#^Unreachable statement \- code above always terminates\.$#'
-			identifier: deadCode.unreachable
-			count: 3
-			path: app/Filament/Tenant/Pages/GeneralSetting.php
-
-		-
 			message: '#^Unsafe call to private method App\\Filament\\Tenant\\Pages\\GeneralSetting\:\:getPageNavigationLabel\(\) through static\:\:\.$#'
 			identifier: staticClassAccess.privateMethod
 			count: 1
@@ -271,12 +205,6 @@ parameters:
 			path: app/Filament/Tenant/Pages/POS.php
 
 		-
-			message: '#^Unreachable statement \- code above always terminates\.$#'
-			identifier: deadCode.unreachable
-			count: 3
-			path: app/Filament/Tenant/Pages/POS.php
-
-		-
 			message: '#^Unsafe call to private method App\\Filament\\Tenant\\Pages\\POS\:\:getPageNavigationLabel\(\) through static\:\:\.$#'
 			identifier: staticClassAccess.privateMethod
 			count: 1
@@ -307,18 +235,6 @@ parameters:
 			path: app/Filament/Tenant/Pages/Printer.php
 
 		-
-			message: '#^Parameter \#1 \$rules of method Filament\\Pages\\BasePage\:\:validate\(\) expects array\<string, array\<mixed\>\>\|null, array\<string, string\> given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Filament/Tenant/Pages/Printer.php
-
-		-
-			message: '#^Unreachable statement \- code above always terminates\.$#'
-			identifier: deadCode.unreachable
-			count: 3
-			path: app/Filament/Tenant/Pages/Printer.php
-
-		-
 			message: '#^Unsafe call to private method App\\Filament\\Tenant\\Pages\\Printer\:\:getPageNavigationLabel\(\) through static\:\:\.$#'
 			identifier: staticClassAccess.privateMethod
 			count: 1
@@ -334,18 +250,6 @@ parameters:
 			message: '#^Call to an undefined static method App\\Filament\\Tenant\\Pages\\ProductReport\:\:getRouteBaseName\(\)\.$#'
 			identifier: staticMethod.notFound
 			count: 1
-			path: app/Filament/Tenant/Pages/ProductReport.php
-
-		-
-			message: '#^Parameter \#1 \$rules of method App\\Filament\\Tenant\\Pages\\ProductReport\:\:validate\(\) expects array\<string, array\<mixed\>\>\|null, array\<string, string\> given\.$#'
-			identifier: argument.type
-			count: 2
-			path: app/Filament/Tenant/Pages/ProductReport.php
-
-		-
-			message: '#^Unreachable statement \- code above always terminates\.$#'
-			identifier: deadCode.unreachable
-			count: 3
 			path: app/Filament/Tenant/Pages/ProductReport.php
 
 		-
@@ -373,18 +277,6 @@ parameters:
 			path: app/Filament/Tenant/Pages/PurchasingReport.php
 
 		-
-			message: '#^Parameter \#1 \$rules of method App\\Filament\\Tenant\\Pages\\PurchasingReport\:\:validate\(\) expects array\<string, array\<mixed\>\>\|null, array\<string, string\> given\.$#'
-			identifier: argument.type
-			count: 2
-			path: app/Filament/Tenant/Pages/PurchasingReport.php
-
-		-
-			message: '#^Unreachable statement \- code above always terminates\.$#'
-			identifier: deadCode.unreachable
-			count: 3
-			path: app/Filament/Tenant/Pages/PurchasingReport.php
-
-		-
 			message: '#^Unsafe call to private method App\\Filament\\Tenant\\Pages\\PurchasingReport\:\:generateNavigationItem\(\) through static\:\:\.$#'
 			identifier: staticClassAccess.privateMethod
 			count: 4
@@ -406,12 +298,6 @@ parameters:
 			message: '#^Call to an undefined static method App\\Filament\\Tenant\\Pages\\Report\:\:getRouteBaseName\(\)\.$#'
 			identifier: staticMethod.notFound
 			count: 1
-			path: app/Filament/Tenant/Pages/Report.php
-
-		-
-			message: '#^Unreachable statement \- code above always terminates\.$#'
-			identifier: deadCode.unreachable
-			count: 3
 			path: app/Filament/Tenant/Pages/Report.php
 
 		-
@@ -439,18 +325,6 @@ parameters:
 			path: app/Filament/Tenant/Pages/SellingReport.php
 
 		-
-			message: '#^Parameter \#1 \$rules of method App\\Filament\\Tenant\\Pages\\SellingReport\:\:validate\(\) expects array\<string, array\<mixed\>\>\|null, array\<string, string\> given\.$#'
-			identifier: argument.type
-			count: 2
-			path: app/Filament/Tenant/Pages/SellingReport.php
-
-		-
-			message: '#^Unreachable statement \- code above always terminates\.$#'
-			identifier: deadCode.unreachable
-			count: 3
-			path: app/Filament/Tenant/Pages/SellingReport.php
-
-		-
 			message: '#^Unsafe call to private method App\\Filament\\Tenant\\Pages\\SellingReport\:\:generateNavigationItem\(\) through static\:\:\.$#'
 			identifier: staticClassAccess.privateMethod
 			count: 4
@@ -473,12 +347,6 @@ parameters:
 			identifier: return.type
 			count: 1
 			path: app/Filament/Tenant/Pages/TenantLogin.php
-
-		-
-			message: '#^Using nullsafe property access "\?\-\>qty" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
-			identifier: nullsafe.neverNull
-			count: 1
-			path: app/Filament/Tenant/Pages/Traits/TableProduct.php
 
 		-
 			message: '#^Access to an undefined static property static\(App\\Filament\\Tenant\\Resources\\CashDrawerResource\)\:\:\$title\.$#'
@@ -580,12 +448,6 @@ parameters:
 			message: '#^Call to an undefined static method App\\Filament\\Tenant\\Resources\\PaymentMethodResource\:\:getNavigationItemActiveRoutePattern\(\)\.$#'
 			identifier: staticMethod.notFound
 			count: 1
-			path: app/Filament/Tenant/Resources/PaymentMethodResource.php
-
-		-
-			message: '#^Match expression does not handle remaining value\: string$#'
-			identifier: match.unhandled
-			count: 5
 			path: app/Filament/Tenant/Resources/PaymentMethodResource.php
 
 		-
@@ -709,12 +571,6 @@ parameters:
 			path: app/Filament/Tenant/Resources/ProductResource/Pages/PrintLabel.php
 
 		-
-			message: '#^Parameter \#1 \$options of method Filament\\Forms\\Components\\Select\:\:options\(\) expects array\<array\<string\>\|string\>\|Closure\|Illuminate\\Contracts\\Support\\Arrayable\|string\|null, array\{1\: 1, 2\: 2, 3\: 3, 4\: 4\} given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Filament/Tenant/Resources/ProductResource/Pages/PrintLabel.php
-
-		-
 			message: '#^Cannot access property \$is_non_stock on Illuminate\\Database\\Eloquent\\Model\|int\|string\.$#'
 			identifier: property.nonObject
 			count: 1
@@ -723,7 +579,7 @@ parameters:
 		-
 			message: '#^Cannot access property \$show on Illuminate\\Database\\Eloquent\\Model\|int\|string\.$#'
 			identifier: property.nonObject
-			count: 6
+			count: 3
 			path: app/Filament/Tenant/Resources/ProductResource/Pages/ViewProduct.php
 
 		-
@@ -739,18 +595,6 @@ parameters:
 			path: app/Filament/Tenant/Resources/ProductResource/RelationManagers/StocksRelationManager.php
 
 		-
-			message: '#^Parameter \#1 \$products of event class App\\Events\\RecalculateEvent constructor expects App\\Models\\Tenants\\Product\|Illuminate\\Support\\Collection\<int\|string, App\\Models\\Tenants\\Product\> in App\\Events\\RecalculateEvent\:\:dispatch\(\), Illuminate\\Support\\Collection\<int, Illuminate\\Database\\Eloquent\\Model\> given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Filament/Tenant/Resources/ProductResource/RelationManagers/StocksRelationManager.php
-
-		-
-			message: '#^Parameter \#1 \$products of event class App\\Events\\RecalculateEvent constructor expects App\\Models\\Tenants\\Product\|Illuminate\\Support\\Collection\<int\|string, App\\Models\\Tenants\\Product\> in App\\Events\\RecalculateEvent\:\:dispatch\(\), Illuminate\\Support\\Collection\<int, Illuminate\\Database\\Eloquent\\Model\|null\> given\.$#'
-			identifier: argument.type
-			count: 2
-			path: app/Filament/Tenant/Resources/ProductResource/RelationManagers/StocksRelationManager.php
-
-		-
 			message: '#^Access to an undefined static property static\(App\\Filament\\Tenant\\Resources\\PurchasingResource\)\:\:\$title\.$#'
 			identifier: staticProperty.notFound
 			count: 2
@@ -763,12 +607,6 @@ parameters:
 			path: app/Filament/Tenant/Resources/PurchasingResource.php
 
 		-
-			message: '#^Match expression does not handle remaining value\: string$#'
-			identifier: match.unhandled
-			count: 2
-			path: app/Filament/Tenant/Resources/PurchasingResource.php
-
-		-
 			message: '#^Unsafe call to private method App\\Filament\\Tenant\\Resources\\PurchasingResource\:\:getPageNavigationLabel\(\) through static\:\:\.$#'
 			identifier: staticClassAccess.privateMethod
 			count: 1
@@ -777,12 +615,6 @@ parameters:
 		-
 			message: '#^Unsafe usage of new static\(\)\.$#'
 			identifier: new.static
-			count: 1
-			path: app/Filament/Tenant/Resources/PurchasingResource.php
-
-		-
-			message: '#^Using nullsafe property access "\?\-\>phone_number" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
-			identifier: nullsafe.neverNull
 			count: 1
 			path: app/Filament/Tenant/Resources/PurchasingResource.php
 
@@ -823,12 +655,6 @@ parameters:
 			path: app/Filament/Tenant/Resources/PurchasingResource/Pages/ViewPurchasing.php
 
 		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
-			count: 1
-			path: app/Filament/Tenant/Resources/PurchasingResource/Pages/ViewPurchasing.php
-
-		-
 			message: '#^PHPDoc tag @var for variable \$purchasing contains unknown class App\\Filament\\Tenant\\Resources\\PurchasingResource\\Pages\\StockOpname\.$#'
 			identifier: class.notFound
 			count: 1
@@ -837,12 +663,6 @@ parameters:
 		-
 			message: '#^PHPDoc tag @var with type App\\Filament\\Tenant\\Resources\\PurchasingResource\\Pages\\StockOpname is not subtype of native type Illuminate\\Database\\Eloquent\\Model\.$#'
 			identifier: varTag.nativeType
-			count: 1
-			path: app/Filament/Tenant/Resources/PurchasingResource/Pages/ViewPurchasing.php
-
-		-
-			message: '#^Parameter \#1 \$stock of method App\\Services\\Tenants\\StockService\:\:update\(\) expects App\\Models\\Tenants\\Stock, Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
-			identifier: argument.type
 			count: 1
 			path: app/Filament/Tenant/Resources/PurchasingResource/Pages/ViewPurchasing.php
 
@@ -865,18 +685,6 @@ parameters:
 			path: app/Filament/Tenant/Resources/PurchasingResource/RelationManagers/StocksRelationManager.php
 
 		-
-			message: '#^Parameter \#1 \$products of event class App\\Events\\RecalculateEvent constructor expects App\\Models\\Tenants\\Product\|Illuminate\\Support\\Collection\<int\|string, App\\Models\\Tenants\\Product\> in App\\Events\\RecalculateEvent\:\:dispatch\(\), Illuminate\\Support\\Collection\<int, Illuminate\\Database\\Eloquent\\Model\|null\> given\.$#'
-			identifier: argument.type
-			count: 3
-			path: app/Filament/Tenant/Resources/PurchasingResource/RelationManagers/StocksRelationManager.php
-
-		-
-			message: '#^Parameter \#1 \$purchasing of method App\\Services\\Tenants\\PurchasingService\:\:getUpdatedPrice\(\) expects App\\Models\\Tenants\\Purchasing, Illuminate\\Database\\Eloquent\\Model given\.$#'
-			identifier: argument.type
-			count: 2
-			path: app/Filament/Tenant/Resources/PurchasingResource/RelationManagers/StocksRelationManager.php
-
-		-
 			message: '#^Access to an undefined static property static\(App\\Filament\\Tenant\\Resources\\ReceivableResource\)\:\:\$title\.$#'
 			identifier: staticProperty.notFound
 			count: 2
@@ -885,18 +693,6 @@ parameters:
 		-
 			message: '#^Call to an undefined static method App\\Filament\\Tenant\\Resources\\ReceivableResource\:\:getNavigationItemActiveRoutePattern\(\)\.$#'
 			identifier: staticMethod.notFound
-			count: 1
-			path: app/Filament/Tenant/Resources/ReceivableResource.php
-
-		-
-			message: '#^Match expression does not handle remaining value\: string$#'
-			identifier: match.unhandled
-			count: 6
-			path: app/Filament/Tenant/Resources/ReceivableResource.php
-
-		-
-			message: '#^Parameter \#1 \$statePath of method Filament\\Forms\\Components\\Field\:\:lte\(\) expects Closure\|string, float given\.$#'
-			identifier: argument.type
 			count: 1
 			path: app/Filament/Tenant/Resources/ReceivableResource.php
 
@@ -923,30 +719,6 @@ parameters:
 			identifier: property.nonObject
 			count: 1
 			path: app/Filament/Tenant/Resources/ReceivableResource/Pages/ViewReceivable.php
-
-		-
-			message: '#^Parameter \#1 \$receivable of method App\\Filament\\Tenant\\Resources\\ReceivableResource\\Pages\\ViewReceivable\:\:getFormPayment\(\) expects App\\Models\\Tenants\\Receivable, Illuminate\\Database\\Eloquent\\Model\|int\|string\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Filament/Tenant/Resources/ReceivableResource/Pages/ViewReceivable.php
-
-		-
-			message: '#^Parameter \#1 \$statePath of method Filament\\Forms\\Components\\Field\:\:lte\(\) expects Closure\|string, float given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Filament/Tenant/Resources/ReceivableResource/Pages/ViewReceivable.php
-
-		-
-			message: '#^Parameter \#1 \$receivable of method App\\Filament\\Tenant\\Resources\\ReceivableResource\\RelationManagers\\ReceivablePaymentsRelationManager\:\:getFormPayment\(\) expects App\\Models\\Tenants\\Receivable, Illuminate\\Database\\Eloquent\\Model given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Filament/Tenant/Resources/ReceivableResource/RelationManagers/ReceivablePaymentsRelationManager.php
-
-		-
-			message: '#^Parameter \#1 \$statePath of method Filament\\Forms\\Components\\Field\:\:lte\(\) expects Closure\|string, float given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Filament/Tenant/Resources/ReceivableResource/RelationManagers/ReceivablePaymentsRelationManager.php
 
 		-
 			message: '#^Access to an undefined static property static\(App\\Filament\\Tenant\\Resources\\RoleResource\)\:\:\$title\.$#'
@@ -1015,18 +787,6 @@ parameters:
 			path: app/Filament/Tenant/Resources/StockOpnameResource.php
 
 		-
-			message: '#^Match expression does not handle remaining value\: string$#'
-			identifier: match.unhandled
-			count: 2
-			path: app/Filament/Tenant/Resources/StockOpnameResource.php
-
-		-
-			message: '#^Parameter \#1 \$width of method Filament\\Forms\\Components\\Component\:\:maxWidth\(\) expects Closure\|Filament\\Support\\Enums\\MaxWidth\|string\|null, 10 given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Filament/Tenant/Resources/StockOpnameResource.php
-
-		-
 			message: '#^Unsafe call to private method App\\Filament\\Tenant\\Resources\\StockOpnameResource\:\:getPageNavigationLabel\(\) through static\:\:\.$#'
 			identifier: staticClassAccess.privateMethod
 			count: 1
@@ -1041,12 +801,6 @@ parameters:
 		-
 			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$number\.$#'
 			identifier: property.notFound
-			count: 1
-			path: app/Filament/Tenant/Resources/StockOpnameResource/Pages/EditStockOpname.php
-
-		-
-			message: '#^Parameter \#1 \$stockOpname of method App\\Services\\Tenants\\StockOpnameService\:\:update\(\) expects App\\Models\\Tenants\\StockOpname, Illuminate\\Database\\Eloquent\\Model given\.$#'
-			identifier: argument.type
 			count: 1
 			path: app/Filament/Tenant/Resources/StockOpnameResource/Pages/EditStockOpname.php
 
@@ -1099,21 +853,9 @@ parameters:
 			path: app/Filament/Tenant/Resources/StockOpnameResource/Pages/ViewStockOpname.php
 
 		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
-			count: 1
-			path: app/Filament/Tenant/Resources/StockOpnameResource/Pages/ViewStockOpname.php
-
-		-
 			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$status\.$#'
 			identifier: property.notFound
 			count: 3
-			path: app/Filament/Tenant/Resources/StockOpnameResource/RelationManagers/StockOpnameItemsRelationManager.php
-
-		-
-			message: '#^Parameter \#1 \$width of method Filament\\Forms\\Components\\Component\:\:maxWidth\(\) expects Closure\|Filament\\Support\\Enums\\MaxWidth\|string\|null, 10 given\.$#'
-			identifier: argument.type
-			count: 1
 			path: app/Filament/Tenant/Resources/StockOpnameResource/RelationManagers/StockOpnameItemsRelationManager.php
 
 		-
@@ -1219,12 +961,6 @@ parameters:
 			path: app/Filament/Tenant/Resources/VoucherResource.php
 
 		-
-			message: '#^Parameter \#1 \$products of event class App\\Events\\RecalculateEvent constructor expects App\\Models\\Tenants\\Product\|Illuminate\\Support\\Collection\<int\|string, App\\Models\\Tenants\\Product\> in App\\Events\\RecalculateEvent\:\:dispatch\(\), Illuminate\\Support\\Collection\<int, App\\Models\\Tenants\\Product\> given\.$#'
-			identifier: argument.type
-			count: 2
-			path: app/Http/Controllers/Api/Tenants/Master/Product/StockController.php
-
-		-
 			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$photo\.$#'
 			identifier: property.notFound
 			count: 2
@@ -1237,42 +973,6 @@ parameters:
 			path: app/Http/Controllers/Api/Tenants/Settings/SecureInitialPriceController.php
 
 		-
-			message: '#^Parameter \#1 \$start of method App\\Services\\Tenants\\DashboardService\:\:grossProfit\(\) expects Illuminate\\Support\\Carbon, Carbon\\Carbon given\.$#'
-			identifier: argument.type
-			count: 2
-			path: app/Http/Controllers/Api/Tenants/Transaction/DashboardController.php
-
-		-
-			message: '#^Parameter \#1 \$start of method App\\Services\\Tenants\\DashboardService\:\:revenue\(\) expects Illuminate\\Support\\Carbon, Carbon\\Carbon given\.$#'
-			identifier: argument.type
-			count: 2
-			path: app/Http/Controllers/Api/Tenants/Transaction/DashboardController.php
-
-		-
-			message: '#^Parameter \#1 \$start of method App\\Services\\Tenants\\DashboardService\:\:sales\(\) expects Illuminate\\Support\\Carbon, Carbon\\Carbon given\.$#'
-			identifier: argument.type
-			count: 2
-			path: app/Http/Controllers/Api/Tenants/Transaction/DashboardController.php
-
-		-
-			message: '#^Parameter \#2 \$end of method App\\Services\\Tenants\\DashboardService\:\:grossProfit\(\) expects Illuminate\\Support\\Carbon, Carbon\\Carbon given\.$#'
-			identifier: argument.type
-			count: 2
-			path: app/Http/Controllers/Api/Tenants/Transaction/DashboardController.php
-
-		-
-			message: '#^Parameter \#2 \$end of method App\\Services\\Tenants\\DashboardService\:\:revenue\(\) expects Illuminate\\Support\\Carbon, Carbon\\Carbon given\.$#'
-			identifier: argument.type
-			count: 2
-			path: app/Http/Controllers/Api/Tenants/Transaction/DashboardController.php
-
-		-
-			message: '#^Parameter \#2 \$end of method App\\Services\\Tenants\\DashboardService\:\:sales\(\) expects Illuminate\\Support\\Carbon, Carbon\\Carbon given\.$#'
-			identifier: argument.type
-			count: 2
-			path: app/Http/Controllers/Api/Tenants/Transaction/DashboardController.php
-
-		-
 			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Builder\<App\\Models\\Tenants\\Selling\>\:\:defaultSort\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -1283,18 +983,6 @@ parameters:
 			identifier: method.notFound
 			count: 1
 			path: app/Http/Controllers/Auth/AuthenticatedSessionController.php
-
-		-
-			message: '#^Parameter \#1 \$user of class Illuminate\\Auth\\Events\\Verified constructor expects Illuminate\\Contracts\\Auth\\MustVerifyEmail, App\\Models\\Tenants\\User\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Http/Controllers/Auth/VerifyEmailController.php
-
-		-
-			message: '#^Call to function is_array\(\) with string will always evaluate to false\.$#'
-			identifier: function.impossibleType
-			count: 1
-			path: app/Http/Filters/SearchFields.php
 
 		-
 			message: '#^Class Spatie\\Permission\\Middlewares\\PermissionMiddleware not found\.$#'
@@ -1325,42 +1013,6 @@ parameters:
 			identifier: method.notFound
 			count: 1
 			path: app/Http/Requests/Tenants/Master/ProductRequest.php
-
-		-
-			message: '#^Using nullsafe property access "\?\-\>business_type" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
-			identifier: nullsafe.neverNull
-			count: 1
-			path: app/Http/Resources/AboutResource.php
-
-		-
-			message: '#^Using nullsafe property access "\?\-\>other_business_type" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
-			identifier: nullsafe.neverNull
-			count: 1
-			path: app/Http/Resources/AboutResource.php
-
-		-
-			message: '#^Using nullsafe property access "\?\-\>photo" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
-			identifier: nullsafe.neverNull
-			count: 1
-			path: app/Http/Resources/AboutResource.php
-
-		-
-			message: '#^Using nullsafe property access "\?\-\>shop_location" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
-			identifier: nullsafe.neverNull
-			count: 1
-			path: app/Http/Resources/AboutResource.php
-
-		-
-			message: '#^Using nullsafe property access "\?\-\>shop_name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
-			identifier: nullsafe.neverNull
-			count: 1
-			path: app/Http/Resources/AboutResource.php
-
-		-
-			message: '#^Using nullsafe property access on non\-nullable type \$this\(App\\Http\\Resources\\AboutResource\)\. Use \-\> instead\.$#'
-			identifier: nullsafe.neverNull
-			count: 1
-			path: app/Http/Resources/AboutResource.php
 
 		-
 			message: '#^Access to an undefined property App\\Http\\Resources\\NotificationCollection\:\:\$created_at\.$#'
@@ -1549,18 +1201,6 @@ parameters:
 			path: app/Http/Resources/StockCollection.php
 
 		-
-			message: '#^Using nullsafe property access "\?\-\>initial_price" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
-			identifier: nullsafe.neverNull
-			count: 1
-			path: app/Listeners/AdjustProduct.php
-
-		-
-			message: '#^Using nullsafe property access "\?\-\>selling_price" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
-			identifier: nullsafe.neverNull
-			count: 1
-			path: app/Listeners/AdjustProduct.php
-
-		-
 			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$is_credit\.$#'
 			identifier: property.notFound
 			count: 1
@@ -1681,12 +1321,6 @@ parameters:
 			path: app/Models/Tenants/Product.php
 
 		-
-			message: '#^Method App\\Models\\Tenants\\Product\:\:firstStockOfWindow\(\) never returns App\\Models\\Tenants\\Stock so it can be removed from the return type\.$#'
-			identifier: return.unusedType
-			count: 1
-			path: app/Models/Tenants/Product.php
-
-		-
 			message: '#^Method App\\Models\\Tenants\\Product\:\:firstStockOfWindow\(\) should return App\\Models\\Tenants\\Stock\|null but returns App\\Models\\Tenants\\Product\|null\.$#'
 			identifier: return.type
 			count: 1
@@ -1705,32 +1339,8 @@ parameters:
 			path: app/Models/Tenants/Product.php
 
 		-
-			message: '#^Parameter \#1 \$array of static method Illuminate\\Support\\Arr\:\:map\(\) expects array, string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Models/Tenants/Product.php
-
-		-
-			message: '#^Parameter \#1 \$value of function count expects array\|Countable, string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Models/Tenants/Product.php
-
-		-
 			message: '#^Property ''hero_image'' does not exist in model\.$#'
 			identifier: rules.modelAppends
-			count: 1
-			path: app/Models/Tenants/Product.php
-
-		-
-			message: '#^Using nullsafe property access "\?\-\>initial_price" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
-			identifier: nullsafe.neverNull
-			count: 1
-			path: app/Models/Tenants/Product.php
-
-		-
-			message: '#^Using nullsafe property access "\?\-\>selling_price" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
-			identifier: nullsafe.neverNull
 			count: 1
 			path: app/Models/Tenants/Product.php
 
@@ -1809,12 +1419,6 @@ parameters:
 		-
 			message: '#^Property ''grand_total_price'' does not exist in model\.$#'
 			identifier: rules.modelAppends
-			count: 1
-			path: app/Models/Tenants/Selling.php
-
-		-
-			message: '#^Unreachable statement \- code above always terminates\.$#'
-			identifier: deadCode.unreachable
 			count: 1
 			path: app/Models/Tenants/Selling.php
 
@@ -1915,18 +1519,6 @@ parameters:
 			path: app/Notifications/StockRunsOut.php
 
 		-
-			message: '#^Using nullsafe property access "\?\-\>locale" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
-			identifier: nullsafe.neverNull
-			count: 1
-			path: app/Notifications/StockRunsOut.php
-
-		-
-			message: '#^Parameter \#1 \$string of function str_pad expects string, int given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Observers/MemberObserver.php
-
-		-
 			message: '#^Access to an undefined property App\\Models\\Tenants\\Product\:\:\$expired\.$#'
 			identifier: property.notFound
 			count: 1
@@ -1935,24 +1527,6 @@ parameters:
 		-
 			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
 			identifier: property.notFound
-			count: 1
-			path: app/Observers/ProductObserver.php
-
-		-
-			message: '#^Parameter \#1 \$string of static method Illuminate\\Support\\Str\:\:of\(\) expects string, int\<0, max\> given\.$#'
-			identifier: argument.type
-			count: 2
-			path: app/Observers/ProductObserver.php
-
-		-
-			message: '#^Parameter \#2 \$pad of method Illuminate\\Support\\Stringable\:\:padLeft\(\) expects string, int given\.$#'
-			identifier: argument.type
-			count: 2
-			path: app/Observers/ProductObserver.php
-
-		-
-			message: '#^Using nullsafe property access "\?\-\>name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
-			identifier: nullsafe.neverNull
 			count: 1
 			path: app/Observers/ProductObserver.php
 
@@ -1981,40 +1555,10 @@ parameters:
 			path: app/Providers/EventServiceProvider.php
 
 		-
-			message: '#^Using nullsafe property access "\?\-\>stock" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
-			identifier: nullsafe.neverNull
-			count: 1
-			path: app/Rules/CheckProductStock.php
-
-		-
 			message: '#^Method App\\Services\\ApiResponseService\:\:setLengthAwarePaginator\(\) invoked with 1 parameter, 0 required\.$#'
 			identifier: arguments.count
 			count: 1
 			path: app/Services/ApiResponseService.php
-
-		-
-			message: '#^Using nullsafe property access on non\-nullable type object\. Use \-\> instead\.$#'
-			identifier: nullsafe.neverNull
-			count: 2
-			path: app/Services/ApiResponseService.php
-
-		-
-			message: '#^Property App\\Services\\AppUpdateService\:\:\$artisanAfterRestore \(array\|null\) is never assigned null so it can be removed from the property type\.$#'
-			identifier: property.unusedType
-			count: 1
-			path: app/Services/AppUpdateService.php
-
-		-
-			message: '#^Property App\\Services\\AppUpdateService\:\:\$artisanAfterUpdate \(array\|null\) is never assigned null so it can be removed from the property type\.$#'
-			identifier: property.unusedType
-			count: 1
-			path: app/Services/AppUpdateService.php
-
-		-
-			message: '#^Property App\\Services\\AppUpdateService\:\:\$commandsAfterUpdate \(array\|null\) is never assigned null so it can be removed from the property type\.$#'
-			identifier: property.unusedType
-			count: 1
-			path: app/Services/AppUpdateService.php
 
 		-
 			message: '#^Access to an undefined property App\\Models\\Tenants\\About\:\:\$owner_name\.$#'
@@ -2056,18 +1600,6 @@ parameters:
 			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$qty\.$#'
 			identifier: property.notFound
 			count: 3
-			path: app/Services/Tenants/CashierReportService.php
-
-		-
-			message: '#^Parameter \#1 \$callback of method Illuminate\\Database\\Eloquent\\Collection\<int,Illuminate\\Database\\Eloquent\\Model\>\:\:map\(\) contains unresolvable type\.$#'
-			identifier: argument.unresolvableType
-			count: 1
-			path: app/Services/Tenants/CashierReportService.php
-
-		-
-			message: '#^Using nullsafe property access "\?\-\>name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
-			identifier: nullsafe.neverNull
-			count: 1
 			path: app/Services/Tenants/CashierReportService.php
 
 		-
@@ -2143,30 +1675,6 @@ parameters:
 			path: app/Services/Tenants/PurchasingService.php
 
 		-
-			message: '#^Parameter \#1 \$callback of method Illuminate\\Support\\Collection\<int,Illuminate\\Database\\Eloquent\\Model\>\:\:each\(\) expects callable\(Illuminate\\Database\\Eloquent\\Model, int\)\: mixed, Closure\(App\\Models\\Tenants\\Stock\)\: void given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Services/Tenants/PurchasingService.php
-
-		-
-			message: '#^Parameter \#1 \$products of event class App\\Events\\RecalculateEvent constructor expects App\\Models\\Tenants\\Product\|Illuminate\\Support\\Collection\<int\|string, App\\Models\\Tenants\\Product\> in App\\Events\\RecalculateEvent\:\:dispatch\(\), Illuminate\\Database\\Eloquent\\Collection\<int, App\\Models\\Tenants\\Product\> given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Services/Tenants/PurchasingService.php
-
-		-
-			message: '#^Parameter \#1 \$string of function str_pad expects string, \(float\|int\) given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Services/Tenants/PurchasingService.php
-
-		-
-			message: '#^Property App\\Services\\Tenants\\PurchasingService\:\:\$stockService is never read, only written\.$#'
-			identifier: property.onlyWritten
-			count: 1
-			path: app/Services/Tenants/PurchasingService.php
-
-		-
 			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$last_billing_date\.$#'
 			identifier: property.notFound
 			count: 1
@@ -2203,22 +1711,10 @@ parameters:
 			path: app/Services/Tenants/ReceivablePaymentService.php
 
 		-
-			message: '#^Unreachable statement \- code above always terminates\.$#'
-			identifier: deadCode.unreachable
-			count: 1
-			path: app/Services/Tenants/ReceivablePaymentService.php
-
-		-
 			message: '#^Method Carbon\\Carbon\:\:addWeek\(\) invoked with 1 parameter, 0 required\.$#'
 			identifier: arguments.count
 			count: 1
 			path: app/Services/Tenants/ReceivableService.php
-
-		-
-			message: '#^Parameter \#4 \$font of method Dompdf\\Canvas\:\:page_text\(\) expects string, null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Services/Tenants/ReportPdf.php
 
 		-
 			message: '#^Access to an undefined property App\\Models\\Tenants\\About\:\:\$owner_name\.$#'
@@ -2251,12 +1747,6 @@ parameters:
 			path: app/Services/Tenants/SellingService.php
 
 		-
-			message: '#^Parameter \#1 \$string of function str_pad expects string, \(float\|int\) given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Services/Tenants/SellingService.php
-
-		-
 			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$missing_stock\.$#'
 			identifier: property.notFound
 			count: 1
@@ -2275,24 +1765,6 @@ parameters:
 			path: app/Services/Tenants/StockOpnameService.php
 
 		-
-			message: '#^Parameter \#1 \$callback of method Illuminate\\Support\\Collection\<int,Illuminate\\Database\\Eloquent\\Model\>\:\:each\(\) expects callable\(Illuminate\\Database\\Eloquent\\Model, int\)\: mixed, Closure\(App\\Models\\Tenants\\StockOpnameItem\)\: void given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Services/Tenants/StockOpnameService.php
-
-		-
-			message: '#^Parameter \#1 \$products of event class App\\Events\\RecalculateEvent constructor expects App\\Models\\Tenants\\Product\|Illuminate\\Support\\Collection\<int\|string, App\\Models\\Tenants\\Product\> in App\\Events\\RecalculateEvent\:\:dispatch\(\), Illuminate\\Database\\Eloquent\\Collection\<int, App\\Models\\Tenants\\Product\> given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Services/Tenants/StockOpnameService.php
-
-		-
-			message: '#^Parameter \#1 \$string of function str_pad expects string, \(float\|int\) given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Services/Tenants/StockOpnameService.php
-
-		-
 			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Builder\<Illuminate\\Database\\Eloquent\\Model\>\:\:newestFirst\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -2303,28 +1775,4 @@ parameters:
 			identifier: method.notFound
 			count: 1
 			path: app/Services/Tenants/StockService.php
-
-		-
-			message: '#^Method App\\Services\\Tenants\\StockService\:\:adjustStockPrepare\(\) never returns null so it can be removed from the return type\.$#'
-			identifier: return.unusedType
-			count: 1
-			path: app/Services/Tenants/StockService.php
-
-		-
-			message: '#^Using nullsafe property access "\?\-\>id" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
-			identifier: nullsafe.neverNull
-			count: 1
-			path: app/Services/Tenants/Traits/HasNumber.php
-
-		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
-			count: 3
-			path: app/Services/VoucherService.php
-
-		-
-			message: '#^Using nullsafe property access on non\-nullable type App\\Models\\Tenants\\Voucher\. Use \-\> instead\.$#'
-			identifier: nullsafe.neverNull
-			count: 1
-			path: app/Services/VoucherService.php
 

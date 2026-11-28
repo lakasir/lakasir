@@ -1,43 +1,501 @@
 @import '/vendor/filament/filament/resources/css/theme.css';
+@import '@fontsource/figtree/400.css';
+@import '@fontsource/figtree/500.css';
+@import '@fontsource/figtree/600.css';
+@import '@fontsource/figtree/700.css';
 @config '../../../../tailwind.config.js';
 
+/*
+ * "Sharp + compact" look, ported from Filament's own v5 demo theme.
+ *
+ * The two levers that matter, and why they are done differently than upstream:
+ * - Neutrals: Filament v3 resolves every neutral through `--gray-*` on `:root`,
+ *   so overriding that ramp retints body, sidebar, tables, forms and badges in
+ *   one place. v5 does the same thing with real design tokens.
+ * - Radius: v5 rewrites `--radius-sm|md|lg|xl`, but v3's Tailwind compiles
+ *   `rounded-lg` to a literal `0.5rem`, so those variables do nothing here.
+ *   Square corners therefore have to name the containers that round.
+ *
+ * Primary stays #FF6600 from the panel's `->colors()`. `resources/css/app.css`
+ * mirrors the tokens for the public pages (separate bundle).
+ */
+:root {
+  --ui-primary: #ff6600;
+  --ui-radius: 0px;
+  --ui-radius-sm: 0px;
 
-.fi-sidebar-nav {
-  @apply bg-white drop-shadow-md dark:bg-gray-900;
+  --ui-rule: rgb(236, 232, 226);
+  --ui-rule-soft: rgb(246, 244, 241);
+  --ui-blueprint-line: rgb(23 23 23 / 0.05);
+  --ui-blueprint-line-dark: rgb(255 255 255 / 0.05);
+  --ui-corner-mark: rgb(221, 215, 206);
+  --ui-corner-mark-size: 12px;
+  --ui-microlabel-size: 0.6875rem;
+  --ui-microlabel-tracking: 0.1em;
+
+  --ui-blueprint-grid:
+    linear-gradient(to right, transparent 11.5px, var(--ui-blueprint-line) 11.5px 12.5px, transparent 12.5px) center / 24px 24px repeat,
+    linear-gradient(to bottom, transparent 11.5px, var(--ui-blueprint-line) 11.5px 12.5px, transparent 12.5px) center / 24px 24px repeat;
+
+  --ui-corner-mark-mask:
+    linear-gradient(to right, #000 0 var(--ui-corner-mark-size), transparent var(--ui-corner-mark-size) calc(100% - var(--ui-corner-mark-size)), #000 calc(100% - var(--ui-corner-mark-size)) 100%),
+    linear-gradient(to bottom, #000 0 var(--ui-corner-mark-size), transparent var(--ui-corner-mark-size) calc(100% - var(--ui-corner-mark-size)), #000 calc(100% - var(--ui-corner-mark-size)) 100%);
+
+  --gray-50: 252, 251, 249;
+  --gray-100: 246, 244, 241;
+  --gray-200: 236, 232, 226;
+  --gray-300: 221, 215, 206;
+  --gray-400: 176, 168, 158;
+  --gray-500: 132, 124, 116;
+  --gray-600: 96, 89, 82;
+  --gray-700: 76, 70, 64;
+  --gray-800: 45, 41, 37;
+  --gray-900: 30, 27, 24;
+  --gray-950: 16, 14, 12;
 }
 
-.fi-sidebar-item a {
-  @apply py-1.5 px-2;
+.dark {
+  --ui-rule: rgb(51 46 40);
+  --ui-rule-soft: rgb(40 36 31);
+  --ui-blueprint-line: var(--ui-blueprint-line-dark);
+  --ui-corner-mark: rgb(255 255 255 / 0.2);
 }
 
-.fi-sidebar-item.fi-sidebar-item-active a {
-  @apply bg-lakasir-primary;
+/* ---------------------------------------------------------------- surfaces */
+
+/* Filament's own body rule is `bg-gray-50 dark:bg-gray-950`; Sharp lifts light
+ * to gray-100 so the white cards separate from the page. */
+body.fi-body {
+  background-color: rgb(var(--gray-100));
 }
 
-.fi-sidebar-item.fi-sidebar-item-active a:hover {
-  @apply bg-lakasir-primary;
+/* Sharp's signature: a 24px hairline blueprint grid behind the auth card and
+ * any empty state. `isolation` keeps the ::before behind the content. */
+.fi-simple-layout,
+.fi-ta-empty-state {
+  position: relative;
+  isolation: isolate;
 }
 
-.fi-sidebar-item.fi-sidebar-item-active svg {
-  @apply text-white;
+.fi-simple-layout::before,
+.fi-ta-empty-state::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: var(--ui-blueprint-grid);
 }
 
-.fi-sidebar-item:not(.fi-sidebar-item-active):hover a {
-  .fi-sidebar-item-label {
-    @apply text-white;
+/* ------------------------------------------------------------------ shapes */
+
+/* Sharp is a zero-radius theme, and it gets that from one variable (v5). v3 has
+ * no such variable, and the 31 custom Blade views hardcode `rounded-md`/`-lg`
+ * by hand, so the only honest equivalent is to square everything and put the
+ * circles back. `.fi-body *` (0,1,1) outranks a bare `.rounded-lg` (0,1,0). */
+.fi-body * {
+  border-radius: 0;
+}
+
+.fi-body .rounded-full,
+.fi-body .fi-avatar,
+.fi-body .fi-sidebar-item-grouped-border > * {
+  border-radius: 9999px;
+}
+
+.fi-simple-main,
+.fi-section,
+.fi-ta-ctn,
+.fi-modal-window {
+  border-radius: 0;
+}
+
+/* Corner brackets: a 1px border masked down to its four corners. */
+@supports (mask-composite: intersect) {
+  .fi-simple-main,
+  .fi-section:not(.fi-aside),
+  .fi-ta-ctn,
+  .fi-modal-window {
+    position: relative;
   }
 
-  svg {
-    @apply text-white;
+  .fi-simple-main::after,
+  .fi-section:not(.fi-aside)::after,
+  .fi-ta-ctn::after,
+  .fi-modal-window::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    border: 1px solid var(--ui-corner-mark);
+    border-radius: inherit;
+    -webkit-mask-image: var(--ui-corner-mark-mask);
+    mask-image: var(--ui-corner-mark-mask);
+    -webkit-mask-composite: source-in;
+    mask-composite: intersect;
   }
-
-  @apply bg-lakasir-primary text-white;
 }
 
-.fi-sidebar-item-active .fi-sidebar-item-label {
-  @apply text-white dark:text-white;
+/* ----------------------------------------------------------------- density */
+
+/* v3 has no density API: compact means editing the padding of what it renders.
+ * Every column type hard-codes its own `px-3 py-4`, two wrappers deep
+ * (`.fi-ta-cell` > `.fi-ta-col-wrp` > column content), so all three levels get
+ * the compact values. */
+.fi-ta-cell {
+  padding-block: 0.5rem;
+  padding-inline: 0.625rem;
+}
+
+.fi-ta-cell > .fi-ta-col-wrp,
+.fi-ta-cell > *,
+.fi-ta-col-wrp > *,
+.fi-ta-cell .fi-ta-text {
+  padding: 0;
+}
+
+.fi-ta-header-cell {
+  font-size: var(--ui-microlabel-size);
+  line-height: 1.25rem;
+  font-weight: 500;
+  letter-spacing: var(--ui-microlabel-tracking);
+  text-transform: uppercase;
+  color: rgb(var(--gray-600));
+}
+
+.fi-btn.fi-size-md,
+.fi-btn:not([class*='fi-size-']) {
+  padding-block: 0.375rem;
+}
+
+.fi-section:not(.fi-aside) > .fi-section-header {
+  padding-block: 0.75rem;
+}
+
+.fi-section:not(.fi-aside) > .fi-section-content-ctn > .fi-section-content,
+.fi-section:not(.fi-aside) > .fi-section-content-ctn > .fi-section-footer {
+  padding: 1rem;
 }
 
 .fi-tabs {
   @apply mx-0;
+}
+
+/* ------------------------------------------------------------------ hairlines */
+
+.fi-ta-ctn {
+  --tw-ring-color: var(--ui-blueprint-line);
+}
+
+.fi-ta-header-cell,
+.fi-ta-row > .fi-ta-cell {
+  border-color: var(--ui-rule-soft);
+}
+
+/* -------------------------------------------------------------------- sidebar */
+
+/* Compact: v3 hardcodes `px-6 py-8` on the nav and `gap-y-7` between groups,
+ * `py-2` on every item and group header. */
+.fi-sidebar-nav {
+  padding: 1rem 0.875rem;
+  row-gap: 1.25rem;
+}
+
+.fi-sidebar-nav-groups {
+  margin-inline: 0;
+  row-gap: 1.25rem;
+}
+
+.fi-sidebar-header {
+  height: 3.5rem;
+  padding-inline: 0.875rem;
+}
+
+/* The topbar and the sidebar header have to be the same height, or the rail's
+ * first item slides under the topbar. v3 hardcodes `h-16` (4rem) on both. */
+.fi-topbar > nav {
+  height: 3.5rem;
+}
+
+.fi-sidebar-item .fi-sidebar-item-button {
+  padding-block: 0.375rem;
+  padding-inline: 0.625rem;
+  column-gap: 0.625rem;
+}
+
+.fi-sidebar-group .fi-sidebar-group-button {
+  padding-block: 0.375rem;
+  padding-inline: 0.625rem;
+  column-gap: 0.625rem;
+}
+
+.fi-sidebar-group-items {
+  row-gap: 0.125rem;
+}
+
+.fi-sidebar-item-icon,
+.fi-sidebar-group-icon {
+  width: 1.125rem;
+  height: 1.125rem;
+}
+
+.fi-sidebar-group-label {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgb(var(--gray-500));
+}
+
+/* Active state: a 2px primary rule on the leading edge plus a primary icon, on
+ * a neutral fill — no filled pill. `inset` box-shadow rather than a
+ * pseudo-element so it survives the collapsed rail. */
+.fi-sidebar-item.fi-active .fi-sidebar-item-button {
+  background-color: rgb(var(--gray-200));
+  box-shadow: inset 2px 0 0 0 var(--ui-primary);
+}
+
+.fi-sidebar-item .fi-sidebar-item-button:hover {
+  background-color: rgb(var(--gray-100));
+}
+
+.fi-sidebar-item.fi-active .fi-sidebar-item-button:hover {
+  background-color: rgb(var(--gray-200));
+}
+
+.fi-sidebar-item.fi-active .fi-sidebar-item-button .fi-sidebar-item-label {
+  color: rgb(var(--gray-950));
+  font-weight: 600;
+}
+
+.fi-sidebar-item.fi-active .fi-sidebar-item-button .fi-sidebar-item-icon {
+  color: var(--ui-primary);
+}
+
+/* The parent group of the active item gets the same treatment, dimmed, so the
+ * open section is visible while reading the list. */
+.fi-sidebar-group.fi-active > .fi-sidebar-group-button .fi-sidebar-group-label {
+  color: rgb(var(--gray-700));
+}
+
+.fi-sidebar-group.fi-active > .fi-sidebar-group-button .fi-sidebar-group-icon {
+  color: var(--ui-primary);
+}
+
+.dark .fi-sidebar-item.fi-active .fi-sidebar-item-button {
+  background-color: rgb(255 255 255 / 0.08);
+}
+
+.dark .fi-sidebar-item .fi-sidebar-item-button:hover {
+  background-color: rgb(255 255 255 / 0.04);
+}
+
+.dark .fi-sidebar-item.fi-active .fi-sidebar-item-button:hover {
+  background-color: rgb(255 255 255 / 0.08);
+}
+
+.dark .fi-sidebar-item.fi-active .fi-sidebar-item-button .fi-sidebar-item-label {
+  color: rgb(255 255 255);
+}
+
+.dark .fi-sidebar-group.fi-active > .fi-sidebar-group-button .fi-sidebar-group-label {
+  color: rgb(255 255 255);
+}
+
+/* ------------------------------------------------ topbar tail into the rail */
+
+/* Filament puts the notification bell and the user menu in the topbar's
+ * right-hand cluster, so they ride along the top edge. They read better stacked
+ * at the bottom of the sidebar as two labelled rows, which is the layout the v5
+ * demo uses.
+ *
+ * Done by lifting the same nodes with `position: fixed` rather than moving them
+ * in the DOM: a render hook would mount a second Livewire instance of
+ * DatabaseNotifications and the user menu, which duplicates polling and the
+ * `open-modal` dispatch. The trigger views under
+ * `resources/views/vendor/filament-panels/components/` add the label spans. */
+.fi-topbar .ms-auto > div:has(.fi-topbar-database-notifications-btn),
+.fi-topbar .ms-auto > .fi-user-menu {
+  position: fixed;
+  inset-inline-start: 0;
+  z-index: 21;
+  display: block;
+  width: var(--sidebar-width);
+  padding-inline: 0.75rem;
+  background-color: rgb(var(--gray-100));
+}
+
+/* Stack the two rows: bell above the user menu. Heights are fixed so the rows
+ * cannot be sized by the inline-block wrapper `x-filament-notifications` uses. */
+.fi-topbar .ms-auto > div:has(.fi-topbar-database-notifications-btn) {
+  bottom: 3rem;
+  height: 2.75rem;
+  padding-top: 0.25rem;
+}
+
+.fi-topbar .ms-auto > .fi-user-menu {
+  bottom: 0;
+  height: 3rem;
+  padding-bottom: calc(0.25rem + env(safe-area-inset-bottom));
+}
+
+/* The strip's own hairline sits above the bell row only. */
+.fi-topbar .ms-auto > div:has(.fi-topbar-database-notifications-btn)::before {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  border-top: 1px solid var(--ui-rule);
+}
+
+/* The bell's wrapper is `inline-block` inside the strip; make it fill the row. */
+.fi-topbar .ms-auto > div:has(.fi-topbar-database-notifications-btn) > div,
+.fi-topbar .ms-auto > div:has(.fi-topbar-database-notifications-btn) > div > div {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Full-width rows, icon + label + trailing count. */
+.fi-sidebar-footer-row,
+.fi-user-menu-trigger {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  width: 100%;
+  height: 2.25rem;
+  padding: 0 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.25rem;
+  text-align: start;
+  color: rgb(var(--gray-700));
+}
+
+.fi-sidebar-footer-row:hover,
+.fi-user-menu-trigger:hover {
+  background-color: rgb(var(--gray-200) / 0.7);
+}
+
+.fi-sidebar-footer-row .fi-sidebar-footer-row-icon,
+.fi-user-menu-trigger .fi-avatar {
+  flex-shrink: 0;
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.fi-sidebar-footer-row-label,
+.fi-user-menu-trigger-text {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fi-sidebar-footer-row-count,
+.fi-user-menu-trigger .fi-user-menu-trigger-icon {
+  flex-shrink: 0;
+  width: 1rem;
+  height: 1rem;
+  margin-inline-start: auto;
+}
+
+.fi-sidebar-footer-row-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.25rem;
+  height: 1.25rem;
+  padding-inline: 0.375rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: rgb(var(--gray-700));
+  background-color: rgb(var(--gray-200));
+}
+
+/* Reserve the strip so the last nav item is never hidden behind it. */
+.fi-sidebar-nav {
+  padding-bottom: 6.5rem;
+}
+
+/* Collapsed rail: the panel is fully collapsible on desktop and the collapsed
+ * state is Alpine-only, so the strip would float over the content. The sidebar
+ * carries `-translate-x-full` when closed, which is what to key on. */
+html:has(.fi-sidebar.-translate-x-full) .fi-topbar .ms-auto > div:has(.fi-topbar-database-notifications-btn),
+html:has(.fi-sidebar.-translate-x-full) .fi-topbar .ms-auto > .fi-user-menu {
+  position: static;
+  width: auto;
+  height: auto;
+  padding: 0;
+  background: transparent;
+}
+
+html:has(.fi-sidebar.-translate-x-full) .fi-topbar .ms-auto > div:has(.fi-topbar-database-notifications-btn)::before {
+  border: 0;
+}
+
+html:has(.fi-sidebar.-translate-x-full) .fi-sidebar-footer-row,
+html:has(.fi-sidebar.-translate-x-full) .fi-user-menu-trigger {
+  width: auto;
+  padding: 0.5rem;
+  gap: 0;
+}
+
+html:has(.fi-sidebar.-translate-x-full) .fi-sidebar-footer-row-label,
+html:has(.fi-sidebar.-translate-x-full) .fi-user-menu-trigger-text,
+html:has(.fi-sidebar.-translate-x-full) .fi-user-menu-trigger-icon {
+  display: none;
+}
+
+/* Mobile: the rail is an overlay over the page, so the controls go back to the
+ * topbar where they belong. */
+@media (max-width: 1023px) {
+  .fi-topbar .ms-auto > div:has(.fi-topbar-database-notifications-btn),
+  .fi-topbar .ms-auto > .fi-user-menu {
+    position: static;
+    width: auto;
+    height: auto;
+    padding: 0;
+    background: transparent;
+  }
+
+  .fi-topbar .ms-auto > div:has(.fi-topbar-database-notifications-btn)::before {
+    border: 0;
+  }
+
+  .fi-sidebar-footer-row,
+  .fi-user-menu-trigger {
+    width: auto;
+    height: auto;
+    padding: 0.5rem;
+    gap: 0;
+  }
+
+  .fi-sidebar-footer-row-label,
+  .fi-user-menu-trigger-text,
+  .fi-user-menu-trigger-icon {
+    display: none;
+  }
+}
+
+/* Dark: the strip has to match the sidebar it sits in. */
+.dark .fi-topbar .ms-auto > div:has(.fi-topbar-database-notifications-btn),
+.dark .fi-topbar .ms-auto > .fi-user-menu {
+  background-color: rgb(var(--gray-900));
+}
+
+.dark .fi-sidebar-footer-row,
+.dark .fi-user-menu-trigger {
+  color: rgb(var(--gray-200));
+}
+
+.dark .fi-sidebar-footer-row:hover,
+.dark .fi-user-menu-trigger:hover {
+  background-color: rgb(255 255 255 / 0.06);
+}
+
+.dark .fi-sidebar-footer-row-count {
+  color: rgb(var(--gray-200));
+  background-color: rgb(255 255 255 / 0.1);
 }

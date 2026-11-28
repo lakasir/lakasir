@@ -66,6 +66,11 @@ class StockOpnameResource extends Resource
                 TextColumn::make('status')
                     ->translateLabel()
                     ->badge()
+                    ->icon(fn (string $state): string => match ($state) {
+                        StockOpnameStatus::pending => 'heroicon-s-clock',
+                        StockOpnameStatus::reviewing => 'heroicon-s-eye',
+                        StockOpnameStatus::approved => 'heroicon-s-check-circle',
+                    })
                     ->color(fn (string $state): string => match ($state) {
                         StockOpnameStatus::pending => 'gray',
                         StockOpnameStatus::reviewing => 'warning',
@@ -124,6 +129,11 @@ class StockOpnameResource extends Resource
         return $infolist->schema([
             TextEntry::make('status')
                 ->badge()
+                ->icon(fn (string $state): string => match ($state) {
+                    StockOpnameStatus::pending => 'heroicon-s-clock',
+                    StockOpnameStatus::reviewing => 'heroicon-s-eye',
+                    StockOpnameStatus::approved => 'heroicon-s-check-circle',
+                })
                 ->color(fn (string $state): string => match ($state) {
                     StockOpnameStatus::pending => 'gray',
                     StockOpnameStatus::reviewing => 'warning',

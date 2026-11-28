@@ -13,7 +13,6 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Resources\Resource;
-use Filament\Support\Colors\Color;
 use Filament\Support\Enums\IconPosition;
 use Filament\Support\RawJs;
 use Filament\Tables;
@@ -100,8 +99,8 @@ class VoucherResource extends Resource
                     ->translateLabel()
                     ->date(),
                 TextColumn::make('expired')
-                    ->icon(fn (mixed $state) => now()->gt($state) ? 'heroicon-s-exclamation-triangle' : '')
-                    ->iconColor(fn (mixed $state) => now()->gt($state) ? Color::Red : '')
+                    ->icon(fn (mixed $state): ?string => now()->gt($state) ? 'heroicon-s-exclamation-triangle' : 'heroicon-s-check-circle')
+                    ->iconColor(fn (mixed $state): ?string => now()->gt($state) ? 'danger' : 'success')
                     ->iconPosition(IconPosition::After)
                     ->translateLabel()
                     ->date(),

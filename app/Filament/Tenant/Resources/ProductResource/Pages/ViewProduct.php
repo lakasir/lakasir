@@ -8,12 +8,12 @@ use App\Filament\Tenant\Resources\ProductResource;
 use App\Filament\Tenant\Resources\ProductResource\RelationManagers\PriceUnitsRelationManager;
 use App\Filament\Tenant\Resources\ProductResource\RelationManagers\SellingDetailsRelationManager;
 use App\Filament\Tenant\Resources\ProductResource\RelationManagers\StocksRelationManager;
+use App\Filament\Tenant\Resources\ProductResource\Traits\TogglesProductState;
 use App\Filament\Tenant\Resources\ProductResource\Widgets\StatsProduct;
 use App\Filament\Tenant\Resources\Traits\RefreshThePage;
 use Filament\Actions;
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
-use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ViewRecord;
 use Filament\Support\Colors\Color;
 use Filament\Support\Enums\ActionSize;
@@ -22,6 +22,7 @@ use Laravel\Pennant\Feature;
 class ViewProduct extends ViewRecord
 {
     use RefreshThePage;
+    use TogglesProductState;
 
     protected static string $resource = ProductResource::class;
 
@@ -39,6 +40,7 @@ class ViewProduct extends ViewRecord
                     ->action(fn ($data) => $this->printLabel($data)),
                 Action::make($this->record->show ? __('Inactivate') : __('Activate'))
                     ->icon($this->record->show ? 'heroicon-s-x-circle' : 'heroicon-s-rocket-launch')
+                    ->authorize(fn (): bool => static::getResource()::canEdit($this->record))
                     ->action('toggleShow'),
                 Actions\DeleteAction::make(),
             ])
@@ -59,13 +61,7 @@ class ViewProduct extends ViewRecord
 
     public function toggleShow(): void
     {
-        $this->record->show = ! $this->record->show;
-        $this->record->save();
-
-        Notification::make()
-            ->title(__($this->record->show ? 'Status active' : 'Status inactive'))
-            ->success()
-            ->send();
+        static::toggleProductVisibility($this->record);
 
         $this->refreshPage();
     }

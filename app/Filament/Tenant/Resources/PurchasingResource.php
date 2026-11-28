@@ -105,6 +105,7 @@ class PurchasingResource extends Resource
                     ->translateLabel(),
                 TextColumn::make('payment_status')
                     ->badge()
+                    ->icon(fn (bool $state): string => $state ? 'heroicon-s-check-circle' : 'heroicon-s-clock')
                     ->color(fn (bool $state): string => match ($state) {
                         false => 'gray',
                         true => 'success',
@@ -113,6 +114,11 @@ class PurchasingResource extends Resource
                     ->translateLabel(),
                 TextColumn::make('status')
                     ->badge()
+                    ->icon(fn (string $state): string => match ($state) {
+                        PurchasingStatus::pending => 'heroicon-s-clock',
+                        PurchasingStatus::reviewing => 'heroicon-s-eye',
+                        PurchasingStatus::approved => 'heroicon-s-check-circle',
+                    })
                     ->color(fn (string $state): string => match ($state) {
                         PurchasingStatus::pending => 'gray',
                         PurchasingStatus::reviewing => 'warning',
