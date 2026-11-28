@@ -87,6 +87,12 @@ class CashDrawerResource extends Resource
                     ->state(fn (CashDrawer $record): ?float => app(CashDrawerService::class)->summary($record)['difference'])
                     ->money(fn (): string => Setting::get('currency', 'IDR'))
                     ->placeholder('-')
+                    ->icon(fn (?float $state): ?string => match (true) {
+                        $state === null => null,
+                        $state < 0 => 'heroicon-s-arrow-trending-down',
+                        $state > 0 => 'heroicon-s-arrow-trending-up',
+                        default => 'heroicon-s-check-circle',
+                    })
                     ->color(fn (?float $state): string => match (true) {
                         $state === null => 'gray',
                         $state < 0 => 'danger',
