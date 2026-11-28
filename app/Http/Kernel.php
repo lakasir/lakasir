@@ -33,7 +33,6 @@ use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
 use Spatie\Permission\Middlewares\PermissionMiddleware;
 use Spatie\Permission\Middlewares\RoleMiddleware;
 use Spatie\Permission\Middlewares\RoleOrPermissionMiddleware;
-use Stancl\Tenancy\Features\UniversalRoutes;
 
 class Kernel extends HttpKernel
 {
@@ -77,9 +76,6 @@ class Kernel extends HttpKernel
             'throttle:api',
             SubstituteBindings::class,
             LocalizationMiddleware::class,
-        ],
-        'universal' => [
-            // UniversalRoutes::class,
         ],
     ];
 

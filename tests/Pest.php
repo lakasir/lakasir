@@ -1,67 +1,50 @@
 <?php
 
-/*
-|--------------------------------------------------------------------------
-| Test Case
-|--------------------------------------------------------------------------
-|
-| The closure you provide to your test functions is always bound to a specific PHPUnit test
-| case class. By default, that class is "PHPUnit\Framework\TestCase". Of course, you may
-| need to change it using the "uses()" function to bind a different classes or traits.
-|
-*/
-
-use App\Services\RegisterTenant;
-use App\Tenant;
-use Illuminate\Support\Facades\DB;
+use App\Models\Company;
+use App\Models\Tenants\User;
+use Illuminate\Support\Facades\Artisan;
 use Tests\TestCase;
 
 uses(
     TestCase::class,
-    // Illuminate\Foundation\Testing\RefreshDatabase::class,
 )->in('Feature', 'Unit');
-
-/*
-|--------------------------------------------------------------------------
-| Expectations
-|--------------------------------------------------------------------------
-|
-| When you're writing tests, you often need to check that values meet certain conditions. The
-| "expect()" function gives you access to a set of "expectations" methods that you can use
-| to assert different things. Of course, you may extend the Expectation API at any time.
-|
-*/
 
 expect()->extend('toBeOne', function () {
     return $this->toBe(1);
 });
 
-/*
-|--------------------------------------------------------------------------
-| Functions
-|--------------------------------------------------------------------------
-|
-| While Pest is very powerful out-of-the-box, you may have some testing code specific to your
-| project that you don't want to repeat in every file. Here you can also expose helpers as
-| global functions to help you to reduce the number of lines of code in your test files.
-|
-*/
-
-function mockTenant(): Tenant
+/**
+ * Create a company and enter it, the way a request would. Call before touching
+ * any company-owned model: the global scope filters on the current company.
+ */
+function mockCompany(string $name = 'Toko Testing'): Company
 {
-    DB::statement('DROP DATABASE IF EXISTS lakasir_toko_testing');
-    Tenant::where('id', 'toko_testing')->delete();
-    $data = [
-        'name' => 'toko_testing',
-        'domain' => 'toko_testing.'.config('tenancy.central_domains')[0],
-        'email' => 'toko_testing@mail.com',
-        'password' => 'password',
-        'full_name' => 'Toko Testing',
-        'shop_name' => 'Toko Testing',
-        'business_type' => 'Retail',
-    ];
-    $sRegisterTenant = new RegisterTenant;
-    $tenant = $sRegisterTenant->create($data);
+    $company = Company::create(['name' => $name]);
 
-    return $tenant;
+    $company->makeCurrent();
+
+    return $company;
+}
+
+/**
+ * A company plus an owner attached to it, seeded with the permission set.
+ */
+function mockTenant(string $name = 'toko_testing'): Company
+{
+    $company = mockCompany($name);
+
+    $user = User::firstOrCreate(
+        ['email' => $name.'@mail.com'],
+        ['password' => bcrypt('password')],
+    );
+
+    $user->companies()->syncWithoutDetaching([$company->id => ['is_owner' => true]]);
+
+    foreach (['PermissionSeeder', 'PaymentMethodSeeder'] as $seeder) {
+        Artisan::call('db:seed', ['--class' => $seeder, '--force' => true]);
+    }
+
+    $user->assignRole('admin');
+
+    return $company;
 }

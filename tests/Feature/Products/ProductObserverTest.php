@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Company;
 use App\Models\Tenants\Category;
 use App\Models\Tenants\Product;
 use App\Observers\ProductObserver;
@@ -116,6 +117,7 @@ test('deleting a product removes its images from the disk', function () {
 
     Storage::disk(config('filesystems.upload_disk'))->put('product/roti.png', 'x');
     DB::table('product_images')->insert([
+        'company_id' => Company::currentId(),
         'product_id' => $product->id,
         'name' => 'product/roti.png',
         'url' => 'http://toko.test/product/roti.png',

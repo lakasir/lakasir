@@ -5,6 +5,7 @@ use App\Events\RecalculateEvent;
 use App\Features\Discount;
 use App\Models\Tenants\CashDrawer;
 use App\Models\Tenants\Member;
+use App\Models\Tenants\PaymentMethod;
 use App\Models\Tenants\Product;
 use App\Models\Tenants\Setting;
 use App\Models\Tenants\Stock;
@@ -160,7 +161,7 @@ test('cashier can create the selling transaction if the cash drawer enabled and 
         ->assertJsonPath('message', 'success create selling');
 
     $this->assertDatabaseHas('sellings', [
-        'cash_drawer_id' => 1,
+        'cash_drawer_id' => CashDrawer::first()->id,
     ]);
 });
 
@@ -183,7 +184,7 @@ test('cashier can create the sellings transaction with normal selling method wit
         ->assertJsonPath('message', 'success create selling');
 
     $this->assertDatabaseHas('sellings', [
-        'payment_method_id' => 1,
+        'payment_method_id' => PaymentMethod::first()->id,
     ]);
 });
 
@@ -212,7 +213,7 @@ test('cashier can create the sellings transaction with normal selling method wit
         ->assertJsonPath('message', 'success create selling');
 
     $this->assertDatabaseHas('sellings', [
-        'payment_method_id' => 1,
+        'payment_method_id' => PaymentMethod::first()->id,
     ]);
 });
 
@@ -241,7 +242,7 @@ test('cashier can create the sellings transaction with normal selling method wit
         ->assertJsonPath('message', 'success create selling');
 
     $this->assertDatabaseHas('sellings', [
-        'payment_method_id' => 1,
+        'payment_method_id' => PaymentMethod::first()->id,
     ]);
 });
 
@@ -525,7 +526,6 @@ test('cashier cannot mass assign server computed selling attributes', function (
         'user_id' => $user->getKey(),
         'is_paid' => true,
         'total_cost' => 10000,
-        'code' => 'SELL0001',
         'cash_drawer_id' => null,
     ]);
 });

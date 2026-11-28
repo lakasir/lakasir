@@ -2,6 +2,7 @@
 
 namespace App\Models\Tenants;
 
+use App\Traits\BelongsToCompany;
 use App\Traits\UseTimezoneAwareQuery;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -15,7 +16,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class Selling extends Model
 {
-    use HasFactory, UseTimezoneAwareQuery;
+    use BelongsToCompany, HasFactory, UseTimezoneAwareQuery;
 
     protected $guarded = ['id', 'friend_price', 'code', 'user_id', 'is_paid', 'cash_drawer_id'];
 

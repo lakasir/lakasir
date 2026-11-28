@@ -26,7 +26,7 @@ class SellingFactory extends Factory
     public function definition()
     {
         return [
-            'member_id' => Member::all()->random(),
+            'member_id' => Member::factory(),
             'date' => now(),
             'payed_money' => $this->randPayedMoney(rand(0, 2)),
         ];

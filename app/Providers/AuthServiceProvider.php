@@ -31,8 +31,6 @@ use App\Policies\Tenants\SupplierPolicy;
 use App\Policies\Tenants\TablePolicy;
 use App\Policies\Tenants\UserPolicy;
 use App\Policies\Tenants\VoucherPolicy;
-use App\Tenant;
-use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
@@ -75,7 +73,7 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
         Gate::after(function (User|Admin $user, $ability) {
-            if ($user->is_owner) {
+            if ($user instanceof User && $user->isOwner()) {
                 return true;
             }
             if (in_array($ability, $this->defaultAbility)) {
@@ -98,12 +96,5 @@ class AuthServiceProvider extends ServiceProvider
             return true;
         });
 
-        ResetPassword::createUrlUsing(function ($notifiable, $token) {
-            /** @var Tenant $tenant */
-            $tenant = Tenant::whereHas('user', fn ($q) => $q->where('email', $notifiable->getEmailForPasswordReset()))->first();
-            $domaaain = $tenant->domains()->first()->domain;
-
-            return "https://$domaaain/reset-password/$token?email=".urlencode($notifiable->getEmailForPasswordReset());
-        });
     }
 }

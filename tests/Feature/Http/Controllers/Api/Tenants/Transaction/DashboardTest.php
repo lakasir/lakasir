@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Company;
 use App\Models\Tenants\Selling;
 use App\Models\Tenants\User;
 use App\Services\Tenants\DashboardService;
@@ -47,6 +48,7 @@ test('unpaid sales are left out of every metric', function () {
     paidSale(['total_price' => 20000, 'tax_price' => 0, 'discount_price' => 0, 'total_discount_per_item' => 0, 'total_cost' => 10000]);
     // `is_paid` is guarded on the model, so mark the row unpaid in the column.
     DB::table('sellings')->insert([
+        'company_id' => Company::currentId(),
         'date' => now()->toDateString(),
         'code' => 'SELL9999',
         'payed_money' => 0,

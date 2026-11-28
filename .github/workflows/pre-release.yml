@@ -56,7 +56,7 @@ jobs:
         env:
           CACHE_DRIVER: array
         run: |
-          php artisan migrate --force --path=database/migrations/tenant
+          php artisan migrate --force
           php artisan filament:assets
           php artisan livewire:publish --assets
 

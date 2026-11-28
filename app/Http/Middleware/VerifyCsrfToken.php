@@ -14,5 +14,8 @@ class VerifyCsrfToken extends Middleware
     protected $except = [
         // 'localhost:3000/*',
         'livewire/*',
+        // Server-to-server from lakasir-cloud, authenticated by a shared
+        // secret, never by a browser session cookie.
+        'api/cloud/provision',
     ];
 }

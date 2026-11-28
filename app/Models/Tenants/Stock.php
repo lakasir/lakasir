@@ -3,6 +3,7 @@
 namespace App\Models\Tenants;
 
 use App\Features\ProductExpired;
+use App\Traits\BelongsToCompany;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Get;
@@ -21,7 +22,7 @@ use Laravel\Pennant\Feature;
  */
 class Stock extends Model
 {
-    use HasFactory;
+    use BelongsToCompany, HasFactory;
 
     protected $guarded = ['id'];
 

@@ -2,6 +2,7 @@
 
 namespace App\Models\Tenants;
 
+use App\Traits\BelongsToCompany;
 use Filament\Facades\Filament;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -25,12 +26,11 @@ use Illuminate\Support\Str;
  */
 class Product extends Model
 {
-    use HasFactory, SoftDeletes;
+    use BelongsToCompany, HasFactory, SoftDeletes;
 
     /**
      * The image a product without a photo shows. Inline, so it needs no route
-     * and no third-party host: under a tenant the asset root points at
-     * /tenancy/assets, which this app does not serve.
+     * and no third-party host.
      */
     public const PLACEHOLDER_IMAGE = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Crect width='200' height='200' fill='%23F3F4F6'/%3E%3Cpath d='M40 140l35-45 25 32 20-25 40 38z' fill='%23D1D5DB'/%3E%3Ccircle cx='70' cy='70' r='14' fill='%23D1D5DB'/%3E%3C/svg%3E";
 
@@ -284,9 +284,7 @@ class Product extends Model
                     return Storage::disk($uploadDisk)->url($path);
                 }
 
-                // Inline pixels: under a tenant the asset root points at
-                // /tenancy/assets, which this app does not serve, and a
-                // third-party host fails on a shop with no internet.
+                // Inline pixels, so a shop with no internet still shows one.
                 return self::PLACEHOLDER_IMAGE;
             }
         );

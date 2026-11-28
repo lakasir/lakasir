@@ -30,7 +30,10 @@ beforeEach(function () {
     // Three sales of three lines each: 10.000 price, 5.000 cost.
     foreach ([true, true, false] as $paid) {
         $selling = Selling::create([
-            'date' => now()->toDateString(),
+            // The report reads its window in the shop's timezone, so the row
+            // has to be dated there too: between 00:00 and 07:00 Jakarta the
+            // UTC date is still yesterday and the sale falls outside the window.
+            'date' => now('Asia/Jakarta')->toDateString(),
             'payed_money' => 30000,
             'money_changes' => 0,
             'total_price' => 30000,

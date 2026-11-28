@@ -40,7 +40,7 @@ test('the web cashier checks out with server totals and tax after discount', fun
     Livewire::test(Cashier::class)
         ->assertSet('total_price', 19800.0)
         ->set('cartDetail.payed_money', 19800)
-        ->set('cartDetail.payment_method_id', 1)
+        ->set('cartDetail.payment_method_id', PaymentMethod::first()->id)
         ->set('cartDetail.discount_price', '0')
         ->call('proceedThePayment')
         ->assertHasNoErrors();
@@ -139,7 +139,7 @@ test('the web cashier applies the same checks as the API: an invalid voucher is 
 
     Livewire::test(Cashier::class)
         ->set('cartDetail.payed_money', 20000)
-        ->set('cartDetail.payment_method_id', 1)
+        ->set('cartDetail.payment_method_id', PaymentMethod::first()->id)
         ->set('cartDetail.discount_price', '0')
         ->set('cartDetail.voucher', 'NOPE')
         ->call('proceedThePayment')
@@ -154,7 +154,7 @@ test('the web cashier applies the same checks as the API: discounts need the dis
 
     Livewire::test(Cashier::class)
         ->set('cartDetail.payed_money', 20000)
-        ->set('cartDetail.payment_method_id', 1)
+        ->set('cartDetail.payment_method_id', PaymentMethod::first()->id)
         ->set('cartDetail.discount_price', '1000')
         ->call('proceedThePayment')
         ->assertHasErrors(['discount_price']);
@@ -168,7 +168,7 @@ test('the web cashier cannot sell while the cash drawer is enabled but not opene
 
     Livewire::test(Cashier::class)
         ->set('cartDetail.payed_money', 20000)
-        ->set('cartDetail.payment_method_id', 1)
+        ->set('cartDetail.payment_method_id', PaymentMethod::first()->id)
         ->set('cartDetail.discount_price', '0')
         ->call('proceedThePayment')
         ->assertHasErrors(['cash_drawer']);

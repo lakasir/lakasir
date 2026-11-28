@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Middleware\SetApiCompany;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Models\Tenants\User;
 use Illuminate\Http\Request;
@@ -18,6 +19,9 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
         /** @var User $user */
         $user = $request->user();
+
+        SetApiCompany::enter($request, $user);
+
         $token = $request->user()->createToken($user->getRememberTokenName());
 
         return response()->json([
@@ -25,7 +29,8 @@ class AuthenticatedSessionController extends Controller
             'message' => 'Yay! success to login',
             'data' => array_merge($user->toArray(), [
                 'token' => $token->plainTextToken,
-                'permissions' => $user->roles()->first()->permissions()->where('guard_name', 'sanctum')->pluck('name')->toArray(),
+                'permissions' => $user->roles()->first()?->permissions()
+                    ->where('guard_name', 'sanctum')->pluck('name')->toArray() ?? [],
                 'features' => Feature::all(),
             ]),
         ]);

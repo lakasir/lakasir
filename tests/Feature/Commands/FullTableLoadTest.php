@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Company;
 use App\Models\Tenants\Product;
 use App\Models\Tenants\Selling;
 use App\Models\Tenants\SellingDetail;
@@ -17,6 +18,7 @@ uses(RefreshDatabaseWithTenant::class);
 function insertSelling(?int $userId): int
 {
     return DB::table('sellings')->insertGetId([
+        'company_id' => Company::currentId(),
         'date' => now()->toDateString(),
         'code' => 'SELL'.str_pad((string) (DB::table('sellings')->count() + 1), 4, '0', STR_PAD_LEFT),
         'payed_money' => 10000,

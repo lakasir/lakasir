@@ -46,3 +46,6 @@ version.txt
 /*.sql
 docker-compose.yml.bak
 modules-*-backup-*.json
+
+# Per-machine test env (was tracked with another machine's DB values)
+.env.testing

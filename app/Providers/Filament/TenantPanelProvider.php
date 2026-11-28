@@ -25,6 +25,7 @@ use App\Filament\Tenant\Pages\Report;
 use App\Filament\Tenant\Pages\SellingReport;
 use App\Filament\Tenant\Pages\TenantLogin;
 use App\Filament\Tenant\Resources\CategoryResource;
+use App\Filament\Tenant\Resources\CompanyResource;
 use App\Filament\Tenant\Resources\MemberResource;
 use App\Filament\Tenant\Resources\PaymentMethodResource;
 use App\Filament\Tenant\Resources\PermissionResource;
@@ -38,9 +39,10 @@ use App\Filament\Tenant\Resources\SupplierResource;
 use App\Filament\Tenant\Resources\TableResource;
 use App\Filament\Tenant\Resources\UserResource;
 use App\Filament\Tenant\Resources\VoucherResource;
+use App\Http\Middleware\IdentifyCompany;
 use App\Http\Middleware\LocalizationMiddleware;
+use App\Http\Middleware\SetCurrentCompany;
 use App\Models\Tenants\About;
-use App\Tenant;
 use Filament\Forms\Components\DatePicker;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -64,11 +66,9 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Illuminate\View\View;
-use Stancl\Tenancy\Bootstrappers\DatabaseTenancyBootstrapper;
 
 class TenantPanelProvider extends PanelProvider
 {
@@ -87,12 +87,7 @@ class TenantPanelProvider extends PanelProvider
     {
         $panel = $this->configurePanel($panel);
 
-        $url = request()->getHost();
-        if ($this->isCentralDomainConfigured()) {
-            $this->initializeTenantPanel($panel, $url);
-        } else {
-            $this->initializeDefaultPanel($panel);
-        }
+        $this->configureBrand($panel);
 
         FilamentView::registerRenderHook(
             PanelsRenderHook::HEAD_END,
@@ -102,6 +97,11 @@ class TenantPanelProvider extends PanelProvider
         FilamentView::registerRenderHook(
             PanelsRenderHook::GLOBAL_SEARCH_AFTER,
             fn () => view('version-indicator')
+        );
+
+        FilamentView::registerRenderHook(
+            PanelsRenderHook::TOPBAR_START,
+            fn (): View => view('filament.tenant.shop-switcher')
         );
 
         if (app()->environment('demo')) {
@@ -142,6 +142,7 @@ class TenantPanelProvider extends PanelProvider
             ->discoverPages(in: app_path('Filament/Tenant/Pages'), for: 'App\\Filament\\Tenant\\Pages')
             ->discoverWidgets(in: app_path('Filament/Tenant/Widgets'), for: 'App\\Filament\\Tenant\\Widgets')
             ->middleware($this->getMiddleware())
+            ->persistentMiddleware([IdentifyCompany::class, SetCurrentCompany::class])
             ->authMiddleware([Authenticate::class])
             ->pages([
                 CartItem::class,
@@ -203,6 +204,7 @@ class TenantPanelProvider extends PanelProvider
             NavigationGroup::make(__('Setting'))->collapsible(false)->items([
                 $this->generateNavigationItem(GeneralSetting::class),
                 $this->generateNavigationItem(Printer::class),
+                $this->generateNavigationItem(CompanyResource::class),
             ]),
         ];
     }
@@ -220,62 +222,19 @@ class TenantPanelProvider extends PanelProvider
             DisableBladeIconComponents::class,
             DispatchServingFilamentEvent::class,
             LocalizationMiddleware::class,
+            IdentifyCompany::class,
+            SetCurrentCompany::class,
         ];
     }
 
-    private function isCentralDomainConfigured(): bool
+    /**
+     * The sidebar names the product, not the shop: the shop is the switcher's
+     * job, and an About lookup here runs before the company is resolved, so it
+     * would show the previous shop's name for one request after a switch.
+     */
+    private function configureBrand(Panel $panel): void
     {
-        return config('tenancy.central_domains')[0] !== null;
-    }
-
-    private function initializeTenantPanel(Panel $panel, string $url): void
-    {
-        try {
-            $tenant = Tenant::whereHas('domains', fn ($query) => $query->where('domain', $url))->first();
-
-            if ($tenant) {
-                tenancy()->initialize($tenant->id);
-                $subdomain = $tenant->domains()->where('domain', $url)->first()?->domain;
-
-                $panel->domain($subdomain);
-                config(['cache.prefix' => $subdomain.'_']);
-
-                app(DatabaseTenancyBootstrapper::class)->bootstrap($tenant);
-
-                tenant()->run(fn () => $this->configureTenantBrand($panel));
-            } else {
-                if (in_array($url, config('tenancy.central_domains'))) {
-                    return;
-                }
-                abort(404);
-            }
-        } catch (\Throwable) {
-            // DB not available during build/package-discovery
-        }
-    }
-
-    private function initializeDefaultPanel(Panel $panel): void
-    {
-        try {
-            if (Schema::hasTable('abouts') && $about = About::first()) {
-                $panel->brandName($about->shop_name ?? 'Your Brand')
-                    ->brandLogo($about->photo ?? null);
-            }
-        } catch (\Throwable) {
-            // DB not available during build/package-discovery
-        }
-    }
-
-    private function configureTenantBrand(Panel $panel): void
-    {
-        try {
-            $about = About::first();
-
-            $panel->brandName($about->shop_name ?? 'Your Brand')
-                ->brandLogo($about->photo ?? null);
-        } catch (\Throwable) {
-            // DB not available during build/package-discovery
-        }
+        $panel->brandName(config('app.name'));
     }
 
     private function isNonFnbBusiness(): bool

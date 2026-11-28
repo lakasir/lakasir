@@ -5,7 +5,6 @@ return [
     'artisan_after_update' => [
         'migrate' => [
             '--force' => true,
-            '--path' => 'database/migrations/tenant',
         ],
         'db:seed' => [
             '--class' => 'PermissionSeeder',
@@ -16,7 +15,6 @@ return [
     'artisan_after_restore' => [
         'migrate:rollback' => [
             '--force' => true,
-            '--path' => 'database/migrations/tenant',
         ],
         'db:seed' => [
             '--class' => 'PermissionSeeder',

@@ -1,12 +1,6 @@
 parameters:
 	ignoreErrors:
 		-
-			message: '#^PHPDoc tag @mixin contains unknown class App\\IdeHelperAbout\.$#'
-			identifier: class.notFound
-			count: 1
-			path: app/About.php
-
-		-
 			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$product\.$#'
 			identifier: property.notFound
 			count: 1
@@ -17,12 +11,6 @@ parameters:
 			identifier: property.notFound
 			count: 1
 			path: app/Console/Commands/FillSellingMissingValue.php
-
-		-
-			message: '#^Access to an undefined property App\\Models\\Tenants\\About\:\:\$photo\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Console/Commands/MigrateUrlsCommand.php
 
 		-
 			message: '#^Using nullsafe property access "\?\-\>disk" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
@@ -527,6 +515,24 @@ parameters:
 			identifier: new.static
 			count: 1
 			path: app/Filament/Tenant/Resources/CategoryResource.php
+
+		-
+			message: '#^Call to an undefined static method App\\Filament\\Tenant\\Resources\\CompanyResource\:\:getNavigationItemActiveRoutePattern\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Filament/Tenant/Resources/CompanyResource.php
+
+		-
+			message: '#^Unsafe call to private method App\\Filament\\Tenant\\Resources\\CompanyResource\:\:getPageNavigationLabel\(\) through static\:\:\.$#'
+			identifier: staticClassAccess.privateMethod
+			count: 1
+			path: app/Filament/Tenant/Resources/CompanyResource.php
+
+		-
+			message: '#^Unsafe usage of new static\(\)\.$#'
+			identifier: new.static
+			count: 1
+			path: app/Filament/Tenant/Resources/CompanyResource.php
 
 		-
 			message: '#^Access to an undefined static property static\(App\\Filament\\Tenant\\Resources\\MemberResource\)\:\:\$title\.$#'
@@ -1273,18 +1279,6 @@ parameters:
 			path: app/Http/Controllers/Auth/AuthenticatedSessionController.php
 
 		-
-			message: '#^If condition is always true\.$#'
-			identifier: if.alwaysTrue
-			count: 1
-			path: app/Http/Controllers/Auth/RegisteredUserController.php
-
-		-
-			message: '#^Unreachable statement \- code above always terminates\.$#'
-			identifier: deadCode.unreachable
-			count: 1
-			path: app/Http/Controllers/Auth/RegisteredUserController.php
-
-		-
 			message: '#^Parameter \#1 \$user of class Illuminate\\Auth\\Events\\Verified constructor expects Illuminate\\Contracts\\Auth\\MustVerifyEmail, App\\Models\\Tenants\\User\|null given\.$#'
 			identifier: argument.type
 			count: 1
@@ -1319,12 +1313,6 @@ parameters:
 			identifier: return.missing
 			count: 1
 			path: app/Http/Middleware/Authenticate.php
-
-		-
-			message: '#^PHPDoc type \(callable\(\)\: mixed\)\|null of property App\\Http\\Middleware\\InitializeTenancyByDomain\:\:\$onFail is not covariant with PHPDoc type callable\(\)\: mixed of overridden property Stancl\\Tenancy\\Middleware\\IdentificationMiddleware\:\:\$onFail\.$#'
-			identifier: property.phpDocType
-			count: 1
-			path: app/Http/Middleware/InitializeTenancyByDomain.php
 
 		-
 			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Relations\\HasMany\:\:primary\(\)\.$#'
@@ -1571,30 +1559,6 @@ parameters:
 			identifier: property.notFound
 			count: 1
 			path: app/Listeners/CreateReceivableIfCredit.php
-
-		-
-			message: '#^Access to an undefined property App\\Livewire\\Forms\\Auth\\RegisterTenantForm\:\:\$form\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Livewire/Forms/Auth/RegisterTenantForm.php
-
-		-
-			message: '#^PHPDoc tag @mixin contains unknown class App\\Models\\IdeHelperAdmin\.$#'
-			identifier: class.notFound
-			count: 1
-			path: app/Models/Admin.php
-
-		-
-			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\Admin\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
-			identifier: property.phpDocType
-			count: 1
-			path: app/Models/Admin.php
-
-		-
-			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\Admin\:\:\$hidden is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$hidden\.$#'
-			identifier: property.phpDocType
-			count: 1
-			path: app/Models/Admin.php
 
 		-
 			message: '#^PHPDoc tag @mixin contains unknown class App\\Models\\Tenants\\IdeHelperAbout\.$#'
@@ -2005,14 +1969,20 @@ parameters:
 			path: app/Observers/ProductObserver.php
 
 		-
+			message: '#^Access to property \$roles on an unknown class App\\Models\\Admin\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Providers/AuthServiceProvider.php
+
+		-
 			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:permissions\(\)\.$#'
 			identifier: method.notFound
 			count: 1
 			path: app/Providers/AuthServiceProvider.php
 
 		-
-			message: '#^Relation ''user'' is not found in App\\Tenant model\.$#'
-			identifier: larastan.relationExistence
+			message: '#^Parameter \$user of anonymous function has invalid type App\\Models\\Admin\.$#'
+			identifier: class.notFound
 			count: 1
 			path: app/Providers/AuthServiceProvider.php
 
@@ -2023,28 +1993,10 @@ parameters:
 			path: app/Providers/EventServiceProvider.php
 
 		-
-			message: '#^Access to an undefined property App\\Models\\Tenants\\About\:\:\$business_type\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Providers/Filament/TenantPanelProvider.php
-
-		-
-			message: '#^Relation ''domains'' is not found in App\\Tenant model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Providers/Filament/TenantPanelProvider.php
-
-		-
 			message: '#^Using nullsafe property access "\?\-\>stock" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
 			identifier: nullsafe.neverNull
 			count: 1
 			path: app/Rules/CheckProductStock.php
-
-		-
-			message: '#^PHPDoc tag @param has invalid value \(\\Closure\(string, \?string \= null\)\: \\Illuminate\\Translation\\PotentiallyTranslatedString  \$fail\)\: Unexpected token "\(", expected variable at offset 66 on line 4$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: app/Rules/Domain.php
 
 		-
 			message: '#^Method App\\Services\\ApiResponseService\:\:setLengthAwarePaginator\(\) invoked with 1 parameter, 0 required\.$#'
@@ -2077,31 +2029,7 @@ parameters:
 			path: app/Services/AppUpdateService.php
 
 		-
-			message: '#^Access to an undefined property App\\Models\\Tenants\\About\:\:\$photo\.$#'
-			identifier: property.notFound
-			count: 8
-			path: app/Services/Tenants/AboutService.php
-
-		-
-			message: '#^Access to an undefined property App\\Models\\Tenants\\About\:\:\$business_type\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Services/Tenants/CashierReportService.php
-
-		-
 			message: '#^Access to an undefined property App\\Models\\Tenants\\About\:\:\$owner_name\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Services/Tenants/CashierReportService.php
-
-		-
-			message: '#^Access to an undefined property App\\Models\\Tenants\\About\:\:\$shop_location\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Services/Tenants/CashierReportService.php
-
-		-
-			message: '#^Access to an undefined property App\\Models\\Tenants\\About\:\:\$shop_name\.$#'
 			identifier: property.notFound
 			count: 1
 			path: app/Services/Tenants/CashierReportService.php
@@ -2155,25 +2083,7 @@ parameters:
 			path: app/Services/Tenants/CashierReportService.php
 
 		-
-			message: '#^Access to an undefined property App\\Models\\Tenants\\About\:\:\$business_type\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Services/Tenants/ProductReportService.php
-
-		-
 			message: '#^Access to an undefined property App\\Models\\Tenants\\About\:\:\$owner_name\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Services/Tenants/ProductReportService.php
-
-		-
-			message: '#^Access to an undefined property App\\Models\\Tenants\\About\:\:\$shop_location\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Services/Tenants/ProductReportService.php
-
-		-
-			message: '#^Access to an undefined property App\\Models\\Tenants\\About\:\:\$shop_name\.$#'
 			identifier: property.notFound
 			count: 1
 			path: app/Services/Tenants/ProductReportService.php
@@ -2221,25 +2131,7 @@ parameters:
 			path: app/Services/Tenants/ProductService.php
 
 		-
-			message: '#^Access to an undefined property App\\Models\\Tenants\\About\:\:\$business_type\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Services/Tenants/PurchasingReportService.php
-
-		-
 			message: '#^Access to an undefined property App\\Models\\Tenants\\About\:\:\$owner_name\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Services/Tenants/PurchasingReportService.php
-
-		-
-			message: '#^Access to an undefined property App\\Models\\Tenants\\About\:\:\$shop_location\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Services/Tenants/PurchasingReportService.php
-
-		-
-			message: '#^Access to an undefined property App\\Models\\Tenants\\About\:\:\$shop_name\.$#'
 			identifier: property.notFound
 			count: 1
 			path: app/Services/Tenants/PurchasingReportService.php
@@ -2341,25 +2233,7 @@ parameters:
 			path: app/Services/Tenants/ReportPdf.php
 
 		-
-			message: '#^Access to an undefined property App\\Models\\Tenants\\About\:\:\$business_type\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Services/Tenants/SellingReportService.php
-
-		-
 			message: '#^Access to an undefined property App\\Models\\Tenants\\About\:\:\$owner_name\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Services/Tenants/SellingReportService.php
-
-		-
-			message: '#^Access to an undefined property App\\Models\\Tenants\\About\:\:\$shop_location\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Services/Tenants/SellingReportService.php
-
-		-
-			message: '#^Access to an undefined property App\\Models\\Tenants\\About\:\:\$shop_name\.$#'
 			identifier: property.notFound
 			count: 1
 			path: app/Services/Tenants/SellingReportService.php
@@ -2466,14 +2340,3 @@ parameters:
 			count: 1
 			path: app/Services/VoucherService.php
 
-		-
-			message: '#^PHPDoc tag @mixin contains unknown class App\\IdeHelperTenant\.$#'
-			identifier: class.notFound
-			count: 1
-			path: app/Tenant.php
-
-		-
-			message: '#^PHPDoc tag @mixin contains unknown class App\\IdeHelperTenantUser\.$#'
-			identifier: class.notFound
-			count: 1
-			path: app/TenantUser.php

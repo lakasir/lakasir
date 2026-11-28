@@ -2,9 +2,9 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Company;
 use App\Models\Tenants\Product;
 use App\Models\Tenants\Setting;
-use App\Models\Tenants\User;
 use App\Notifications\StockRunsOut;
 use Illuminate\Console\Command;
 
@@ -14,10 +14,16 @@ class FCM extends Command
 
     public function handle(): void
     {
-        $this->sentTheStockAlert();
+        Company::where('enabled', true)->each(function (Company $company) {
+            $company->makeCurrent();
+
+            $this->sentTheStockAlert($company);
+        });
+
+        Company::forgetCurrent();
     }
 
-    private function sentTheStockAlert(): void
+    private function sentTheStockAlert(Company $company): void
     {
         $minStockSetting = Setting::get('minimum_stock_nofication', 0);
         $runsOutStock = Product::select('id', 'name', 'stock')
@@ -31,8 +37,7 @@ class FCM extends Command
             ->values();
 
         if ($runsOutStock->count() > 0) {
-            $users = User::get();
-            foreach ($users as $user) {
+            foreach ($company->users as $user) {
                 $user->notify(new StockRunsOut($runsOutStock->toArray()));
             }
         }

@@ -2,6 +2,7 @@
 
 namespace App\Models\Tenants;
 
+use App\Traits\BelongsToCompany;
 use Filament\Actions\Imports\Models\Import as ModelsImport;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -11,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class Import extends ModelsImport
 {
-    use HasFactory;
+    use BelongsToCompany, HasFactory;
 
     public function user(): BelongsTo
     {

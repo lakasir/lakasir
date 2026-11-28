@@ -53,7 +53,7 @@
    * edit the env based on your local configuration
    * `composer install`
    * `php artisan key:generate`
-   * `php artisan migrate --path=database/migrations/tenant --seed`
+   * `php artisan migrate --seed`
    * `php artisan filament:assets`
    * `php artisan livewire:publish --assets`
 5. Javascript:

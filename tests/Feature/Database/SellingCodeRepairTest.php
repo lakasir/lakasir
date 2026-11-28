@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Company;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Tests\RefreshDatabaseWithTenant;
@@ -11,8 +12,10 @@ uses(RefreshDatabaseWithTenant::class);
  * hold SELL0005, and id 7 already holds SELL0006.
  */
 test('the code repair survives a candidate another row already holds', function () {
+    // The shop-wide unique was replaced by (company_id, code) once companies
+    // landed, so drop whichever index exists before rebuilding the old state.
     Schema::table('sellings', function ($table) {
-        $table->dropUnique(['code']);
+        $table->dropUnique(['company_id', 'code']);
         $table->string('code')->nullable()->change();
     });
 
@@ -30,6 +33,7 @@ test('the code repair survives a candidate another row already holds', function 
 
     foreach ($rows as $row) {
         DB::table('sellings')->insert($row + [
+            'company_id' => Company::currentId(),
             'date' => now()->toDateString(),
             'payed_money' => 1000,
             'money_changes' => 0,
@@ -42,7 +46,7 @@ test('the code repair survives a candidate another row already holds', function 
     }
 
     // Run the repair's up() exactly as a tenant migration would.
-    $migration = require database_path('migrations/tenant/2026_11_21_000004_add_unique_code_to_sellings_table.php');
+    $migration = require database_path('migrations/2026_11_21_000004_add_unique_code_to_sellings_table.php');
     $migration->up();
 
     $codes = DB::table('sellings')->orderBy('id')->pluck('code')->all();
@@ -52,7 +56,7 @@ test('the code repair survives a candidate another row already holds', function 
         ->and($codes[4])->toBe('SELL0005')                   // first of the group keeps its code
         ->and($codes[6])->toBe('SELL0006');                  // the row that already held it is untouched
 
-    // The unique index is really there.
+    // The unique index is really there, and scoped to the shop.
     $indexes = collect(DB::select('SHOW INDEX FROM `sellings`'))->pluck('Key_name')->unique();
     expect($indexes)->toContain('sellings_code_unique');
 });

@@ -3,11 +3,13 @@
 namespace App\Filament\Tenant\Pages;
 
 use App\Filament\Tenant\Resources\Traits\RefreshThePage;
+use App\Models\License;
 use App\Models\Tenants\About;
 use App\Models\Tenants\Profile;
 use App\Models\Tenants\Setting;
 use App\Models\Tenants\UploadedFile;
 use App\Models\Tenants\User;
+use App\Services\License\License as LicenseGate;
 use App\Services\Tenants\AboutService;
 use App\Traits\HasTranslatableResource;
 use Filament\Actions\Contracts\HasActions;
@@ -17,6 +19,7 @@ use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Tabs;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
@@ -57,6 +60,11 @@ class GeneralSetting extends Page implements HasActions, HasForms
 
     public $profile = [];
 
+    public $license = [
+        'token' => '',
+        'plan' => 'free',
+    ];
+
     public function mount(): void
     {
         $about = About::first()?->toArray() ?? $this->about;
@@ -79,6 +87,11 @@ class GeneralSetting extends Page implements HasActions, HasForms
             'voucher' => Feature::active('voucher'),
             'pos-v2' => Feature::active('pos-v2'),
             'product-import' => Feature::active('product-import'),
+        ];
+
+        $this->license = [
+            'token' => License::token(),
+            'plan' => app(LicenseGate::class)->plan(),
         ];
 
         $user = auth()->user();
@@ -156,12 +169,49 @@ class GeneralSetting extends Page implements HasActions, HasForms
                                     ->action('saveFeature'),
                             ]),
                         ]),
+                    Tabs\Tab::make('License')
+                        ->statePath('license')
+                        ->visible(can('access general setting'))
+                        ->translateLabel()
+                        ->schema([
+                            Textarea::make('token')
+                                ->label(__('License key'))
+                                ->rows(4)
+                                ->helperText(__('Plan').': '.$this->license['plan']),
+                            Actions::make([
+                                Action::make('Save')
+                                    ->translateLabel()
+                                    ->requiresConfirmation()
+                                    ->action('saveLicense'),
+                            ]),
+                        ]),
                     Tabs\Tab::make('Profile')
                         ->statePath('profile')
                         ->translateLabel()
                         ->schema(Profile::form()),
                 ]),
         ]);
+    }
+
+    public function saveLicense(LicenseGate $license): void
+    {
+        $token = trim((string) $this->license['token']);
+
+        $license->store($token);
+
+        if ($token !== '' && ! $license->licensed()) {
+            Notification::make()
+                ->title(__('Invalid license key'))
+                ->danger()
+                ->send();
+        } else {
+            Notification::make()
+                ->title(__('Success'))
+                ->success()
+                ->send();
+        }
+
+        $this->mount();
     }
 
     public function saveApp(): void
