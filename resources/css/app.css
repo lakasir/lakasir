@@ -1,6 +1,78 @@
+@import '@fontsource/figtree/400.css';
+@import '@fontsource/figtree/500.css';
+@import '@fontsource/figtree/600.css';
+@import '@fontsource/figtree/700.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Same tokens as resources/css/filament/tenant/theme.css, so public pages and
+ * the panel read as one product. */
+:root {
+  --ui-primary: #ff6600;
+  --ui-radius: 0px;
+  --ui-radius-sm: 0px;
+  --ui-surface: #ffffff;
+  --ui-surface-2: #f6f4f1;
+  --ui-border: #e7e2da;
+  --ui-rule: #ece8e2;
+  --ui-text: #1c1917;
+  --ui-text-muted: #78716c;
+  --ui-shadow: 0 1px 2px rgb(28 25 23 / 0.06), 0 1px 3px rgb(28 25 23 / 0.04);
+  --ui-blueprint-line: rgb(23 23 23 / 0.05);
+  --ui-corner-mark: #ddd7ce;
+  --ui-corner-mark-size: 12px;
+
+  --ui-blueprint-grid:
+    linear-gradient(to right, transparent 11.5px, var(--ui-blueprint-line) 11.5px 12.5px, transparent 12.5px) center / 24px 24px repeat,
+    linear-gradient(to bottom, transparent 11.5px, var(--ui-blueprint-line) 11.5px 12.5px, transparent 12.5px) center / 24px 24px repeat;
+
+  --ui-corner-mark-mask:
+    linear-gradient(to right, #000 0 var(--ui-corner-mark-size), transparent var(--ui-corner-mark-size) calc(100% - var(--ui-corner-mark-size)), #000 calc(100% - var(--ui-corner-mark-size)) 100%),
+    linear-gradient(to bottom, #000 0 var(--ui-corner-mark-size), transparent var(--ui-corner-mark-size) calc(100% - var(--ui-corner-mark-size)), #000 calc(100% - var(--ui-corner-mark-size)) 100%);
+}
+
+body {
+  font-family: Figtree, ui-sans-serif, system-ui, sans-serif;
+  background-color: var(--ui-surface-2);
+  color: var(--ui-text);
+}
+
+/* Sharp's blueprint grid, for the auth layout. */
+.ui-blueprint {
+  position: relative;
+  isolation: isolate;
+}
+
+.ui-blueprint::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: var(--ui-blueprint-grid);
+}
+
+/* Corner brackets for the card, masked to its four corners. */
+@supports (mask-composite: intersect) {
+  .ui-card {
+    position: relative;
+  }
+
+  .ui-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    border: 1px solid var(--ui-corner-mark);
+    border-radius: inherit;
+    -webkit-mask-image: var(--ui-corner-mark-mask);
+    mask-image: var(--ui-corner-mark-mask);
+    -webkit-mask-composite: source-in;
+    mask-composite: intersect;
+  }
+}
 
 .hero-title {
   animation: slipDown 1s ease;

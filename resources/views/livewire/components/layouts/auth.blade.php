@@ -1,82 +1,42 @@
 <!DOCTYPE html>
-<html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
 
   <title>{{ config('app.name', 'Laravel') }}</title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" crossorigin="anonymous">
-  <style type="text/css">
-    @import url(https://fonts.googleapis.com/css?family=Raleway:300,400,600);
 
-    body {
-      margin: 0;
-      font-size: .9rem;
-      font-weight: 400;
-      line-height: 1.6;
-      color: #212529;
-      text-align: left;
-      background-color: #f5f8fa;
-    }
-
-    .navbar-laravel {
-      box-shadow: 0 2px 4px rgba(0, 0, 0, .04);
-    }
-
-    .navbar-brand,
-    .nav-link,
-    .my-form,
-    .login-form {
-      font-family: Raleway, sans-serif;
-    }
-
-    .my-form {
-      padding-top: 1.5rem;
-      padding-bottom: 1.5rem;
-    }
-
-    .my-form .row {
-      margin-left: 0;
-      margin-right: 0;
-    }
-
-    .login-form {
-      padding-top: 1.5rem;
-      padding-bottom: 1.5rem;
-    }
-
-    .login-form .row {
-      margin-left: 0;
-      margin-right: 0;
-    }
-  </style>
+  @vite(['resources/css/app.css', 'resources/js/app.js'])
   @livewireStyles
 
 </head>
 
-<body>
+<body class="min-h-screen bg-[color:var(--ui-surface-2)] font-sans text-[color:var(--ui-text)] antialiased">
+  <header class="border-b border-[color:var(--ui-rule)] bg-[color:var(--ui-surface)]">
+    <div class="mx-auto flex h-14 max-w-5xl items-center px-6">
+      <a href="/" class="flex items-center gap-x-2 text-lg font-semibold">
+        <img src="{{ asset('assets/logo/image.png') }}" alt="" class="h-8 w-8 object-contain">
+        <span>{{ config('app.name', 'Lakasir') }}</span>
+      </a>
+    </div>
+  </header>
 
-  <nav class="navbar navbar-expand-lg navbar-light navbar-laravel">
-    <div class="container">
-      <a class="navbar-brand" href="#">Lakasir</a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
+  <main class="ui-blueprint flex min-h-[calc(100vh-3.5rem)] items-center justify-center px-6 py-12">
+    <div class="w-full max-w-md">
+      @if (session()->has('message'))
+        <div class="mb-4 border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
+          {{ session('message') }}
+        </div>
+      @endif
 
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <div class="ui-card bg-[color:var(--ui-surface)] p-6 shadow-[var(--ui-shadow)] ring-1 ring-[color:var(--ui-rule)]">
+        {{ $slot }}
       </div>
     </div>
-  </nav>
+  </main>
 
-  <div>
-    @if (session()->has('message'))
-    <div class="alert alert-success">
-      {{ session('message') }}
-    </div>
-    @endif
-  </div>
-  {{ $slot }}
   @livewireScripts
 </body>
 
