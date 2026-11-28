@@ -487,6 +487,30 @@ parameters:
 			path: app/Filament/Tenant/Pages/Traits/TableProduct.php
 
 		-
+			message: '#^Access to an undefined static property static\(App\\Filament\\Tenant\\Resources\\CashDrawerResource\)\:\:\$title\.$#'
+			identifier: staticProperty.notFound
+			count: 2
+			path: app/Filament/Tenant/Resources/CashDrawerResource.php
+
+		-
+			message: '#^Call to an undefined static method App\\Filament\\Tenant\\Resources\\CashDrawerResource\:\:getNavigationItemActiveRoutePattern\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Filament/Tenant/Resources/CashDrawerResource.php
+
+		-
+			message: '#^Unsafe call to private method App\\Filament\\Tenant\\Resources\\CashDrawerResource\:\:getPageNavigationLabel\(\) through static\:\:\.$#'
+			identifier: staticClassAccess.privateMethod
+			count: 1
+			path: app/Filament/Tenant/Resources/CashDrawerResource.php
+
+		-
+			message: '#^Unsafe usage of new static\(\)\.$#'
+			identifier: new.static
+			count: 1
+			path: app/Filament/Tenant/Resources/CashDrawerResource.php
+
+		-
 			message: '#^Access to an undefined static property static\(App\\Filament\\Tenant\\Resources\\CategoryResource\)\:\:\$title\.$#'
 			identifier: staticProperty.notFound
 			count: 2
@@ -953,12 +977,6 @@ parameters:
 			identifier: new.static
 			count: 1
 			path: app/Filament/Tenant/Resources/RoleResource.php
-
-		-
-			message: '#^Access to an undefined property App\\Models\\Tenants\\User\:\:\$cashier_name\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Filament/Tenant/Resources/SellingResource.php
 
 		-
 			message: '#^Access to an undefined static property static\(App\\Filament\\Tenant\\Resources\\SellingResource\)\:\:\$title\.$#'
@@ -1585,12 +1603,6 @@ parameters:
 			path: app/Models/Tenants/Barcode.php
 
 		-
-			message: '#^PHPDoc tag @mixin contains unknown class App\\Models\\Tenants\\IdeHelperCart\.$#'
-			identifier: class.notFound
-			count: 1
-			path: app/Models/Tenants/Cart.php
-
-		-
 			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$hero_images\.$#'
 			identifier: property.notFound
 			count: 1
@@ -1621,22 +1633,10 @@ parameters:
 			path: app/Models/Tenants/Category.php
 
 		-
-			message: '#^PHPDoc tag @mixin contains unknown class App\\Models\\Tenants\\IdeHelperImport\.$#'
-			identifier: class.notFound
-			count: 1
-			path: app/Models/Tenants/Import.php
-
-		-
 			message: '#^PHPDoc tag @mixin contains unknown class App\\Models\\Tenants\\IdeHelperMember\.$#'
 			identifier: class.notFound
 			count: 1
 			path: app/Models/Tenants/Member.php
-
-		-
-			message: '#^PHPDoc tag @mixin contains unknown class App\\Models\\Tenants\\IdeHelperNotification\.$#'
-			identifier: class.notFound
-			count: 1
-			path: app/Models/Tenants/Notification.php
 
 		-
 			message: '#^PHPDoc tag @mixin contains unknown class App\\Models\\Tenants\\IdeHelperPaymentMethod\.$#'

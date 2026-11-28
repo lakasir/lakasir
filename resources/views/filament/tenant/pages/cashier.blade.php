@@ -33,6 +33,26 @@
                 </x-slot>
 
                 <x-filament::dropdown.list>
+                  @if ($cashDrawerEnabled && ! $cashDrawerOpen && can('open cash drawer'))
+                    <x-filament::dropdown.list.item
+                      x-on:mousedown="$dispatch('open-modal', {id: 'open-cash-drawer'})">
+                      <div class="flex gap-x-2">
+                        <x-heroicon-o-banknotes class="h-5 w-5 text-gray-900 dark:text-gray-300" />
+                        <p>{{ __('Open cash drawer') }}</p>
+                      </div>
+                    </x-filament::dropdown.list.item>
+                  @endif
+
+                  @if ($cashDrawerEnabled && $cashDrawerOpen && (can('open cash drawer') || can('close cash drawer')))
+                    <x-filament::dropdown.list.item
+                      x-on:mousedown="$dispatch('open-modal', {id: 'cash-drawer-summary'})">
+                      <div class="flex gap-x-2">
+                        <x-heroicon-o-clipboard-document-list class="h-5 w-5 text-gray-900 dark:text-gray-300" />
+                        <p>{{ __('Cash drawer summary') }}</p>
+                      </div>
+                    </x-filament::dropdown.list.item>
+                  @endif
+
                   <x-filament::dropdown.list.item x-on:mousedown="document.location.reload()">
                     <div class="flex gap-x-2">
                       <x-heroicon-m-arrow-path class="h-5 w-5 cursor-pointer text-gray-900 dark:text-gray-300" />
@@ -75,7 +95,7 @@
               id="{{ $item->id }}" key="{{ rand() }}">
               <div class="grid items-center space-x-3">
                 <div class="flex justify-between">
-                  <p class="font-semibold"> {{ $item->product->name }}</p>
+                  <p class="font-semibold"> {{ $item->product?->name }}</p>
                   <p class="font-semibold text-lakasir-primary">{{ $item->price_format_money }}</p>
                 </div>
               </div>
@@ -84,7 +104,7 @@
                   @feature(Discount::class)
                     <div class="mb-1 flex justify-end">
                       <x-filament::input.wrapper class="w-1/2">
-                        <x-filament::input type="text" id="{{ $item->product->name }}-{{ $item->id }}"
+                        <x-filament::input type="text" id="{{ $item->product?->name }}-{{ $item->id }}"
                           value="{{ $item->discount_price == 0 ? '' : $item->discount_price }}"
                           wire:keyup.debounce.500ms="addDiscountPricePerItem({{ $item }}, parseFloat($event.target.value.replace(/,/g, '')))"
                           placeholder="{{ __('Discount') }}" class="w-1/2 text-right" inputMode="numeric"
@@ -104,7 +124,7 @@
                 </button>
                 <x-filament::input.wrapper class="w-20" x-data="cart">
                   <x-filament::input type="text"
-                    id="{{ $item->product->name }}-{{ $item->id }}-qty-{{ rand() }}"
+                    id="{{ $item->product?->name }}-{{ $item->id }}-qty-{{ rand() }}"
                     data-value="{{ $item->qty }}" value="{{ $item->qty }}"
                     x-on:keyup.debounce.500ms="(e) => add('{{ $item->product_id }}', e.target.value)"
                     placeholder="{{ __('Discount') }}" class="w-1/2 text-right" inputMode="numeric" />
@@ -140,12 +160,91 @@
             @include('filament.tenant.pages.cashier.total')
           </div>
         </div>
-        <button class="w-full rounded-lg bg-lakasir-primary px-2 py-4 text-white"
-          x-on:mousedown="$dispatch('open-modal', {id: 'proceed-the-payment'})">{{ __('Proceed to payment') }}</button>
+        @if ($cashDrawerEnabled && ! $cashDrawerOpen)
+          <button class="w-full rounded-lg bg-gray-300 px-2 py-4 text-gray-600"
+            x-on:mousedown="$dispatch('open-modal', {id: 'open-cash-drawer'})">{{ __('Open the cash drawer first') }}</button>
+        @else
+          <button class="w-full rounded-lg bg-lakasir-primary px-2 py-4 text-white"
+            x-on:mousedown="$dispatch('open-modal', {id: 'proceed-the-payment'})">{{ __('Proceed to payment') }}</button>
+        @endif
       </div>
     </div>
   </div>
   {{-- modal --}}
+  <x-filament::modal id="open-cash-drawer" width="md">
+    <x-slot name="heading">
+      {{ __('Open cash drawer') }}
+    </x-slot>
+    <form wire:submit.prevent="openCashDrawer">
+      <x-filament::input.wrapper :valid="! $errors->has('cashDrawerCash')" class="mb-2">
+        <x-slot name="prefix">
+          {{ __('Opening cash') }}
+        </x-slot>
+        <x-filament::input type="number" wire:model="cashDrawerCash" inputMode="numeric" />
+      </x-filament::input.wrapper>
+      @error('cashDrawerCash')
+        <span class="text-danger-500">{{ $message }}</span>
+      @enderror
+    </form>
+    <x-slot name="footer">
+      <x-filament::button wire:click="openCashDrawer">{{ __('Save') }}</x-filament::button>
+      <x-filament::button color="gray" x-on:click="$dispatch('close-modal', {id: 'open-cash-drawer'})">
+        {{ __('Close') }}
+      </x-filament::button>
+    </x-slot>
+  </x-filament::modal>
+
+  <x-filament::modal id="cash-drawer-summary" width="md">
+    <x-slot name="heading">
+      {{ __('Cash drawer summary') }}
+    </x-slot>
+    @if ($cashDrawerSummary)
+      <div class="space-y-2">
+        <div class="flex justify-between">
+          <p>{{ __('Opening cash') }}</p>
+          <p class="font-bold">{{ price_format($cashDrawerSummary['opening_cash']) }}</p>
+        </div>
+        <div class="flex justify-between">
+          <p>{{ __('Cash sales') }}</p>
+          <p class="font-bold">{{ price_format($cashDrawerSummary['cash_sales']) }}</p>
+        </div>
+        <div class="flex justify-between">
+          <p>{{ __('Expected cash') }}</p>
+          <p class="font-bold text-lakasir-primary">{{ price_format($cashDrawerSummary['expected_cash']) }}</p>
+        </div>
+        @if ($cashDrawerSummary['counted_cash'] !== null)
+          <div class="flex justify-between">
+            <p>{{ __('Counted cash') }}</p>
+            <p class="font-bold">{{ price_format($cashDrawerSummary['counted_cash']) }}</p>
+          </div>
+          <div class="flex justify-between">
+            <p>{{ __('Difference') }}</p>
+            <p class="font-bold">{{ price_format($cashDrawerSummary['difference']) }}</p>
+          </div>
+        @endif
+        @if ($cashDrawerOpen)
+          <x-filament::input.wrapper :valid="! $errors->has('countedCash')" class="mt-4">
+            <x-slot name="prefix">
+              {{ __('Counted cash') }}
+            </x-slot>
+            <x-filament::input type="number" wire:model="countedCash" inputMode="numeric" />
+          </x-filament::input.wrapper>
+          @error('countedCash')
+            <span class="text-danger-500">{{ $message }}</span>
+          @enderror
+        @endif
+      </div>
+    @endif
+    <x-slot name="footer">
+      @if ($cashDrawerOpen && can('close cash drawer'))
+        <x-filament::button wire:click="closeCashDrawer">{{ __('Close the cash drawer') }}</x-filament::button>
+      @endif
+      <x-filament::button color="gray" x-on:click="$dispatch('close-modal', {id: 'cash-drawer-summary'})">
+        {{ __('Close') }}
+      </x-filament::button>
+    </x-slot>
+  </x-filament::modal>
+
   <x-filament::modal id="edit-detail" width="2xl">
     <form wire:submit.prevent="storeCart">
       <x-slot name="heading">

@@ -141,6 +141,14 @@ class GeneralSetting extends Page implements HasActions, HasForms
                                 ->numeric()
                                 ->suffix('%')
                                 ->translateLabel(),
+                            Select::make('cash_drawer_enabled')
+                                ->label(__('Cash drawer'))
+                                ->visible(can('enable cash drawer'))
+                                ->options([
+                                    false => __('Inactive'),
+                                    true => __('Active'),
+                                ])
+                                ->translateLabel(),
                             Actions::make([
                                 Action::make('Save')
                                     ->translateLabel()
@@ -217,6 +225,10 @@ class GeneralSetting extends Page implements HasActions, HasForms
     public function saveApp(): void
     {
         foreach ($this->setting as $key => $value) {
+            if ($key === 'cash_drawer_enabled' && ! can('enable cash drawer')) {
+                continue;
+            }
+
             Setting::set($key, $value);
         }
 

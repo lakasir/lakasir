@@ -24,6 +24,7 @@ use App\Filament\Tenant\Pages\PurchasingReport;
 use App\Filament\Tenant\Pages\Report;
 use App\Filament\Tenant\Pages\SellingReport;
 use App\Filament\Tenant\Pages\TenantLogin;
+use App\Filament\Tenant\Resources\CashDrawerResource;
 use App\Filament\Tenant\Resources\CategoryResource;
 use App\Filament\Tenant\Resources\CompanyResource;
 use App\Filament\Tenant\Resources\MemberResource;
@@ -169,6 +170,7 @@ class TenantPanelProvider extends PanelProvider
             $this->generateNavigationItem(MemberResource::class, Member::class),
             $this->generateNavigationItem(PaymentMethodResource::class, PaymentMethod::class),
             $this->generateNavigationItem(ReceivableResource::class, Receivable::class),
+            $this->generateNavigationItem(CashDrawerResource::class),
         ];
     }
 

@@ -14,7 +14,7 @@ class SellingObserver extends AbstractObserver
             $selling->date = now()->format('Y-m-d H:i:s');
         }
         if (Setting::get('cash_drawer_enabled', false)) {
-            $selling->cash_drawer_id = CashDrawer::lastOpened()->first()->id;
+            $selling->cash_drawer_id = CashDrawer::lastOpened()->first()?->id;
         }
         $selling->user()->associate(auth()->user());
     }
