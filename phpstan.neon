@@ -7,6 +7,6 @@ includes:
 parameters:
     paths:
         - app
-    level: 5
+    level: 3
     excludePaths:
         - app/Filament/**/Widgets/*.php
