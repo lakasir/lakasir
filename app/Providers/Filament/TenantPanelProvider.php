@@ -223,9 +223,9 @@ class TenantPanelProvider extends PanelProvider
             SubstituteBindings::class,
             DisableBladeIconComponents::class,
             DispatchServingFilamentEvent::class,
-            LocalizationMiddleware::class,
             IdentifyCompany::class,
             SetCurrentCompany::class,
+            LocalizationMiddleware::class,
         ];
     }
 
