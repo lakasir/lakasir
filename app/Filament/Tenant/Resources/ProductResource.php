@@ -155,11 +155,13 @@ class ProductResource extends Resource
                     Tables\Actions\Action::make('toggle-show')
                         ->label(fn (Product $record) => $record->show ? __('Inactivate') : __('Activate'))
                         ->icon(fn (Product $record) => $record->show ? 'heroicon-s-x-circle' : 'heroicon-s-rocket-launch')
+                        ->authorize(fn (Product $record): bool => static::canEdit($record))
                         ->action(fn (Product $record) => static::toggleProductVisibility($record)),
                     Tables\Actions\Action::make('toggle-non-stock')
                         ->label(fn (Product $record) => $record->is_non_stock ? __('Mark as stock') : __('Mark as non stock'))
                         ->icon(fn (Product $record) => $record->is_non_stock ? 'heroicon-s-archive-box' : 'heroicon-s-archive-box-x-mark')
                         ->visible(Feature::active(ProductStock::class))
+                        ->authorize(fn (Product $record): bool => static::canEdit($record))
                         ->action(fn (Product $record) => static::toggleProductNonStock($record)),
                     Tables\Actions\DeleteAction::make(),
                     Tables\Actions\RestoreAction::make(),

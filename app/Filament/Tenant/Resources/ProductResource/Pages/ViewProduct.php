@@ -40,6 +40,7 @@ class ViewProduct extends ViewRecord
                     ->action(fn ($data) => $this->printLabel($data)),
                 Action::make($this->record->show ? __('Inactivate') : __('Activate'))
                     ->icon($this->record->show ? 'heroicon-s-x-circle' : 'heroicon-s-rocket-launch')
+                    ->authorize(fn (): bool => static::getResource()::canEdit($this->record))
                     ->action('toggleShow'),
                 Actions\DeleteAction::make(),
             ])
