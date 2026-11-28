@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Company;
 use App\Models\Tenants\Supplier;
 use App\Models\Tenants\User;
 use Tests\RefreshDatabaseWithTenant;
@@ -9,14 +10,20 @@ use function Pest\Laravel\actingAs;
 uses(RefreshDatabaseWithTenant::class);
 
 /**
- * A cashier: signed in, no permissions beyond creating a sale.
+ * A cashier: a member of the shop, signed in, with no permissions. Membership
+ * matters: the API refuses a user who belongs to no shop before any permission
+ * check runs.
  */
 function cashier(): User
 {
-    return User::create([
+    $cashier = User::create([
         'email' => 'cashier@mail.com',
         'password' => bcrypt('password'),
     ]);
+
+    $cashier->companies()->attach(Company::currentId());
+
+    return $cashier;
 }
 
 test('suppliers need a supplier permission', function () {

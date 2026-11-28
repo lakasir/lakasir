@@ -13,10 +13,16 @@ class CompanyScope implements Scope
     {
         $companyId = Company::currentId();
 
-        if ($companyId === null) {
+        if ($companyId !== null) {
+            $builder->where($model->getTable().'.company_id', $companyId);
+
             return;
         }
 
-        $builder->where($model->getTable().'.company_id', $companyId);
+        if (app()->runningInConsole() && ! app()->runningUnitTests()) {
+            return;
+        }
+
+        $builder->whereRaw('1 = 0');
     }
 }

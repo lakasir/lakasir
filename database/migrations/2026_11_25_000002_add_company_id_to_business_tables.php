@@ -7,9 +7,10 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
-     * Business tables owned by one company. The four tables whose unique keys
-     * already mention company_id (members, settings, barcodes, features) add it
-     * in their own create migration.
+     * Business tables owned by one company. The three tables whose unique keys
+     * already mention company_id (members, settings, barcodes) add it in their
+     * own create migration; Pennant's features are per company through their
+     * scope column.
      */
     private array $tables = [
         'abouts',

@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\Company;
 use App\Models\Tenants\User;
 use App\Services\Tenants\CheckoutProducts;
 use Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider;
@@ -65,7 +66,7 @@ class AppServiceProvider extends ServiceProvider
 
             return $columns ? $query : $this;
         });
-        Feature::resolveScopeUsing(fn ($driver) => null);
+        Feature::resolveScopeUsing(fn ($driver) => Company::getCurrent());
         Feature::discover();
     }
 }

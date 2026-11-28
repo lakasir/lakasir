@@ -6,6 +6,7 @@ use App\Models\Tenants\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\PermissionRegistrar;
@@ -52,7 +53,10 @@ class Company extends Model
         return (int) ceil(now()->diffInDays($this->trial_ends_at, true));
     }
 
-    public function users()
+    /**
+     * @return BelongsToMany<User, $this>
+     */
+    public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'user_companies');
     }
@@ -64,7 +68,7 @@ class Company extends Model
 
     public function scopeHasUser(Builder $builder): Builder
     {
-        return $builder->whereHas('users', fn(Builder $builder) => $builder->where('user_id', Auth::id()));
+        return $builder->whereHas('users', fn (Builder $builder) => $builder->where('user_id', Auth::id()));
     }
 
     public function makeCurrent(): static
@@ -88,6 +92,8 @@ class Company extends Model
     public static function forgetCurrent(): void
     {
         app()->forgetInstance(static::class);
+
+        app(PermissionRegistrar::class)->setPermissionsTeamId(null);
     }
 
     public static function currentId(): ?int

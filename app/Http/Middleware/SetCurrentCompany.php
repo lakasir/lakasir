@@ -22,8 +22,10 @@ class SetCurrentCompany
             return $next($request);
         }
 
-        $company = $this->fromSession($request, $user)
-            ?? $user->companies()->where('enabled', true)->orderBy('id')->first();
+        $sessionId = $request->session()->get('company_id');
+
+        $company = ($sessionId ? $user->resolveCompany((int) $sessionId) : null)
+            ?? $user->resolveCompany();
 
         if (! $company) {
             return $next($request);
@@ -34,16 +36,5 @@ class SetCurrentCompany
         $company->makeCurrent();
 
         return $next($request);
-    }
-
-    private function fromSession(Request $request, $user): ?Company
-    {
-        $id = $request->session()->get('company_id');
-
-        if (! $id) {
-            return null;
-        }
-
-        return $user->companies()->whereKey($id)->where('enabled', true)->first();
     }
 }

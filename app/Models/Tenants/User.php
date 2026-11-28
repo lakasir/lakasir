@@ -64,10 +64,26 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName
         return true;
     }
 
+    /**
+     * @return BelongsToMany<Company, $this>
+     */
     public function companies(): BelongsToMany
     {
         return $this->belongsToMany(Company::class, 'user_companies')
             ->withPivot('is_owner');
+    }
+
+    /**
+     * The enabled shop this user acts in: the one asked for when they belong
+     * to it, their first one when nothing was asked, null when neither.
+     */
+    public function resolveCompany(?int $companyId = null): ?Company
+    {
+        $companies = $this->companies()->where('enabled', true);
+
+        return $companyId !== null
+            ? $companies->whereKey($companyId)->first()
+            : $companies->orderBy('companies.id')->first();
     }
 
     /**

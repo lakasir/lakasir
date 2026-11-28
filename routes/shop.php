@@ -27,6 +27,8 @@ use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\PrinterController;
 use App\Http\Controllers\ReportController;
 use App\Http\Middleware\IdentifyCompany;
+use App\Http\Middleware\SetApiCompany;
+use App\Http\Middleware\SetCurrentCompany;
 use App\Livewire\ResetPassword;
 use App\Models\Company;
 use Illuminate\Support\Facades\Route;
@@ -34,6 +36,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware([
     'web',
     IdentifyCompany::class,
+    SetCurrentCompany::class,
 ])
     ->group(function () {
         Route::get('/', function () {
@@ -96,15 +99,15 @@ Route::middleware([
                 ->name('logout');
 
             Route::get('/me', [ProfileController::class, 'index'])
-                ->middleware('auth:sanctum')
+                ->middleware(['auth:sanctum', SetApiCompany::class])
                 ->name('me');
 
             Route::put('/me', [ProfileController::class, 'update'])
-                ->middleware('auth:sanctum')
+                ->middleware(['auth:sanctum', SetApiCompany::class])
                 ->name('profile.update');
         });
 
-        Route::group(['middleware' => 'auth:sanctum'], function () {
+        Route::group(['middleware' => ['auth:sanctum', SetApiCompany::class]], function () {
             Route::post('/register-fcm-token', RegisterFCMTokenController::class);
 
             Route::group(['prefix' => 'temp'], function () {

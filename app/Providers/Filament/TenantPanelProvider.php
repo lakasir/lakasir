@@ -142,6 +142,7 @@ class TenantPanelProvider extends PanelProvider
             ->discoverPages(in: app_path('Filament/Tenant/Pages'), for: 'App\\Filament\\Tenant\\Pages')
             ->discoverWidgets(in: app_path('Filament/Tenant/Widgets'), for: 'App\\Filament\\Tenant\\Widgets')
             ->middleware($this->getMiddleware())
+            ->persistentMiddleware([IdentifyCompany::class, SetCurrentCompany::class])
             ->authMiddleware([Authenticate::class])
             ->pages([
                 CartItem::class,

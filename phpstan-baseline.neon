@@ -1561,30 +1561,6 @@ parameters:
 			path: app/Listeners/CreateReceivableIfCredit.php
 
 		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model&object\{pivot\: Illuminate\\Database\\Eloquent\\Relations\\Pivot\}\:\:\$enabled\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Livewire/ShopSwitcher.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model&object\{pivot\: Illuminate\\Database\\Eloquent\\Relations\\Pivot\}\:\:\$id\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Livewire/ShopSwitcher.php
-
-		-
-			message: '#^Class App\\Models\\User not found\.$#'
-			identifier: class.notFound
-			count: 1
-			path: app/Models/Company.php
-
-		-
-			message: '#^Parameter \#1 \$related of method Illuminate\\Database\\Eloquent\\Model\:\:belongsToMany\(\) expects class\-string\<Illuminate\\Database\\Eloquent\\Model\>, string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Models/Company.php
-
-		-
 			message: '#^PHPDoc tag @mixin contains unknown class App\\Models\\Tenants\\IdeHelperAbout\.$#'
 			identifier: class.notFound
 			count: 1

@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Constants\Role;
 use App\Models\Company;
 use App\Models\Tenants\User;
 use App\Services\ProvisionCompany;
@@ -26,6 +27,8 @@ class CreateUser extends Command
 
         $company->makeCurrent();
         $company->users()->syncWithoutDetaching([$user->id => ['is_owner' => true]]);
+
+        $user->assignRole(Role::admin);
 
         $this->info('User created, open '.config('app.url').'/member/login');
 
