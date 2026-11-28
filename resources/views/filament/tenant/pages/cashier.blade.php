@@ -185,10 +185,13 @@
       @error('cashDrawerCash')
         <span class="text-danger-500">{{ $message }}</span>
       @enderror
-      <x-slot name="footer">
-        <x-filament::button type="submit">{{ __('Save') }}</x-filament::button>
-      </x-slot>
     </form>
+    <x-slot name="footer">
+      <x-filament::button wire:click="openCashDrawer">{{ __('Save') }}</x-filament::button>
+      <x-filament::button color="gray" x-on:click="$dispatch('close-modal', {id: 'open-cash-drawer'})">
+        {{ __('Close') }}
+      </x-filament::button>
+    </x-slot>
   </x-filament::modal>
 
   <x-filament::modal id="cash-drawer-summary" width="md">

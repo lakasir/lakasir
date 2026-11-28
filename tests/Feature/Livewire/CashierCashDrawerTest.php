@@ -59,6 +59,16 @@ test('the summary expects the opening cash plus cash sales', function () {
         ->assertSet('cashDrawerSummary.expected_cash', 120000.0);
 });
 
+test('the save button in the open drawer modal is wired to the action', function () {
+    $view = file_get_contents(resource_path('views/filament/tenant/pages/cashier.blade.php'));
+    $modal = substr($view, strpos($view, 'id="open-cash-drawer"'));
+    $modal = substr($modal, 0, strpos($modal, '</x-filament::modal>'));
+
+    expect($modal)
+        ->toContain('wire:click="openCashDrawer"')
+        ->not->toContain('type="submit"');
+});
+
 test('opening the drawer twice is rejected', function () {
     Livewire::test(Cashier::class)
         ->set('cashDrawerCash', 100000)

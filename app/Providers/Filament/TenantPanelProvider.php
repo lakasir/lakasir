@@ -39,6 +39,7 @@ use App\Filament\Tenant\Resources\SupplierResource;
 use App\Filament\Tenant\Resources\TableResource;
 use App\Filament\Tenant\Resources\UserResource;
 use App\Filament\Tenant\Resources\VoucherResource;
+use App\Filament\Tenant\Resources\CashDrawerResource;
 use App\Http\Middleware\IdentifyCompany;
 use App\Http\Middleware\LocalizationMiddleware;
 use App\Http\Middleware\SetCurrentCompany;
@@ -169,6 +170,7 @@ class TenantPanelProvider extends PanelProvider
             $this->generateNavigationItem(MemberResource::class, Member::class),
             $this->generateNavigationItem(PaymentMethodResource::class, PaymentMethod::class),
             $this->generateNavigationItem(ReceivableResource::class, Receivable::class),
+            $this->generateNavigationItem(CashDrawerResource::class),
         ];
     }
 
