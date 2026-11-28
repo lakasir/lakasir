@@ -148,6 +148,8 @@ class Cashier extends Page implements HasForms, HasTable
 
     public function openCashDrawer(): void
     {
+        abort_unless(can('open cash drawer'), 403);
+
         $this->validate([
             'cashDrawerCash' => ['required', 'numeric', 'min:0'],
         ]);
@@ -182,6 +184,8 @@ class Cashier extends Page implements HasForms, HasTable
 
     public function closeCashDrawer(): void
     {
+        abort_unless(can('close cash drawer'), 403);
+
         $this->validate([
             'countedCash' => ['nullable', 'numeric', 'min:0'],
         ]);

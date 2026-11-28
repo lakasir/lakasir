@@ -225,6 +225,10 @@ class GeneralSetting extends Page implements HasActions, HasForms
     public function saveApp(): void
     {
         foreach ($this->setting as $key => $value) {
+            if ($key === 'cash_drawer_enabled' && ! can('enable cash drawer')) {
+                continue;
+            }
+
             Setting::set($key, $value);
         }
 
