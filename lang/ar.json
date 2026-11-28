@@ -430,5 +430,11 @@
     "From": "من",
     "Until": "حتى",
     "Total": "المجموع",
-    "POS V2": "POS V2"
+    "POS V2": "POS V2",
+    "Status": "الحالة",
+    "Non stock": "بدون مخزون",
+    "Mark as stock": "وضع علامة كمخزون",
+    "Mark as non stock": "وضع علامة كبدون مخزون",
+    "Marked as stock": "تم وضع علامة كمخزون",
+    "Marked as non stock": "تم وضع علامة كبدون مخزون"
 }

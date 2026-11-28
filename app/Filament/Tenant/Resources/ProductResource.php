@@ -8,6 +8,7 @@ use App\Features\ProductStock;
 use App\Features\ProductType;
 use App\Filament\Tenant\Resources\ProductResource\Pages;
 use App\Filament\Tenant\Resources\ProductResource\Traits\HasProductForm;
+use App\Filament\Tenant\Resources\ProductResource\Traits\TogglesProductState;
 use App\Filament\Tenant\Resources\Traits\HasUploadFileField;
 use App\Models\Tenants\Product;
 use App\Models\Tenants\Setting;
@@ -18,11 +19,9 @@ use Filament\Infolists;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
-use Filament\Support\Colors\Color;
 use Filament\Support\Enums\ActionSize;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
@@ -33,6 +32,7 @@ use Laravel\Pennant\Feature;
 class ProductResource extends Resource
 {
     use HasProductForm, HasTranslatableResource, HasUploadFileField;
+    use TogglesProductState;
 
     protected static ?string $model = Product::class;
 
@@ -111,10 +111,22 @@ class ProductResource extends Resource
                 TextColumn::make('type')
                     ->visible(Feature::active(ProductType::class))
                     ->translateLabel(),
-                ToggleColumn::make('is_non_stock')
+                TextColumn::make('show')
+                    ->label(__('Status'))
+                    ->badge()
+                    ->formatStateUsing(fn (bool $state) => $state ? __('Active') : __('Inactive'))
+                    ->icon(fn (bool $state) => $state ? 'heroicon-s-check-circle' : 'heroicon-s-x-circle')
+                    ->color(fn (bool $state) => $state ? 'success' : 'danger')
+                    ->sortable(),
+                TextColumn::make('is_non_stock')
+                    ->label(__('Non stock'))
+                    ->badge()
+                    ->formatStateUsing(fn (bool $state) => $state ? __('Yes') : __('No'))
+                    ->icon(fn (bool $state) => $state ? 'heroicon-s-archive-box-x-mark' : 'heroicon-s-archive-box')
+                    ->color(fn (bool $state) => $state ? 'warning' : 'gray')
                     ->toggleable()
                     ->visible(Feature::active(ProductStock::class))
-                    ->translateLabel(),
+                    ->sortable(),
             ])
             ->searchPlaceholder(__('Search (SKU, name, barcode)'))
             ->filters([
@@ -140,6 +152,15 @@ class ProductResource extends Resource
                         ->label(__('Print Label'))
                         ->icon('heroicon-o-printer')
                         ->url(fn (Product $record) => static::getUrl('print-label', ['record' => $record])),
+                    Tables\Actions\Action::make('toggle-show')
+                        ->label(fn (Product $record) => $record->show ? __('Inactivate') : __('Activate'))
+                        ->icon(fn (Product $record) => $record->show ? 'heroicon-s-x-circle' : 'heroicon-s-rocket-launch')
+                        ->action(fn (Product $record) => static::toggleProductVisibility($record)),
+                    Tables\Actions\Action::make('toggle-non-stock')
+                        ->label(fn (Product $record) => $record->is_non_stock ? __('Mark as stock') : __('Mark as non stock'))
+                        ->icon(fn (Product $record) => $record->is_non_stock ? 'heroicon-s-archive-box' : 'heroicon-s-archive-box-x-mark')
+                        ->visible(Feature::active(ProductStock::class))
+                        ->action(fn (Product $record) => static::toggleProductNonStock($record)),
                     Tables\Actions\DeleteAction::make(),
                     Tables\Actions\RestoreAction::make(),
                     Tables\Actions\ForceDeleteAction::make(),

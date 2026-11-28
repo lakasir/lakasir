@@ -401,5 +401,11 @@
     "From": "Desde",
     "Until": "Hasta",
     "Total": "Total",
-    "POS V2": "POS V2"
+    "POS V2": "POS V2",
+    "Status": "Estado",
+    "Non stock": "Sin stock",
+    "Mark as stock": "Marcar como stock",
+    "Mark as non stock": "Marcar como sin stock",
+    "Marked as stock": "Marcado como stock",
+    "Marked as non stock": "Marcado como sin stock"
 }

@@ -410,5 +410,11 @@
     "From": "Dari",
     "Until": "Sampai",
     "Total": "Total",
-    "POS V2": "POS V2"
+    "POS V2": "POS V2",
+    "Status": "Status",
+    "Non stock": "Non stok",
+    "Mark as stock": "Tandai sebagai stok",
+    "Mark as non stock": "Tandai sebagai non stok",
+    "Marked as stock": "Ditandai sebagai stok",
+    "Marked as non stock": "Ditandai sebagai non stok"
 }
