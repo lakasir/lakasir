@@ -9,6 +9,7 @@ use App\Filament\Tenant\Pages\Traits\TableProduct;
 use App\Filament\Tenant\Resources\Traits\RefreshThePage;
 use App\Models\Tenants\About;
 use App\Models\Tenants\CartItem;
+use App\Models\Tenants\CashDrawer;
 use App\Models\Tenants\Member;
 use App\Models\Tenants\PaymentMethod;
 use App\Models\Tenants\Profile;
@@ -16,6 +17,7 @@ use App\Models\Tenants\Selling;
 use App\Models\Tenants\Setting;
 use App\Models\Tenants\Table;
 use App\Models\Tenants\Voucher as TenantsVoucher;
+use App\Services\Tenants\CashDrawerService;
 use App\Services\Tenants\SellingService;
 use App\Services\VoucherService;
 use App\Traits\HasTranslatableResource;
@@ -40,11 +42,6 @@ class Cashier extends Page implements HasForms, HasTable
     protected static ?string $navigationIcon = 'heroicon-o-bolt';
 
     protected static string $view = 'filament.tenant.pages.cashier';
-
-    public static function canAccess(): bool
-    {
-        return can('create selling');
-    }
 
     public Collection $cartItems;
 
@@ -72,7 +69,22 @@ class Cashier extends Page implements HasForms, HasTable
 
     public ?Collection $tableOption;
 
+    public bool $cashDrawerEnabled = false;
+
+    public bool $cashDrawerOpen = false;
+
+    public ?array $cashDrawerSummary = null;
+
+    public float $cashDrawerCash = 0;
+
+    public ?float $countedCash = null;
+
     private float $discount_price = 0;
+
+    public static function canAccess(): bool
+    {
+        return can('create selling');
+    }
 
     public function mount()
     {
@@ -121,6 +133,86 @@ class Cashier extends Page implements HasForms, HasTable
         ]);
 
         $this->fillPayemntMethod();
+
+        $this->refreshCashDrawer();
+    }
+
+    public function refreshCashDrawer(): void
+    {
+        $this->cashDrawerEnabled = (bool) Setting::get('cash_drawer_enabled', false);
+
+        $cashDrawer = CashDrawer::lastOpened()->first();
+        $this->cashDrawerOpen = $cashDrawer !== null;
+        $this->cashDrawerSummary = $cashDrawer ? app(CashDrawerService::class)->summary($cashDrawer) : null;
+    }
+
+    public function openCashDrawer(): void
+    {
+        $this->validate([
+            'cashDrawerCash' => ['required', 'numeric', 'min:0'],
+        ]);
+
+        if (CashDrawer::lastOpened()->exists()) {
+            Notification::make()
+                ->title(__('Cash drawer is already open'))
+                ->danger()
+                ->send();
+
+            $this->dispatch('close-modal', id: 'open-cash-drawer');
+            $this->refreshCashDrawer();
+
+            return;
+        }
+
+        CashDrawer::create([
+            'cash' => $this->cashDrawerCash,
+            'opened_by' => auth()->id(),
+        ]);
+
+        $this->cashDrawerCash = 0;
+        $this->dispatch('close-modal', id: 'open-cash-drawer');
+
+        Notification::make()
+            ->title(__('Cash drawer opened'))
+            ->success()
+            ->send();
+
+        $this->refreshCashDrawer();
+    }
+
+    public function closeCashDrawer(): void
+    {
+        $this->validate([
+            'countedCash' => ['nullable', 'numeric', 'min:0'],
+        ]);
+
+        $cashDrawer = CashDrawer::lastOpened()->first();
+        if (! $cashDrawer) {
+            Notification::make()
+                ->title(__('Cash drawer is already closed'))
+                ->danger()
+                ->send();
+
+            $this->refreshCashDrawer();
+
+            return;
+        }
+
+        $cashDrawer->update([
+            'closed_by' => auth()->id(),
+            'closed_at' => now(),
+            'counted_cash' => $this->countedCash,
+        ]);
+
+        $this->cashDrawerOpen = false;
+        $this->cashDrawerSummary = app(CashDrawerService::class)->summary($cashDrawer);
+        $this->countedCash = null;
+        $this->dispatch('open-modal', id: 'cash-drawer-summary');
+
+        Notification::make()
+            ->title(__('Cash drawer closed'))
+            ->success()
+            ->send();
     }
 
     protected function getForms(): array

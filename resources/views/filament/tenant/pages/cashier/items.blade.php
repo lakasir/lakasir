@@ -4,9 +4,9 @@
     <div class="flex justify-between bg-white dark:border-gray-900 dark:bg-gray-900">
       <div class="flex items-center space-x-3">
         <div class="space-y-3">
-          <p class="font-semibold"> {{ $item->product->name }}</p>
+          <p class="font-semibold"> {{ $item->product?->name }}</p>
           <div class="flex space-x-3 h-8">
-            <p>{{ $item->product->selling_price_label }} x {{ $item->qty }}</p>
+            <p>{{ $item->product?->selling_price_label }} x {{ $item->qty }}</p>
           </div>
         </div>
       </div>

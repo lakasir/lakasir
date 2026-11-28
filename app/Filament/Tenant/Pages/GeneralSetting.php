@@ -141,6 +141,9 @@ class GeneralSetting extends Page implements HasActions, HasForms
                                 ->numeric()
                                 ->suffix('%')
                                 ->translateLabel(),
+                            Checkbox::make('cash_drawer_enabled')
+                                ->label(__('Cash drawer'))
+                                ->visible(can('enable cash drawer')),
                             Actions::make([
                                 Action::make('Save')
                                     ->translateLabel()
