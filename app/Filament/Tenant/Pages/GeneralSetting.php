@@ -27,7 +27,11 @@ use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Pages\Concerns\InteractsWithFormActions;
 use Filament\Pages\Page;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rules\Password;
 use Laravel\Pennant\Feature;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
@@ -100,11 +104,11 @@ class GeneralSetting extends Page implements HasActions, HasForms
         $this->profile = [
             'name' => $user->name,
             'email' => $user->email,
-            'phone' => $profile->phone,
-            'address' => $profile->address,
-            'locale' => $profile->locale,
-            'timezone' => $profile->timezone,
-            'photo' => $profile->photo ? [$profile->photo] : null,
+            'phone' => $profile?->phone,
+            'address' => $profile?->address,
+            'locale' => $profile?->locale,
+            'timezone' => $profile?->timezone,
+            'photo' => $profile?->photo ? [$profile->photo] : null,
         ];
     }
 
@@ -271,9 +275,9 @@ class GeneralSetting extends Page implements HasActions, HasForms
     public function saveAbout(AboutService $aboutService): void
     {
         $this->validate([
-            'about.shop_name' => 'required',
-            'about.business_type' => 'required',
-            'about.shop_location' => 'required',
+            'about.shop_name' => ['required'],
+            'about.business_type' => ['required'],
+            'about.shop_location' => ['required'],
         ]);
 
         if (isset($this->about['photo']) && $this->about['photo'] != null && array_values($this->about['photo'])[0] instanceof TemporaryUploadedFile) {
@@ -316,63 +320,55 @@ class GeneralSetting extends Page implements HasActions, HasForms
     public function saveProfile(): void
     {
         $this->validate([
-            'profile.email' => 'required|email',
-            'profile.timezone' => 'required',
-            'profile.locale' => 'required',
-            'profile.password' => 'nullable|confirmed',
+            'profile.name' => ['nullable', 'string', 'max:255'],
+            'profile.email' => ['required', 'email', 'unique:users,email,'.auth()->id()],
+            'profile.timezone' => ['required'],
+            'profile.locale' => ['required'],
+            'profile.password' => ['nullable', 'confirmed', Password::default()],
         ]);
+
+        $data = $this->profile;
+        $password = $data['password'] ?? null;
+        $photo = $data['photo'] ?? null;
+        $photo = is_array($photo) ? (array_values($photo)[0] ?? null) : $photo;
+
+        unset($data['password'], $data['password_confirmation'], $data['photo']);
+
+        $uploadedFileId = $photo instanceof TemporaryUploadedFile
+            ? $this->storeAsUploadedFile($photo)
+            : null;
 
         /** @var User $user */
         $user = auth()->user();
-        $profile = $user->profile;
 
-        if (feature('edit-profile')) {
-            if (isset($this->profile['photo']) && $this->profile['photo'] != null && array_values($this->profile['photo'])[0] instanceof TemporaryUploadedFile) {
-                /** @var TemporaryUploadedFile $image */
-                $image = array_values($this->profile['photo'])[0];
-                $this->profile['uploaded_file_id'] = $this->storeAsUploadedFile($image);
-                $this->profile['photo'] = null;
+        DB::transaction(function () use ($user, $data, $password, $photo, $uploadedFileId) {
+            $user->fill(Arr::only($data, ['name', 'email']));
+            if (filled($password)) {
+                $user->password = Hash::make($password);
             }
-        }
+            $user->save();
 
-        if (isset($this->profile['password']) && $this->profile['password'] != '') {
-            $this->profile['password'] = bcrypt($this->profile['password']);
-        }
+            /** @var Profile $profile */
+            $profile = $user->profile()->updateOrCreate([], Arr::except($data, ['name', 'email']));
 
-        $user->update($this->profile);
-        $profile->update($this->profile);
+            if (! feature('edit-profile')) {
+                return;
+            }
 
-        if (feature('edit-profile')) {
-            $data = $this->profile;
+            $tmpFile = $uploadedFileId ? UploadedFile::find($uploadedFileId) : null;
 
-            if (isset($data['uploaded_file_id'])) {
-                $tmpFile = UploadedFile::find($data['uploaded_file_id']);
-
-                if ($tmpFile && $tmpFile->relative_path !== $profile->photo) {
-                    $relativePath = $tmpFile->moveToPublic('profile', $profile->photo ?: null);
+            if ($tmpFile) {
+                if ($tmpFile->relative_path !== $profile->photo) {
                     $profile->update([
-                        'photo' => $relativePath,
+                        'photo' => $tmpFile->moveToPublic('profile', $profile->photo ?: null),
                     ]);
                 }
+            } elseif ($photo === null && $profile->photo) {
+                $this->deletePhoto($profile);
             }
+        });
 
-            if (! isset($data['uploaded_file_id']) && ! isset($data['photo']) && $profile->photo) {
-                $tmpFile = UploadedFile::where('relative_path', $profile->photo)->first()
-                    ?? UploadedFile::where('url', $profile->photo)->first();
-                if ($tmpFile) {
-                    $tmpFile->deleteFromPublic('profile');
-                } else {
-                    $uploadDisk = config('filesystems.upload_disk');
-                    if (Storage::disk($uploadDisk)->exists($profile->photo)) {
-                        Storage::disk($uploadDisk)->delete($profile->photo);
-                    }
-                }
-
-                $profile->update([
-                    'photo' => null,
-                ]);
-            }
-        }
+        $user->unsetRelation('profile');
 
         Notification::make()
             ->title(__('Success'))
@@ -380,5 +376,22 @@ class GeneralSetting extends Page implements HasActions, HasForms
             ->send();
 
         $this->mount();
+    }
+
+    private function deletePhoto(Profile $profile): void
+    {
+        $tmpFile = UploadedFile::where('relative_path', $profile->photo)->first()
+            ?? UploadedFile::where('url', $profile->photo)->first();
+
+        if ($tmpFile) {
+            $tmpFile->deleteFromPublic('profile');
+        } else {
+            $disk = Storage::disk(config('filesystems.upload_disk'));
+            if ($disk->exists($profile->photo)) {
+                $disk->delete($profile->photo);
+            }
+        }
+
+        $profile->update(['photo' => null]);
     }
 }

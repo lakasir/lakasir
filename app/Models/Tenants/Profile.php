@@ -64,7 +64,6 @@ class Profile extends Model
                 ->searchable(),
             Select::make('locale')
                 ->label(__('Language'))
-                ->selectablePlaceholder(false)
                 ->options([
                     'id' => 'Bahasa Indonesia',
                     'en' => 'English',
