@@ -17,7 +17,7 @@ return new class extends Migration
 
     public function up(): void
     {
-        if (DB::table('companies')->exists()) {
+        if (DB::table('companies')->exists() || ! $this->hasOrphanRows()) {
             return;
         }
 
@@ -50,6 +50,21 @@ return new class extends Migration
         ])->all();
 
         DB::table('user_companies')->insertOrIgnore($rows);
+    }
+
+    private function hasOrphanRows(): bool
+    {
+        foreach ($this->tables as $table) {
+            if (Schema::hasColumn($table, 'company_id') && DB::table($table)->where('company_id', 0)->exists()) {
+                return true;
+            }
+        }
+
+        return DB::table('users')->exists()
+            || DB::table('roles')->whereNull('company_id')->exists()
+            || DB::table('model_has_roles')->exists()
+            || DB::table('model_has_permissions')->exists()
+            || DB::table('features')->where('scope', '__laravel_null')->exists();
     }
 
     public function down(): void
