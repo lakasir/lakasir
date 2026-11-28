@@ -481,12 +481,6 @@ parameters:
 			path: app/Filament/Tenant/Pages/TenantLogin.php
 
 		-
-			message: '#^Unreachable statement \- code above always terminates\.$#'
-			identifier: deadCode.unreachable
-			count: 1
-			path: app/Filament/Tenant/Pages/TenantLogin.php
-
-		-
 			message: '#^Using nullsafe property access "\?\-\>qty" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
 			identifier: nullsafe.neverNull
 			count: 1
