@@ -4,6 +4,7 @@ namespace App\Filament\Tenant\Resources;
 
 use App\Filament\Tenant\Resources\CashDrawerResource\Pages;
 use App\Models\Tenants\CashDrawer;
+use App\Models\Tenants\Profile;
 use App\Models\Tenants\Setting;
 use App\Models\Tenants\User;
 use App\Services\Tenants\CashDrawerService;
@@ -53,14 +54,14 @@ class CashDrawerResource extends Resource
                     ->sortable(),
                 TextColumn::make('created_at')
                     ->label(__('Opened at'))
-                    ->dateTime(timezone: auth()->user()->profile?->timezone)
+                    ->dateTime(timezone: Profile::get()->timezone)
                     ->sortable(),
                 TextColumn::make('openedBy.name')
                     ->label(__('Opened by'))
                     ->placeholder('-'),
                 TextColumn::make('closed_at')
                     ->label(__('Closed at'))
-                    ->dateTime(timezone: auth()->user()->profile?->timezone)
+                    ->dateTime(timezone: Profile::get()->timezone)
                     ->placeholder(__('Still open'))
                     ->sortable(),
                 TextColumn::make('closedBy.name')
@@ -97,7 +98,7 @@ class CashDrawerResource extends Resource
                     ->label(__('Opened by'))
                     ->options(fn (): array => User::query()
                         ->get(['id', 'name', 'email'])
-                        ->mapWithKeys(fn ($user): array => [$user->id => $user->cashier_name])
+                        ->mapWithKeys(fn (User $user): array => [$user->id => $user->cashier_name])
                         ->all()),
                 Filter::make('open')
                     ->label(__('Still open'))

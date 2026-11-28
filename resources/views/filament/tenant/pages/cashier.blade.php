@@ -43,7 +43,7 @@
                     </x-filament::dropdown.list.item>
                   @endif
 
-                  @if ($cashDrawerEnabled && $cashDrawerOpen && can('open cash drawer'))
+                  @if ($cashDrawerEnabled && $cashDrawerOpen && (can('open cash drawer') || can('close cash drawer')))
                     <x-filament::dropdown.list.item
                       x-on:mousedown="$dispatch('open-modal', {id: 'cash-drawer-summary'})">
                       <div class="flex gap-x-2">

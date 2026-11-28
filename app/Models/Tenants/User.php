@@ -21,6 +21,8 @@ use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
 /**
+ * @property-read string $cashier_name
+ *
  * @mixin IdeHelperUser
  */
 class User extends Authenticatable implements FilamentUser, HasAvatar, HasName
