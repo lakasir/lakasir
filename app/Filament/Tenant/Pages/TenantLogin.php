@@ -15,12 +15,11 @@ class TenantLogin extends Login
         $loginResponse = parent::authenticate();
         /** @var User $user */
         $user = Filament::auth()->user();
+        $user->resolveCompany()?->makeCurrent();
         if (! $user->can('access web app')) {
             throw ValidationException::withMessages([
                 'data.email' => 'You do not have permission to access the web app',
             ]);
-
-            return null;
         }
         $user->profile()->updateOrCreate(
             [
